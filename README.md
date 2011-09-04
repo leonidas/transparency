@@ -34,7 +34,7 @@ $('.greeting').render(greeting);
 **Result:**
 
 ```html
-<div class="container"
+<div class="container">
   <div class="greeting">Hello <a class="name" href="www.example.com">World!!!</a>
   </div>
 </div>
