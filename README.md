@@ -14,7 +14,7 @@ Otherwise, there's nothing else you need to do. Just call $('my-template').rende
 
 ```html
 <div class="container">
-  <div class="greeting"><a class="name" href="#"></span>
+  <div class="greeting"><a class="name" href="#"></a>
   </div>
 </div>
 ```
@@ -35,7 +35,7 @@ $('.greeting').render(greeting);
 
 ```html
 <div class="container"
-  <div class="greeting">Hello <a class="name" href="www.example.com">World!!!</span>
+  <div class="greeting">Hello <a class="name" href="www.example.com">World!!!</a>
   </div>
 </div>
 ```
@@ -48,7 +48,7 @@ It's just like rendering a single object. No kidding, it's just the same.
 
 ```html
 <div class="container">
-  <div class="greeting"><a class="name" href="#"></span>
+  <div class="greeting"><a class="name" href="#"></a>
   </div>
 </div>
 ```
@@ -76,9 +76,9 @@ $('.greeting').render(greetings);
 
 ```html
 <div class="container">
-  <div class="greeting">Hello <a class="name" href="#">World!!!</span>
+  <div class="greeting">Hello <a class="name" href="#">World!!!</a>
   </div>
-  <div class="greeting">See you, <a class="name" href="#">Susan!</span>
+  <div class="greeting">See you, <a class="name" href="#">Susan!</a>
   </div>
 </div>
 ```
