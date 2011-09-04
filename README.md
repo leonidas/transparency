@@ -10,34 +10,79 @@ Otherwise, there's nothing else you need to do. Just call $('my-template').rende
 
 ### Hello World
 
-Template:
+**Template:**
 
 ```html
-<div class="hello"><a class="world" href="#"></span>
+<div class="container">
+  <div class="greeting"><a class="name" href="#"></span>
+  </div>
 </div>
 ```
 
-Javascript:
+**Javascript:**
 
 ```js
 var greeting = {
-  hello:        'Hello '
-  world:        'World!!!'
-  'world@href': 'www.example.com'
+  greeting:     'Hello ',
+  name:         'World!!!',
+  'name@href':  'www.example.com'
 };
+
+$('.greeting').render(greeting);
 ```
 
-Result:
+**Result:**
 
 ```html
-<div class="hello">Hello <a class="world" href="www.example.com">World!!!</span>
+<div class="container"
+  <div class="greeting">Hello <a class="name" href="www.example.com">World!!!</span>
+  </div>
 </div>
 ```
 
-## Iterate over a list (look ma', no hands!)
+### Iterate over a list (look ma', no hands!)
 
-It's just like rendering a signle object
+It's just like rendering a single object. No kidding, it's just the same.
 
-### The name?
+**Template:**
 
-Transparency refers to overhead transparencies. Yeah, those projectors and hand-made transparencies of the 80's! Can you feel the vintage? :)
+```html
+<div class="container">
+  <div class="greeting"><a class="name" href="#"></span>
+  </div>
+</div>
+```
+
+**Javascript:**
+
+```js
+var greetings = [
+  {
+    greeting:    'Hello ',
+    name:        'World!!!',
+    'name@href': 'www.example.com'
+  },
+  {
+    greeting:    'See you, ',
+    name:        'Susan!',
+    'name@href': 'www.example.com'
+  }
+];
+
+$('.greeting').render(greetings);
+```
+
+**Result:**
+
+```html
+<div class="container">
+  <div class="greeting">Hello <a class="name" href="#">World!!!</span>
+  </div>
+  <div class="greeting">See you, <a class="name" href="#">Susan!</span>
+  </div>
+</div>
+```
+
+## The name?
+
+Transparency refers to overhead projectors. Yeah, those projectors and hand-made transparencies of the 80's! Can you feel the vintage? :)
