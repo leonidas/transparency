@@ -11,26 +11,30 @@ Otherwise, there's nothing else you need to do. Just call $('my-template').rende
 ### Hello World
 
 Template:
+
 ```html
 <div class="hello"><a class="world" href="#"></span>
 </div>
 ```
 
 Javascript:
+
 ```js
 var greeting = {
   hello:        'Hello '
   world:        'World!!!'
   'world@href': 'www.example.com'
 };
+```
 
 Result:
+
 ```html
 <div class="hello">Hello <a class="world" href="www.example.com">World!!!</span>
 </div>
 ```
 
-### Iterate over a list (look ma', no hands!)
+## Iterate over a list (look ma', no hands!)
 
 It's just like rendering a signle object
 
