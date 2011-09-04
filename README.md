@@ -1,6 +1,6 @@
 ## Introduction
 
-Transparency is heavily influenced by PURE. Having the same spirit, it is even more opinionated about how the templates and data are bind together. Templating should be unobustrive, dead simple and just stay out of the way.
+Transparency is heavily influenced by [PURE](http://beebole.com/pure/). Transparency certainly have the same spirit, but it is even more opinionated about how the templates and data are bind together. Templating should be unobustrive, dead simple and just stay out of the way.
 
 Transparency relies on convention over configuration and requires you to have 1:1 match between css classes and json objects. Usually this is a good idea anyway, and minimizes the amount of cognitive noise you have to deal with. 
 
