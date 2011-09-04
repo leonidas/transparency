@@ -4,7 +4,7 @@ Transparency is heavily influenced by PURE. Having the same spirit, it is even m
 
 Transparency relies on convention over configuration and requires you to have 1:1 match between css classes and json objects. Usually this is a good idea anyway, and minimizes the amount of cognitive noise you have to deal with. 
 
-Otherwise, there's nothing else you need to do. Just call `$('my-template').render(data)` and enjoy your life.
+Otherwise, there's nothing else you need to do. Just call `$('.my-template').render(data)` and enjoy your life.
 
 ## Examples
 
