@@ -76,9 +76,9 @@ $('.greeting').render(greetings);
 
 ```html
 <div class="container">
-  <div class="greeting">Hello <a class="name" href="#">World!!!</a>
+  <div class="greeting">Hello <a class="name" href="www.example.com">World!!!</a>
   </div>
-  <div class="greeting">See you, <a class="name" href="#">Susan!</a>
+  <div class="greeting">See you, <a class="name" href="www.example.com">Susan!</a>
   </div>
 </div>
 ```
