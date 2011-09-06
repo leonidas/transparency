@@ -6,7 +6,7 @@ jQuery.fn.render = (data) ->
 
   jQuery.each data, (index, object) ->
 
-    _(object).chain().keys().each (key) ->
+    jQuery.each object, (key, value) ->
 
       tmp       = key.split('@')
       klass     = tmp[0]
