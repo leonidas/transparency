@@ -1,0 +1,15 @@
+{
+  "name"          : "transparency",
+  "version"       : "0.1.0",
+  "description"   : "Sleek, elegant and minimal template engine for jQuery.",
+  "homepage"      : "https://github.com/pyykkis/transparency",
+  "repository"    : { "type" : "git"
+                    , "url"  : "https://github.com/pyykkis/transparency.git"
+                    },
+  "keywords"      : ["template", "templating", "engine", "unobtrusive"],
+  "author"        : "Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>",
+  "contributors"  : [],
+  "licenses"      : ["MIT"],
+  "devDependencies"  : {"jsdom" : ">=0.2.x"},
+  "main"          : "lib/jasmine-node"
+}
