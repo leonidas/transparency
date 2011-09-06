@@ -1,12 +1,18 @@
 jQuery.fn.render = (data) ->
-  data     = [data] unless jQuery.isArray(data)
   template = this
 
-  jQuery.each data, (index, object) ->
-
-    jQuery.each object, (key, value) ->
-      #if value.isArray()
-      #  render jQuery.find(key), value
+  if jQuery.isArray(data)
+    parent = template.parent()
+    #console.log(parent.html())
+    template.remove()
+    jQuery.each data, (index, value) ->
+      template.clone().render(value).appendTo(parent)
+      #console.log render.html()
+      #parent.append(render)
+      #console.log(parent.html())
+      #render.appendTo(parent)
+  else
+    jQuery.each data, (key, value) ->
 
       [klass, attribute] = key.split('@')
       template.find(".#{klass}").each ->

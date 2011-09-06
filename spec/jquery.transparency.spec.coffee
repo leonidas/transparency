@@ -1,14 +1,20 @@
 # fake browser window
-global.window = require("jsdom").jsdom().createWindow()
+global.jsdom  = require 'jsdom'
+global.window = jsdom.jsdom().createWindow()
 global.jQuery = require "jquery"
 
-_ = require "underscore"
+# jsdom.jQueryify window, "jquery.js", () ->
+#   window.jQuery('body')
+
 require "../jquery.transparency.coffee"
+
+wrap = (html) ->
+  jQuery("<div>#{html}</div>")
 
 describe "Transparency", ->
 
   it "should assing data values to template", ->
-    template = jQuery(
+    template = wrap(
      '<div class="container">
         <div class="greeting"></div>
         <div class="name"></div>
@@ -19,7 +25,7 @@ describe "Transparency", ->
       greeting: 'Hello '
       name:     'World!'
 
-    result = jQuery(
+    result = wrap(
       '<div class="container">
         <div class="greeting">Hello </div>
         <div class="name">World!</div>
@@ -64,3 +70,78 @@ describe "Transparency", ->
       </div>')
 
     expect(template.render(data).html()).toEqual(result.html())
+
+  it "should handle list of objects", ->
+    template = jQuery(
+     '<div>
+       <div class="container">
+          <div class="comment">
+            <span class="name"></span>
+            <span class="text"></span>
+          </div>
+        </div>
+      </div>')
+
+    data = [ { 
+        name:    'John'
+        text: 'That rules' }, { 
+        name:    'Arnold'
+        text: 'Great post!'}
+      ]
+
+    result = jQuery(
+     '<div>
+       <div class="container">
+          <div class="comment">
+            <span class="name">John</span>
+            <span class="text">That rules</span>
+          </div>
+          <div class="comment">
+            <span class="name">Arnold</span>
+            <span class="text">Great post!</span>
+          </div>
+        </div>
+      </div>')
+
+    expect(result.html()).toEqual(template.find('.container').render(data).html())
+
+  # it "should handle nested objects", ->
+  #   template = jQuery(
+  #    '<div class="container">
+  #       <h1 class="title"></h>
+  #       <p class="post"></p>
+  #       <div class="comments">
+  #         <div>
+  #           <span class="name"></span>
+  #           <span class="comment"></span>
+  #         </div>
+  #       </div>
+  #     </div>')
+
+  #   data =
+  #     title:    'Hello World'
+  #     post:     'Hi there it is me'
+  #     comments: [ { 
+  #         name:    'John'
+  #         comment: 'That rules' }, { 
+  #         name:    'Arnold'
+  #         comment: 'Great post!'}
+  #     ]
+
+  #   result = jQuery(
+  #    '<div class="container">
+  #       <h1 class="title">Hello World</h>
+  #       <p class="post">Hi there it is me</p>
+  #       <div class="comments">
+  #         <div>
+  #           <span class="name">John</span>
+  #           <span class="comment">That rules</span>
+  #         </div>
+  #         <div>
+  #           <span class="name">Arnold</span>
+  #           <span class="comment">Great post!</span>
+  #         </div>
+  #       </div>
+  #     </div>')
+
+  #   expect(template.render(data).html()).toEqual(result.html())
