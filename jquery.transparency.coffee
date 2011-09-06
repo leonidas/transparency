@@ -1,12 +1,11 @@
+_ = require "underscore"
+
 jQuery.fn.render = (data) ->
   data     = [data] unless jQuery.isArray(data)
-  parent   = this.parent()
-  template = this.clone()
-  this.remove()
+  template = this
 
   _(data).each (object) ->
 
-    template = template.clone()
     _(object).chain().keys().each (key) ->
 
       tmp       = key.split('@')
@@ -17,6 +16,4 @@ jQuery.fn.render = (data) ->
           jQuery(this).attr attribute, object[key]
         else
           jQuery(this).text object[key]
-      
-    parent.append(template)
-  return parent
+  return this
