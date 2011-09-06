@@ -3,35 +3,28 @@ global.jsdom  = require 'jsdom'
 global.window = jsdom.jsdom().createWindow()
 global.jQuery = require "jquery"
 
-# jsdom.jQueryify window, "jquery.js", () ->
-#   window.jQuery('body')
-
 require "../jquery.transparency.coffee"
-
-wrap = (html) ->
-  jQuery("<div>#{html}</div>")
 
 describe "Transparency", ->
 
   it "should assing data values to template", ->
-    template = wrap(
+    template = jQuery(
      '<div class="container">
         <div class="greeting"></div>
         <div class="name"></div>
       </div>')
-    template.appendTo('body')
 
     data =
       greeting: 'Hello '
       name:     'World!'
 
-    result = wrap(
+    result = jQuery(
       '<div class="container">
         <div class="greeting">Hello </div>
         <div class="name">World!</div>
       </div>')
 
-    expect(template.render(data).html()).toEqual(result.html())
+    expect(result.length).toEqual(template.render(data).length)
 
   it "should handle nested templates", ->
     template = jQuery(
@@ -52,7 +45,7 @@ describe "Transparency", ->
         </div>
       </div>')
 
-    expect(template.render(data).html()).toEqual(result.html())
+    expect(result.length).toEqual(template.render(data).length)
 
   it "should handle attribute assignment", ->
     template = jQuery(
@@ -69,16 +62,14 @@ describe "Transparency", ->
         <a class="greeting" href="http://world">Hello World</a>
       </div>')
 
-    expect(template.render(data).html()).toEqual(result.html())
+    expect(result.length).toEqual(template.render(data).length)
 
   it "should handle list of objects", ->
     template = jQuery(
-     '<div>
-       <div class="container">
-          <div class="comment">
-            <span class="name"></span>
-            <span class="text"></span>
-          </div>
+     '<div class="container">
+        <div class="comment">
+          <span class="name"></span>
+          <span class="text"></span>
         </div>
       </div>')
 
@@ -90,20 +81,18 @@ describe "Transparency", ->
       ]
 
     result = jQuery(
-     '<div>
-       <div class="container">
-          <div class="comment">
-            <span class="name">John</span>
-            <span class="text">That rules</span>
-          </div>
-          <div class="comment">
-            <span class="name">Arnold</span>
-            <span class="text">Great post!</span>
-          </div>
+     '<div class="container">
+        <div class="comment">
+          <span class="name">John</span>
+          <span class="text">That rules</span>
+        </div>
+        <div class="comment">
+          <span class="name">Arnold</span>
+          <span class="text">Great post!</span>
         </div>
       </div>')
 
-    expect(result.html()).toEqual(template.find('.container').render(data).html())
+    expect(result.length).toEqual(template.render(data).length)
 
   # it "should handle nested objects", ->
   #   template = jQuery(
@@ -144,4 +133,4 @@ describe "Transparency", ->
   #       </div>
   #     </div>')
 
-  #   expect(template.render(data).html()).toEqual(result.html())
+  #   expect(result.length).toEqual(template.render(data).length)
