@@ -5,13 +5,14 @@ jQuery.fn.render = (data) ->
   jQuery.each data, (index, object) ->
 
     jQuery.each object, (key, value) ->
+      #if value.isArray()
+      #  render jQuery.find(key), value
 
-      tmp       = key.split('@')
-      klass     = tmp[0]
-      attribute = tmp[1] if tmp.length > 1
+      [klass, attribute] = key.split('@')
       template.find(".#{klass}").each ->
         if attribute
           jQuery(this).attr attribute, value
         else
           jQuery(this).prepend value
+
   return this

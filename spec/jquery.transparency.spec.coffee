@@ -27,7 +27,7 @@ describe "Transparency", ->
 
     expect(template.render(data).html()).toEqual(result.html())
 
-  it "should work ok with nested templates", ->
+  it "should handle nested templates", ->
     template = jQuery(
      '<div class="container">
         <div class="greeting">
@@ -44,6 +44,23 @@ describe "Transparency", ->
         <div class="greeting">Hello 
           <span class="name">World!</span>
         </div>
+      </div>')
+
+    expect(template.render(data).html()).toEqual(result.html())
+
+  it "should handle attribute assignment", ->
+    template = jQuery(
+     '<div class="container">
+        <a class="greeting" href="#"></a>
+      </div>')
+
+    data =
+      greeting:         'Hello World'
+      'greeting@href':  'http://world'
+
+    result = jQuery(
+      '<div class="container">
+        <a class="greeting" href="http://world">Hello World</a>
       </div>')
 
     expect(template.render(data).html()).toEqual(result.html())
