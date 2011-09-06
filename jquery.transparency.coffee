@@ -15,5 +15,5 @@ jQuery.fn.render = (data) ->
         if attribute
           jQuery(this).attr attribute, object[key]
         else
-          jQuery(this).text object[key]
+          jQuery(this).prepend object[key]
   return this

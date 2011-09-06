@@ -11,13 +11,13 @@ describe "Transparency", ->
     template = jQuery(
      '<div class="container">
         <div class="greeting"></div>
-        <div class="name">aa</div>
+        <div class="name"></div>
       </div>')
     template.appendTo('body')
 
     data =
-      name:     'World!'
       greeting: 'Hello '
+      name:     'World!'
 
     result = jQuery(
       '<div class="container">
@@ -25,6 +25,25 @@ describe "Transparency", ->
         <div class="name">World!</div>
       </div>')
 
-    res = template.render(data)
-    jasmine.log res.data()
-    expect(res.html()).toEqual(result.html())
+    expect(template.render(data).html()).toEqual(result.html())
+
+  it "should work ok with nested templates", ->
+    template = jQuery(
+     '<div class="container">
+        <div class="greeting">
+          <span class="name"></span>
+        </div>
+      </div>')
+
+    data =
+      greeting: 'Hello '
+      name:     'World!'
+
+    result = jQuery(
+      '<div class="container">
+        <div class="greeting">Hello 
+          <span class="name">World!</span>
+        </div>
+      </div>')
+
+    expect(template.render(data).html()).toEqual(result.html())
