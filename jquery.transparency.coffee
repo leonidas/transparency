@@ -1,5 +1,3 @@
-_ = require "underscore"
-
 jQuery.fn.render = (data) ->
   data     = [data] unless jQuery.isArray(data)
   template = this
@@ -13,7 +11,7 @@ jQuery.fn.render = (data) ->
       attribute = tmp[1] if tmp.length > 1
       template.find(".#{klass}").each ->
         if attribute
-          jQuery(this).attr attribute, object[key]
+          jQuery(this).attr attribute, value
         else
-          jQuery(this).prepend object[key]
+          jQuery(this).prepend value
   return this
