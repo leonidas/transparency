@@ -4,7 +4,7 @@ jQuery.fn.render = (data) ->
   data     = [data] unless jQuery.isArray(data)
   template = this
 
-  _(data).each (object) ->
+  jQuery.each data, (index, object) ->
 
     _(object).chain().keys().each (key) ->
 
