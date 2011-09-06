@@ -1,20 +1,20 @@
 jQuery.fn.render = (data) ->
-  template = this.clone()
-  output   = ""
+  jQuery.fn.render = (data) ->
+    context  = this
+    template = this.clone()
+    data     = [data] unless jQuery.isArray(data)
+    context.empty()
 
-  if jQuery.isArray(data)
-    jQuery.each data, (index, value) ->
-      output += template.clone().render(value).html()
+    jQuery.each data, (index, object) ->
+      tmp = template.clone()
 
-  else
-    jQuery.each data, (key, value) ->
+      jQuery.each object, (key, value) ->
+        [klass, attribute] = key.split('@')
+        tmp.find(".#{klass}").each ->
+          if attribute
+            jQuery(this).attr attribute, value
+          else
+            jQuery(this).prepend value
+      context.before(tmp)
 
-      [klass, attribute] = key.split('@')
-      template.find(".#{klass}").each ->
-        if attribute
-          jQuery(this).attr attribute, value
-        else
-          jQuery(this).prepend value
-    output += template.html()
-
-  return jQuery("<div>#{output}</div>")
+    return context.last().remove()

@@ -1,31 +1,30 @@
 (function() {
   jQuery.fn.render = function(data) {
-    var parent, template;
-    if (!jQuery.isArray(data)) {
-      data = [data];
-    }
-    parent = this.parent();
-    template = this.clone();
-    this.remove();
-    _(data).each(function(object) {
-      template = template.clone();
-      _(object).chain().keys().each(function(key) {
-        var attribute, klass, tmp;
-        tmp = key.split('@');
-        klass = tmp[0];
-        if (tmp.length > 1) {
-          attribute = tmp[1];
-        }
-        return template.find("." + klass).each(function() {
-          if (attribute) {
-            return jQuery(this).attr(attribute, object[key]);
-          } else {
-            return jQuery(this).text(object[key]);
-          }
+    return jQuery.fn.render = function(data) {
+      var context, template;
+      context = this;
+      template = this.clone();
+      if (!jQuery.isArray(data)) {
+        data = [data];
+      }
+      context.empty();
+      jQuery.each(data, function(index, object) {
+        var tmp;
+        tmp = template.clone();
+        jQuery.each(object, function(key, value) {
+          var attribute, klass, _ref;
+          _ref = key.split('@'), klass = _ref[0], attribute = _ref[1];
+          return tmp.find("." + klass).each(function() {
+            if (attribute) {
+              return jQuery(this).attr(attribute, value);
+            } else {
+              return jQuery(this).prepend(value);
+            }
+          });
         });
+        return context.before(tmp);
       });
-      return parent.append(template);
-    });
-    return parent;
+      return context.last().remove();
+    };
   };
 }).call(this);
