@@ -1,14 +1,6 @@
-## Introduction
-
-Transparency is heavily influenced by [PURE](http://beebole.com/pure/). Transparency certainly have the same spirit, but it is even more opinionated about how the templates and data are bind together. Templating should be unobustrive, dead simple and just stay out of the way.
-
-Transparency relies on convention over configuration and requires you to have 1:1 match between css classes and json objects. Usually this is a good idea anyway, and minimizes the amount of cognitive noise you have to deal with. 
-
-Otherwise, there's nothing else you need to do. Just call `$('.my-template').render(data)` and enjoy your life.
+Transparency is a minimal template engine for jQuery. It maps JSON objects to HTML values and attributes with zero configuration.
 
 ## Examples
-
-### Hello World
 
 **Template:**
 
@@ -40,7 +32,7 @@ $('.greeting').render(greeting);
 </div>
 ```
 
-### Iterate over a list (look ma', no hands!)
+### Iterating over a list (look ma', no hands!)
 
 It's just like rendering a single object. No kidding, it's just the same.
 
@@ -83,6 +75,10 @@ $('.greeting').render(greetings);
 </div>
 ```
 
-## The name?
+## Philosophy
 
-Transparency refers to overhead projectors. Yeah, those projectors and hand-made transparencies of the 80's! Can you feel the vintage? :)
+Transparency is heavily influenced by [PURE](http://beebole.com/pure/) but is even more opinionated about how templates and data bind together. Templating with Transparency is unobustrive, dead simple and just stays out of the way.
+
+Transparency relies on convention over configuration and requires you to have 1:1 match between CSS classes and JSON objects. The idea is to minimize the cognitive noise you have to deal with. Just call `$('.my-template').render(data)` and enjoy your life.
+
+The name Transparency refers to overhead projectors. Yeah, those projectors and hand-made transparencies of the 80's! Can you feel the vintage? :)
