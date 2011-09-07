@@ -10,15 +10,19 @@ jQuery.fn.render = (data) ->
     # Iterate over keys in the data object
     jQuery.each object, (key, value) ->
 
-      [klass, attribute] = key.split('@')
-      tmp.find(".#{klass}").each ->
+      # Render child template
+      if jQuery.isArray(value)
+        tmp.find(".#{key}").children().first().render(value)
+      else
+        [klass, attribute] = key.split('@')
+        tmp.find(".#{klass}").each ->
 
-        if attribute
-          jQuery(this).attr attribute, value
-        else
-          jQuery(this).prepend value
+          if attribute
+            jQuery(this).attr attribute, value
+          else
+            jQuery(this).prepend value
     
     # Add rendered template to dom
     context.before(tmp)
-
+  
   return context.remove()
