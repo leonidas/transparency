@@ -22,7 +22,3 @@ jQuery.fn.render = (data) ->
     context.before(tmp)
 
   return context.remove()
-
-'        <div class="container">          <div class="comment">            <span class="name">John</span>            <span class="text">That rules</span>          </div>        </div><div class="container">          <div class="comment">            <span class="name">Arnold</span>            <span class="text">Great post!</span>          </div>        </div>      '
-
-'        <div class="container">          <div class="comment">            <span class="name">John</span>            <span class="text">That rules</span>          </div>          <div class="comment">            <span class="name">Arnold</span>            <span class="text">Great post!</span>          </div>        </div>      '
