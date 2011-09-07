@@ -8,29 +8,36 @@ require "../jquery.transparency.coffee"
 describe "Transparency", ->
 
   it "should assing data values to template", ->
-    template = jQuery(
-     '<div class="container">
-        <div class="greeting"></div>
-        <div class="name"></div>
+    doc = jQuery(
+     '<div>
+        <div class="container">
+          <div class="greeting"></div>
+          <div class="name"></div>
+        </div>
       </div>')
 
     data =
       greeting: 'Hello '
       name:     'World!'
 
-    result = jQuery(
-      '<div class="container">
-        <div class="greeting">Hello </div>
-        <div class="name">World!</div>
+    expected = jQuery(
+      '<div>
+        <div class="container">
+          <div class="greeting">Hello </div>
+          <div class="name">World!</div>
+        </div>
       </div>')
 
-    expect(result.length).toEqual(template.render(data).length)
+    doc.find('.container').render(data)
+    expect(doc.html()).toEqual(expected.html())
 
   it "should handle nested templates", ->
-    template = jQuery(
-     '<div class="container">
-        <div class="greeting">
-          <span class="name"></span>
+    doc = jQuery(
+     '<div>
+        <div class="container">
+          <div class="greeting">
+            <span class="name"></span>
+          </div>
         </div>
       </div>')
 
@@ -38,61 +45,72 @@ describe "Transparency", ->
       greeting: 'Hello '
       name:     'World!'
 
-    result = jQuery(
-      '<div class="container">
-        <div class="greeting">Hello 
-          <span class="name">World!</span>
+    expected = jQuery(
+      '<div>
+        <div class="container">
+          <div class="greeting">Hello 
+            <span class="name">World!</span>
+          </div>
         </div>
       </div>')
 
-    expect(result.length).toEqual(template.render(data).length)
+    doc.find('.container').render(data)
+    expect(doc.html()).toEqual(expected.html())
 
   it "should handle attribute assignment", ->
-    template = jQuery(
-     '<div class="container">
-        <a class="greeting" href="#"></a>
+    doc = jQuery(
+     '<div>
+        <div class="container">
+          <a class="greeting" href="#"></a>
+        </div>
       </div>')
 
     data =
-      greeting:         'Hello World'
-      'greeting@href':  'http://world'
+      "greeting":      "Hello World"
+      "greeting@href": "http://world"
 
-    result = jQuery(
-      '<div class="container">
-        <a class="greeting" href="http://world">Hello World</a>
+    expected = jQuery(
+      '<div>
+        <div class="container">
+          <a class="greeting" href="http://world">Hello World</a>
+        </div>
       </div>')
 
-    expect(result.length).toEqual(template.render(data).length)
+    doc.find('.container').render(data)
+    expect(doc.html()).toEqual(expected.html())
 
   it "should handle list of objects", ->
-    template = jQuery(
-     '<div class="container">
-        <div class="comment">
-          <span class="name"></span>
-          <span class="text"></span>
+    doc = jQuery(
+     '<div>
+        <div class="container">
+          <div class="comment">
+            <span class="name"></span>
+            <span class="text"></span>
+          </div>
         </div>
       </div>')
 
-    data = [ { 
-        name:    'John'
-        text: 'That rules' }, { 
-        name:    'Arnold'
-        text: 'Great post!'}
-      ]
+    data = [ 
+      { name: 'John',   text: 'That rules'  }, 
+      { name: 'Arnold', text: 'Great post!' }
+    ]
 
-    result = jQuery(
-     '<div class="container">
-        <div class="comment">
-          <span class="name">John</span>
-          <span class="text">That rules</span>
-        </div>
-        <div class="comment">
-          <span class="name">Arnold</span>
-          <span class="text">Great post!</span>
+    expected = jQuery(
+     '<div>
+        <div class="container">
+          <div class="comment">
+            <span class="name">John</span>
+            <span class="text">That rules</span>
+          </div>
+          <div class="comment">
+            <span class="name">Arnold</span>
+            <span class="text">Great post!</span>
+          </div>
         </div>
       </div>')
 
-    expect(result.length).toEqual(template.render(data).length)
+    doc.find('.container').render(data)
+    expect(doc.html()).toEqual(expected.html())
 
   # it "should handle nested objects", ->
   #   template = jQuery(

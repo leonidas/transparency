@@ -1,20 +1,24 @@
 jQuery.fn.render = (data) ->
-  jQuery.fn.render = (data) ->
-    context  = this
-    template = this.clone()
-    data     = [data] unless jQuery.isArray(data)
-    context.empty()
+  data     = [data] unless jQuery.isArray(data)
+  context  = this
+  template = this.clone()
 
-    jQuery.each data, (index, object) ->
-      tmp = template.clone()
+  # Iterate over data objects
+  jQuery.each data, (index, object) ->
+    tmp = template.clone()
 
-      jQuery.each object, (key, value) ->
-        [klass, attribute] = key.split('@')
-        tmp.find(".#{klass}").each ->
-          if attribute
-            jQuery(this).attr attribute, value
-          else
-            jQuery(this).prepend value
-      context.before(tmp)
+    # Iterate over keys in the data object
+    jQuery.each object, (key, value) ->
 
-    return context.last().remove()
+      [klass, attribute] = key.split('@')
+      tmp.find(".#{klass}").each ->
+
+        if attribute
+          jQuery(this).attr attribute, value
+        else
+          jQuery(this).prepend value
+    
+    # Add rendered template to dom
+    context.before(tmp)
+
+  return context.remove()
