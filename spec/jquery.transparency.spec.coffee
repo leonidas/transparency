@@ -101,15 +101,14 @@ describe "Transparency", ->
           <div class="comment">
             <span class="name">John</span>
             <span class="text">That rules</span>
-          </div>
-          <div class="comment">
+          </div><div class="comment">
             <span class="name">Arnold</span>
             <span class="text">Great post!</span>
           </div>
         </div>
       </div>')
 
-    doc.find('.container').render(data)
+    doc.find('.comment').render(data)
     expect(doc.html()).toEqual(expected.html())
 
   # it "should handle nested objects", ->
