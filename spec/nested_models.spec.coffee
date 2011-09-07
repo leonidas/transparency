@@ -14,7 +14,7 @@ describe "Transparency", ->
         expected    = expected.replace(/\s\s+/g, '')
         this.actual == expected
 
-  it "should handle nested objects", ->
+  it "should handle nested models", ->
     doc = jQuery(
      '<div>
        <div class="container">
@@ -53,6 +53,39 @@ describe "Transparency", ->
               <span class="name">Arnold</span>
               <span class="text">Great post!</span>
             </div>
+          </div>
+        </div>
+      </div>')
+
+    doc.find('.container').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should handle nested models with overlapping attributes", ->
+    doc = jQuery(
+     '<div>
+       <div class="container">
+          <p class="tweet"></p>
+          <div class="responses">
+            <p class="tweet"></p>
+          </div>
+        </div>
+      </div>')
+
+    data =
+      tweet: 'Jasmine is great!'
+      responses: [
+        tweet: 'It truly is!'
+      ,
+        tweet: 'I prefer JsUnit'
+      ]
+
+    expected = jQuery(
+     '<div>
+       <div class="container">
+          <p class="tweet">Jasmine is great!</p>
+          <div class="responses">
+            <p class="tweet">It truly is!</p>
+            <p class="tweet">I prefer JsUnit</p>
           </div>
         </div>
       </div>')
