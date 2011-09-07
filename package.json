@@ -10,6 +10,7 @@
   "author"        : "Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>",
   "contributors"  : [],
   "licenses"      : ["MIT"],
-  "devDependencies"  : {"jsdom" : ">=0.2.x"},
+  "dependencies"  : {"jsdom" : ">=0.2.x",
+                     "jquery": ">=1.6.x"},
   "main"          : "lib/jasmine-node"
 }
