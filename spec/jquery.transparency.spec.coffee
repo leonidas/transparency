@@ -10,8 +10,7 @@ describe "Transparency", ->
   beforeEach ->
     this.addMatchers
       htmlToBeEqual: (expected) ->
-        this.actual = this.actual.replace(/\s\s+/g, '')
-        this.actual == expected.replace(/\s\s+/g, '')
+        this.actual.replace(/\s\s+/g, '') == expected.replace(/\s\s+/g, '')
 
 
   it "should assing data values to template", ->
