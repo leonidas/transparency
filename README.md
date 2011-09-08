@@ -75,6 +75,105 @@ $('.greeting').render(greetings);
 </div>
 ```
 
+### Nested lists
+
+**Template:**
+
+```html
+<div class="container">
+  <h1 class="title"></h1>
+  <p class="post"></p>
+  <div class="comments">
+    <div class="comment">
+      <span class="name"></span>
+      <span class="text"></span>
+    </div>
+  </div>
+</div>
+```
+
+**Javascript:**
+
+```js
+var post = {
+  title:    'Hello World',
+  post:     'Hi there it is me',
+  comments: [ { 
+      name: 'John',
+      text: 'That rules'
+    }, { 
+      name: 'Arnold',
+      text: 'Great post!'
+    }
+  ]
+};
+
+$('.container').render(post);
+```
+
+**Result:**
+
+```html
+<div class="container">
+  <h1 class="title">Hello World</h1>
+  <p class="post">Hi there it is me</p>
+  <div class="comments">
+    <div class="comment">
+      <span class="name">John</span>
+      <span class="text">That rules</span>
+    </div>
+    <div class="comment">
+      <span class="name">Arnold</span>
+      <span class="text">Great post!</span>
+    </div>
+  </div>
+</div>
+```
+
+### Nested objects
+
+**Template:**
+
+```html
+<div class="container">
+  <div class="firstname"></div>
+  <div class="lastname"></div>
+  <div class="address">
+    <div class="street"></div>
+    <div class="zip"><span class="city"></span></div>
+  </div>
+</div>
+```
+
+**Javascript:**
+
+```js
+var person = {
+  firstname: 'John',
+  lastname:  'Wayne',
+  address: {
+    street: '4th Street',
+    city:   'San Francisco',
+    zip:    '94199'
+  }
+};
+
+$('.container').render(post);
+```
+
+**Result:**
+
+```html
+<div class="container">
+  <div class="firstname">John</div>
+  <div class="lastname">Wayne</div>
+  <div class="address">
+    <div class="street">4th Street</div>
+    <div class="zip">94199<span class="city">San Francisco</span></div>
+  </div>
+</div>
+```
+
 ## Philosophy
 
 Transparency is heavily influenced by [PURE](http://beebole.com/pure/) but is even more opinionated about how templates and data bind together. Templating with Transparency is unobustrive, dead simple and just stays out of the way.
