@@ -24,6 +24,10 @@ $.fn.render = (data) ->
       if $.isArray(value)
         tmp.find(".#{key}").children().first().render(value)
 
+      else if typeof value == "object"
+        tmp.find(".#{key}").render(value)
+
+      # Assign attributes
       else
         [klass, attribute] = key.split('@')
         assign tmp, attribute, value if tmp.hasClass klass

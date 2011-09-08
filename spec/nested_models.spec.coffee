@@ -14,7 +14,7 @@ describe "Transparency", ->
         expected    = expected.replace(/\s\s+/g, '')
         this.actual == expected
 
-  it "should handle nested models", ->
+  it "should handle nested lists", ->
     doc = jQuery(
      '<div>
        <div class="container">
@@ -60,7 +60,7 @@ describe "Transparency", ->
     doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
-  it "should handle nested models with overlapping attributes", ->
+  it "should handle nested lists with overlapping attributes", ->
     doc = jQuery(
      '<div>
        <div class="container">
@@ -86,6 +86,42 @@ describe "Transparency", ->
           <div class="responses">
             <p class="tweet">It truly is!</p>
             <p class="tweet">I prefer JsUnit</p>
+          </div>
+        </div>
+      </div>')
+
+    doc.find('.container').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should handle nested objects", ->
+    doc = jQuery(
+     '<div>
+       <div class="container">
+          <div class="firstname"></div>
+          <div class="lastname"></div>
+          <div class="address">
+            <div class="street"></div>
+            <div class="zip"><span class="city"></span></div>
+          </div>
+        </div>
+      </div>')
+
+    data =
+      firstname: 'John'
+      lastname:  'Wayne'
+      address:
+        street: '4th Street'
+        city:   'San Francisco'
+        zip:    '94199'
+
+    expected = jQuery(
+     '<div>
+       <div class="container">
+          <div class="firstname">John</div>
+          <div class="lastname">Wayne</div>
+          <div class="address">
+            <div class="street">4th Street</div>
+            <div class="zip">94199<span class="city">San Francisco</span></div>
           </div>
         </div>
       </div>')
