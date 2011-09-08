@@ -1,4 +1,3 @@
-_ = require 'underscore'
 $ = jQuery
 
 assign = (node, attribute, value) ->
