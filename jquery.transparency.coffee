@@ -14,11 +14,11 @@ $.fn.render = (data) ->
   template = this.clone()
 
   # Iterate over the list of objects
-  $.each data, (index, object) ->
+  for object in data
     tmp = template.clone()
 
     # Iterate over keys in the object
-    $.each object, (key, value) ->
+    for key, value of object
 
       # Render child list
       if $.isArray(value)
@@ -37,5 +37,5 @@ $.fn.render = (data) ->
 
     # Add rendered template to dom
     context.before(tmp)
-  
+
   return context.remove() # Remove the original template from dom
