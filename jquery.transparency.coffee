@@ -1,5 +1,13 @@
 $ = jQuery
 
+assign = (node, attribute, value) ->
+  if attribute
+    node.attr attribute, value
+  else
+    children = node.children().detach()
+    node.text value
+    node.append(children)
+
 $.fn.render = (data) ->
   data     = [data] unless $.isArray(data)
   context  = this
@@ -12,24 +20,17 @@ $.fn.render = (data) ->
     # Iterate over keys in the data object
     $.each object, (key, value) ->
 
-      # Render child template
+      # Render child objects
       if $.isArray(value)
         tmp.find(".#{key}").children().first().render(value)
+
       else
         [klass, attribute] = key.split('@')
-        if tmp.hasClass klass
-          if attribute
-            tmp.attr attribute, value
-          else
-            tmp.text value
-        else
-          tmp.find(".#{klass}").each ->
-            if attribute
-              $(this).attr attribute, value
-            else
-              $(this).prepend value
-    
+        assign tmp, attribute, value if tmp.hasClass klass
+        tmp.find(".#{klass}").each ->
+          assign $(this), attribute, value
+
     # Add rendered template to dom
     context.before(tmp)
   
-  return context.remove()
+  return context.remove() # Remove template from dom
