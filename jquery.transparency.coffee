@@ -13,17 +13,18 @@ $.fn.render = (data) ->
   context  = this
   template = this.clone()
 
-  # Iterate over data objects
+  # Iterate over the list of objects
   $.each data, (index, object) ->
     tmp = template.clone()
 
-    # Iterate over keys in the data object
+    # Iterate over keys in the object
     $.each object, (key, value) ->
 
-      # Render child objects
+      # Render child list
       if $.isArray(value)
         tmp.find(".#{key}").children().first().render(value)
 
+      # Render child object
       else if typeof value == "object"
         tmp.find(".#{key}").render(value)
 
@@ -37,4 +38,4 @@ $.fn.render = (data) ->
     # Add rendered template to dom
     context.before(tmp)
   
-  return context.remove() # Remove template from dom
+  return context.remove() # Remove the original template from dom
