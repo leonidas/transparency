@@ -1,3 +1,4 @@
+_ = require 'underscore'
 $ = jQuery
 
 assign = (node, attribute, value) ->
@@ -15,27 +16,44 @@ $.fn.render = (data) ->
 
   # Iterate over the list of objects
   for object in data
-    tmp = template.clone()
+    #values = filter_by_value(object, (key, value) -> true )#typeof value == "string")
+    # values  = _.map(object, (value, key) -> `{key : value}` )
+    #console.log values
+    # objects = _.select(object, (key, value) -> typeof value == "object")
+    # lists   = _.select(object, (key, value) -> $.isArray() )
+    tmp     = template.clone()
 
-    # Iterate over keys in the object
     for key, value of object
-
-      # Render child list
-      if $.isArray(value)
-        tmp.find(".#{key}").children().first().render(value)
-
-      # Render child object
-      else if typeof value == "object"
-        tmp.find(".#{key}").render(value)
-
-      # Assign attributes
-      else
+      if typeof value == "string"
         [klass, attribute] = key.split('@')
         assign tmp, attribute, value if tmp.hasClass klass
         tmp.find(".#{klass}").each ->
           assign $(this), attribute, value
 
+    for key, value of object
+      if $.isArray(value)
+        tmp.find(".#{key}").children().first().render(value)
+
+    for key, value of object
+      if typeof value == "object" && not $.isArray(value)
+        tmp.find(".#{key}").render(value)
+
     # Add rendered template to dom
     context.before(tmp)
 
   return context.remove() # Remove the original template from dom
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -72,12 +72,12 @@ describe "Transparency", ->
       </div>')
 
     data =
-      tweet: 'Jasmine is great!'
       responses: [
         tweet: 'It truly is!'
       ,
         tweet: 'I prefer JsUnit'
       ]
+      tweet: 'Jasmine is great!'
 
     expected = jQuery(
      '<div>
