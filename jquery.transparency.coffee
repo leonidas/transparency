@@ -25,22 +25,22 @@ $.fn.render = (data) ->
     values  = select(object, (key, value) -> typeof value == "string")
     objects = select(object, (key, value) -> typeof value == "object"  && not $.isArray(value))
     lists   = select(object, (key, value) -> $.isArray(value) )
-    tmp     = template.clone()
+    result  = template.clone()
 
     for key, value of values
       [klass, attribute] = key.split('@')
-      assign tmp, attribute, value if tmp.hasClass klass
-      tmp.find(".#{klass}").each ->
+      assign result, attribute, value if result.hasClass klass
+      result.find(".#{klass}").each ->
         assign $(this), attribute, value
 
     for key, value of lists
-      tmp.find(".#{key}").children().first().render(value)
+      result.find(".#{key}").children().first().render(value)
 
     for key, value of objects
-      tmp.find(".#{key}").render(value)
+      result.find(".#{key}").render(value)
 
     # Add rendered template to dom
-    context.before(tmp)
+    context.before(result)
 
   return context.remove() # Remove the original template from dom
 
