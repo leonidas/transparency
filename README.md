@@ -158,7 +158,7 @@ var person = {
   }
 };
 
-$('.container').render(post);
+$('.container').render(person);
 ```
 
 **Result:**
