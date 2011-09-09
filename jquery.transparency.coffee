@@ -8,9 +8,9 @@ assign = (node, attribute, value) ->
     node.text value
     node.append(children)
 
-select = (hash, fn) ->
+select = (object, fn) ->
   result = {}
-  for key, value of hash
+  for key, value of object
     (result[key] = value) if fn key, value
   result
 
