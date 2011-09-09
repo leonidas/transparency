@@ -14,13 +14,13 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to HT
 **Javascript:**
 
 ```js
-var greeting = {
+var hello = {
   greeting:     'Hello ',
   name:         'World!!!',
   'name@href':  'www.example.com'
 };
 
-$('.greeting').render(greeting);
+$('.container').render(hello);
 ```
 
 **Result:**
@@ -34,45 +34,71 @@ $('.greeting').render(greeting);
 
 ### Iterating over a list (look ma', no hands!)
 
-It's just like rendering a single object. No kidding, it's just the same.
+It's just like rendering a single object, which makes it easy to render e.g. tables.
 
 **Template:**
 
 ```html
-<div class="container">
-  <div class="greeting"><a class="name" href="#"></a>
-  </div>
-</div>
+<table class="activities">
+  <tr>
+    <th>Date</th>
+    <th>Activity</th>
+    <th>Comment</th>
+    <th>Name</th>
+  </th>
+  <tr class="activity">
+    <td class="date"></td>
+    <td class="activity"></td>
+    <td class="comment"></td>
+    <td class="name"></td>
+  </tr>
+</table>
 ```
 
 **Javascript:**
 
 ```js
-var greetings = [
+var activities = [
   {
-    greeting:    'Hello ',
-    name:        'World!!!',
-    'name@href': 'www.example.com'
+    date:     '2011-08-23',
+    activity: 'Jogging',
+    comment:  'Early morning run',
+    name:     'Harry Potter'
   },
   {
-    greeting:    'See you, ',
-    name:        'Susan!',
-    'name@href': 'www.example.com'
+    date:     '2011-09-04',
+    activity: 'Gym',
+    comment:  'Chest workout',
+    name:     'Batman'
   }
 ];
 
-$('.greeting').render(greetings);
+$('.activity').render(activities);
 ```
 
 **Result:**
 
 ```html
-<div class="container">
-  <div class="greeting">Hello <a class="name" href="www.example.com">World!!!</a>
-  </div>
-  <div class="greeting">See you, <a class="name" href="www.example.com">Susan!</a>
-  </div>
-</div>
+<table class="activities">
+  <tr>
+    <th>Date</th>
+    <th>Activity</th>
+    <th>Comment</th>
+    <th>Name</th>
+  </th>
+  <tr class="activity">
+    <td class="date">2011-08-23</td>
+    <td class="activity">Jogging</td>
+    <td class="comment">Early morning run</td>
+    <td class="name">Harry Potter</td>
+  </tr>
+  <tr class="activity">
+    <td class="date">2011-09-04</td>
+    <td class="activity">Gym</td>
+    <td class="comment">Chest workout</td>
+    <td class="name">Batman</td>
+  </tr>
+</table>
 ```
 
 ### Nested lists
