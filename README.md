@@ -34,7 +34,7 @@ $('.container').render(hello);
 
 ### Iterating over a list (look ma', no hands!)
 
-It's just like rendering a single object, which makes it easy to render e.g. tables.
+It's just like rendering a single object, which makes it easy to render, e.g., tables.
 
 **Template:**
 
