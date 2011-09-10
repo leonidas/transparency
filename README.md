@@ -32,26 +32,28 @@ $('.container').render(hello);
 </div>
 ```
 
-### Iterating over a list (look ma', no hands!)
-
-It's just like rendering a single object, which makes it easy to render, e.g., tables.
+### Iterating over a list (look ma', no loops!)
 
 **Template:**
 
 ```html
-<table class="activities">
-  <tr>
-    <th>Date</th>
-    <th>Activity</th>
-    <th>Comment</th>
-    <th>Name</th>
-  </th>
-  <tr class="activity">
-    <td class="date"></td>
-    <td class="activity"></td>
-    <td class="comment"></td>
-    <td class="name"></td>
-  </tr>
+<table >
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Activity</th>
+      <th>Comment</th>
+      <th>Name</th>
+    </tr>
+  </head>
+  <tbody class="activities">
+    <tr class="activity">
+      <td class="date"></td>
+      <td class="activity"></td>
+      <td class="comment"></td>
+      <td class="name"></td>
+    </tr>
+  </tbody>
 </table>
 ```
 
@@ -80,24 +82,28 @@ $('.activity').render(activities);
 
 ```html
 <table class="activities">
-  <tr>
-    <th>Date</th>
-    <th>Activity</th>
-    <th>Comment</th>
-    <th>Name</th>
-  </th>
-  <tr class="activity">
-    <td class="date">2011-08-23</td>
-    <td class="activity">Jogging</td>
-    <td class="comment">Early morning run</td>
-    <td class="name">Harry Potter</td>
-  </tr>
-  <tr class="activity">
-    <td class="date">2011-09-04</td>
-    <td class="activity">Gym</td>
-    <td class="comment">Chest workout</td>
-    <td class="name">Batman</td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Activity</th>
+      <th>Comment</th>
+      <th>Name</th>
+    </th>
+  </thead>
+  <tbody class="activities">
+    <tr class="activity">
+      <td class="date">2011-08-23</td>
+      <td class="activity">Jogging</td>
+      <td class="comment">Early morning run</td>
+      <td class="name">Harry Potter</td>
+    </tr>
+    <tr class="activity">
+      <td class="date">2011-09-04</td>
+      <td class="activity">Gym</td>
+      <td class="comment">Chest workout</td>
+      <td class="name">Batman</td>
+    </tr>
+  </tbody>
 </table>
 ```
 
