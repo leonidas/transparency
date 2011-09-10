@@ -15,9 +15,9 @@ select = (object, fn) ->
   result
 
 $.fn.render = (data) ->
+  context  = if $.isArray(data) then this.children().first() else this
+  template = context.clone()
   data     = [data] unless $.isArray(data)
-  context  = this
-  template = this.clone()
 
   # Iterate over the list of objects
   for object in data
@@ -33,7 +33,7 @@ $.fn.render = (data) ->
         assign $(this), attribute, value
 
     for key, value of lists
-      result.find(".#{key}").children().first().render(value)
+      result.find(".#{key}").render(value)
 
     for key, value of objects
       result.find(".#{key}").render(value)

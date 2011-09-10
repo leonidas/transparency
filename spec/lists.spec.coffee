@@ -17,7 +17,7 @@ describe "Transparency", ->
   it "should handle list of objects", ->
     doc = jQuery(
      '<div>
-        <div class="container">
+        <div class="comments">
           <div class="comment">
             <span class="name"></span>
             <span class="text"></span>
@@ -32,7 +32,7 @@ describe "Transparency", ->
 
     expected = jQuery(
      '<div>
-        <div class="container">
+        <div class="comments">
           <div class="comment">
             <span class="name">John</span>
             <span class="text">That rules</span>
@@ -43,5 +43,5 @@ describe "Transparency", ->
         </div>
       </div>')
 
-    doc.find('.comment').render(data)
+    doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
