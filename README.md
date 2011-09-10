@@ -2,9 +2,9 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to HT
 
 ## Features
 
-* Data binding by convention - no extra markup in the views
-* Collection rendering - no more loops and partials
-* Nested objects and lists - automatically, of course
+* Data binding by convention - No extra markup in the views
+* Collection rendering - No more loops and partials
+* Nested objects and lists - Automatically, of course
 * Directives - Calculate values on the fly
 
 ## Examples
