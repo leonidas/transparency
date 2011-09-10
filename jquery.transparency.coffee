@@ -1,16 +1,26 @@
 renderKey = (key, value, buffer) ->
   [klass, attribute] = key.split('@')
-  assignValue buffer, attribute, value if buffer.hasClass klass
-  buffer.find(".#{klass}").each ->
+  element = klass # We don't know wheter the user means img class or element, so look for both
+  assignValue buffer, attribute, value if buffer.hasClass klass or buffer.is(element)
+  buffer.find("#{element}, .#{klass}").each ->
+    console.log attribute if attribute
     assignValue jQuery(this), attribute, value
 
 assignValue = (node, attribute, value) ->
+  #allowed_attributes = ['id', 'src']
+  #throw "#{attribute}: Unsafe attribute assignment" if attribute
   if attribute
+    #console.log attribute
+    #console.log value
     node.attr attribute, value
   else
     children = node.children().detach()
     node.text value
     node.append(children)
+
+valid_attribute = (attribute) ->
+  valid_attributes = ['src', 'alt', 'id', 'href', 'class', /data-*/]
+  return true #(true for valid in valid_attributes when valid == attribute)
 
 select = (object, fn) ->
   result = {}
@@ -38,7 +48,7 @@ jQuery.fn.render = (data, directives) ->
       renderKey key, value, buffer
 
     for key, value of objects
-      buffer.find(".#{key}").render value, directives[key]
+      buffer.find(".#{key}").add(key).render value, directives[key]
 
     # Add the rendered template to the dom
     context.before(buffer)
