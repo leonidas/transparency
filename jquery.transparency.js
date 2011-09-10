@@ -23,22 +23,19 @@
     return result;
   };
   $.fn.render = function(data) {
-    var attribute, context, key, klass, lists, object, objects, result, template, value, values, _i, _len, _ref;
+    var attribute, context, key, klass, object, objects, result, template, value, values, _i, _len, _ref;
+    context = $.isArray(data) ? this.children().first() : this;
+    template = context.clone();
     if (!$.isArray(data)) {
       data = [data];
     }
-    context = this;
-    template = this.clone();
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       object = data[_i];
       values = select(object, function(key, value) {
         return typeof value === "string";
       });
       objects = select(object, function(key, value) {
-        return typeof value === "object" && !$.isArray(value);
-      });
-      lists = select(object, function(key, value) {
-        return $.isArray(value);
+        return typeof value === "object";
       });
       result = template.clone();
       for (key in values) {
@@ -50,10 +47,6 @@
         result.find("." + klass).each(function() {
           return assign($(this), attribute, value);
         });
-      }
-      for (key in lists) {
-        value = lists[key];
-        result.find("." + key).children().first().render(value);
       }
       for (key in objects) {
         value = objects[key];
