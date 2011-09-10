@@ -19,8 +19,8 @@ validAttribute = (attribute) ->
 
 select = (object, fn) ->
   result = {}
-  for key, value of object
-    (result[key] = value) if fn key, value
+  for key, value of object when fn key, value
+    result[key] = value
   result
 
 jQuery.fn.render = (data, directives) ->
