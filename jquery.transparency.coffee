@@ -19,11 +19,9 @@ $.fn.render = (data) ->
   template = context.clone()
   data     = [data] unless $.isArray(data)
 
-  # Iterate over the list of objects
   for object in data
     values  = select(object, (key, value) -> typeof value == "string")
-    objects = select(object, (key, value) -> typeof value == "object"  && not $.isArray(value))
-    lists   = select(object, (key, value) -> $.isArray(value) )
+    objects = select(object, (key, value) -> typeof value == "object")
     result  = template.clone()
 
     for key, value of values
@@ -32,9 +30,6 @@ $.fn.render = (data) ->
       result.find(".#{klass}").each ->
         assign $(this), attribute, value
 
-    for key, value of lists
-      result.find(".#{key}").render(value)
-
     for key, value of objects
       result.find(".#{key}").render(value)
 
@@ -42,18 +37,3 @@ $.fn.render = (data) ->
     context.before(result)
 
   return context.remove() # Remove the original template from dom
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
