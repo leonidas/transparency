@@ -1,10 +1,8 @@
-$ = jQuery
-
 renderKey = (key, value, buffer) ->
   [klass, attribute] = key.split('@')
   assignValue buffer, attribute, value if buffer.hasClass klass
   buffer.find(".#{klass}").each ->
-    assignValue $(this), attribute, value
+    assignValue jQuery(this), attribute, value
 
 assignValue = (node, attribute, value) ->
   if attribute
@@ -20,29 +18,29 @@ select = (object, fn) ->
     (result[key] = value) if fn key, value
   result
 
-$.fn.render = (data, directives) ->
+jQuery.fn.render = (data, directives) ->
   directives ?= {}
-  context     = if $.isArray(data) then this.children().first() else this
+  context     = if jQuery.isArray(data) then this.children().first() else this
   template    = context.clone()
-  data        = [data] unless $.isArray(data)
+  data        = [data] unless jQuery.isArray(data)
 
   for object in data
-    values  = select(object, (key, value) -> typeof value == 'string')
-    objects = select(object, (key, value) -> typeof value == 'object')
-    buffer  = template.clone()
+    local_values     = select(object,     (key, value)     -> typeof value     == 'string'  )
+    local_directives = select(directives, (key, directive) -> typeof directive == 'function')
+    objects          = select(object,     (key, value)     -> typeof value     == 'object'  )
+    buffer           = template.clone()
 
-    for key, value of values
+    for key, value of local_values
       renderKey key, value, buffer
 
-    for key, directive of directives
-      if typeof directive == 'function'
-        value = directive.call(object)
-        renderKey key, value, buffer
+    for key, directive of local_directives
+      value = directive.call(object)
+      renderKey key, value, buffer
 
     for key, value of objects
       buffer.find(".#{key}").render value, directives[key]
 
-    # Add rendered template to the dom
+    # Add the rendered template to the dom
     context.before(buffer)
 
   return context.remove() # Remove the original template from the dom
