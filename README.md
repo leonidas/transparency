@@ -261,9 +261,58 @@ Result:
 
 Template:
 
+```html
+<div class="person">
+  <span class="name"></span>
+  <span class="email"></span>
+  <div class="friends">
+    <div class="friend">
+      <span class="name"></span>
+      <span class="email"></span>
+    </div>
+  </div>
+</div>
+```
+
 Javascript:
 
+```js
+person = {
+  firstname:  'Jasmine',
+  lastname:   'Taylor',
+  email:      'jasmine.taylor@example.com',
+  friends:    [ {
+    firstname: 'John',
+    lastname:  'Mayer',
+    email:     'john.mayer@example.com'
+  }, {
+    firstname: 'Damien',
+    lastname:  'Rice',
+    email:     'damien.rice@example.com'
+  }
+};
+
+$('.person').render(person, directives);
+```
+
 Result:
+
+```html
+<div class="person">
+  <span class="name">Jasmine Taylor</span>
+  <span class="email">jasmine.taylor@example.com</span>
+  <div class="friends">
+    <div class="friend">
+      <span class="name">John Mayer</span>
+      <span class="email">john.mayer@example.com</span>
+    </div>
+    <div class="friend">
+      <span class="name">Damien Rice</span>
+      <span class="email">damien.rice@example.com</span>
+    </div>
+  </div>
+</div>
+```
 
 ## Philosophy
 
