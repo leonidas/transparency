@@ -4,7 +4,7 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to HT
 
 Here's an overview of available features. For further details, please see the examples folder, tests and the source code.
 
-### Assigning values and attributes
+### Assigning values and attributes (look ma', no assignment!)
 
 **Note:** In order to avoid security hacks, e.g., setting `onclick` attributes for links, only following attributes can be set:
 `id`, `class`, `src`, `alt`, `href` and `data-*`
