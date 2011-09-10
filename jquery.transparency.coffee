@@ -30,9 +30,9 @@ jQuery.fn.render = (data, directives) ->
   data         = [data] unless jQuery.isArray(data)
 
   for object in data
+    child_objects    = select(object,     (key, value)     -> typeof value     == 'object'  )
     local_values     = select(object,     (key, value)     -> typeof value     == 'string'  )
     local_directives = select(directives, (key, directive) -> typeof directive == 'function')
-    objects          = select(object,     (key, value)     -> typeof value     == 'object'  )
     buffer           = template.clone()
 
     for key, value of local_values
@@ -42,7 +42,7 @@ jQuery.fn.render = (data, directives) ->
       value = directive.call object
       renderKey key, value, buffer
 
-    for klass, value of objects
+    for klass, value of child_objects
       buffer.find(".#{klass}").add(key).render value, directives[klass]
 
     # Add the rendered template to the dom
