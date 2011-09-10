@@ -14,7 +14,7 @@ assignValue = (node, attribute, value) ->
     node.append children
 
 validAttribute = (attribute) ->
-  valids = [/^src$/, /^alt$/, 'id', /^href$/, /^class$/, /^data-*/]
+  valids = ['src', 'alt', 'id', 'href', 'class', /^data-*/]
   (true for valid in valids when attribute.match valid).length == 1
 
 select = (object, fn) ->

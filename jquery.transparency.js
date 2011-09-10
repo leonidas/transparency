@@ -25,7 +25,7 @@
   };
   validAttribute = function(attribute) {
     var valid, valids;
-    valids = [/^src$/, /^alt$/, 'id', /^href$/, /^class$/, /^data-*/];
+    valids = ['src', 'alt', 'id', 'href', 'class', /^data-*/];
     return ((function() {
       var _i, _len, _results;
       _results = [];
@@ -51,9 +51,7 @@
   };
   jQuery.fn.render = function(data, directives) {
     var buffer, context, directive, key, klass, local_directives, local_values, object, objects, template, value, _i, _len;
-    if (directives == null) {
-      directives = {};
-    }
+    directives || (directives = {});
     context = jQuery.isArray(data) ? this.children().first() : this;
     template = context.clone();
     if (!jQuery.isArray(data)) {
