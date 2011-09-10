@@ -179,7 +179,7 @@ Result:
 Template:
 
 ```html
-<div class="container">
+<div class="person">
   <div class="firstname"></div>
   <div class="lastname"></div>
   <div class="address">
@@ -202,7 +202,7 @@ var person = {
   }
 };
 
-$('.container').render(person);
+$('.person').render(person);
 ```
 
 Result:
@@ -217,6 +217,51 @@ Result:
   </div>
 </div>
 ```
+
+### Directives
+
+Template:
+
+```html
+<div class="person">
+  <span class="name"></span>
+  <span class="email"></span>
+</div>
+```
+
+Javascript:
+
+```js
+person = {
+  firstname: 'Jasmine',
+  lastname:  'Taylor',
+  email:     'jasmine.tailor@example.com'
+};
+
+directives =
+  name: function() {
+    return "#{this.firstname} #{this.lastname}";
+};
+
+$('.person').render(person, directives);
+```
+
+Result:
+
+```html
+<div class="person">
+  <span class="name">Jasmine Taylor</span>
+  <span class="email">jasmine.tailor@example.com</span>
+</div>
+```
+
+### Nested directives
+
+Template:
+
+Javascript:
+
+Result:
 
 ## Philosophy
 
