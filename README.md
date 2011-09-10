@@ -292,6 +292,15 @@ person = {
   }
 };
 
+nameDecorator = function() { return this.firstname + " " + this.lastname };
+
+directives = {
+  name: nameDecorator,
+  friends: {
+    name: nameDecorator
+  }
+};
+
 $('.person').render(person, directives);
 ```
 
