@@ -6,7 +6,7 @@ Here's an overview of available features. For further details, please see the ex
 
 ### Assigning values and attributes
 
-**Note:** In order to avoid security hacks, e.g., setting onclick events for links, only following attributes can be set:
+**Note:** In order to avoid security hacks, e.g., setting `onclick` attributes for links, only following attributes can be set:
 `id`, `class`, `src`, `alt`, `href` and `data-*`
 
 Template:
