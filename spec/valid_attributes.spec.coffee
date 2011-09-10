@@ -25,21 +25,36 @@ describe "Transparency", ->
       </div>')
 
     person =
-      'person@id'   : '2334'
-      'person@class': 'person selected'
-      'img@src' : 'http://example.com/jamie.jpg'
-      'img@alt'     : 'Potrait of Jamie'
-      'name'        : 'Jamie Oliver'
-      'a@href'   : 'http://example.com/jamie'
+      'person@id'        : '2334'
+      'person@class'     : 'person selected'
+      'img@src'          : 'http://example.com/jamie.jpg'
+      'img@alt'          : 'Potrait of Jamie'
+      'name'             : 'Jamie Oliver'
+      'name@data-undo'   : 'Jamie Olivieir'
+      'a@href'           : 'http://example.com/jamie'
 
 
     expected = jQuery(
       '<div>
         <div class="person selected" id="2334">
           <img src="http://example.com/jamie.jpg" alt="Potrait of Jamie" />
-          <a class="name" href="http://example.com/jamie">Jamie Oliver</a>
+          <a class="name" href="http://example.com/jamie" data-undo="Jamie Olivieir">Jamie Oliver</a>
         </div>
       </div>')
 
     doc.find('.person').render(person)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should not allow event handler injections", ->
+    doc = jQuery(
+     '<div>
+        <div class="person">
+          <a class="name" href="#"></a>
+        </div>
+      </div>')
+
+    person =
+      'name'      : 'Jamie Oliver'
+      'a@onclick' : 'alert("Calling home...")'
+
+    expect(() -> (doc.find('.person').render(person))).toThrow()

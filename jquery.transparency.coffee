@@ -5,17 +5,17 @@ renderKey = (key, value, buffer) ->
     assignValue jQuery(this), attribute, value
 
 assignValue = (node, attribute, value) ->
-  #throw "#{attribute}: Unsafe attribute assignment" if attribute
   if attribute
+    throw "#{attribute}: Unsafe attribute assignment" if not validAttribute attribute
     node.attr attribute, value
   else
     children = node.children().detach()
     node.text value
     node.append children
 
-valid_attribute = (attribute) ->
-  valid_attributes = ['src', 'alt', 'id', 'href', 'class', /data-*/]
-  return true #(true for valid in valid_attributes when valid == attribute)
+validAttribute = (attribute) ->
+  valids = [/^src$/, /^alt$/, 'id', /^href$/, /^class$/, /^data-*/]
+  (true for valid in valids when attribute.match valid).length == 1
 
 select = (object, fn) ->
   result = {}
