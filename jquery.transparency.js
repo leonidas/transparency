@@ -1,5 +1,5 @@
 (function() {
-  var assignValue, renderKey, select, validAttribute;
+  var assignValue, renderKey, validAttribute;
   renderKey = function(key, value, buffer) {
     var attribute, element, klass, _, _ref, _ref2;
     _ref2 = (_ref = key.split('@'), element = _ref[0], _ = _ref[1], _ref), klass = _ref2[0], attribute = _ref2[1];
@@ -38,19 +38,8 @@
       return _results;
     })()).length === 1;
   };
-  select = function(object, fn) {
-    var key, result, value;
-    result = {};
-    for (key in object) {
-      value = object[key];
-      if (fn(key, value)) {
-        result[key] = value;
-      }
-    }
-    return result;
-  };
   jQuery.fn.render = function(data, directives) {
-    var buffer, child_objects, context, directive, key, klass, local_directives, local_values, object, template, value, _i, _len;
+    var buffer, context, directive, key, klass, object, template, value, _i, _len;
     directives || (directives = {});
     context = jQuery.isArray(data) ? this.children().first() : this;
     template = context.clone();
@@ -59,28 +48,25 @@
     }
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       object = data[_i];
-      child_objects = select(object, function(key, value) {
-        return typeof value === 'object';
-      });
-      local_values = select(object, function(key, value) {
-        return typeof value === 'string';
-      });
-      local_directives = select(directives, function(key, directive) {
-        return typeof directive === 'function';
-      });
       buffer = template.clone();
-      for (key in local_values) {
-        value = local_values[key];
-        renderKey(key, value, buffer);
+      for (key in object) {
+        value = object[key];
+        if (typeof value === 'string') {
+          renderKey(key, value, buffer);
+        }
       }
-      for (key in local_directives) {
-        directive = local_directives[key];
-        value = directive.call(object);
-        renderKey(key, value, buffer);
+      for (key in directives) {
+        directive = directives[key];
+        if (typeof directive === 'function') {
+          value = directive.call(object);
+          renderKey(key, value, buffer);
+        }
       }
-      for (klass in child_objects) {
-        value = child_objects[klass];
-        buffer.find("." + klass).add(key).render(value, directives[klass]);
+      for (klass in object) {
+        value = object[klass];
+        if (typeof value === 'object') {
+          buffer.find("." + klass).add(key).render(value, directives[klass]);
+        }
       }
       context.before(buffer);
     }

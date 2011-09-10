@@ -17,12 +17,6 @@ validAttribute = (attribute) ->
   valids = ['src', 'alt', 'id', 'href', 'class', /^data-*/]
   (true for valid in valids when attribute.match valid).length == 1
 
-select = (object, fn) ->
-  result = {}
-  for key, value of object when fn key, value
-    result[key] = value
-  result
-
 jQuery.fn.render = (data, directives) ->
   directives ||= {}
   context      = if jQuery.isArray(data) then this.children().first() else this
@@ -30,19 +24,16 @@ jQuery.fn.render = (data, directives) ->
   data         = [data] unless jQuery.isArray(data)
 
   for object in data
-    child_objects    = select(object,     (key, value)     -> typeof value     == 'object'  )
-    local_values     = select(object,     (key, value)     -> typeof value     == 'string'  )
-    local_directives = select(directives, (key, directive) -> typeof directive == 'function')
-    buffer           = template.clone()
+    buffer = template.clone()
 
-    for key, value of local_values
+    for key, value of object when typeof value == 'string'
       renderKey key, value, buffer
 
-    for key, directive of local_directives
+    for key, directive of directives when typeof directive == 'function'
       value = directive.call object
       renderKey key, value, buffer
 
-    for klass, value of child_objects
+    for klass, value of object when typeof value == 'object'
       buffer.find(".#{klass}").add(key).render value, directives[klass]
 
     # Add the rendered template to the dom
