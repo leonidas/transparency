@@ -24,10 +24,10 @@ select = (object, fn) ->
   result
 
 jQuery.fn.render = (data, directives) ->
-  directives ?= {}
-  context     = if jQuery.isArray(data) then this.children().first() else this
-  template    = context.clone()
-  data        = [data] unless jQuery.isArray(data)
+  directives ||= {}
+  context      = if jQuery.isArray(data) then this.children().first() else this
+  template     = context.clone()
+  data         = [data] unless jQuery.isArray(data)
 
   for object in data
     local_values     = select(object,     (key, value)     -> typeof value     == 'string'  )
