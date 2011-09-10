@@ -2,7 +2,7 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to HT
 
 ## Examples
 
-**Template:**
+Template:
 
 ```html
 <div class="container">
@@ -11,7 +11,7 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to HT
 </div>
 ```
 
-**Javascript:**
+Javascript:
 
 ```js
 var hello = {
@@ -23,7 +23,7 @@ var hello = {
 $('.container').render(hello);
 ```
 
-**Result:**
+Result:
 
 ```html
 <div class="container">
@@ -34,7 +34,7 @@ $('.container').render(hello);
 
 ### Iterating over a list (look ma', no loops!)
 
-**Template:**
+Template:
 
 ```html
 <table >
@@ -57,7 +57,7 @@ $('.container').render(hello);
 </table>
 ```
 
-**Javascript:**
+Javascript:
 
 ```js
 var activities = [
@@ -78,7 +78,7 @@ var activities = [
 $('.activity').render(activities);
 ```
 
-**Result:**
+Result:
 
 ```html
 <table class="activities">
@@ -109,7 +109,7 @@ $('.activity').render(activities);
 
 ### Nested lists
 
-**Template:**
+Template:
 
 ```html
 <div class="container">
@@ -124,7 +124,7 @@ $('.activity').render(activities);
 </div>
 ```
 
-**Javascript:**
+Javascript:
 
 ```js
 var post = {
@@ -143,7 +143,7 @@ var post = {
 $('.container').render(post);
 ```
 
-**Result:**
+Result:
 
 ```html
 <div class="container">
@@ -164,7 +164,7 @@ $('.container').render(post);
 
 ### Nested objects
 
-**Template:**
+Template:
 
 ```html
 <div class="container">
@@ -177,7 +177,7 @@ $('.container').render(post);
 </div>
 ```
 
-**Javascript:**
+Javascript:
 
 ```js
 var person = {
@@ -193,7 +193,7 @@ var person = {
 $('.container').render(person);
 ```
 
-**Result:**
+Result:
 
 ```html
 <div class="container">
