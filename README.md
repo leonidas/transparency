@@ -82,7 +82,7 @@ var activities = [
   }
 ];
 
-$('.activity').render(activities);
+$('.activities').render(activities);
 ```
 
 Result:
