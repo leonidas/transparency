@@ -27,19 +27,20 @@ $.fn.render = (data, directives) ->
   data        = [data] unless $.isArray(data)
 
   for object in data
-    values  = select(object, (key, value) -> typeof value == "string")
-    objects = select(object, (key, value) -> typeof value == "object")
+    values  = select(object, (key, value) -> typeof value == 'string')
+    objects = select(object, (key, value) -> typeof value == 'object')
     buffer  = template.clone()
 
     for key, value of values
       renderKey key, value, buffer
 
     for key, directive of directives
-      value = directive.call(object)
-      renderKey key, value, buffer
+      if typeof directive == 'function'
+        value = directive.call(object)
+        renderKey key, value, buffer
 
     for key, value of objects
-      buffer.find(".#{key}").render value
+      buffer.find(".#{key}").render value, directives[key]
 
     # Add rendered template to the dom
     context.before(buffer)
