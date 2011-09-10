@@ -7,13 +7,7 @@ Here's an overview of available features. For further details, please see the ex
 ### Assigning values and attributes
 
 **Note:** In order to avoid security hacks, e.g., setting onclick events for links, only following attributes can be set:
-
-* id
-* class
-* src
-* alt
-* href
-* data-*
+`id`, `class`, `src`, `alt`, `href` and `data-*`
 
 Template:
 
@@ -266,8 +260,9 @@ Result:
 
 ## Philosophy
 
-Transparency is heavily influenced by [PURE](http://beebole.com/pure/) but is even more opinionated about how templates and data bind together. Templating with Transparency is unobustrive, dead simple and just stays out of the way.
+Transparency is heavily influenced by [PURE](http://beebole.com/pure/) but is even more opinionated about how 
+templates and data bind together. Templating with Transparency is unobustrive, dead simple and just stays out of the way.
 
-Transparency relies on convention over configuration and requires you to have 1:1 match between CSS classes and JSON objects. The idea is to minimize the cognitive noise you have to deal with. Just call `$('.my-template').render(data)` and enjoy your life.
-
-The name Transparency refers to overhead projectors. Yeah, those projectors and hand-made transparencies of the 80's! Can you feel the vintage? :)
+Transparency relies on convention over configuration and requires you to have 1:1 match between CSS classes and 
+JSON objects. The idea is to minimize the cognitive noise you have to deal with. 
+Just call `$('.container').render(data)` and move on.
