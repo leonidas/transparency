@@ -30,8 +30,8 @@ describe "Transparency", ->
       lastname:   'Taylor'
 
     directives =
-      initials: (person) ->
-        " #{person.middlename.substr(0,1)}. "
+      initials: () ->
+        " #{this.middlename.substr(0,1)}. "
 
     expected = jQuery(
       '<div>

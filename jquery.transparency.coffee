@@ -1,6 +1,12 @@
 $ = jQuery
 
-assign = (node, attribute, value) ->
+renderKey = (key, value, buffer) ->
+  [klass, attribute] = key.split('@')
+  assignValue buffer, attribute, value if buffer.hasClass klass
+  buffer.find(".#{klass}").each ->
+    assignValue $(this), attribute, value
+
+assignValue = (node, attribute, value) ->
   if attribute
     node.attr attribute, value
   else
@@ -23,25 +29,19 @@ $.fn.render = (data, directives) ->
   for object in data
     values  = select(object, (key, value) -> typeof value == "string")
     objects = select(object, (key, value) -> typeof value == "object")
-    result  = template.clone()
+    buffer  = template.clone()
 
     for key, value of values
-      [klass, attribute] = key.split('@')
-      assign result, attribute, value if result.hasClass klass
-      result.find(".#{klass}").each ->
-        assign $(this), attribute, value
+      renderKey key, value, buffer
 
     for key, directive of directives
-      [klass, attribute] = key.split('@')
-      value = directive(object)
-      assign result, attribute, value if result.hasClass klass
-      result.find(".#{klass}").each ->
-        assign $(this), attribute, value
+      value = directive.call(object)
+      renderKey key, value, buffer
 
     for key, value of objects
-      result.find(".#{key}").render(value)
+      buffer.find(".#{key}").render value
 
     # Add rendered template to the dom
-    context.before(result)
+    context.before(buffer)
 
   return context.remove() # Remove the original template from the dom
