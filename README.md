@@ -43,7 +43,7 @@ Result:
 </div>
 ```
 
-**Note:** In order to avoid security hacks, e.g., setting `onclick` attributes for links, only following attributes can be set:
+**Note:** In order to avoid security hacks, e.g., setting `onclick` handlers for links, only following attributes can be set:
 `id`, `class`, `src`, `alt`, `href` and `data-*`
 
 ### Iterating over a list (look ma', no loops!)
