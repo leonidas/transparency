@@ -3,7 +3,7 @@
 ##############################
 
 # Module dependencies.
-express = require('express')
+express = require 'express'
 app     = module.exports = express.createServer()
 
 # Configuration
@@ -47,15 +47,15 @@ database.articles = [
     ]
 
 # Routes
-app.get "/.:format?", (req, res) ->
+app.get "/.:format?", (req, res) ->   
   if req.params.format == "json"
-    res.send database.articles
+    res.send database.articles # Filter Article.body out in the real world
   else
     res.render "index"
 
 app.get "/articles/:id.:format?", (req, res) ->
   if req.params.format == "json"
-    res.send database.articles[0]
+    res.send database.articles[req.params.id - 1]
   else
     res.render "index"
 
