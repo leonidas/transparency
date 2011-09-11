@@ -5,3 +5,9 @@ body {
 a {
   color: #00b7ff;
 }
+input,
+textarea {
+  display: block;
+  width: 500px;
+  margin-top: 10px;
+}

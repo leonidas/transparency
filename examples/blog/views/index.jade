@@ -1,2 +1,27 @@
-h1= title
-p Welcome to #{title}
+h1 Blog with Transparency, jQuery, Jade and Express
+
+p Create 
+  a a new article
+
+p List of available articles
+  ul.articles
+    li
+      a.name
+
+div.new_article_form
+  p New Article
+  form
+    input(name="title", type="text", value="Title")
+    textarea(id="body", name="body") Body
+
+:coffeescript
+  $ ->
+    articles = [
+      name: 'First Article'
+      'name@href': "#articles/1"
+    ,
+      name: 'Second Article'
+      'name@href': "#articles/2"
+    ]
+
+    $('.articles').render articles
