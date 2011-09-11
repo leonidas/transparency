@@ -8,6 +8,12 @@
   Path.map("/articles/new").to(function() {
     return $('.content').empty().append($('.template .new_article.page').clone());
   });
+  Path.map("/articles/:id").to(function() {
+    $('.content').empty().append($('.template .show_article.page').clone());
+    return $.get("/articles/" + this.params.id + ".json", function(article) {
+      return $('.content .article').render(article);
+    });
+  });
   $(function() {
     $('.template').hide();
     Path.history.listen();

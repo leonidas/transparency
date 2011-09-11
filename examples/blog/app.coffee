@@ -8,7 +8,7 @@ app     = module.exports = express.createServer()
 
 # Configuration
 app.configure ->
-  app.use express.logger(format: 'method :url')
+  app.use express.logger('dev')
   app.set "views", __dirname + "/views"
   app.set "view engine", "jade"
   app.use express.bodyParser()
@@ -33,14 +33,17 @@ app.configure "production", ->
 # Database =)
 database = {}
 database.articles = [
-      name: 'First Article'
-      'name@href': "#articles/1"
+      title: 'First Article'
+      'title@href': "/articles/1"
+      body: 'Hello World, my name is Jarno!!!'
     ,
-      name: 'Second Article'
-      'name@href': "#articles/2"
+      title: 'Second Article'
+      'title@href': "/articles/2"
+      body: 'Hello World, my name is Sanna!!!'
     ,
-      name: 'Third Article'
-      'name@href': "#articles/3"
+      title: 'Third Article'
+      'title@href': "/articles/3"
+      body: 'Hello World, here we are!!!'
     ]
 
 # Routes
@@ -50,8 +53,11 @@ app.get "/.:format?", (req, res) ->
   else
     res.render "index"
 
-app.get "/articles/*", (req, res) ->
-  res.render "index"
+app.get "/articles/:id.:format?", (req, res) ->
+  if req.params.format == "json"
+    res.send database.articles[0]
+  else
+    res.render "index"
 
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env

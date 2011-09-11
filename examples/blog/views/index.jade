@@ -8,10 +8,16 @@ div.template
     p Create 
       a(href="/articles/new") a new article
 
-    p List of available articles
+    p List of articles
       ul.articles
         li
-          a.name
+          a.title(href="#")
+
+  div.show_article.page
+    div.article
+      h2.title
+      p.body
+      div.comments
 
   div.new_article.page
     p New Article
