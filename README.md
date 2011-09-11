@@ -13,9 +13,6 @@ Here's couple of examples. For further details, please see the examples folder, 
 
 ### Assigning values and attributes (look ma', no assignment!)
 
-**Note:** In order to avoid security hacks, e.g., setting `onclick` attributes for links, only following attributes can be set:
-`id`, `class`, `src`, `alt`, `href` and `data-*`
-
 Template:
 
 ```html
@@ -45,6 +42,9 @@ Result:
   </div>
 </div>
 ```
+
+**Note:** In order to avoid security hacks, e.g., setting `onclick` attributes for links, only following attributes can be set:
+`id`, `class`, `src`, `alt`, `href` and `data-*`
 
 ### Iterating over a list (look ma', no loops!)
 
