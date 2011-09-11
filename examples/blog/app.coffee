@@ -49,5 +49,8 @@ app.get "/.:format?", (req, res) ->
   else
     res.render "index"
 
+app.get "/articles/*", (req, res) ->
+  res.render "index"
+
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
