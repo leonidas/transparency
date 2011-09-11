@@ -2,7 +2,11 @@
   Path.map("/").to(function() {
     $('.content').empty().append($('.template .index.page').clone());
     return $.get('/.json', function(articles) {
-      return $('.content .articles').render(articles);
+      return $('.content .articles').render(articles, {
+        'title@href': function() {
+          return "/articles/" + this.id;
+        }
+      });
     });
   });
   Path.map("/articles/new").to(function() {

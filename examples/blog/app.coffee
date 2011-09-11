@@ -33,31 +33,39 @@ app.configure "production", ->
 # Database =)
 database = {}
 database.articles = [
-      title: 'First Article'
-      'title@href': "/articles/1"
-      body: 'Hello World, my name is Jarno!!!'
-    ,
-      title: 'Second Article'
-      'title@href': "/articles/2"
-      body: 'Hello World, my name is Sanna!!!'
-    ,
-      title: 'Third Article'
-      'title@href': "/articles/3"
-      body: 'Hello World, here we are!!!'
-    ]
+  id: 0
+  title: 'First Article'
+  body: 'Hello World, this is my First article!!!'
+,
+  id: 1
+  title: 'Second Article'
+  body: 'Hello World, this is my Second article!!!'
+,
+  id: 2
+  title: 'Third Article'
+  body: 'Hello World, here we are!!!'
+]
 
 # Routes
 app.get "/.:format?", (req, res) ->   
   if req.params.format == "json"
+    console.log database.articles
     res.send database.articles # Filter Article.body out in the real world
   else
     res.render "index"
 
 app.get "/articles/:id.:format?", (req, res) ->
   if req.params.format == "json"
-    res.send database.articles[req.params.id - 1]
+    res.send database.articles[req.params.id]
   else
     res.render "index"
+
+app.post "/articles/", (req, res) ->
+  article    = req.body.article
+  article.id = database.articles.length
+  database.articles.push article
+  console.log article
+  res.send 200
 
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env

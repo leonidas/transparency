@@ -21,7 +21,7 @@ div.template
 
   div.new_article.page
     p New Article
-    form
+    form(action="/articles/", method="post")
       input(name="article[title]", type="text", value="Title")
       textarea(name="article[body]", rows="10") Body
       button Cancel

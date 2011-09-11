@@ -1,7 +1,7 @@
 Path.map("/").to ->
   $('.content').empty().append $('.template .index.page').clone()
   $.get '/.json', (articles) ->
-    $('.content .articles').render articles
+    $('.content .articles').render articles, 'title@href': () -> ("/articles/#{this.id}")
 
 Path.map("/articles/new").to ->
   $('.content').empty().append $('.template .new_article.page').clone()
