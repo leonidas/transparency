@@ -1,4 +1,4 @@
-Transparency is a minimal template engine for jQuery. It maps JSON objects to HTML values and attributes with zero configuration.
+Transparency is a minimal template engine for jQuery. It maps JSON objects to DOM elements with zero configuration.
 
 ## Features
 
