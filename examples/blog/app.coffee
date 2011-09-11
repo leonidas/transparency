@@ -44,12 +44,14 @@ database.articles = [
 
 # Routes
 app.get "/.:format?", (req, res) ->
+  console.log req.url
   if req.params.format == "json"
     res.send database.articles
   else
     res.render "index"
 
 app.get "/articles/*", (req, res) ->
+  console.log req.url
   res.render "index"
 
 app.listen 3000
