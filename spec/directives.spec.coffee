@@ -18,27 +18,25 @@ describe "Transparency", ->
     doc = jQuery(
      '<div>
         <div class="person">
-          <span class="firstname"></span>
-          <span class="initials"></span>
-          <span class="lastname"></span>
+          <span class="name"></span>
+          <span class="email"></span>
         </div>
       </div>')
 
     person =
-      firstname:  'Jasmine'
-      middlename: 'Elisabeth'
-      lastname:   'Taylor'
+      firstname: 'Jasmine'
+      lastname:  'Taylor'
+      email:     'jasmine.tailor@example.com'
 
     directives =
-      initials: () ->
-        " #{this.middlename.substr(0,1)}. "
+      name: () ->
+        "#{this.firstname} #{this.lastname}"
 
     expected = jQuery(
       '<div>
         <div class="person">
-          <span class="firstname">Jasmine</span>
-          <span class="initials"> E. </span>
-          <span class="lastname">Taylor</span>
+          <span class="name">Jasmine Taylor</span>
+          <span class="email">jasmine.tailor@example.com</span>
         </div>
       </div>')
 
@@ -49,12 +47,11 @@ describe "Transparency", ->
     doc = jQuery(
      '<div>
         <div class="person">
-          <span class="firstname"></span>
-          <span class="initials"></span>
-          <span class="lastname"></span>
+          <span class="name"></span>
+          <span class="email"></span>
           <div class="friends">
             <div class="friend">
-              <span class="short_name"></span>
+              <span class="name"></span>
               <span class="email"></span>
             </div>
           </div>
@@ -63,8 +60,8 @@ describe "Transparency", ->
 
     person =
       firstname:  'Jasmine'
-      middlename: 'Elisabeth'
       lastname:   'Taylor'
+      email:      'jasmine.taylor@example.com'
       friends:    [
         firstname: 'John'
         lastname:  'Mayer'
@@ -75,27 +72,25 @@ describe "Transparency", ->
         email:     'damien.rice@example.com'
       ]
 
+    nameDecorator = () -> ("#{this.firstname} #{this.lastname}")
     directives =
-      initials: () ->
-        " #{this.middlename.substr(0,1)}. "
+      name: nameDecorator
       friends:
-        short_name: () ->
-          "#{this.firstname.substr(0,1)}. #{this.lastname}"
+        name: nameDecorator
 
 
     expected = jQuery(
       '<div>
         <div class="person">
-          <span class="firstname">Jasmine</span>
-          <span class="initials"> E. </span>
-          <span class="lastname">Taylor</span>
+          <span class="name">Jasmine Taylor</span>
+          <span class="email">jasmine.taylor@example.com</span>
           <div class="friends">
             <div class="friend">
-              <span class="short_name">J. Mayer</span>
+              <span class="name">John Mayer</span>
               <span class="email">john.mayer@example.com</span>
             </div>
             <div class="friend">
-              <span class="short_name">D. Rice</span>
+              <span class="name">Damien Rice</span>
               <span class="email">damien.rice@example.com</span>
             </div>
           </div>
