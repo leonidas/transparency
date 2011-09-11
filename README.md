@@ -3,13 +3,13 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to DO
 ## Features
 
 * Data binding by convention - No extra markup in the views
-* Collection rendering - No more loops and partials
-* Nested objects and lists - Automatically, of course
-* Directives - Calculate values on the fly
+* Collection rendering - No need for loops and partials
+* Nested objects and collections - No configuration, just conventions
+* Directives - No custom DSL, just functions
 
 ## Examples
 
-Here's couple of examples. For further details, please see the examples folder, tests and the source code.
+Here's some of examples. For further details, please see the examples folder, tests and the source code.
 
 ### Assigning values and attributes (look ma', no assignment!)
 
@@ -241,8 +241,7 @@ person = {
 };
 
 directives =
-  name: function() {
-    return "#{this.firstname} #{this.lastname}";
+  name: function() { return this.firstname + " " + this.lastname; }
 };
 
 $('.person').render(person, directives);
