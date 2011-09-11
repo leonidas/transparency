@@ -1,27 +1,38 @@
 h1 Blog with Transparency, jQuery, Jade and Express
 
-p Create 
-  a a new article
+div.index.page
+  p Create 
+    a(href="/articles/new") a new article
 
-p List of available articles
-  ul.articles
-    li
-      a.name
+  p List of available articles
+    ul.articles
+      li
+        a.name
 
-div.new_article_form
+div.new_article.page
   p New Article
   form
-    input(name="title", type="text", value="Title")
-    textarea(id="body", name="body") Body
+    input(name="article[title]", type="text", value="Title")
+    textarea(name="article[body]", rows="10") Body
+    button Cancel
+    input(type="submit")
 
 :coffeescript
-  $ ->
-    articles = [
-      name: 'First Article'
-      'name@href': "#articles/1"
-    ,
-      name: 'Second Article'
-      'name@href': "#articles/2"
-    ]
+  hidePages = () -> $('.page').hide()
 
-    $('.articles').render articles
+  Path.map("/").to ->
+    $('.page').hide()
+    $('.index.page').show()
+    $.get '/.json', (articles) ->
+      $('.articles').render articles
+
+  Path.map("/articles/new").to ->
+    $('.page').hide()
+    $('.new_article.page').show()
+
+  $ ->
+    Path.history.listen()
+
+    $("a").click (event) ->
+      event.preventDefault()
+      Path.history.pushState {}, "", $(this).attr("href")

@@ -5,9 +5,16 @@ body {
 a {
   color: #00b7ff;
 }
-input,
+form {
+  width: 500px;
+}
+input[type=submit] {
+  float: right;
+}
+input[type=text],
 textarea {
   display: block;
-  width: 500px;
+  width: 100%;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
