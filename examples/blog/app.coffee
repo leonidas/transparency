@@ -8,6 +8,7 @@ app     = module.exports = express.createServer()
 
 # Configuration
 app.configure ->
+  app.use express.logger(format: 'method :url')
   app.set "views", __dirname + "/views"
   app.set "view engine", "jade"
   app.use express.bodyParser()
@@ -44,14 +45,12 @@ database.articles = [
 
 # Routes
 app.get "/.:format?", (req, res) ->
-  console.log req.url
   if req.params.format == "json"
     res.send database.articles
   else
     res.render "index"
 
 app.get "/articles/*", (req, res) ->
-  console.log req.url
   res.render "index"
 
 app.listen 3000

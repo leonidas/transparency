@@ -7,7 +7,6 @@ Path.map("/").to ->
 Path.map("/articles/new").to ->
   $('.content').empty().append $('.template .new_article.page').clone()
 
-
 $ ->
   $('.template').hide()
   Path.history.listen()
