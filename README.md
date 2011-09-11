@@ -241,8 +241,7 @@ person = {
 };
 
 directives =
-  name: function() {
-    return "#{this.firstname} #{this.lastname}";
+  name: function() { return this.firstname + " " + this.lastname; }
 };
 
 $('.person').render(person, directives);
