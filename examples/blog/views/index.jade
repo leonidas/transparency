@@ -1,4 +1,4 @@
-h1 Blog with Transparency, jQuery, Jade and Express
+h1 Blog with Transparency, jQuery, Spine, Jade and Express
 
 div.content
 
@@ -11,7 +11,7 @@ div.template
     p List of articles
       ul.articles
         li
-          a.title(href="#")
+          a.title(href="/#/hello") Hello
 
   div.show_article.page
     div.article
@@ -21,7 +21,7 @@ div.template
 
   div.new_article.page
     p New Article
-    form(action="/articles/", method="post")
+    form(action="/articles", method="post")
       input(name="article[title]", type="text", value="Title")
       textarea(name="article[body]", rows="10") Body
       button Cancel

@@ -1,20 +1,26 @@
-Path.map("/").to ->
-  $('.content').empty().append $('.template .index.page').clone()
-  $.get '/.json', (articles) ->
-    $('.content .articles').render articles, 'title@href': () -> ("/articles/#{this.id}")
-
-Path.map("/articles/new").to ->
-  $('.content').empty().append $('.template .new_article.page').clone()
-
-Path.map("/articles/:id").to ->
+showArticle = (article) ->
   $('.content').empty().append $('.template .show_article.page').clone()
-  $.get "/articles/#{this.params.id}.json", (article) ->
-    $('.content .article').render article
+  $('.content .article').render article
 
 $ ->
-  $('.template').hide()
-  Path.history.listen()
+  Spine.Route.add
+    '/': () ->
+      console.log '/'
+      $('.content').empty().append $('.template .index.page').clone()
+      $.getJSON '/articles.json', (articles) ->
+        $('.content .articles').render articles, 'title@href': () -> ("/articles/#{this.id}")
 
-  $('a').live 'click', (event) ->
-    Path.history.pushState {}, "", $(this).attr("href")
-    event.preventDefault()
+    '/articles/:id': (params) ->
+      console.log params.id
+      $.getJSON "/articles/#{params.id}.json", showArticle
+
+    '/articles/new': () ->
+      console.log '/articles/new'
+      $('.content').empty().append $('.template .new_article.page').clone()
+      form = $('.content .new_article form')
+      form.submit (event) ->
+        event.preventDefault()
+        $.post form.attr("action"), form.serialize(), (article) ->
+          Spine.Route.navigate("/articles", article.id, true)
+
+  Spine.Route.setup(history: true)

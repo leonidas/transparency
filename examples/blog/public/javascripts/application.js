@@ -1,29 +1,41 @@
 (function() {
-  Path.map("/").to(function() {
-    $('.content').empty().append($('.template .index.page').clone());
-    return $.get('/.json', function(articles) {
-      return $('.content .articles').render(articles, {
-        'title@href': function() {
-          return "/articles/" + this.id;
-        }
-      });
-    });
-  });
-  Path.map("/articles/new").to(function() {
-    return $('.content').empty().append($('.template .new_article.page').clone());
-  });
-  Path.map("/articles/:id").to(function() {
+  var showArticle;
+  showArticle = function(article) {
     $('.content').empty().append($('.template .show_article.page').clone());
-    return $.get("/articles/" + this.params.id + ".json", function(article) {
-      return $('.content .article').render(article);
-    });
-  });
+    return $('.content .article').render(article);
+  };
   $(function() {
-    $('.template').hide();
-    Path.history.listen();
-    return $('a').live('click', function(event) {
-      Path.history.pushState({}, "", $(this).attr("href"));
-      return event.preventDefault();
+    Spine.Route.add({
+      '/': function() {
+        console.log('/');
+        $('.content').empty().append($('.template .index.page').clone());
+        return $.getJSON('/articles.json', function(articles) {
+          return $('.content .articles').render(articles, {
+            'title@href': function() {
+              return "/articles/" + this.id;
+            }
+          });
+        });
+      },
+      '/articles/:id': function(params) {
+        console.log(params.id);
+        return $.getJSON("/articles/" + params.id + ".json", showArticle);
+      },
+      '/articles/new': function() {
+        var form;
+        console.log('/articles/new');
+        $('.content').empty().append($('.template .new_article.page').clone());
+        form = $('.content .new_article form');
+        return form.submit(function(event) {
+          event.preventDefault();
+          return $.post(form.attr("action"), form.serialize(), function(article) {
+            return Spine.Route.navigate("/articles", article.id, true);
+          });
+        });
+      }
+    });
+    return Spine.Route.setup({
+      history: true
     });
   });
 }).call(this);

@@ -47,10 +47,13 @@ database.articles = [
 ]
 
 # Routes
-app.get "/.:format?", (req, res) ->   
+app.get "/", (req, res) ->
+    res.render "index"
+
+app.get "/articles.:format?", (req, res) ->
   if req.params.format == "json"
     console.log database.articles
-    res.send database.articles # Filter Article.body out in the real world
+    res.send database.articles
   else
     res.render "index"
 
@@ -60,12 +63,12 @@ app.get "/articles/:id.:format?", (req, res) ->
   else
     res.render "index"
 
-app.post "/articles/", (req, res) ->
+app.post "/articles", (req, res) ->
   article    = req.body.article
   article.id = database.articles.length
   database.articles.push article
   console.log article
-  res.send 200
+  res.send article
 
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
