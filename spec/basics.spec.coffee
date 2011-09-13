@@ -68,25 +68,3 @@ describe "Transparency", ->
 
     doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
-
-  it "should handle attribute assignment", ->
-    doc = jQuery(
-     '<div>
-        <div class="container">
-          <a class="greeting" href="#"></a>
-        </div>
-      </div>')
-
-    data =
-      "greeting":      "Hello World"
-      "greeting@href": "http://world"
-
-    expected = jQuery(
-      '<div>
-        <div class="container">
-          <a class="greeting" href="http://world">Hello World</a>
-        </div>
-      </div>')
-
-    doc.find('.container').render(data)
-    expect(doc.html()).htmlToBeEqual(expected.html())

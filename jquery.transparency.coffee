@@ -1,21 +1,26 @@
-renderKey = (key, value, buffer) ->
-  [klass, attribute] = [element, _] = key.split('@')
-  assignValue buffer, attribute, value if buffer.hasClass klass or buffer.is element
+renderValue = (buffer, key, value) ->
+  element = klass = key # Match both classes and elements
+  renderNode buffer, value if buffer.hasClass klass or buffer.is element
   buffer.find("#{element}, .#{klass}").each ->
-    assignValue jQuery(this), attribute, value
+    renderNode jQuery(this), value
 
-assignValue = (node, attribute, value) ->
+renderDirective = (buffer, key, directive, object) ->
+  [klass, attribute] = [element, _] = key.split('@') # Match both classes and elements
+  
+  if buffer.hasClass klass or buffer.is element
+    renderNode buffer, directive.call(object, buffer), attribute 
+
+  buffer.find("#{element}, .#{klass}").each ->
+    node = jQuery(this)
+    renderNode node, directive.call(object, node), attribute
+
+renderNode = (node, value, attribute) ->
   if attribute
-    throw "#{attribute}: Unsafe attribute assignment" if not validAttribute attribute
     node.attr attribute, value
   else
     children = node.children().detach()
     node.text value
     node.append children
-
-validAttribute = (attribute) ->
-  valids = ['src', 'alt', 'id', 'href', 'class', /^data-*/]
-  (true for valid in valids when attribute.match valid).length == 1
 
 jQuery.fn.render = (data, directives) ->
   directives ||= {}
@@ -31,11 +36,10 @@ jQuery.fn.render = (data, directives) ->
       buffer = template.clone()
 
       for key, value of object when typeof value == 'string'
-        renderKey key, value, buffer
+        renderValue buffer, key, value
 
       for key, directive of directives when typeof directive == 'function'
-        value = directive.call object
-        renderKey key, value, buffer
+        renderDirective buffer, key, directive, object
 
       for klass, value of object when typeof value == 'object'
         buffer.render value, directives[klass] if buffer.hasClass klass

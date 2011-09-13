@@ -10,7 +10,7 @@ describe "Transparency", ->
     @addMatchers
       htmlToBeEqual: (expected) ->
         #TODO: Refactor to spec_helper.coffee or something
-        @actual = @actual.replace(/\s\s+/g, '')
+        @actual = @actual.replace(/\s\s+/g, '') 
         expected    = expected.replace(/\s\s+/g, '')
         @actual == expected
 
