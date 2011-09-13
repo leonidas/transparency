@@ -39,37 +39,46 @@
     })()).length === 1;
   };
   jQuery.fn.render = function(data, directives) {
-    var buffer, context, directive, key, klass, object, template, value, _i, _len;
+    var buffer, context, contexts, directive, key, klass, object, original, template, value, _i, _j, _len, _len2;
     directives || (directives = {});
-    context = jQuery.isArray(data) ? this.children().first() : this;
-    template = context.clone();
-    if (!jQuery.isArray(data)) {
-      data = [data];
+    original = this;
+    contexts = jQuery.isArray(data) ? this.children() : [this];
+    for (_i = 0, _len = contexts.length; _i < _len; _i++) {
+      context = contexts[_i];
+      context = jQuery(context);
+      template = context.clone();
+      if (!jQuery.isArray(data)) {
+        data = [data];
+      }
+      for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
+        object = data[_j];
+        buffer = template.clone();
+        for (key in object) {
+          value = object[key];
+          if (typeof value === 'string') {
+            renderKey(key, value, buffer);
+          }
+        }
+        for (key in directives) {
+          directive = directives[key];
+          if (typeof directive === 'function') {
+            value = directive.call(object);
+            renderKey(key, value, buffer);
+          }
+        }
+        for (klass in object) {
+          value = object[klass];
+          if (typeof value === 'object') {
+            if (buffer.hasClass(klass)) {
+              buffer.render(value, directives[klass]);
+            }
+            buffer.find("." + klass).add(key).render(value, directives[klass]);
+          }
+        }
+        context.before(buffer);
+      }
+      context.remove();
     }
-    for (_i = 0, _len = data.length; _i < _len; _i++) {
-      object = data[_i];
-      buffer = template.clone();
-      for (key in object) {
-        value = object[key];
-        if (typeof value === 'string') {
-          renderKey(key, value, buffer);
-        }
-      }
-      for (key in directives) {
-        directive = directives[key];
-        if (typeof directive === 'function') {
-          value = directive.call(object);
-          renderKey(key, value, buffer);
-        }
-      }
-      for (klass in object) {
-        value = object[klass];
-        if (typeof value === 'object') {
-          buffer.find("." + klass).add(key).render(value, directives[klass]);
-        }
-      }
-      context.before(buffer);
-    }
-    return context.remove();
+    return original;
   };
 }).call(this);
