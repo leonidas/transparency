@@ -7,12 +7,12 @@ require "../jquery.transparency.coffee"
 describe "Transparency", ->
 
   beforeEach ->
-    this.addMatchers
+    @addMatchers
       htmlToBeEqual: (expected) ->
         #TODO: Refactor to spec_helper.coffee or something
-        this.actual = this.actual.replace(/\s\s+/g, '') 
+        @actual = @actual.replace(/\s\s+/g, '')
         expected    = expected.replace(/\s\s+/g, '')
-        this.actual == expected
+        @actual == expected
 
   it "should calculate values with directives", ->
     doc = jQuery(
@@ -29,8 +29,7 @@ describe "Transparency", ->
       email:     'jasmine.tailor@example.com'
 
     directives =
-      name: () ->
-        "#{this.firstname} #{this.lastname}"
+      name: (element) -> ("#{@firstname} #{@lastname}")
 
     expected = jQuery(
       '<div>
@@ -72,7 +71,7 @@ describe "Transparency", ->
         email:     'damien.rice@example.com'
       ]
 
-    nameDecorator = () -> ("#{this.firstname} #{this.lastname}")
+    nameDecorator = (element) -> ("#{@firstname} #{@lastname}")
     directives =
       name: nameDecorator
       friends:

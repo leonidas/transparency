@@ -19,8 +19,8 @@ validAttribute = (attribute) ->
 
 jQuery.fn.render = (data, directives) ->
   directives ||= {}
-  original     = this
-  contexts     = if jQuery.isArray(data) then this.children() else [this]
+  result       = this
+  contexts     = if jQuery.isArray(data) then @children() else [this]
 
   for context in contexts
     context   = jQuery(context)
@@ -46,4 +46,4 @@ jQuery.fn.render = (data, directives) ->
     
     context.remove() # Remove the original template from the dom
 
-  return original
+  return result
