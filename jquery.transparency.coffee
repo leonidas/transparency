@@ -1,18 +1,26 @@
-renderValue = (buffer, key, value) ->
-  element = klass = key # Match both classes and elements
-  renderNode buffer, value if buffer.hasClass klass or buffer.is element
-  buffer.find("#{element}, .#{klass}").each ->
-    renderNode jQuery(this), value
+renderValues = (buffer, object) ->
+  for key, value of object when typeof value == 'string'
+    renderNode buffer, value if buffer.hasClass key or buffer.is key
 
-renderDirective = (buffer, key, directive, object) ->
-  [klass, attribute] = [element, _] = key.split('@') # Match both classes and elements
-  
-  if buffer.hasClass klass or buffer.is element
-    renderNode buffer, directive.call(object, buffer), attribute 
+    for node in buffer.find("#{key}, .#{key}")
+      renderNode jQuery(node), value
 
-  buffer.find("#{element}, .#{klass}").each ->
-    node = jQuery(this)
-    renderNode node, directive.call(object, node), attribute
+renderDirectives = (buffer, object, directives) ->
+  for key, directive of directives when typeof directive == 'function'
+    [key, attribute] = key.split('@')
+
+    if buffer.hasClass key or buffer.is key
+      renderNode buffer, directive.call(object, buffer), attribute
+
+    for node in buffer.find("#{key}, .#{key}")
+      node = jQuery(node)
+      renderNode node, directive.call(object, node), attribute
+
+renderChildren = (buffer, object, directives) ->
+  for key, value of object when typeof value == 'object' and key != 'parent_'
+    value.parent_ = object
+    buffer.render value, directives[key] if buffer.hasClass key
+    buffer.find(".#{key}").render value, directives[key]
 
 renderNode = (node, value, attribute) ->
   if attribute
@@ -35,19 +43,11 @@ jQuery.fn.render = (data, directives) ->
     for object in data
       buffer = template.clone()
 
-      for key, value of object when typeof value == 'string'
-        renderValue buffer, key, value
-
-      for key, directive of directives when typeof directive == 'function'
-        renderDirective buffer, key, directive, object
-
-      for klass, value of object when typeof value == 'object'
-        buffer.render value, directives[klass] if buffer.hasClass klass
-        buffer.find(".#{klass}").render value, directives[klass]
-
-      # Add the rendered template to the dom
+      renderValues     buffer, object
+      renderDirectives buffer, object, directives
+      renderChildren   buffer, object, directives
       context.before(buffer)
-    
+
     context.remove() # Remove the original template from the dom
 
   return result

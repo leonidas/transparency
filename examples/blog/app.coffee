@@ -52,7 +52,6 @@ app.get "/", (req, res) ->
 
 app.get "/articles.:format?", (req, res) ->
   if req.params.format == "json"
-    console.log database.articles
     res.send database.articles
   else
     res.render "index"
@@ -67,8 +66,7 @@ app.post "/articles", (req, res) ->
   article    = req.body.article
   article.id = database.articles.length
   database.articles.push article
-  console.log article
-  res.send article
+  res.send "/articles/#{article.id}"
 
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
