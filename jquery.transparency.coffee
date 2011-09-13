@@ -43,7 +43,7 @@ jQuery.fn.render = (data, directives) ->
 
       for klass, value of object when typeof value == 'object'
         buffer.render value, directives[klass] if buffer.hasClass klass
-        buffer.find(".#{klass}").add(key).render value, directives[klass]
+        buffer.find(".#{klass}").render value, directives[klass]
 
       # Add the rendered template to the dom
       context.before(buffer)
