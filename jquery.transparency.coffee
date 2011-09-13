@@ -19,24 +19,31 @@ validAttribute = (attribute) ->
 
 jQuery.fn.render = (data, directives) ->
   directives ||= {}
-  context      = if jQuery.isArray(data) then this.children().first() else this
-  template     = context.clone()
-  data         = [data] unless jQuery.isArray(data)
+  original     = this
+  contexts     = if jQuery.isArray(data) then this.children() else [this]
 
-  for object in data
-    buffer = template.clone()
+  for context in contexts
+    context   = jQuery(context)
+    template  = context.clone()
+    data      = [data] unless jQuery.isArray(data)
 
-    for key, value of object when typeof value == 'string'
-      renderKey key, value, buffer
+    for object in data
+      buffer = template.clone()
 
-    for key, directive of directives when typeof directive == 'function'
-      value = directive.call object
-      renderKey key, value, buffer
+      for key, value of object when typeof value == 'string'
+        renderKey key, value, buffer
 
-    for klass, value of object when typeof value == 'object'
-      buffer.find(".#{klass}").add(key).render value, directives[klass]
+      for key, directive of directives when typeof directive == 'function'
+        value = directive.call object
+        renderKey key, value, buffer
 
-    # Add the rendered template to the dom
-    context.before(buffer)
+      for klass, value of object when typeof value == 'object'
+        buffer.render value, directives[klass] if buffer.hasClass klass
+        buffer.find(".#{klass}").add(key).render value, directives[klass]
 
-  return context.remove() # Remove the original template from the dom
+      # Add the rendered template to the dom
+      context.before(buffer)
+    
+    context.remove() # Remove the original template from the dom
+
+  return original

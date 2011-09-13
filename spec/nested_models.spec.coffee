@@ -128,3 +128,132 @@ describe "Transparency", ->
 
     doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should handle tables with dynamic headers", ->
+    doc = jQuery(
+     '<div>
+       <table class="test_reports">
+          <thead>
+            <tr class="profiles">
+              <th class="name"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="profiles">
+              <td class="testsets">
+                <div class="testset">
+                  <a href="#" class="name"></a>
+                  <ul class="products">
+                    <li>
+                      <a href="#" class="name"></a>
+                    </li>
+                  </ul>
+                </div>
+          </tbody>
+        </table>
+      </div>')
+
+    data =
+      profiles: [
+        name: 'Core'
+        testsets: [ 
+          name: "Core Sanity"
+          products: [
+            name: "Core Sanity N900"
+          ,
+            name: "Core Sanity Lenovo"
+          ]
+        ,
+          name: "Core Acceptance"
+          products: [
+            name: "Core Acceptance Netbook"
+          ,
+            name: "Core Acceptance Pinetrail"
+          ]
+        ]
+      , 
+        name: 'Handset'
+        testsets: [
+          name: "Handset Sanity"
+          products: [
+            name: "Handset Sanity N900"
+          ,
+            name: "Handset Sanity Lenovo"
+          ]
+        ,
+          name: 'Handset Acceptance'
+          products: [
+            name: "Handset Acceptance Netbook"
+          ,
+            name: "Handset Acceptance Pinetrail"
+          ]
+        ]
+      ]
+
+    expected = jQuery(
+     '<div>
+       <table class="test_reports">
+          <thead>
+            <tr class="profiles">
+              <th class="name">Core</th>
+              <th class="name">Handset</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="profiles">
+              <td class="testsets">
+                <div class="testset">
+                  <a href="#" class="name">Core Sanity</a>
+                  <ul class="products">
+                    <li>
+                      <a href="#" class="name">Core Sanity N900</a>
+                    </li>
+                    <li>
+                      <a href="#" class="name">Core Sanity Lenovo</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="testset">
+                  <a href="#" class="name">Core Acceptance</a>
+                  <ul class="products">
+                    <li>
+                      <a href="#" class="name">Core Acceptance Netbook</a>
+                    </li>
+                    <li>
+                      <a href="#" class="name">Core Acceptance Pinetrail</a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+
+              <td class="testsets">
+                <div class="testset"
+                  <a href="#" class="name">Handset Sanity</a>
+                  <ul class="products">
+                    <li>
+                      <a href="#" class="name">Handset Sanity N900</a>
+                    </li>
+                    <li>
+                      <a href="#" class="name">Handset Sanity Lenovo</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="testset"
+                  <a href="#" class="name">Handset Acceptance</a>
+                  <ul class="products">
+                    <li>
+                      <a href="#" class="name">Handset Acceptance Netbook</a>
+                    </li>
+                    <li>
+                      <a href="#" class="name">Handset Acceptance Pinetrail</a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>')
+
+    doc.find('.test_reports').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
