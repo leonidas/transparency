@@ -1,21 +1,71 @@
 (function() {
-  var assignValue, renderKey, validAttribute;
-  renderKey = function(key, value, buffer) {
-    var attribute, element, klass, _, _ref, _ref2;
-    _ref2 = (_ref = key.split('@'), element = _ref[0], _ = _ref[1], _ref), klass = _ref2[0], attribute = _ref2[1];
-    if (buffer.hasClass(klass || buffer.is(element))) {
-      assignValue(buffer, attribute, value);
+  var renderChildren, renderDirectives, renderNode, renderValues;
+  renderValues = function(buffer, object) {
+    var key, node, value, _results;
+    _results = [];
+    for (key in object) {
+      value = object[key];
+      if (typeof value === 'string') {
+        if (buffer.hasClass(key || buffer.is(key))) {
+          renderNode(buffer, value);
+        }
+        _results.push((function() {
+          var _i, _len, _ref, _results2;
+          _ref = buffer.find("" + key + ", ." + key);
+          _results2 = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results2.push(renderNode(jQuery(node), value));
+          }
+          return _results2;
+        })());
+      }
     }
-    return buffer.find("" + element + ", ." + klass).each(function() {
-      return assignValue(jQuery(this), attribute, value);
-    });
+    return _results;
   };
-  assignValue = function(node, attribute, value) {
+  renderDirectives = function(buffer, object, directives) {
+    var attribute, directive, key, node, _ref, _results;
+    _results = [];
+    for (key in directives) {
+      directive = directives[key];
+      if (typeof directive === 'function') {
+        _ref = key.split('@'), key = _ref[0], attribute = _ref[1];
+        if (buffer.hasClass(key || buffer.is(key))) {
+          renderNode(buffer, directive.call(object, buffer), attribute);
+        }
+        _results.push((function() {
+          var _i, _len, _ref2, _results2;
+          _ref2 = buffer.find("" + key + ", ." + key);
+          _results2 = [];
+          for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+            node = _ref2[_i];
+            node = jQuery(node);
+            _results2.push(renderNode(node, directive.call(object, node), attribute));
+          }
+          return _results2;
+        })());
+      }
+    }
+    return _results;
+  };
+  renderChildren = function(buffer, object, directives) {
+    var key, value, _results;
+    _results = [];
+    for (key in object) {
+      value = object[key];
+      if (typeof value === 'object' && key !== 'parent_') {
+        value.parent_ = object;
+        if (buffer.hasClass(key)) {
+          buffer.render(value, directives[key]);
+        }
+        _results.push(buffer.find("." + key).render(value, directives[key]));
+      }
+    }
+    return _results;
+  };
+  renderNode = function(node, value, attribute) {
     var children;
     if (attribute) {
-      if (!validAttribute(attribute)) {
-        throw "" + attribute + ": Unsafe attribute assignment";
-      }
       return node.attr(attribute, value);
     } else {
       children = node.children().detach();
@@ -23,25 +73,10 @@
       return node.append(children);
     }
   };
-  validAttribute = function(attribute) {
-    var valid, valids;
-    valids = ['src', 'alt', 'id', 'href', 'class', /^data-*/];
-    return ((function() {
-      var _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = valids.length; _i < _len; _i++) {
-        valid = valids[_i];
-        if (attribute.match(valid)) {
-          _results.push(true);
-        }
-      }
-      return _results;
-    })()).length === 1;
-  };
   jQuery.fn.render = function(data, directives) {
-    var buffer, context, contexts, directive, key, klass, object, original, template, value, _i, _j, _len, _len2;
+    var buffer, context, contexts, object, result, template, _i, _j, _len, _len2;
     directives || (directives = {});
-    original = this;
+    result = this;
     contexts = jQuery.isArray(data) ? this.children() : [this];
     for (_i = 0, _len = contexts.length; _i < _len; _i++) {
       context = contexts[_i];
@@ -53,32 +88,13 @@
       for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
         object = data[_j];
         buffer = template.clone();
-        for (key in object) {
-          value = object[key];
-          if (typeof value === 'string') {
-            renderKey(key, value, buffer);
-          }
-        }
-        for (key in directives) {
-          directive = directives[key];
-          if (typeof directive === 'function') {
-            value = directive.call(object);
-            renderKey(key, value, buffer);
-          }
-        }
-        for (klass in object) {
-          value = object[klass];
-          if (typeof value === 'object') {
-            if (buffer.hasClass(klass)) {
-              buffer.render(value, directives[klass]);
-            }
-            buffer.find("." + klass).add(key).render(value, directives[klass]);
-          }
-        }
+        renderValues(buffer, object);
+        renderDirectives(buffer, object, directives);
+        renderChildren(buffer, object, directives);
         context.before(buffer);
       }
       context.remove();
     }
-    return original;
+    return result;
   };
 }).call(this);
