@@ -18,9 +18,8 @@ renderDirectives = (buffer, object, directives) ->
 
 renderChildren = (buffer, object, directives) ->
   for key, value of object when typeof value == 'object' and key != 'parent_'
-    value.parent_ = object
-    buffer.render value, directives[key] if buffer.hasClass key
-    buffer.find(".#{key}").render value, directives[key]
+    buffer.render value, directives[key], object if buffer.hasClass key
+    buffer.find(".#{key}").render value, directives[key], object
 
 renderNode = (node, value, attribute) ->
   if attribute
@@ -30,7 +29,7 @@ renderNode = (node, value, attribute) ->
     node.text value
     node.append children
 
-jQuery.fn.render = (data, directives) ->
+jQuery.fn.render = (data, directives, parent) ->
   directives ||= {}
   result       = this
   contexts     = if jQuery.isArray(data) then @children() else [this]
@@ -41,7 +40,8 @@ jQuery.fn.render = (data, directives) ->
     data      = [data] unless jQuery.isArray(data)
 
     for object in data
-      buffer = template.clone()
+      object.parent_ = parent
+      buffer         = template.clone()
 
       renderValues     buffer, object
       renderDirectives buffer, object, directives

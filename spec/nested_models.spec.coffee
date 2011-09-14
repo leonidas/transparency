@@ -135,17 +135,19 @@ describe "Transparency", ->
        <table class="test_reports">
           <thead>
             <tr class="profiles">
-              <th class="name"></th>
+              <th>
+                <a class="name" href="#"></a>
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr class="profiles">
               <td class="testsets">
                 <div class="testset">
-                  <a href="#" class="name"></a>
+                  <a class="name" href="#"></a>
                   <ul class="products">
                     <li>
-                      <a href="#" class="name"></a>
+                      <a class="name" href="#"></a>
                     </li>
                   </ul>
                 </div>
@@ -154,73 +156,88 @@ describe "Transparency", ->
       </div>')
 
     data =
+      release: "1.2"
       profiles: [
         name: 'Core'
         testsets: [ 
-          name: "Core Sanity"
+          name: "Sanity"
           products: [
-            name: "Core Sanity N900"
+            name: "N900"
           ,
-            name: "Core Sanity Lenovo"
+            name: "Lenovo"
           ]
         ,
-          name: "Core Acceptance"
+          name: "Acceptance"
           products: [
-            name: "Core Acceptance Netbook"
+            name: "Netbook"
           ,
-            name: "Core Acceptance Pinetrail"
+            name: "Pinetrail"
           ]
         ]
       , 
         name: 'Handset'
         testsets: [
-          name: "Handset Sanity"
+          name: "Feature"
           products: [
-            name: "Handset Sanity N900"
+            name: "N900"
           ,
-            name: "Handset Sanity Lenovo"
+            name: "Lenovo"
           ]
         ,
-          name: 'Handset Acceptance'
+          name: 'NFT'
           products: [
-            name: "Handset Acceptance Netbook"
+            name: "Netbook"
           ,
-            name: "Handset Acceptance Pinetrail"
+            name: "iCDK"
           ]
         ]
       ]
+
+    directives =
+      profiles:
+        'name@href': (elem) -> "/#{data.release}/#{@name}"
+        testsets:
+          'name@href': (elem) ->
+            "/#{data.release}/#{@parent_.name}/#{@name}"
+          products:
+           'name@href': (elem) ->
+              "/#{data.release}/#{@parent_.parent_.name}/#{@parent_.name}/#{@name}"
 
     expected = jQuery(
      '<div>
        <table class="test_reports">
           <thead>
             <tr class="profiles">
-              <th class="name">Core</th>
-              <th class="name">Handset</th>
+              <th>
+                <a class="name" href="/1.2/Core">Core</a>
+              </th>
+              <th>
+                <a class="name" href="/1.2/Handset">Handset</a>
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr class="profiles">
               <td class="testsets">
                 <div class="testset">
-                  <a href="#" class="name">Core Sanity</a>
+                  <a class="name" href="/1.2/Core/Sanity">Sanity</a>
                   <ul class="products">
                     <li>
-                      <a href="#" class="name">Core Sanity N900</a>
+                      <a class="name" href="/1.2/Core/Sanity/N900">N900</a>
                     </li>
                     <li>
-                      <a href="#" class="name">Core Sanity Lenovo</a>
+                      <a class="name" href="/1.2/Core/Sanity/Lenovo">Lenovo</a>
                     </li>
                   </ul>
                 </div>
                 <div class="testset">
-                  <a href="#" class="name">Core Acceptance</a>
+                  <a class="name" href="/1.2/Core/Acceptance">Acceptance</a>
                   <ul class="products">
                     <li>
-                      <a href="#" class="name">Core Acceptance Netbook</a>
+                      <a class="name" href="/1.2/Core/Acceptance/Netbook">Netbook</a>
                     </li>
                     <li>
-                      <a href="#" class="name">Core Acceptance Pinetrail</a>
+                      <a class="name" href="/1.2/Core/Acceptance/Pinetrail">Pinetrail</a>
                     </li>
                   </ul>
                 </div>
@@ -228,24 +245,24 @@ describe "Transparency", ->
 
               <td class="testsets">
                 <div class="testset"
-                  <a href="#" class="name">Handset Sanity</a>
+                  <a class="name" href="/1.2/Handset/Feature">Feature</a>
                   <ul class="products">
                     <li>
-                      <a href="#" class="name">Handset Sanity N900</a>
+                      <a class="name" href="/1.2/Handset/Feature/N900">N900</a>
                     </li>
                     <li>
-                      <a href="#" class="name">Handset Sanity Lenovo</a>
+                      <a class="name" href="/1.2/Handset/Feature/Lenovo">Lenovo</a>
                     </li>
                   </ul>
                 </div>
                 <div class="testset"
-                  <a href="#" class="name">Handset Acceptance</a>
+                  <a class="name" href="/1.2/Handset/NFT">NFT</a>
                   <ul class="products">
                     <li>
-                      <a href="#" class="name">Handset Acceptance Netbook</a>
+                      <a class="name" href="/1.2/Handset/NFT/Netbook">Netbook</a>
                     </li>
                     <li>
-                      <a href="#" class="name">Handset Acceptance Pinetrail</a>
+                      <a class="name" href="/1.2/Handset/NFT/iCDK">iCDK</a>
                     </li>
                   </ul>
                 </div>
@@ -255,5 +272,5 @@ describe "Transparency", ->
         </table>
       </div>')
 
-    doc.find('.test_reports').render(data)
+    doc.find('.test_reports').render(data, directives)
     expect(doc.html()).htmlToBeEqual(expected.html())
