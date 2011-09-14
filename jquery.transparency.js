@@ -54,11 +54,10 @@
     for (key in object) {
       value = object[key];
       if (typeof value === 'object' && key !== 'parent_') {
-        value.parent_ = object;
         if (buffer.hasClass(key)) {
-          buffer.render(value, directives[key]);
+          buffer.render(value, directives[key], object);
         }
-        _results.push(buffer.find("." + key).render(value, directives[key]));
+        _results.push(buffer.find("." + key).render(value, directives[key], object));
       }
     }
     return _results;
@@ -73,7 +72,7 @@
       return node.append(children);
     }
   };
-  jQuery.fn.render = function(data, directives) {
+  jQuery.fn.render = function(data, directives, parent) {
     var buffer, context, contexts, object, result, template, _i, _j, _len, _len2;
     directives || (directives = {});
     result = this;
@@ -87,6 +86,7 @@
       }
       for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
         object = data[_j];
+        object.parent_ = parent;
         buffer = template.clone();
         renderValues(buffer, object);
         renderDirectives(buffer, object, directives);
