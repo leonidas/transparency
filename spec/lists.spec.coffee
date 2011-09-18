@@ -10,7 +10,7 @@ describe "Transparency", ->
     this.addMatchers
       htmlToBeEqual: (expected) ->
         #TODO: Refactor to spec_helper.coffee or something
-        this.actual = this.actual.replace(/\s\s+/g, '') 
+        this.actual = this.actual.replace(/\s\s+/g, '')
         expected    = expected.replace(/\s\s+/g, '')
         this.actual == expected
 
@@ -25,8 +25,8 @@ describe "Transparency", ->
         </div>
       </div>')
 
-    data = [ 
-      { name: 'John',   text: 'That rules'  }, 
+    data = [
+      { name: 'John',   text: 'That rules'  },
       { name: 'Arnold', text: 'Great post!' }
     ]
 
@@ -40,6 +40,28 @@ describe "Transparency", ->
             <span class="name">Arnold</span>
             <span class="text">Great post!</span>
           </div>
+        </div>
+      </div>')
+
+    doc.find('.comments').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should handle empty lists", ->
+    doc = jQuery(
+     '<div>
+        <div class="comments">
+          <div class="comment">
+            <span class="name"></span>
+            <span class="text"></span>
+          </div>
+        </div>
+      </div>')
+
+    data = []
+
+    expected = jQuery(
+     '<div>
+        <div class="comments">
         </div>
       </div>')
 

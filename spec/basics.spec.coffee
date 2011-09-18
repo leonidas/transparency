@@ -32,6 +32,39 @@ describe "Transparency", ->
         result
 
 
+  it "should work with null values", ->
+    doc = jQuery(
+     '<div>
+        <div class="content">
+        </div>
+        <div class="template">
+          <div class="container"
+            <div class="hello"></div>
+            <div class="goodbye"></div>
+          </div>
+        </div>
+      </div>')
+
+    data =
+      hello:   'Hello'
+      goodbye: null
+
+    expected = jQuery(
+      '<div>
+        <div class="content"
+          <div class="container">
+            <div class="hello">Hello</div>
+            <div class="goodbye"></div>
+          </div>
+        </div>
+        <div class="template">
+          <div class="container">
+            <div class="hello"></div>
+            <div class="goodbye"></div>
+          </div>
+        </div>
+      </div>')
+
   it "should assing data values to template", ->
     doc = jQuery(
      '<div>
@@ -46,7 +79,7 @@ describe "Transparency", ->
       </div>')
 
     data =
-      hello:    'Hello'
+      hello:   'Hello'
       goodbye: 'Goodbye!'
 
     expected = jQuery(
