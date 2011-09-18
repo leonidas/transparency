@@ -31,8 +31,8 @@ renderNode = (node, value, attribute) ->
 
 jQuery.fn.render = (data, directives, parent) ->
   directives ||= {}
-  result       = this
-  contexts     = if jQuery.isArray(data) then @children() else [this]
+  result       = jQuery.isArray(data) ? this : null
+  contexts     = if jQuery.isArray(data) then @children() else this
 
   for context in contexts
     context   = jQuery(context)
@@ -42,11 +42,12 @@ jQuery.fn.render = (data, directives, parent) ->
     for object in data
       object.parent_ = parent
       buffer         = template.clone()
+      result       ||= buffer
 
       renderValues     buffer, object
       renderDirectives buffer, object, directives
       renderChildren   buffer, object, directives
-      context.before(buffer)
+      context.before   buffer
 
     context.remove() # Remove the original template from the dom
 

@@ -10,33 +10,67 @@ describe "Transparency", ->
     this.addMatchers
       htmlToBeEqual: (expected) ->
         #TODO: Refactor to spec_helper.coffee or something
-        this.actual = this.actual.replace(/\s\s+/g, '') 
-        expected    = expected.replace(/\s\s+/g, '')
-        this.actual == expected
+        formatHtml = (html) ->
+          html.replace(/\s\s+/g, '').replace(/></g, '>\n<').split('\n')
+
+        actual   = formatHtml(this.actual)
+        expected = formatHtml(expected)
+        message  = ""
+
+        result = true
+        row    = 0
+        while row < Math.min(actual.length, expected.length)
+          if actual[row] != expected[row]
+            result  = false
+            message = "Expected row #{row + 1} to be equal:\nActual:  #{actual[row]}\nExpected:#{expected[row]}"
+            break
+          row += 1
+
+        this.message = () ->
+          message
+
+        result
 
 
   it "should assing data values to template", ->
     doc = jQuery(
      '<div>
-        <div class="container">
-          <div class="greeting"></div>
-          <div class="name"></div>
+        <div class="content">
+        </div>
+        <div class="template">
+          <div class="container"
+            <div class="hello"></div>
+            <div class="goodbye"></div>
+          </div>
         </div>
       </div>')
 
     data =
-      greeting: 'Hello '
-      name:     'World!'
+      hello:    'Hello'
+      goodbye: 'Goodbye!'
 
     expected = jQuery(
       '<div>
-        <div class="container">
-          <div class="greeting">Hello </div>
-          <div class="name">World!</div>
+        <div class="content"
+          <div class="container">
+            <div class="hello">Hello</div>
+            <div class="goodbye">Goodbye!</div>
+          </div>
+        </div>
+        <div class="template">
+          <div class="container">
+            <div class="hello"></div>
+            <div class="goodbye"></div>
+          </div>
         </div>
       </div>')
 
-    doc.find('.container').render(data)
+    result = doc.find('.template .container').clone().render(data)
+    doc.find('.content').append(result)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+    doc.find('.content').empty()
+    doc.find('.content').append(doc.find('.template .container').clone())
+    doc.find('.content .container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
   it "should handle nested templates", ->
