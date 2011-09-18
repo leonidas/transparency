@@ -73,10 +73,12 @@
     }
   };
   jQuery.fn.render = function(data, directives, parent) {
-    var buffer, context, contexts, object, result, template, _i, _j, _len, _len2;
+    var buffer, context, contexts, object, result, template, _i, _j, _len, _len2, _ref;
     directives || (directives = {});
-    result = this;
-    contexts = jQuery.isArray(data) ? this.children() : [this];
+    result = (_ref = jQuery.isArray(data)) != null ? _ref : {
+      "this": null
+    };
+    contexts = jQuery.isArray(data) ? this.children() : this;
     for (_i = 0, _len = contexts.length; _i < _len; _i++) {
       context = contexts[_i];
       context = jQuery(context);
@@ -88,6 +90,7 @@
         object = data[_j];
         object.parent_ = parent;
         buffer = template.clone();
+        result || (result = buffer);
         renderValues(buffer, object);
         renderDirectives(buffer, object, directives);
         renderChildren(buffer, object, directives);
