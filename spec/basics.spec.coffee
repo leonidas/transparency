@@ -65,11 +65,10 @@ describe "Transparency", ->
         </div>
       </div>')
 
-    result = doc.find('.template .container').clone().render(data)
-    doc.find('.content').append(result)
+    doc.find('.template .container').clone().render(data).appendTo(doc.find('.content'))
     expect(doc.html()).htmlToBeEqual(expected.html())
-    doc.find('.content').empty()
-    doc.find('.content').append(doc.find('.template .container').clone())
+
+    doc.find('.content').empty().append(doc.find('.template .container').clone())
     doc.find('.content .container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
