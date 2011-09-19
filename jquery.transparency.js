@@ -88,7 +88,9 @@
       }
       for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
         object = data[_j];
-        object.parent_ = parent;
+        if (object) {
+          object.parent_ = parent;
+        }
         buffer = template.clone();
         result || (result = buffer);
         renderValues(buffer, object);

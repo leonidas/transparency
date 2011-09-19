@@ -40,7 +40,7 @@ jQuery.fn.render = (data, directives, parent) ->
     data      = [data] unless jQuery.isArray(data)
 
     for object in data
-      object.parent_ = parent
+      object.parent_ = parent if object
       buffer         = template.clone()
       result       ||= buffer
 
