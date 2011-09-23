@@ -17,8 +17,7 @@ Template:
 
 ```html
 <div class="container">
-  <div class="greeting"><a class="name" href="#"></a>
-  </div>
+  <span class="hello"></span><span class="goodbye" href="#"></span>
 </div>
 ```
 
@@ -26,9 +25,8 @@ Javascript:
 
 ```js
 var hello = {
-  greeting:     'Hello ',
-  name:         'World!!!',
-  'name@href':  'www.example.com'
+  hello:   'Hello',
+  goodbye: 'Goodbye!'
 };
 
 $('.container').render(hello);
@@ -38,13 +36,9 @@ Result:
 
 ```html
 <div class="container">
-  <div class="greeting">Hello <a class="name" href="www.example.com">World!!!</a>
-  </div>
+  <span class="hello">Hello</span><span class="goodbye" href="#">Goodbye</span>
 </div>
 ```
-
-**Note:** In order to avoid security hacks, e.g., setting `onclick` handlers for links, only following attributes can be set:
-`id`, `class`, `src`, `alt`, `href` and `data-*`
 
 ### Iterating over a list (look ma', no loops!)
 
@@ -222,12 +216,14 @@ Result:
 
 ### Directives
 
+Directives are used for calculated values and setting element attributes. In addition to having an access to the current data object through `this`, directives also have access to the current element as a parameter, which makes it easy to, e.g., selectively hide it.
+
 Template:
 
 ```html
 <div class="person">
   <span class="name"></span>
-  <span class="email"></span>
+  <a class="email"></a>
 </div>
 ```
 
@@ -237,11 +233,12 @@ Javascript:
 person = {
   firstname: 'Jasmine',
   lastname:  'Taylor',
-  email:     'jasmine.tailor@example.com'
+  email:     'jasmine.tailor@example.com' 
 };
 
 directives =
-  name: function() { return this.firstname + " " + this.lastname; }
+  name:         function(element) { return this.firstname + " " + this.lastname; }
+  'email@href': function(element) { return "mailto:" + this.email; }
 };
 
 $('.person').render(person, directives);
@@ -252,7 +249,7 @@ Result:
 ```html
 <div class="person">
   <span class="name">Jasmine Taylor</span>
-  <span class="email">jasmine.tailor@example.com</span>
+  <a class="email" href="mailto:jasmine.tailor@example.com">jasmine.tailor@example.com</a>
 </div>
 ```
 
