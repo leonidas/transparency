@@ -10,7 +10,7 @@ describe "Transparency", ->
     this.addMatchers
       htmlToBeEqual: (expected) ->
         #TODO: Refactor to spec_helper.coffee or something
-        this.actual = this.actual.replace(/\s\s+/g, '') 
+        this.actual = this.actual.replace(/\s\s+/g, '')
         expected    = expected.replace(/\s\s+/g, '')
         this.actual == expected
 
@@ -32,9 +32,9 @@ describe "Transparency", ->
     data =
       title:    'Hello World'
       post:     'Hi there it is me'
-      comments: [ { 
+      comments: [ {
           name:    'John'
-          text: 'That rules' }, { 
+          text: 'That rules' }, {
           name:    'Arnold'
           text: 'Great post!'}
       ]
@@ -159,7 +159,7 @@ describe "Transparency", ->
       release: "1.2"
       profiles: [
         name: 'Core'
-        testsets: [ 
+        testsets: [
           name: "Sanity"
           products: [
             name: "N900"
@@ -174,7 +174,7 @@ describe "Transparency", ->
             name: "Pinetrail"
           ]
         ]
-      , 
+      ,
         name: 'Handset'
         testsets: [
           name: "Feature"
@@ -273,4 +273,58 @@ describe "Transparency", ->
       </div>')
 
     doc.find('.test_reports').render(data, directives)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should render forms", ->
+    doc = jQuery(
+     '<div>
+        <form class="hotel_reservation">
+          <label>Name
+            <input class="name_input" type="text" />
+          </label>
+          <label>Room type
+            <select class="room_types">
+              <option class="name"></option>
+            </select>
+          </label>
+        </form>
+      </div>')
+
+    data =
+      name: "Michael Jackson"
+      room_types: [
+          name: "Single"
+          id: "1"
+        ,
+          name: "Double"
+          id: "2"
+        ,
+          name: "King Size"
+          id: "3"
+          selected: "true"
+        ]
+
+    directives =
+      'name_input@value': -> @name
+      room_types:
+        'name@value': -> @id
+        'name@selected': -> @selected
+
+    expected = jQuery(
+     '<div>
+        <form class="hotel_reservation">
+          <label>Name
+            <input class="name_input" type="text" value="Michael Jackson"/>
+          </label>
+          <label>Room type
+            <select class="room_types">
+              <option class="name" value="1">Single</option>
+              <option class="name" value="2">Double</option>
+              <option class="name" value="3" selected="selected">King Size</option>
+            </select>
+          </label>
+        </form>
+      </div>')
+
+    doc.find('.hotel_reservation').render(data, directives)
     expect(doc.html()).htmlToBeEqual(expected.html())
