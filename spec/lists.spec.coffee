@@ -1,18 +1,7 @@
-global.jsdom  = require 'jsdom'
-global.window = jsdom.jsdom().createWindow()
-global.jQuery = require "jquery"
-
-require "../jquery.transparency.coffee"
+require './spec_helper'
+require '../jquery.transparency'
 
 describe "Transparency", ->
-
-  beforeEach ->
-    this.addMatchers
-      htmlToBeEqual: (expected) ->
-        #TODO: Refactor to spec_helper.coffee or something
-        this.actual = this.actual.replace(/\s\s+/g, '')
-        expected    = expected.replace(/\s\s+/g, '')
-        this.actual == expected
 
   it "should handle list of objects", ->
     doc = jQuery(

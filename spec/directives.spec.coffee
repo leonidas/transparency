@@ -1,18 +1,7 @@
-global.jsdom  = require 'jsdom'
-global.window = jsdom.jsdom().createWindow()
-global.jQuery = require "jquery"
-
-require "../jquery.transparency.coffee"
+require './spec_helper'
+require '../jquery.transparency'
 
 describe "Transparency", ->
-
-  beforeEach ->
-    @addMatchers
-      htmlToBeEqual: (expected) ->
-        #TODO: Refactor to spec_helper.coffee or something
-        @actual = @actual.replace(/\s\s+/g, '') 
-        expected    = expected.replace(/\s\s+/g, '')
-        @actual == expected
 
   it "should calculate values with directives", ->
     doc = jQuery(
