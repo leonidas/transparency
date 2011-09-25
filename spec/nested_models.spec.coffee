@@ -19,13 +19,14 @@ describe "Transparency", ->
       </div>')
 
     data =
-      title:    'Hello World'
-      post:     'Hi there it is me'
-      comments: [ {
-          name:    'John'
-          text: 'That rules' }, {
-          name:    'Arnold'
-          text: 'Great post!'}
+      title: 'Hello World'
+      post:  'Hi there it is me'
+      comments: [
+        name: 'John'
+        text: 'That rules'
+      ,
+        name: 'Arnold'
+        text: 'Great post!'
       ]
 
     expected = jQuery(

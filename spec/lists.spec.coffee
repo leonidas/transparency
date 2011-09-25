@@ -15,8 +15,11 @@ describe "Transparency", ->
       </div>')
 
     data = [
-      { name: 'John',   text: 'That rules'  },
-      { name: 'Arnold', text: 'Great post!' }
+      name: 'John'
+      text: 'That rules'
+    ,
+      name: 'Arnold'
+      text: 'Great post!'
     ]
 
     expected = jQuery(
