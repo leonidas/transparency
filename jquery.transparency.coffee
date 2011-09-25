@@ -1,9 +1,13 @@
 renderValues = (buffer, object) ->
   for key, value of object when typeof value == 'string'
-    renderNode buffer, value if buffer.hasClass key or buffer.is key
+    renderNode buffer, value          if buffer.hasClass key or buffer.is key
+    renderNode buffer, value, 'value' if buffer.is('input') and buffer.attr('name') == key
 
     for node in buffer.find("#{key}, .#{key}")
       renderNode jQuery(node), value
+
+    for node in buffer.find("input[name=#{key}]")
+      renderNode jQuery(node), value, 'value'
 
 renderDirectives = (buffer, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
@@ -52,3 +56,6 @@ jQuery.fn.render = (data, directives, parent) ->
     context.remove() # Remove the original template from the dom
 
   return result
+
+  id -> value
+

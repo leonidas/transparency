@@ -1,7 +1,7 @@
 (function() {
   var renderChildren, renderDirectives, renderNode, renderValues;
   renderValues = function(buffer, object) {
-    var key, node, value, _results;
+    var key, node, value, _i, _len, _ref, _results;
     _results = [];
     for (key in object) {
       value = object[key];
@@ -9,13 +9,21 @@
         if (buffer.hasClass(key || buffer.is(key))) {
           renderNode(buffer, value);
         }
+        if (buffer.is('input') && buffer.attr('name') === key) {
+          renderNode(buffer, value, 'value');
+        }
+        _ref = buffer.find("" + key + ", ." + key);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          node = _ref[_i];
+          renderNode(jQuery(node), value);
+        }
         _results.push((function() {
-          var _i, _len, _ref, _results2;
-          _ref = buffer.find("" + key + ", ." + key);
+          var _j, _len2, _ref2, _results2;
+          _ref2 = buffer.find("input[name=" + key + "]");
           _results2 = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            node = _ref[_i];
-            _results2.push(renderNode(jQuery(node), value));
+          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+            node = _ref2[_j];
+            _results2.push(renderNode(jQuery(node), value, 'value'));
           }
           return _results2;
         })());
@@ -101,5 +109,8 @@
       context.remove();
     }
     return result;
+    return id(function() {
+      return value;
+    });
   };
 }).call(this);
