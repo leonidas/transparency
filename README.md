@@ -11,7 +11,7 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to DO
 
 Here's some of examples. For further details, please see the examples folder, tests and the source code.
 
-### Assigning values and attributes (look ma', no assignment!)
+### Assigning values
 
 Template:
 
@@ -40,7 +40,7 @@ Result:
 </div>
 ```
 
-### Iterating over a list (look ma', no loops!)
+### Iterating over a list
 
 Template:
 
@@ -278,14 +278,15 @@ person = {
   lastname:   'Taylor',
   email:      'jasmine.taylor@example.com',
   friends:    [ {
-    firstname: 'John',
-    lastname:  'Mayer',
-    email:     'john.mayer@example.com'
-  }, {
-    firstname: 'Damien',
-    lastname:  'Rice',
-    email:     'damien.rice@example.com'
-  }
+      firstname: 'John',
+      lastname:  'Mayer',
+      email:     'john.mayer@example.com'
+    }, {
+      firstname: 'Damien',
+      lastname:  'Rice',
+      email:     'damien.rice@example.com'
+    }
+  ]
 };
 
 nameDecorator = function() { return this.firstname + " " + this.lastname };
