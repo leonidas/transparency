@@ -5,7 +5,7 @@ global.jQuery = require 'jquery'
 beforeEach ->
   this.addMatchers
     htmlToBeEqual: (expected) ->
-      #TODO: Refactor to spec_helper.coffee or something
+
       formatHtml = (html) ->
         html.replace(/\s\s+/g, '').replace(/></g, '>\n<').split('\n')
 
