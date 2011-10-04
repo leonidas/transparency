@@ -3,7 +3,7 @@ require '../src/jquery.transparency'
 
 describe "Transparency", ->
 
-  xit "should render text inputs", ->
+  it "should render text inputs", ->
     doc = jQuery(
      '<div>
         <form class="user">
@@ -26,7 +26,6 @@ describe "Transparency", ->
       </div>')
 
     doc.render(data)
-    console.log doc.html()
     expect(doc.html()).htmlToBeEqual(expected.html())
 
   xit "should radio buttons and check boxes", ->

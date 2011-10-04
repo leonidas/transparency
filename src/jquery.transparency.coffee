@@ -9,8 +9,9 @@ jQuery.fn.render = (data, directives, parent) ->
     context.empty()
 
     for object in data
-      template       = context.data('template').clone()
       object.parent_ = parent if object
+      template       = context.data('template').clone()
+      template.data 'key', context.data 'key'
 
       renderValues     template, object
       renderForms      template, object
@@ -20,44 +21,44 @@ jQuery.fn.render = (data, directives, parent) ->
 
   return contexts
 
-renderValues = (buffer, object) ->
+renderValues = (template, object) ->
   for key, value of object when typeof value == 'string'
-    renderNode buffer, value if buffer.hasClass key or buffer.is key
+    renderNode template, value if template.hasClass key or template.is key
 
-    for node in buffer.find("#{key}, .#{key}")
+    for node in template.find("#{key}, .#{key}")
       renderNode jQuery(node), value
 
-renderForms = (buffer, object) ->
-  parentKey = buffer.data 'key'
+renderForms = (template, object) ->
+  parentKey = template.data 'key'
   return unless parentKey
 
   for key, value of object when typeof value == 'string'
     inputName = "#{parentKey}\\[#{key}\\]"
 
-    if buffer.is('input') and buffer.attr('name') == inputName and buffer.attr('type') == 'text'
-      renderNode buffer, value, 'value'
+    if template.is('input') and template.attr('name') == inputName and template.attr('type') == 'text'
+      renderNode template, value, 'value'
 
-    for node in buffer.find("input[name=#{inputName}]")
+    for node in template.find("input[name=#{inputName}]")
       renderNode jQuery(node), value, 'value'
 
-renderDirectives = (buffer, object, directives) ->
+renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
     [key, attribute] = key.split('@')
 
-    if buffer.hasClass key or buffer.is key
-      renderNode buffer, directive.call(object, buffer), attribute
+    if template.hasClass key or template.is key
+      renderNode template, directive.call(object, template), attribute
 
-    for node in buffer.find("#{key}, .#{key}")
+    for node in template.find("#{key}, .#{key}")
       node = jQuery(node)
       renderNode node, directive.call(object, node), attribute
 
-renderChildren = (buffer, object, directives) ->
+renderChildren = (template, object, directives) ->
   for key, value of object when typeof value == 'object' and key != 'parent_'
-    buffer.data 'key', key
-    buffer.render value, directives[key], object if buffer.hasClass key
+    template.data 'key', key
+    template.render value, directives[key], object if template.hasClass key
 
-    buffer.find(".#{key}").data 'key', key
-    buffer.find(".#{key}").render value, directives[key], object
+    template.find(".#{key}").data 'key', key
+    template.find(".#{key}").render value, directives[key], object
 
 renderNode = (node, value, attribute) ->
   if attribute
