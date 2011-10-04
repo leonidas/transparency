@@ -1,5 +1,5 @@
 require './spec_helper'
-require '../jquery.transparency.coffee'
+require '../src/jquery.transparency'
 
 describe "Transparency", ->
 
