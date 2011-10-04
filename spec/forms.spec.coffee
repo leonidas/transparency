@@ -3,85 +3,75 @@ require '../jquery.transparency.coffee'
 
 describe "Transparency", ->
 
-  it "should render input elements", ->
+  xit "should render text inputs", ->
     doc = jQuery(
      '<div>
-        <form class="person">
-          <label>Name
-            <input type="text" name="name" />
-            <input type="password" name="password" />
-          </label>
+        <form class="user">
+          <input type="text" name="user[name]" />
+          <input type="password" name="user[password]" />
         </form>
       </div>')
 
     data =
-      name: "Michael Jackson"
-      password: "MySecret42"
+      user:
+        name: "Michael Jackson"
+        password: "MySecret42"
 
     expected = jQuery(
      '<div>
-        <form class="person">
-          <label>Name
-            <input type="text" name="name" value="Michael Jackson" />
-            <input type="password" name="password" value="MySecret42" />
-          </label>
+        <form class="user">
+          <input type="text" name="user[name]" value="Michael Jackson" />
+          <input type="password" name="user[password]" value="MySecret42" />
         </form>
       </div>')
 
-    doc.find('.person').render(data)
+    doc.render(data)
+    console.log doc.html()
     expect(doc.html()).htmlToBeEqual(expected.html())
 
-  xit "should select elements", ->
+  xit "should radio buttons and check boxes", ->
     doc = jQuery(
      '<div>
-        <form class="hotel_reservation">
-          <label>Name
-            <input type="text" name="name" />
+        <form>
+          <label class="desserts">Desserts
+            <input type="radio" name="dessert[name]" />
           </label>
-          <label>Room type
-            <select class="room_types">
-              <option class="name"></option>
-            </select>
+          <label class="addons">Add-ons
+            <input type="checkbox" name="addon[name]" />
           </label>
         </form>
       </div>')
 
     data =
-      name: "Michael Jackson"
-      room_types: [
-          name: "Single"
-          id:   "1"
-        ,
-          name: "Double"
-          id:   "2"
-        ,
-          name: "King Size"
-          id:   "3"
-          selected: "true"
-        ]
+      desserts: [
+        name: "Coffee"
+      ,
+        name: "Tea"
+      ]
+      addons: [
+        name: "Milk"
+      ,
+        name: "Sugar"
+      ]
 
     directives =
-      name: ''
-      'name_input@value': -> @name
-      room_types:
-        'name@value':    -> @id
-        'name@selected': -> @selected
+      desserts:
+        'name@': "foo"
 
     expected = jQuery(
      '<div>
-        <form class="hotel_reservation">
-          <label>Name
-            <input type="text" name="name" value="Michael Jackson"/>
+        <form>
+          <label class="desserts">Desserts
+            <input type="radio" name="dessert[name]" value="Coffee"/>
+            <input type="radio" name="dessert[name]" value="Tea"/>
           </label>
-          <label>Room type
-            <select class="room_types">
-              <option class="name" value="1">Single</option>
-              <option class="name" value="2">Double</option>
-              <option class="name" value="3" selected="selected">King Size</option>
-            </select>
+          <label class="addons">Add-ons
+            <input type="checkbox" name="addon[name]" value="Milk"/>
+            <input type="checkbox" name="addon[name]" value="Sugar"/>
           </label>
         </form>
       </div>')
 
-    doc.find('.hotel_reservation').render(data, directives)
+    doc.find('form').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+

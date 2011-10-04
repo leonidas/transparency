@@ -1,18 +1,14 @@
 require './spec_helper'
-require '../jquery.transparency'
+require '../jquery.transparency.coffee'
 
 describe "Transparency", ->
 
   it "should work with null values", ->
     doc = jQuery(
      '<div>
-        <div class="content">
-        </div>
-        <div class="template">
-          <div class="container"
-            <div class="hello"></div>
-            <div class="goodbye"></div>
-          </div>
+        <div class="container"
+          <div class="hello"></div>
+          <div class="goodbye"></div>
         </div>
       </div>')
 
@@ -22,37 +18,22 @@ describe "Transparency", ->
 
     expected = jQuery(
       '<div>
-        <div class="content"
-          <div class="container">
-            <div class="hello">Hello</div>
-            <div class="goodbye"></div>
-          </div>
-        </div>
-        <div class="template">
-          <div class="container">
-            <div class="hello"></div>
-            <div class="goodbye"></div>
-          </div>
+        <div class="container"
+          <div class="hello">Hello</div>
+          <div class="goodbye"></div>
         </div>
       </div>')
 
-    doc.find('.template .container').clone().render(data).appendTo(doc.find('.content'))
+    res = doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
-
-    doc.find('.content').empty().append(doc.find('.template .container').clone())
-    doc.find('.content .container').render(data)
-    expect(doc.html()).htmlToBeEqual(expected.html())
+    #expect(res.html()).htmlToBeEqual(expected.html())
 
   it "should assing data values to template", ->
     doc = jQuery(
      '<div>
-        <div class="content">
-        </div>
-        <div class="template">
-          <div class="container"
-            <div class="hello"></div>
-            <div class="goodbye"></div>
-          </div>
+        <div class="container"
+          <div class="hello"></div>
+          <div class="goodbye"></div>
         </div>
       </div>')
 
@@ -62,25 +43,13 @@ describe "Transparency", ->
 
     expected = jQuery(
       '<div>
-        <div class="content"
-          <div class="container">
-            <div class="hello">Hello</div>
-            <div class="goodbye">Goodbye!</div>
-          </div>
-        </div>
-        <div class="template">
-          <div class="container">
-            <div class="hello"></div>
-            <div class="goodbye"></div>
-          </div>
+        <div class="container">
+          <div class="hello">Hello</div>
+          <div class="goodbye">Goodbye!</div>
         </div>
       </div>')
 
-    doc.find('.template .container').clone().render(data).appendTo(doc.find('.content'))
-    expect(doc.html()).htmlToBeEqual(expected.html())
-
-    doc.find('.content').empty().append(doc.find('.template .container').clone())
-    doc.find('.content .container').render(data)
+    doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
   it "should handle nested templates", ->
@@ -112,3 +81,4 @@ describe "Transparency", ->
 
     doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+    #expect(result).htmlToBeEqual(expected.html())
