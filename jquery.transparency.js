@@ -1,7 +1,7 @@
 (function() {
-  var renderChildren, renderDirectives, renderNode, renderValues;
+  var renderChildren, renderDirectives, renderForms, renderNode, renderValues;
   renderValues = function(buffer, object) {
-    var key, node, value, _i, _len, _ref, _results;
+    var key, node, value, _results;
     _results = [];
     for (key in object) {
       value = object[key];
@@ -9,20 +9,40 @@
         if (buffer.hasClass(key || buffer.is(key))) {
           renderNode(buffer, value);
         }
-        if (buffer.is('input') && buffer.attr('name') === key) {
+        _results.push((function() {
+          var _i, _len, _ref, _results2;
+          _ref = buffer.find("" + key + ", ." + key);
+          _results2 = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results2.push(renderNode(jQuery(node), value));
+          }
+          return _results2;
+        })());
+      }
+    }
+    return _results;
+  };
+  renderForms = function(buffer, object) {
+    var inputName, key, node, parentKey, value, _results;
+    parentKey = buffer.data('key');
+    if (!parentKey) {
+      return;
+    }
+    _results = [];
+    for (key in object) {
+      value = object[key];
+      if (typeof value === 'string') {
+        inputName = "" + parentKey + "\\[" + key + "\\]";
+        if (buffer.is('input') && buffer.attr('name') === inputName && buffer.attr('type') === 'text') {
           renderNode(buffer, value, 'value');
         }
-        _ref = buffer.find("" + key + ", ." + key);
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          node = _ref[_i];
-          renderNode(jQuery(node), value);
-        }
         _results.push((function() {
-          var _j, _len2, _ref2, _results2;
-          _ref2 = buffer.find("input[name=" + key + "]");
+          var _i, _len, _ref, _results2;
+          _ref = buffer.find("input[name=" + inputName + "]");
           _results2 = [];
-          for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
-            node = _ref2[_j];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
             _results2.push(renderNode(jQuery(node), value, 'value'));
           }
           return _results2;
@@ -62,6 +82,7 @@
     for (key in object) {
       value = object[key];
       if (typeof value === 'object' && key !== 'parent_') {
+        buffer.data('key', key);
         if (buffer.hasClass(key)) {
           buffer.render(value, directives[key], object);
         }
@@ -81,36 +102,32 @@
     }
   };
   jQuery.fn.render = function(data, directives, parent) {
-    var buffer, context, contexts, object, result, template, _i, _j, _len, _len2, _ref;
+    var context, contexts, object, template, _i, _j, _len, _len2;
+    contexts = this;
+    if (!jQuery.isArray(data)) {
+      data = [data];
+    }
     directives || (directives = {});
-    result = (_ref = jQuery.isArray(data)) != null ? _ref : {
-      "this": null
-    };
-    contexts = jQuery.isArray(data) ? this.children() : this;
     for (_i = 0, _len = contexts.length; _i < _len; _i++) {
       context = contexts[_i];
       context = jQuery(context);
-      template = context.clone();
-      if (!jQuery.isArray(data)) {
-        data = [data];
+      if (!context.data('template')) {
+        context.data('template', context.clone());
       }
+      context.empty();
       for (_j = 0, _len2 = data.length; _j < _len2; _j++) {
         object = data[_j];
+        template = context.data('template').clone();
         if (object) {
           object.parent_ = parent;
         }
-        buffer = template.clone();
-        result || (result = buffer);
-        renderValues(buffer, object);
-        renderDirectives(buffer, object, directives);
-        renderChildren(buffer, object, directives);
-        context.before(buffer);
+        renderValues(template, object);
+        renderForms(template, object);
+        renderDirectives(template, object, directives);
+        renderChildren(template, object, directives);
+        context.append(template.html());
       }
-      context.remove();
     }
-    return result;
-    return id(function() {
-      return value;
-    });
+    return contexts;
   };
 }).call(this);
