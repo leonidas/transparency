@@ -1,3 +1,25 @@
+jQuery.fn.render = (data, directives, parent) ->
+  contexts     = this
+  data         = [data] unless jQuery.isArray(data)
+  directives ||= {}
+
+  for context in contexts
+    context = jQuery(context)
+    context.data('template', context.clone()) unless context.data 'template'
+    context.empty()
+
+    for object in data
+      template       = context.data('template').clone()
+      object.parent_ = parent if object
+
+      renderValues     template, object
+      renderForms      template, object
+      renderDirectives template, object, directives
+      renderChildren   template, object, directives
+      context.append   template.html()
+
+  return contexts
+
 renderValues = (buffer, object) ->
   for key, value of object when typeof value == 'string'
     renderNode buffer, value if buffer.hasClass key or buffer.is key
@@ -33,6 +55,8 @@ renderChildren = (buffer, object, directives) ->
   for key, value of object when typeof value == 'object' and key != 'parent_'
     buffer.data 'key', key
     buffer.render value, directives[key], object if buffer.hasClass key
+
+    buffer.find(".#{key}").data 'key', key
     buffer.find(".#{key}").render value, directives[key], object
 
 renderNode = (node, value, attribute) ->
@@ -42,26 +66,3 @@ renderNode = (node, value, attribute) ->
     children = node.children().detach()
     node.text value
     node.append children
-
-jQuery.fn.render = (data, directives, parent) ->
-  contexts     = this
-  data         = [data] unless jQuery.isArray(data)
-  directives ||= {}
-
-  for context in contexts
-    context = jQuery(context)
-    context.data('template', context.clone()) unless context.data 'template'
-    context.empty()
-
-    for object in data
-      template       = context.data('template').clone()
-      object.parent_ = parent if object
-
-      renderValues     template, object
-      renderForms      template, object
-      renderDirectives template, object, directives
-      renderChildren   template, object, directives
-      context.append   template.html()
-
-  return contexts
-
