@@ -23,14 +23,12 @@ jQuery.fn.render = (data, directives, parent) ->
 
 renderValues = (template, object) ->
   for key, value of object when typeof value == 'string'
-    if template.hasClass key or template.is key
-      template.data 'object', object
-      renderNode template, value
+    renderables = template.find(".#{key}").add(template if template.hasClass key or template.is key)
 
-    for node in template.find("#{key}, .#{key}")
-      $node = jQuery(node)
-      $node.data 'object', object
-      renderNode $node, value
+    for node in renderables
+      node = jQuery(node)
+      node.data 'object', object
+      renderNode node, value
 
 renderForms = (template, object) ->
   parentKey = template.data 'key'
@@ -48,21 +46,17 @@ renderForms = (template, object) ->
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
     [key, attribute] = key.split('@')
+    renderables      = template.find(".#{key}").add(template if template.hasClass key or template.is key)
 
-    if template.hasClass key or template.is key
-      renderNode template, directive.call(object, template), attribute
-
-    for node in template.find("#{key}, .#{key}")
+    for node in renderables
       node = jQuery(node)
       renderNode node, directive.call(object, node), attribute
 
 renderChildren = (template, object, directives) ->
   for key, value of object when typeof value == 'object' and key != 'parent_'
-    template.data 'key', key
-    template.render value, directives[key], object if template.hasClass key
-
-    template.find(".#{key}").data 'key', key
-    template.find(".#{key}").render value, directives[key], object
+    renderables = template.find(".#{key}").add(template if template.hasClass key)
+      .data('key', key)
+      .render value, directives[key], object
 
 renderNode = (node, value, attribute) ->
   if attribute
