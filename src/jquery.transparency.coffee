@@ -17,16 +17,20 @@ jQuery.fn.render = (data, directives, parent) ->
       renderForms      template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
-      context.append   template.html()
+      context.append   template.children().clone true, true
 
   return contexts
 
 renderValues = (template, object) ->
   for key, value of object when typeof value == 'string'
-    renderNode template, value if template.hasClass key or template.is key
+    if template.hasClass key or template.is key
+      template.data 'object', object
+      renderNode template, value
 
     for node in template.find("#{key}, .#{key}")
-      renderNode jQuery(node), value
+      $node = jQuery(node)
+      $node.data 'object', object
+      renderNode $node, value
 
 renderForms = (template, object) ->
   parentKey = template.data 'key'
