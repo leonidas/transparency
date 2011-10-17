@@ -17,8 +17,8 @@ describe "Transparency", ->
       email: 'jasmine.tailor@example.com'
 
     doc.find('.person').render person
-    object = doc.find('.name').data('object')
-    expect(object).toEqual(person)
+    data = doc.find('.name').data('data')
+    expect(data).toEqual(person)
 
   it "should allow updating original data", ->
     doc = jQuery(
@@ -34,7 +34,7 @@ describe "Transparency", ->
       email: 'jasmine.tailor@example.com'
 
     doc.find('.person').render person
-    object = doc.find('.person .name').data('object')
-    object.name = 'Frank Sinatra'
+    data = doc.find('.person .name').data('data')
+    data.name = 'Frank Sinatra'
 
-    expect(object.name).toEqual(person.name)
+    expect(data.name).toEqual(person.name)

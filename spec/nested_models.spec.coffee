@@ -185,13 +185,11 @@ describe "Transparency", ->
 
     directives =
       profiles:
-        'name@href': (elem) -> "/#{data.release}/#{@name}"
+        'name@href': (elem, data) -> "/#{@name}"
         testsets:
-          'name@href': (elem) ->
-            "/#{data.release}/#{@parent_.name}/#{@name}"
+          'name@href': (elem, data) -> "/#{@name}"
           products:
-           'name@href': (elem) ->
-              "/#{data.release}/#{@parent_.parent_.name}/#{@parent_.name}/#{@name}"
+           'name@href': (elem, data) -> "/#{@name}"
 
     expected = jQuery(
      '<div>
@@ -199,10 +197,10 @@ describe "Transparency", ->
           <thead>
             <tr class="profiles">
               <th>
-                <a class="name" href="/1.2/Core">Core</a>
+                <a class="name" href="/Core">Core</a>
               </th>
               <th>
-                <a class="name" href="/1.2/Handset">Handset</a>
+                <a class="name" href="/Handset">Handset</a>
               </th>
             </tr>
           </thead>
@@ -210,24 +208,24 @@ describe "Transparency", ->
             <tr class="profiles">
               <td class="testsets">
                 <div class="testset">
-                  <a class="name" href="/1.2/Core/Sanity">Sanity</a>
+                  <a class="name" href="/Sanity">Sanity</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/1.2/Core/Sanity/N900">N900</a>
+                      <a class="name" href="/N900">N900</a>
                     </li>
                     <li>
-                      <a class="name" href="/1.2/Core/Sanity/Lenovo">Lenovo</a>
+                      <a class="name" href="/Lenovo">Lenovo</a>
                     </li>
                   </ul>
                 </div>
                 <div class="testset">
-                  <a class="name" href="/1.2/Core/Acceptance">Acceptance</a>
+                  <a class="name" href="/Acceptance">Acceptance</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/1.2/Core/Acceptance/Netbook">Netbook</a>
+                      <a class="name" href="/Netbook">Netbook</a>
                     </li>
                     <li>
-                      <a class="name" href="/1.2/Core/Acceptance/Pinetrail">Pinetrail</a>
+                      <a class="name" href="/Pinetrail">Pinetrail</a>
                     </li>
                   </ul>
                 </div>
@@ -235,24 +233,24 @@ describe "Transparency", ->
 
               <td class="testsets">
                 <div class="testset"
-                  <a class="name" href="/1.2/Handset/Feature">Feature</a>
+                  <a class="name" href="/Feature">Feature</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/1.2/Handset/Feature/N900">N900</a>
+                      <a class="name" href="/N900">N900</a>
                     </li>
                     <li>
-                      <a class="name" href="/1.2/Handset/Feature/Lenovo">Lenovo</a>
+                      <a class="name" href="/Lenovo">Lenovo</a>
                     </li>
                   </ul>
                 </div>
                 <div class="testset"
-                  <a class="name" href="/1.2/Handset/NFT">NFT</a>
+                  <a class="name" href="/NFT">NFT</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/1.2/Handset/NFT/Netbook">Netbook</a>
+                      <a class="name" href="/Netbook">Netbook</a>
                     </li>
                     <li>
-                      <a class="name" href="/1.2/Handset/NFT/iCDK">iCDK</a>
+                      <a class="name" href="/iCDK">iCDK</a>
                     </li>
                   </ul>
                 </div>

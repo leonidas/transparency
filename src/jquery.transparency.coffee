@@ -9,7 +9,6 @@ jQuery.fn.render = (data, directives, parent) ->
     context.empty()
 
     for object in data
-      object.parent_ = parent if object
       template       = context.data('template').clone()
       template.data 'key', context.data 'key'
 
@@ -27,7 +26,7 @@ renderValues = (template, object) ->
 
     for node in renderables
       node = jQuery(node)
-      node.data 'object', object
+      node.data 'data', object
       renderNode node, value
 
 renderForms = (template, object) ->
@@ -53,7 +52,7 @@ renderDirectives = (template, object, directives) ->
       renderNode node, directive.call(object, node), attribute
 
 renderChildren = (template, object, directives) ->
-  for key, value of object when typeof value == 'object' and key != 'parent_'
+  for key, value of object when typeof value == 'object'
     renderables = template.find(".#{key}").add(template if template.hasClass key)
       .data('key', key)
       .render value, directives[key], object
