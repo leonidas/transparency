@@ -82,3 +82,28 @@ describe "Transparency", ->
     doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
     #expect(result).htmlToBeEqual(expected.html())
+
+  it "should work with numeric values", ->
+    doc = jQuery(
+     '<div>
+        <div class="container"
+          <div class="hello"></div>
+          <div class="goodbye"></div>
+        </div>
+      </div>')
+
+    data =
+      hello:   'Hello'
+      goodbye: 5
+
+    expected = jQuery(
+      '<div>
+        <div class="container"
+          <div class="hello">Hello</div>
+          <div class="goodbye">5</div>
+        </div>
+      </div>')
+
+    res = doc.find('.container').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+    #expect(res.html()).htmlToBeEqual(expected.html())

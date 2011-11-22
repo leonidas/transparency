@@ -21,7 +21,7 @@ jQuery.fn.render = (data, directives, parent) ->
   return contexts
 
 renderValues = (template, object) ->
-  for key, value of object when typeof value == 'string'
+  for key, value of object when typeof value != 'object'
     renderables = template.find(".#{key}").add(template if template.hasClass key or template.is key)
 
     for node in renderables
@@ -33,7 +33,7 @@ renderForms = (template, object) ->
   parentKey = template.data 'key'
   return unless parentKey
 
-  for key, value of object when typeof value == 'string'
+  for key, value of object when typeof value != 'object'
     inputName = "#{parentKey}\\[#{key}\\]"
 
     if template.is('input') and template.attr('name') == inputName and template.attr('type') == 'text'
