@@ -12,7 +12,7 @@
                      "Antti Tarvainen <antti.tarvainen@leonidasoy.fi>",
                      "Tomi Laine <tomi.laine@leonidasoy.fi>"],
   "licenses"      : ["MIT"],
-  "dependencies"  : {"jsdom"        : ">=0.2.10",
+  "dependencies"  : {"jsdom"        : ">=0.2.x",
                      "jquery"       : ">=1.6.x",
                      "jasmine-node" : ">=1.0.x",
                      "coffee-script": ">=1.1.x"},
