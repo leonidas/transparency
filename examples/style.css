@@ -1,0 +1,19 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+  color: #00b7ff;
+}
+form {
+  width: 500px;
+}
+input[type=submit] {
+  float: right;
+}
+input[type=text],
+textarea {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

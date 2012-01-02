@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Try Transparency</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="coffee-script.js"></script>
+    <script src="jade.js"></script>
+    <script src="jquery-1.7.1.min.js"></script>
+    <script src="../lib/jquery.transparency.min.js"></script>
+  </head>
+
+  <body>
+    <h1>Try Transparency</h1>
+    <div style="width: 70%">
+      <div style="float: left;">
+        <h3>Data in CoffeeScript</h3>
+        <textarea class="data" rows="15" cols="50">foo: "bar"</textarea>
+      </div>
+      <div style="float: left;">
+        <h3>Template in Jade</h3>
+        <textarea class="template" rows="15" cols="50">
+.container
+  .foo
+        </textarea>
+      </div>
+      <div style="float: left;">
+        <h3>
+      <button id="eval" style="clear: both; float: right;">Render</button>
+    <div>
+    <div style="clear: both;">
+      <h3>Result</h3>
+      <div class="result"></div>
+    </div>
+    <script type="text/coffeescript">
+      $(document).ready ->
+        $('#eval').click ->
+
+          data = $('.data').val()
+          template = $('.template').val()
+          try
+            data = CoffeeScript.compile data, bare: on
+            data = eval data
+            template = jade.compile(template)()
+          catch error
+            alert error.message
+
+          $('.result').empty().append $(template).render(data)
+    </script>
+  </body>
+</html>
