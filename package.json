@@ -15,6 +15,6 @@
   "dependencies"  : {"jsdom"        : ">=0.2.10",
                      "jquery"       : ">=1.6.x",
                      "jasmine-node" : ">=1.0.x",
-                     "coffee-script": ">=1.1.x"},
+                     "coffee-script": ">=1.2.x"},
   "main"          : "spec/jquery.transparency.spec.coffee"
 }
