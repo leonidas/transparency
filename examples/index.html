@@ -3,33 +3,38 @@
   <head>
     <title>Try Transparency</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/prettify.css">
     <script src="js/coffee-script.js"></script>
     <script src="js/jade.js"></script>
     <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/prettify.js"></script>
     <script src="../lib/jquery.transparency.min.js"></script>
   </head>
 
   <body>
     <h1>Try Transparency</h1>
-    <div style="width: 70%">
+    <div>
       <div style="float: left;">
-        <h3>Data in CoffeeScript</h3>
-        <textarea class="data" rows="15" cols="50">foo: "bar"</textarea>
-      </div>
-      <div style="float: left;">
-        <h3>Template in Jade</h3>
-        <textarea class="template" rows="15" cols="50">
+        <h3><a id="jade">Jade</a> | <a id="html">HTML</a></h3>
+        <textarea class="template" rows="15" cols="62">
 .container
   .foo
         </textarea>
       </div>
       <div style="float: left;">
+        <h3><a id="coffee">CoffeeScript</a> | <a id="javascript">JavaScript</a></h3>
+        <textarea class="data" rows="15" cols="62">foo: "bar"</textarea>
+      </div>
+      <div style="float: left;">
         <h3>
+      </div>
       <button id="eval" style="clear: both; float: right;">Render</button>
     <div>
     <div style="clear: both;">
       <h3>Result</h3>
-      <div class="result"></div>
+      <div class="result" style="float: left; width: 400px">&nbsp</div>
+      <h3>Source</h3>
+      <textarea class="source" rows="15" cols="62" style="float: left"></textarea>
     </div>
     <script type="text/coffeescript">
       $(document).ready ->
@@ -45,6 +50,7 @@
             alert error.message
 
           $('.result').empty().append $(template).render(data)
+          $('.source').val $('.result').html()
     </script>
   </body>
 </html>
