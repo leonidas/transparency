@@ -16,6 +16,9 @@ textarea, pre {
   margin-bottom: 10px;
 }
 
+#error {
+  color: red;
+}
 #result div {
   margin-left: 10px;
 }

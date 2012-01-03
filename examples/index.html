@@ -27,6 +27,7 @@
     <div class="col">
         <h3><a href="#" class="option" id="jade">Jade</a> | <a href="#" class="option" id="html">HTML</a></h3>
         <textarea id="template" rows="15" cols="62"></textarea>
+        <div id="error"></div>
         <h3>Result</h3>
         <div id="result"></div>
       </div>
@@ -37,7 +38,6 @@
       <textarea id="code" rows="15" cols="52"></textarea>
       <h3>Rendered HTML</h3>
       <pre id="source" class="prettyprint"></pre>
-      <button id="eval" style="clear: both; float: right;">Render</button>
     </div>
 
     <script type="text/coffeescript">
@@ -218,8 +218,9 @@
             eval code
             $('#source').empty().text style_html($('#result').html(), indent_size: 2)
             prettyPrint()
+            $('#error').empty()
           catch error
-            alert error
+            $('#error').text error.message
 
         $('.option').click (event) ->
           event.preventDefault()
