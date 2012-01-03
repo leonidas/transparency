@@ -8,49 +8,225 @@
     <script src="js/jade.js"></script>
     <script src="js/jquery-1.7.1.min.js"></script>
     <script src="js/prettify.js"></script>
+    <script src="js/beautify-html.js"></script>
     <script src="../lib/jquery.transparency.min.js"></script>
   </head>
-
   <body>
     <h1>Try Transparency</h1>
-    <div>
-      <div style="float: left;">
-        <h3><a id="jade">Jade</a> | <a id="html">HTML</a></h3>
-        <textarea class="template" rows="15" cols="62">
-.container
-  .foo
-        </textarea>
-      </div>
-      <div style="float: left;">
-        <h3><a id="coffee">CoffeeScript</a> | <a id="javascript">JavaScript</a></h3>
-        <textarea class="data" rows="15" cols="62">foo: "bar"</textarea>
-      </div>
-      <div style="float: left;">
-        <h3>
-      </div>
-      <button id="eval" style="clear: both; float: right;">Render</button>
-    <div>
-    <div style="clear: both;">
-      <h3>Result</h3>
-      <div class="result" style="float: left; width: 400px">&nbsp</div>
-      <h3>Source</h3>
-      <textarea class="source" rows="15" cols="62" style="float: left"></textarea>
-    </div>
-    <script type="text/coffeescript">
-      $(document).ready ->
-        $('#eval').click ->
+    <h2>Examples</h2>
+    <ul id="examples">
+      <li><a href="#" id="assigning-values">Assigning values</a></li>
+      <li><a href="#" id="iterating-over-a-list">Iterating over a list</a></li>
+      <li><a href="#" id="nested-lists">Nested lists</a></li>
+      <li><a href="#" id="nested-objects">Nested objects</a></li>
+      <li><a href="#" id="directives">Directives</a></li>
+      <li><a href="#" id="nested-directives">Nested directives</a></li>
+    </ul>
 
-          data = $('.data').val()
-          template = $('.template').val()
+    <!-- Left col -->
+    <div class="col">
+        <h3><a href="#" id="jade">Jade</a> | <a href="#" id="html">HTML</a></h3>
+        <textarea id="template" rows="15" cols="62">
+.container
+  .hello
+  .goodbye
+        </textarea>
+        <h3>Result</h3>
+        <div id="result">&nbsp</div>
+      </div>
+
+    <!-- Right col -->
+    <div class="col">
+      <h3><a href="#" id="coffee">CoffeeScript</a> | <a href="#" id="javascript">JavaScript</a></h3>
+      <textarea id="code" rows="15" cols="52">foo: "bar"</textarea>
+      <h3>Rendered HTML</h3>
+      <pre id="source" class="prettyprint"></pre>
+      <button id="eval" style="clear: both; float: right;">Render</button>
+    </div>
+
+    <script type="text/coffeescript">
+      examples =
+        "assigning-values":
+          coffee:
+            """
+            hello =
+              hello: "Hello!"
+              goodbye: "Goodbye!"
+
+            $('.container').render hello
+            """
+          jade:
+            """
+            .container
+              .hello
+              .goodbye
+            """
+
+        "iterating-over-a-list":
+          coffee:
+            """
+            activities = [
+              date:     '2011-08-23'
+              activity: 'Jogging'
+              comment:  'Early morning run'
+              name:     'Harry Potter'
+            ,
+              date:     '2011-09-04'
+              activity: 'Gym'
+              comment:  'Chest workout'
+              name:     'Batman'
+            ]
+
+            $('.activities').render activities
+            """
+          jade:
+            """
+            table
+              thead
+                tr
+                  th Date
+                  th Activity
+                  th Comment
+                  th Name
+              tbody.activities
+                tr.activity
+                  td.date
+                  td.activity
+                  td.comment
+                  td.name
+            """
+
+        "nested-lists":
+          coffee:
+            """
+            post =
+              title:    'Hello World',
+              post:     'Hi there it is me',
+              comments: [
+                name: 'John',
+                text: 'That rules'
+              ,
+                name: 'Arnold',
+                text: 'Great post!'
+              ]
+
+            $('.container').render post
+            """
+          jade:
+            """
+            .container
+              h1.title
+              p.post
+              .comments
+                .comment
+                  span.name
+                  span.text
+            """
+
+        "nested-objects":
+          coffee:
+            """
+            person =
+              firstname: 'John'
+              lastname: 'Wayne'
+              address:
+                street: '4th Street'
+                city: 'San Francisco'
+                zip: 94199
+
+            $(".person").render person
+            """
+          jade:
+            """
+            .person
+              .firstname
+              .lastname
+              .address
+                .street
+                .zip
+                  span.city
+            """
+
+        "directives":
+          coffee:
+            """
+            person =
+              firstname: 'Jasmine'
+              lastname:  'Taylor'
+              email:     'jasmine.tailor@example.com'
+
+            directives =
+              name:         -> "\#{@firstname} \#{@lastname}"
+              'email@href': -> "mailto:\#{@email}"
+
+            $('.person').render person, directives
+            """
+          jade:
+            """
+            .person
+              .name
+              a.email
+            """
+
+        "nested-directives":
+          coffee:
+            """
+            person =
+              firstname: 'Jasmine'
+              lastname: 'Taylor'
+              email: 'jasmine.taylor@example.com'
+              friends: [
+                firstname: 'John'
+                lastname: 'Mayer'
+                email: 'john.mayer@example.com'
+              ,
+                firstname: 'Damien'
+                lastname: 'Rice'
+                email: 'damien.rice@example.com'
+              ]
+
+            nameDecorator = ->
+              "\#{@firstname} \#{@lastname}"
+
+            directives =
+              name: nameDecorator
+              friends:
+                name: nameDecorator
+
+            $('.person').render person, directives
+            """
+          jade:
+            """
+            .person
+              .name
+              .email
+              .friends
+                .friend
+                  .name
+                  .email
+            """
+
+      $(document).ready ->
+        $('#code, #template').keyup ->
+          code = $('#code').val()
+          template = $('#template').val()
           try
-            data = CoffeeScript.compile data, bare: on
-            data = eval data
             template = jade.compile(template)()
+            $('#result').empty().append $(template)
+            code = CoffeeScript.compile code, bare: on
+            code = eval code
           catch error
             alert error.message
 
-          $('.result').empty().append $(template).render(data)
-          $('.source').val $('.result').html()
+          $('#source').empty().text style_html($('#result').html(), indent_size: 2)
+          prettyPrint()
+
+        $('#examples a').click (event) ->
+          event.preventDefault()
+          example = $(event.target).attr 'id'
+          $('#code').val examples[example].coffee
+          $('#template').val examples[example].jade
+          $('#code').trigger 'keyup'
     </script>
   </body>
 </html>
