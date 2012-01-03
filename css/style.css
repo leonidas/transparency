@@ -1,0 +1,29 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00b7ff;
+}
+
+textarea, pre {
+  font-family: courier;
+  font-size: small;
+  display: block;
+  width: 400px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#error {
+  color: red;
+}
+#result div {
+  margin-left: 10px;
+}
+
+.col {
+  float: left;
+  margin-right: 15px;
+}
