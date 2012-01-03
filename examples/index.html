@@ -25,20 +25,16 @@
 
     <!-- Left col -->
     <div class="col">
-        <h3><a href="#" id="jade">Jade</a> | <a href="#" id="html">HTML</a></h3>
-        <textarea id="template" rows="15" cols="62">
-.container
-  .hello
-  .goodbye
-        </textarea>
+        <h3><a href="#" class="option" id="jade">Jade</a> | <a href="#" class="option" id="html">HTML</a></h3>
+        <textarea id="template" rows="15" cols="62"></textarea>
         <h3>Result</h3>
-        <div id="result">&nbsp</div>
+        <div id="result"></div>
       </div>
 
     <!-- Right col -->
     <div class="col">
-      <h3><a href="#" id="coffee">CoffeeScript</a> | <a href="#" id="javascript">JavaScript</a></h3>
-      <textarea id="code" rows="15" cols="52">foo: "bar"</textarea>
+      <h3><a href="#" class="option" id="coffee">CoffeeScript</a> | <a href="#" class="option" id="javascript">JavaScript</a></h3>
+      <textarea id="code" rows="15" cols="52"></textarea>
       <h3>Rendered HTML</h3>
       <pre id="source" class="prettyprint"></pre>
       <button id="eval" style="clear: both; float: right;">Render</button>
@@ -207,26 +203,50 @@
             """
 
       $(document).ready ->
+        state =
+          example:  "assigning-values"
+          template: "jade"
+          code:     "coffee"
+
         $('#code, #template').keyup ->
           code = $('#code').val()
           template = $('#template').val()
           try
-            template = jade.compile(template)()
-            $('#result').empty().append $(template)
-            code = CoffeeScript.compile code, bare: on
-            code = eval code
+            template = jade.compile(template)() if state.template == "jade"
+            $('#result').empty().append template
+            code = CoffeeScript.compile(code, bare: on) if state.code == "coffee"
+            eval code
+            $('#source').empty().text style_html($('#result').html(), indent_size: 2)
+            prettyPrint()
           catch error
-            alert error.message
+            alert error
 
-          $('#source').empty().text style_html($('#result').html(), indent_size: 2)
-          prettyPrint()
-
-        $('#examples a').click (event) ->
+        $('.option').click (event) ->
           event.preventDefault()
-          example = $(event.target).attr 'id'
-          $('#code').val examples[example].coffee
-          $('#template').val examples[example].jade
+          option = $(event.target).attr 'id'
+          console.log option
+          switch option
+            when "jade", "html"         then state.template = option
+            when "coffee", "javascript" then state.code     = option
+          updateCode()
+
+        $('#examples').click (event) ->
+          event.preventDefault()
+          state.example = $(event.target).attr 'id'
+          updateCode()
+
+        updateCode = () ->
+          switch state.code
+            when "coffee" then $('#code').val examples[state.example]["coffee"]
+            else $('#code').val CoffeeScript.compile(examples[state.example]["coffee"], bare: on)
+
+          switch state.template
+            when "jade" then $('#template').val examples[state.example]["jade"]
+            else $('#template').val style_html(jade.compile(examples[state.example]["jade"])(), indent_size: 2)
+
           $('#code').trigger 'keyup'
+
+        $('#examples a').first().trigger 'click'
     </script>
   </body>
 </html>

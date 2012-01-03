@@ -9,6 +9,7 @@ a {
 
 textarea, pre {
   font-family: courier;
+  font-size: small;
   display: block;
   width: 400px;
   margin-top: 10px;
