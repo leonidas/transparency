@@ -1,15 +1,35 @@
 body {
-  padding: 50px;
+  margin: 0;
   font: 18px "Terminal Dosis", sans-serif;
   font-weight: 300;
+  background-color: #95c7d0;
+}
+
+#main {
   background: #95c7d0 url("../img/body-back.jpg") no-repeat center top;
   color: #44666d;
   text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
+  width: 100%;
+  padding: 50px 0 80px 0;
+  border-bottom: 1px solid #bedbe2;
+  background-attachment: fixed;
 }
 
 a {
   color: #44666d;
   text-decoration: none;
+}
+
+hr {
+  background: transparent url("../img/hr.png") repeat-x center center;
+  height: 2px;
+  border: none;
+  margin: 30px 0;
+  clear: both;
+}
+
+strong {
+  font-weight: 600;
 }
 
 #logo {
@@ -18,7 +38,20 @@ a {
   background: transparent url("../img/logo.png") no-repeat center center;
   text-indent: -99999px;
   overflow: hidden;
-  margin: 0px 0 60px 0;
+  margin: 0px 0 30px 0;
+}
+
+#tagline {
+  font-size: 36px;
+  text-align: center;
+  margin: 0px;
+  font-weight: 300;
+  color: #669ba5;
+}
+
+#tagline strong {
+  color: #44666d;
+  font-weight: 300;
 }
 
 h2, h3, h4, h5, h6 {
@@ -33,13 +66,18 @@ h2, h3, h4, h5, h6 {
   margin: 0 auto;
 }
 
+#content {
+  width: 780px;
+  float: left;
+  position: relative;
+}
+
 .editor {
   background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
   background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
   background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
   background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
   background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
-
   background-image: -webkit-gradient(
     linear,
     left bottom,
@@ -76,7 +114,6 @@ h2, h3, h4, h5, h6 {
   background-image: -moz-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
   background-image: -webkit-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
   background-image: -ms-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
-
   background-image: -webkit-gradient(
     linear,
     left bottom,
@@ -106,7 +143,6 @@ textarea {
   background-image: -moz-linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
   background-image: -webkit-linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
   background-image: -ms-linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
-
   background-image: -webkit-gradient(
     linear,
     left bottom,
@@ -131,7 +167,6 @@ pre.prettyprint {
   background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
-
   background-image: -webkit-gradient(
     linear,
     left bottom,
@@ -154,7 +189,6 @@ pre.prettyprint {
   background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
-
   background-image: -webkit-gradient(
     linear,
     left bottom,
@@ -178,7 +212,10 @@ pre.prettyprint {
 }
 
 #error {
-  color: red;
+  clear: both;
+  color: #a40027;
+  padding-left: 20px;
+  padding-top: 10px;
 }
 
 .col {
@@ -217,3 +254,48 @@ pre.prettyprint {
 #examples li a:hover {
   background-color: rgba(255,255,255,0.2);
 }
+
+#read-more {
+  float: right;
+  display: block;
+  height: 50px;
+  line-height: 48px;
+  border-radius: 10px;
+  color: #EBF5F7;
+  background-image: linear-gradient(bottom, rgb(90,120,128) 0%, rgb(100,136,146) 100%);
+  background-image: -o-linear-gradient(bottom, rgb(90,120,128) 0%, rgb(100,136,146) 100%);
+  background-image: -moz-linear-gradient(bottom, rgb(90,120,128) 0%, rgb(100,136,146) 100%);
+  background-image: -webkit-linear-gradient(bottom, rgb(90,120,128) 0%, rgb(100,136,146) 100%);
+  background-image: -ms-linear-gradient(bottom, rgb(90,120,128) 0%, rgb(100,136,146) 100%);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, rgb(90,120,128)),
+    color-stop(1, rgb(100,136,146))
+  );
+  padding: 0 20px;
+  text-shadow: -1px -1px 0px rgba(0,0,0,0.1);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 24px;
+  text-shadow: -1px -1px 0px #415c64;
+  box-shadow: inset 0px 0px 5px #415c64;
+}
+
+#read-more:active {
+  background-image: linear-gradient(bottom, rgb(90,120,128) 100%, rgb(100,136,146) 0%);
+  background-image: -o-linear-gradient(bottom, rgb(90,120,128) 100%, rgb(100,136,146) 0%);
+  background-image: -moz-linear-gradient(bottom, rgb(90,120,128) 100%, rgb(100,136,146) 0%);
+  background-image: -webkit-linear-gradient(bottom, rgb(90,120,128) 100%, rgb(100,136,146) 0%);
+  background-image: -ms-linear-gradient(bottom, rgb(90,120,128) 100%, rgb(100,136,146) 0%);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(1, rgb(90,120,128)),
+    color-stop(0, rgb(100,136,146))
+  );
+}
+
+

@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Try Transparency</title>
+    <link rel="shortcut icon" href="favicon.ico">
     <link href='http://fonts.googleapis.com/css?family=Inconsolata|Terminal+Dosis:300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/prettify.css">
     <link rel="stylesheet" href="css/style.css">
@@ -13,48 +14,64 @@
     <script src="js/jquery.transparency.js"></script>
   </head>
   <body>
-    <div class="wrap">
-      <h1 id="logo">Try Transparency</h1>
+    <div id="main">
+      <div class="wrap">
+        <h1 id="logo">Try Transparency</h1>
+        <hr>
+        <p id="tagline">
+          Transparency is a minimal template engine for jQuery. It maps JSON objects to DOM elements with zero configuration. <strong>Just call .render()</strong>
+        </p>
+        <hr>
+        <div class="aside">
+          <h2>Examples</h2>
+          <ul id="examples">
+            <li><a href="#" id="assigning-values">Assigning values</a></li>
+            <li><a href="#" id="iterating-over-a-list">Iterating over a list</a></li>
+            <li><a href="#" id="nested-lists">Nested lists</a></li>
+            <li><a href="#" id="nested-objects">Nested objects</a></li>
+            <li><a href="#" id="directives">Directives</a></li>
+            <li><a href="#" id="nested-directives">Nested directives</a></li>
+          </ul>
+        </div>
+        <div id="content">
 
-      <div class="aside">
-        <h2>Examples</h2>
-        <ul id="examples">
-          <li><a href="#" id="assigning-values">Assigning values</a></li>
-          <li><a href="#" id="iterating-over-a-list">Iterating over a list</a></li>
-          <li><a href="#" id="nested-lists">Nested lists</a></li>
-          <li><a href="#" id="nested-objects">Nested objects</a></li>
-          <li><a href="#" id="directives">Directives</a></li>
-          <li><a href="#" id="nested-directives">Nested directives</a></li>
-        </ul>
-      </div>
-
-      <!-- Left col -->
-      <div class="col">
-        <div class="editor">
-          <div class="tabs">
-            <a href="#" class="option active" id="jade">Jade</a><a href="#" class="option" id="html">HTML</a></h3>
+          <div class="col">
+            <div class="editor">
+              <div class="tabs">
+                <a href="#" class="option active" id="coffee">CoffeeScript</a><a href="#" class="option" id="javascript">JavaScript</a>
+              </div>
+              <textarea id="code" rows="15"></textarea>
+            </div>
           </div>
-          <textarea id="template" rows="15"></textarea>
+
+          <div class="col">
+            <div class="editor">
+              <div class="tabs">
+                <a href="#" class="option active" id="jade">Jade</a><a href="#" class="option" id="html">HTML</a></h3>
+              </div>
+              <textarea id="template" rows="15"></textarea>
+            </div>
+          </div>
+
           <div id="error"></div>
-        </div>
-        <h3>Result</h3>
-        <div id="result"></div>
-      </div>
 
-      <!-- Right col -->
-      <div class="col">
-        <div class="editor">
-          <div class="tabs">
-            <a href="#" class="option active" id="coffee">CoffeeScript</a><a href="#" class="option" id="javascript">JavaScript</a>
+          <div class="col">
+            <h3>HTML</h3>
+            <pre id="source" class="prettyprint"></pre>
           </div>
-          <textarea id="code" rows="15"></textarea>
-        </div>
-        <h3>Rendered HTML</h3>
-        <pre id="source" class="prettyprint"></pre>
-      </div>
 
+          <div class="col">
+            <h3>Result</h3>
+            <div id="result"></div>
+          </div>
+
+        </div>
+        <div style="clear: both;"></div>
+        <hr>
+        <a href="http://github.com/pyykkis/transparency" id="read-more">Read more</a>
+      </div>
+      <div style="clear: both;"></div>
     </div>
-    <div style="clear: both;"></div>
     <script type="text/coffeescript">
       examples =
         "assigning-values":
