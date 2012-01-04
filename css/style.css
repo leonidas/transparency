@@ -1,29 +1,219 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 18px "Terminal Dosis", sans-serif;
+  font-weight: 300;
+  background: #95c7d0 url("../img/body-back.jpg") no-repeat center top;
+  color: #44666d;
+  text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
 }
 
 a {
-  color: #00b7ff;
+  color: #44666d;
+  text-decoration: none;
+}
+
+#logo {
+  width: 940px;
+  height: 100px;
+  background: transparent url("../img/logo.png") no-repeat center center;
+  text-indent: -99999px;
+  overflow: hidden;
+  margin: 0px 0 60px 0;
+}
+
+h2, h3, h4, h5, h6 {
+  margin: 1em 0 0.5em 0;
+  color: #ebf5f7;
+  text-shadow: -1px -1px 1px rgba(0,0,0,0.1);
+  font-weight: 600;
+}
+
+.wrap {
+  width: 940px;
+  margin: 0 auto;
+}
+
+.editor {
+  background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
+  background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
+  background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
+  background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
+  background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
+
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(1, rgb(255,255,255)),
+    color-stop(0.8, rgb(235,245,247))
+  );
+  padding: 4px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.05);
+}
+
+.editor .tabs {
+  padding: 0;
+}
+
+.editor .tabs a {
+  display: block;
+  padding: 0 10px;
+  float: left;
+  height: 30px;
+  line-height: 26px;
+  text-shadow: none;
+  font-size: 14px;
+  font-weight: 600;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.editor .tabs a.active {
+  background-image: linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
+  background-image: -o-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
+  background-image: -moz-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
+  background-image: -webkit-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
+  background-image: -ms-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
+
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(1, rgb(219,228,230)),
+    color-stop(0, rgb(255,255,255))
+  );
 }
 
 textarea, pre {
-  font-family: courier;
-  font-size: small;
+  font-family: "Inconsolata", courier, monospace;
+  font-size: 14px;
   display: block;
-  width: 400px;
+  width: 340px;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding: 10px;
+}
+
+textarea {
+  border: none;
+  border-radius: 5px;
+  box-shadow: inset 0px 2px 5px rgba(0,0,0,0.2);
+  resize: none;
+  background-image: linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
+  background-image: -o-linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
+  background-image: -moz-linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
+  background-image: -webkit-linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
+  background-image: -ms-linear-gradient(bottom, rgb(68,102,109) 100%, rgb(91,125,132) 0%);
+
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(1, rgb(68,102,109)),
+    color-stop(0, rgb(91,125,132))
+  );
+  color: #ebf5f7;
+  padding: 10px;
+  margin: 0;
+}
+
+textarea:focus {
+  -moz-outline: none;
+  -webkit-outline: none;
+  outline: none;
+}
+
+pre.prettyprint {
+  background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(1, rgb(255,255,255)),
+    color-stop(0, rgb(235,245,247))
+  );
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+  width: 350px;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
+  font-size: 12px;
+}
+
+#result {
+  background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+  background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
+
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(1, rgb(255,255,255)),
+    color-stop(0, rgb(235,245,247))
+  );
+  border: none;
+  padding: 10px 10px 20px 10px;
+  border-radius: 10px;
+  word-wrap: break-word
+  text-shadow: none;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
+  font-size: 13px;
+  font-family: "Helvetica Neue", "Helvetica", Arial, Sans-Serif;
+  font-weight: normal;
+}
+
+#result th {
+  text-align: right;
 }
 
 #error {
   color: red;
 }
-#result div {
-  margin-left: 10px;
-}
 
 .col {
   float: left;
-  margin-right: 15px;
+  margin-left: 20px;
+  width: 370px;
+}
+
+.aside {
+  width: 160px;
+  float: left;
+}
+
+.aside h2 {
+  margin-top: 0;
+}
+
+#examples {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#examples li {
+
+}
+
+#examples li a {
+  text-decoration: none;
+  display: block;
+  border-radius: 5px;
+  padding: 3px 10px;
+  margin-left: -10px;
+}
+
+#examples li a:hover {
+  background-color: rgba(255,255,255,0.2);
 }
