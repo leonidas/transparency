@@ -2,8 +2,9 @@
 <html>
   <head>
     <title>Try Transparency</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href='http://fonts.googleapis.com/css?family=Inconsolata|Terminal+Dosis:300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/prettify.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="js/coffee-script.js"></script>
     <script src="js/jade.js"></script>
     <script src="js/jquery-1.7.1.min.js"></script>
@@ -12,34 +13,48 @@
     <script src="js/jquery.transparency.js"></script>
   </head>
   <body>
-    <h1>Try Transparency</h1>
-    <h2>Examples</h2>
-    <ul id="examples">
-      <li><a href="#" id="assigning-values">Assigning values</a></li>
-      <li><a href="#" id="iterating-over-a-list">Iterating over a list</a></li>
-      <li><a href="#" id="nested-lists">Nested lists</a></li>
-      <li><a href="#" id="nested-objects">Nested objects</a></li>
-      <li><a href="#" id="directives">Directives</a></li>
-      <li><a href="#" id="nested-directives">Nested directives</a></li>
-    </ul>
+    <div class="wrap">
+      <h1 id="logo">Try Transparency</h1>
 
-    <!-- Left col -->
-    <div class="col">
-        <h3><a href="#" class="option" id="jade">Jade</a> | <a href="#" class="option" id="html">HTML</a></h3>
-        <textarea id="template" rows="15" cols="62"></textarea>
-        <div id="error"></div>
+      <div class="aside">
+        <h2>Examples</h2>
+        <ul id="examples">
+          <li><a href="#" id="assigning-values">Assigning values</a></li>
+          <li><a href="#" id="iterating-over-a-list">Iterating over a list</a></li>
+          <li><a href="#" id="nested-lists">Nested lists</a></li>
+          <li><a href="#" id="nested-objects">Nested objects</a></li>
+          <li><a href="#" id="directives">Directives</a></li>
+          <li><a href="#" id="nested-directives">Nested directives</a></li>
+        </ul>
+      </div>
+
+      <!-- Left col -->
+      <div class="col">
+        <div class="editor">
+          <div class="tabs">
+            <a href="#" class="option active" id="jade">Jade</a><a href="#" class="option" id="html">HTML</a></h3>
+          </div>
+          <textarea id="template" rows="15"></textarea>
+          <div id="error"></div>
+        </div>
         <h3>Result</h3>
         <div id="result"></div>
       </div>
 
-    <!-- Right col -->
-    <div class="col">
-      <h3><a href="#" class="option" id="coffee">CoffeeScript</a> | <a href="#" class="option" id="javascript">JavaScript</a></h3>
-      <textarea id="code" rows="15" cols="52"></textarea>
-      <h3>Rendered HTML</h3>
-      <pre id="source" class="prettyprint"></pre>
-    </div>
+      <!-- Right col -->
+      <div class="col">
+        <div class="editor">
+          <div class="tabs">
+            <a href="#" class="option active" id="coffee">CoffeeScript</a><a href="#" class="option" id="javascript">JavaScript</a>
+          </div>
+          <textarea id="code" rows="15"></textarea>
+        </div>
+        <h3>Rendered HTML</h3>
+        <pre id="source" class="prettyprint"></pre>
+      </div>
 
+    </div>
+    <div style="clear: both;"></div>
     <script type="text/coffeescript">
       examples =
         "assigning-values":
@@ -224,6 +239,8 @@
 
         $('.option').click (event) ->
           event.preventDefault()
+          $(this).siblings().removeClass('active')
+          $(this).addClass('active')
           option = $(event.target).attr 'id'
           console.log option
           switch option
@@ -249,5 +266,6 @@
 
         $('#examples a').first().trigger 'click'
     </script>
+    <a href="http://github.com/pyykkis/transparency"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
   </body>
 </html>
