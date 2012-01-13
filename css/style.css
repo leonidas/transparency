@@ -72,7 +72,8 @@ h2, h3, h4, h5, h6 {
   position: relative;
 }
 
-.editor {
+.editor,
+.results {
   background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
   background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
   background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
@@ -89,13 +90,21 @@ h2, h3, h4, h5, h6 {
   border: 1px solid #fff;
   border-radius: 10px;
   box-shadow: 0px 5px 10px rgba(0,0,0,0.05);
+  position: relative;
 }
 
-.editor .tabs {
+.results {
+  margin-left: 20px;
+}
+
+.editor .tabs,
+.results .tabs {
   padding: 0;
+  height: 30px;
 }
 
-.editor .tabs a {
+.editor .tabs a,
+.results .tabs a {
   display: block;
   padding: 0 10px;
   float: left;
@@ -108,19 +117,39 @@ h2, h3, h4, h5, h6 {
   border-top-right-radius: 5px;
 }
 
-.editor .tabs a.active {
-  background-image: linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
-  background-image: -o-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
-  background-image: -moz-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
-  background-image: -webkit-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
-  background-image: -ms-linear-gradient(bottom, rgb(219,228,230) 100%, rgb(255,255,255) 0%);
+.editor .tabs a.active,
+.results .tabs a.active {
+  background-image: linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
+  background-image: -o-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
+  background-image: -moz-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
+  background-image: -webkit-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
+  background-image: -ms-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
   background-image: -webkit-gradient(
     linear,
     left bottom,
     left top,
     color-stop(1, rgb(219,228,230)),
-    color-stop(0, rgb(255,255,255))
+    color-stop(0, rgba(235,245,247,0))
   );
+}
+
+.editor.markup .plus {
+  position: absolute;
+  top: 41%;
+  left: -20px;
+  font-size: 40px;
+}
+
+.editor .arrow {
+  position: absolute;
+  bottom: -29px;
+  margin-left: -7px;
+  width: 15px;
+  height: 22px;
+  left: 50%;
+  font-size: 40px;
+  background: transparent url('../img/arrow-down.png') no-repeat left top;
+  -webkit-transition: opacity 300ms linear;
 }
 
 textarea, pre {
@@ -162,6 +191,7 @@ textarea:focus {
 }
 
 pre.prettyprint {
+  /*
   background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
@@ -181,9 +211,11 @@ pre.prettyprint {
   width: 350px;
   box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
   font-size: 12px;
+  */
 }
 
 #result {
+  /*
   background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
   background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 0%);
@@ -205,17 +237,54 @@ pre.prettyprint {
   font-size: 13px;
   font-family: "Helvetica Neue", "Helvetica", Arial, Sans-Serif;
   font-weight: normal;
+  */
+  margin: 10px;
 }
 
-#result th {
-  text-align: right;
+#result table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#result table th {
+  text-align: left;
+  padding: 3px 10px;
+  border-bottom: 1px solid #bde2e9;
+  border-right: 1px dotted #bde2e9;
+}
+
+#result table td {
+  text-align: left;
+  padding: 3px 10px;
+  border-right: 1px dotted #bde2e9;
+}
+
+#result table th:last-child,
+#result table td:last-child {
+  border-right-width: 0px;
+}
+
+#result span {
+  margin-right: 4px;
+}
+
+#source {
+  display: none;
+  margin: 10px;
+  width: auto;
+  border: none;
 }
 
 #error {
   clear: both;
   color: #a40027;
-  padding-left: 20px;
-  padding-top: 10px;
+  padding: 10px 20px;
+  min-height: 14px;
+  line-height: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  -webkit-transition: opacity 300ms linear;
 }
 
 .col {

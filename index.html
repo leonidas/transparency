@@ -36,33 +36,34 @@
         <div id="content">
 
           <div class="col">
-            <div class="editor">
+            <div class="editor script">
               <div class="tabs">
                 <a href="#" class="option active" id="coffee">CoffeeScript</a><a href="#" class="option" id="javascript">JavaScript</a>
               </div>
               <textarea id="code" rows="15"></textarea>
+              <span class="arrow"></span>
             </div>
           </div>
 
           <div class="col">
-            <div class="editor">
+            <div class="editor markup">
               <div class="tabs">
                 <a href="#" class="option active" id="jade">Jade</a><a href="#" class="option" id="html">HTML</a></h3>
               </div>
               <textarea id="template" rows="15"></textarea>
+              <span class="plus">+</span>
+              <span class="arrow"></span>
             </div>
           </div>
 
           <div id="error"></div>
 
-          <div class="col">
-            <h3>HTML</h3>
-            <pre id="source" class="prettyprint"></pre>
-          </div>
-
-          <div class="col">
-            <h3>Result</h3>
-            <div id="result"></div>
+          <div class="results">
+              <div class="tabs">
+                <a href="#" class="option active" data-id="result">Result</a><a href="#" class="option" data-id="source">HTML</a></h3>
+              </div>
+              <div id="result"></div>
+              <pre id="source" class="prettyprint"></pre>
           </div>
 
         </div>
@@ -117,7 +118,7 @@
                   th Comment
                   th Name
               tbody.activities
-                tr.activity
+                tr
                   td.date
                   td.activity
                   td.comment
@@ -250,20 +251,29 @@
             eval code
             $('#source').empty().text style_html($('#result').html(), indent_size: 2)
             prettyPrint()
-            $('#error').empty()
+            $('#error').css 'opacity', 0
+            setTimeout ->
+              $('#error').empty()
+            , 300
+            $('.arrow').css 'opacity', 1
           catch error
-            $('#error').text error.message
+            $('#error').text(error.message).css 'opacity', 1
+            $('.arrow').css 'opacity', 0
 
-        $('.option').click (event) ->
+        $('.editor .option').click (event) ->
           event.preventDefault()
-          $(this).siblings().removeClass('active')
-          $(this).addClass('active')
+          $(this).addClass('active').siblings().removeClass('active')
           option = $(event.target).attr 'id'
           console.log option
           switch option
             when "jade", "html"         then state.template = option
             when "coffee", "javascript" then state.code     = option
           updateCode()
+
+        $('.results .option').click (event) ->
+          event.preventDefault()
+          $(this).addClass('active').siblings().removeClass('active')
+          $('#' + $(this).attr 'data-id').show().siblings(':not(.tabs)').hide()
 
         $('#examples').click (event) ->
           event.preventDefault()
