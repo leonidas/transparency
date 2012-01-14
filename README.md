@@ -7,6 +7,25 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to DO
 * Nested objects and collections - No configuration, just conventions
 * Directives - No custom DSL, just functions
 
+## Usage
+
+### Client-side
+
+grab the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/jquery.transparency.min.js)
+and include it to your application with jQuery
+
+```html
+<script src="js/jquery-1.7.1.min.js"></script>
+<script src="js/jquery.transparency.min.js"></script>
+```
+
+### Server-side
+
+TODO: publish Transparency npm package
+
+Require transparency in your package.json and use it with [jsdom](https://github.com/tmpvar/jsdom) and 
+[jQuery](https://github.com/jquery/jquery)
+
 ## Examples
 
 Here's some of examples. For further details, please see the examples folder, tests and the source code.
