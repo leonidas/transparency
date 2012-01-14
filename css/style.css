@@ -285,6 +285,9 @@ pre.prettyprint {
   font-weight: 600;
   text-align: center;
   -webkit-transition: opacity 300ms linear;
+  -moz-transition: opacity 300ms linear;
+  -o-transition: opacity 300ms linear;
+  transition: opacity 300ms linear;
 }
 
 .col {
