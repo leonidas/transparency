@@ -15,13 +15,9 @@ $(document).ready ->
       $('#source').empty().text style_html($('#result').html(), indent_size: 2)
       prettyPrint()
       $('#error').css 'opacity', 0
-      setTimeout ->
-        $('#error').empty()
-      , 300
-      $('.arrow').css 'opacity', 1
+      $('#error').empty()
     catch error
       $('#error').text(error.message).css 'opacity', 1
-      $('.arrow').css 'opacity', 0
 
   $('.editor .option').click (event) ->
     event.preventDefault()

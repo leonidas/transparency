@@ -133,25 +133,6 @@ h2, h3, h4, h5, h6 {
   );
 }
 
-.editor.markup .plus {
-  position: absolute;
-  top: 41%;
-  left: -20px;
-  font-size: 40px;
-}
-
-.editor .arrow {
-  position: absolute;
-  bottom: -29px;
-  margin-left: -7px;
-  width: 15px;
-  height: 22px;
-  left: 50%;
-  font-size: 40px;
-  background: transparent url('../img/arrow-down.png') no-repeat left top;
-  -webkit-transition: opacity 300ms linear;
-}
-
 textarea, pre {
   font-family: "Inconsolata", courier, monospace;
   font-size: 14px;

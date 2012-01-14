@@ -26,13 +26,9 @@
         }));
         prettyPrint();
         $('#error').css('opacity', 0);
-        setTimeout(function() {
-          return $('#error').empty();
-        }, 300);
-        return $('.arrow').css('opacity', 1);
+        return $('#error').empty();
       } catch (error) {
-        $('#error').text(error.message).css('opacity', 1);
-        return $('.arrow').css('opacity', 0);
+        return $('#error').text(error.message).css('opacity', 1);
       }
     });
     $('.editor .option').click(function(event) {
