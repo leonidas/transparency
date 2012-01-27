@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>To-do List</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/coffee-script.js"></script>
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/underscore-min.js"></script>
+    <script src="../../lib/jquery.transparency.min.js"></script>
+  </head>
+  <body>
+    <h1>To-do List</h1>
+    <form id="add-task">
+      <input type="text" name="task" />
+      <input type="submit" value="Add" />
+    </form>
+    <div id="tasks">
+      <div><input type="checkbox"/><span class="task"></span></div>
+    </div>
+
+    <script type="text/coffeescript">
+      data = [
+        task: "Foo"
+      ,
+        task: "Bar"
+      ]
+
+      $(document).ready ->
+        input = $('input[name="task"]')
+        tasks = $('#tasks')
+
+        $('#tasks').bind 'update', ->
+          tasks.render data
+
+        $('#add-task').submit (event) ->
+          event.preventDefault()
+          data.push task: input.val()
+          input.val ""
+          tasks.trigger 'update'
+
+        $('input[type="checkbox"]').live 'click', (event) ->
+          taskName = $(event.target).next().text()
+          data     = _.reject(data, (e) -> e.task == taskName)
+          tasks.trigger 'update'
+
+        tasks.trigger 'update'
+    </script>
+  </body>
+</html>
