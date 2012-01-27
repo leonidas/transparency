@@ -353,6 +353,9 @@ All the following are appreciated, in an asceding order of preference
 In case your contribution is going to change Transparency API, please create a ticket first in order to discuss and
 agree on design.
 
+There's [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
+regarding the original design and implementation. It might be worth reading as an introduction.
+
 Thanks for help! :)
 
 ## Philosophy
