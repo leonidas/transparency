@@ -6,12 +6,15 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to DO
 * Collection rendering - No need for loops and partials
 * Nested objects and collections - No configuration, just conventions
 * Directives - No custom DSL, just functions
+* Template caching - No manual template lookup/compilation/rendering
 
 ## Usage
 
+See the examples and test with your data at http://leonidas.github.com/transparency/
+
 ### Client-side
 
-grab the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/jquery.transparency.min.js)
+Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/jquery.transparency.min.js)
 and include it to your application with jQuery
 
 ```html
@@ -338,6 +341,22 @@ Result:
   </div>
 </div>
 ```
+
+## Contributing
+
+All the following are appreciated, in an asceding order of preference
+
+1. New issue with feature request or bug report
+2. New issue with failing unit test and pull request
+3. New issue with unit test, corresponding implementation and pull request
+
+In case your contribution is going to change Transparency API, please create a ticket first in order to discuss and
+agree on design.
+
+There's [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
+regarding the original design and implementation. It might be worth reading as an introduction.
+
+Thanks for help! :)
 
 ## Philosophy
 
