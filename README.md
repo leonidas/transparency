@@ -10,7 +10,7 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to DO
 
 ## Usage
 
-See the examples and test Transparency with your own data at http://leonidas.github.com/transparency/
+See the examples and test with your data at http://leonidas.github.com/transparency/
 
 ### Client-side
 
