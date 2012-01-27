@@ -29,7 +29,7 @@
         input = $('input[name="task"]')
         tasks = $('#tasks')
 
-        $('#tasks').bind 'update', ->
+        tasks.bind 'update', ->
           tasks.render data
 
         $('#add-task').submit (event) ->
