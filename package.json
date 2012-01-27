@@ -2,19 +2,21 @@
   "name"          : "transparency",
   "version"       : "0.1.0",
   "description"   : "Transparency is a minimal template engine for jQuery. It maps JSON objects to DOM elements with zero configuration.",
-  "homepage"      : "https://github.com/pyykkis/transparency",
+  "homepage"      : "https://github.com/leonidas/transparency",
   "repository"    : { "type" : "git"
-                    , "url"  : "https://github.com/pyykkis/transparency.git"
+                    , "url"  : "https://github.com/leonidas/transparency.git"
                     },
-  "keywords"      : ["template", "templating", "engine", "unobtrusive"],
+  "keywords"      : ["template", "templating", "engine", "unobtrusive", "semantic"],
   "author"        : "Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>",
-  "contributors"  : ["Toni Jyrkinen <toni.jyrkinen@leonidasoy.fi>",
+  "contributors"  : ["Janne Hietamäki <janne.hietamaki@leonidasoy.fi>",
+                     "Sami Hangaslammi <sami.hangaslammi@leonidasoy.fi>",
+                     "Toni Jyrkinen <toni.jyrkinen@leonidasoy.fi>",
                      "Antti Tarvainen <antti.tarvainen@leonidasoy.fi>",
                      "Tomi Laine <tomi.laine@leonidasoy.fi>"],
   "licenses"      : ["MIT"],
   "dependencies"  : {"jsdom"        : ">=0.2.10",
                      "jquery"       : ">=1.6.x",
-                     "jasmine-node" : ">=1.0.x",
                      "coffee-script": ">=1.2.x"},
-  "main"          : "spec/jquery.transparency.spec.coffee"
+  "devDependencies": {"jasmine-node" : ">=1.0.x"},
+  "scripts"        : {"test": "jasmine-node --coffee spec"}
 }
