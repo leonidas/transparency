@@ -346,17 +346,15 @@ Result:
 
 All the following are appreciated, in an asceding order of preference
 
-1. New issue with feature request or bug report
-2. New issue with failing unit test and pull request
-3. New issue with unit test, corresponding implementation and pull request
+1. A feature request or a bug report
+2. Pull request with a failing unit test
+3. Pull request with unit tests and corresponding implementation
 
-In case your contribution is going to change Transparency API, please create a ticket first in order to discuss and
+In case the contribution is going to change Transparency API, please create a ticket first in order to discuss and
 agree on design.
 
 There's [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
 regarding the original design and implementation. It might be worth reading as an introduction.
-
-Thanks for help! :)
 
 ## Philosophy
 
