@@ -10,7 +10,7 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to DO
 
 ## Usage
 
-See the examples and test with your data at http://leonidas.github.com/transparency/
+See the examples and test Transparency at http://leonidas.github.com/transparency/
 
 ### Client-side
 
@@ -24,10 +24,28 @@ and include it to your application with jQuery
 
 ### Server-side
 
-TODO: publish Transparency npm package
+Define jQuery and Transparency as dependencies in package.json
 
-Require transparency in your package.json and use it with [jsdom](https://github.com/tmpvar/jsdom) and 
-[jQuery](https://github.com/jquery/jquery)
+```javascript
+{
+    "name": "hello-server",
+    "dependencies": {
+      "express":      "2.5.5",
+      "jquery":       ">= 1.6.3",
+      "transparency": ">= 0.2.0"
+  }
+}
+```
+
+Require and use as usual
+
+```javascript
+var $ = require("jquery");
+require("transparency");
+
+var template = $('<div><h1 class="title"></h1></div>');
+var result   = template.render(title: "Hello world!").html();
+```
 
 ## Examples
 
