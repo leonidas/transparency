@@ -1,3 +1,3 @@
-require('jsdom')
-jQuery = require('jquery')
-module.exports = require('./lib/jquery.transparency')
+require('jsdom');
+jQuery = require('jquery');
+require('./lib/jquery.transparency');
