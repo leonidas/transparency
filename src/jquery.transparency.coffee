@@ -22,9 +22,7 @@ jQuery.fn.render = (data, directives, parent) ->
 
 renderValues = (template, object) ->
   for key, value of object when typeof value != 'object'
-    renderables = template.find(".#{key}").add(template if template.hasClass key or template.is key)
-
-    for node in renderables
+    for node in matchingElements(template, key)
       node = jQuery(node)
       node.data 'data', object
       renderNode node, value
@@ -45,15 +43,14 @@ renderForms = (template, object) ->
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
     [key, attribute] = key.split('@')
-    renderables      = template.find(".#{key}").add(template if template.hasClass key or template.is key)
 
-    for node in renderables
+    for node in matchingElements(template, key)
       node = jQuery(node)
       renderNode node, directive.call(object, node), attribute
 
 renderChildren = (template, object, directives) ->
   for key, value of object when typeof value == 'object'
-    renderables = template.find(".#{key}").add(template if template.hasClass key)
+    matchingElements(template, key)
       .data('key', key)
       .render value, directives[key], object
 
@@ -62,5 +59,9 @@ renderNode = (node, value, attribute) ->
     node.attr attribute, value
   else
     children = node.children().detach()
-    node.text value
+    node.html value
     node.append children
+
+matchingElements = (template, key) ->
+  template.find(".#{key}, ##{key}, #{key}")
+    .add(template if template.is(".#{key}, ##{key}, #{key}"))

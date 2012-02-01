@@ -26,7 +26,6 @@ describe "Transparency", ->
 
     res = doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
-    #expect(res.html()).htmlToBeEqual(expected.html())
 
   it "should assing data values to template", ->
     doc = jQuery(
@@ -81,7 +80,6 @@ describe "Transparency", ->
 
     doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
-    #expect(result).htmlToBeEqual(expected.html())
 
   it "should work with numeric values", ->
     doc = jQuery(
@@ -106,4 +104,51 @@ describe "Transparency", ->
 
     res = doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
-    #expect(res.html()).htmlToBeEqual(expected.html())
+
+  it "should match by element id, class and name", ->
+    doc = jQuery(
+     '<div>
+        <div class="container"
+          <div id="my-id"></div>
+          <div class="my-class"></div>
+          <span></span>
+        </div>
+      </div>')
+
+    data =
+      'my-id':   'id-data'
+      'my-class': 'class-data'
+      span:     'name-data'
+
+    expected = jQuery(
+      '<div>
+        <div class="container"
+          <div id="my-id">id-data</div>
+          <div class="my-class">class-data</div>
+          <span>name-data</span>
+        </div>
+      </div>')
+
+    res = doc.find('.container').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should render html", ->
+    doc = jQuery(
+     '<div>
+        <div class="container"
+          <div id="post"></div>
+        </div>
+      </div>')
+
+    data =
+      post: '<h1>This is the title</h1><p>This is the body</p>'
+
+    expected = jQuery(
+      '<div>
+        <div class="container"
+          <div id="post"><h1>This is the title</h1><p>This is the body</p></div>
+        </div>
+      </div>')
+
+    res = doc.find('.container').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
