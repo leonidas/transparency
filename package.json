@@ -1,6 +1,6 @@
 {
   "name"           : "transparency",
-  "version"        : "0.2.0",
+  "version"        : "0.3.0",
   "description"    : "Transparency is a minimal template engine for jQuery. It maps JSON objects to DOM elements with zero configuration.",
   "homepage"       : "https://github.com/leonidas/transparency",
   "repository"     : {"type": "git",
@@ -20,7 +20,8 @@
                       "mustache"     : ">=0.3.x",
                       "benchmark"    : ">=0.2.x",
                       "plates"       : ">=0.4.x",
-                      "uglify-js"       : ">=1.2.5"},
+                      "uglify-js"    : ">=1.2.5"},
   "scripts"        : {"test": "jasmine-node --coffee spec",
-                      "perf": "node spec/perf.js"}
+                      "perf": "node spec/perf.js",
+                      "pre-publish": "cake build"}
 }
