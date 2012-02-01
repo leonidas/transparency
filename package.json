@@ -16,6 +16,11 @@
   "dependencies"   : {"jsdom"        : ">=0.2.10",
                       "jquery"       : ">=1.6.x"},
   "devDependencies": {"jasmine-node" : ">=1.0.x",
-                      "coffee-script": ">=1.2.x"},
-  "scripts"        : {"test": "jasmine-node --coffee spec"}
+                      "coffee-script": ">=1.2.x",
+                      "mustache"     : ">=0.3.x",
+                      "benchmark"    : ">=0.2.x",
+                      "plates"       : ">=0.4.x",
+                      "uglify-js"       : ">=1.2.5"},
+  "scripts"        : {"test": "jasmine-node --coffee spec",
+                      "perf": "node spec/perf.js"}
 }
