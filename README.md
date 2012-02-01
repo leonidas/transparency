@@ -44,7 +44,7 @@ var $ = require("jquery");
 require("transparency");
 
 var template = $('<div><h1 class="title"></h1></div>');
-var result   = template.render(title: "Hello world!").html();
+var result   = template.render({title: "Hello world!"}).html();
 ```
 
 ## Examples
