@@ -1,8 +1,9 @@
 (function() {
+
   window.examples = {
     "assigning-values": {
-      coffee: "hello =\n  hello: \"Hello!\"\n  goodbye: \"Goodbye!\"\n\n$('.container').render hello",
-      jade: ".container\n  .hello\n  .goodbye"
+      coffee: "hello =\n  hello: \"Hello!\"\n  hi:    \"<i>Hi there!</i>\"\n  span:  \"Goodbye!\"\n\n$('.container').render hello",
+      jade: ".container\n  #hello\n  .hi\n  span"
     },
     "iterating-over-a-list": {
       coffee: "activities = [\n  date:     '2011-08-23'\n  activity: 'Jogging'\n  comment:  'Early morning run'\n  name:     'Harry Potter'\n,\n  date:     '2011-09-04'\n  activity: 'Gym'\n  comment:  'Chest workout'\n  name:     'Batman'\n]\n\n$('.activities').render activities",
@@ -25,4 +26,5 @@
       jade: ".person\n  .name\n  .email\n  .friends\n    .friend\n      .name\n      .email"
     }
   };
+
 }).call(this);

@@ -4,15 +4,17 @@ window.examples =
       """
       hello =
         hello: "Hello!"
-        goodbye: "Goodbye!"
+        hi:    "<i>Hi there!</i>"
+        span:  "Goodbye!"
 
       $('.container').render hello
       """
     jade:
       """
       .container
-        .hello
-        .goodbye
+        #hello
+        .hi
+        span
       """
 
   "iterating-over-a-list":
