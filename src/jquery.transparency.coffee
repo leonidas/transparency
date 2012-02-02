@@ -1,6 +1,6 @@
 jQuery.fn.render = (data, directives, parent) ->
   contexts     = this
-  data         = [data] unless jQuery.isArray(data)
+  data         = [data] unless data instanceof Array
   directives ||= {}
 
   for context in contexts
@@ -65,5 +65,7 @@ renderNode = (node, value, attribute) ->
     node.append children
 
 matchingElements = (template, key) ->
-  template.find(".#{key}, ##{key}, #{key}")
-    .add(template if template.is(".#{key}, ##{key}, #{key}"))
+  template
+    .find(".#{key}")
+    .add(template.find "##{key}")
+    .add(template.find "#{key}")
