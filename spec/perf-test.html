@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transparency perf test</title>
+    <script src="https://raw.github.com/bestiejs/benchmark.js/master/benchmark.js"></script>
+    <script src="https://raw.github.com/jashkenas/coffee-script/master/extras/coffee-script.js"></script>
+    <script src="http://mustache.github.com/extras/mustache.js"></script>
+    <script src="https://raw.github.com/hij1nx/weld/master/lib/weld.js"></script>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="../lib/jquery.transparency.min.js"></script>
+  </head>
+  <body>
+    <div>
+      <div id="transparency">
+        <h1 id="name">My Name</h1>
+        <ul class="interests"><li class="interest">An interest</li></ul>
+      </div>
+
+      <div id="weld">
+        <h1 id="name">My Name</h1>
+        <ul class="interests"><li class="interest">An interest</li></ul>
+      </div>
+
+      <div id="mustache">
+         <h1>{{name}}</h1>
+         <ul>
+         {{#interests}}
+           <li>{{interest}}</li>
+         {{/interests}}
+         </ul>
+      </div>
+
+      <div id="mustache-saved">
+         <h1>{{name}}</h1>
+         <ul>
+         {{#interests}}
+           <li>{{interest}}</li>
+         {{/interests}}
+         </ul>
+      </div>
+    </div>
+
+  <script type="text/coffeescript">
+    data =
+      name: "Joshua Kehn"
+      interests: [
+        interest: "javascript"
+      ,
+        interest: "node.js"
+      ,
+        interest: "development"
+      ,
+        interest: "programming"
+      ]
+
+    weld_t           = $("#weld")
+    transparency_t   = $("#transparency")
+    mustache_t       = $("#mustache")
+    mustache_saved   = $("#mustache-saved")
+
+    suite = new Benchmark.Suite()
+
+    suite
+      .add("transparency", ->
+        transparency_t.render data)
+
+      .add("weld", ->
+        weld weld_t[0], data)
+
+      .add("mustache", ->
+        mustache_t.html Mustache.to_html(mustache_saved.html(), data))
+
+      .on("cycle", (event, bench) ->
+        console.log String(bench))
+
+      .on("complete", ->
+        console.log "Fastest is " + @filter("fastest").pluck("name"))
+
+      .run true
+  </script>
+  </body>
+</html>
