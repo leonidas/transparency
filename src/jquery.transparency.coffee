@@ -6,7 +6,7 @@ jQuery.fn.render = (data, directives, parent) ->
   for context in contexts
     context = jQuery(context)
     context.data('template', context.clone()) unless context.data 'template'
-    context.empty()
+    result = jQuery('<div></div>')
 
     for object in data
       template       = context.data('template').clone()
@@ -16,7 +16,9 @@ jQuery.fn.render = (data, directives, parent) ->
       renderForms      template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
-      context.append   template.children().clone true, true
+      result.append    template.children().clone true, true
+
+    context.empty().append result.children()
 
   return contexts
 
