@@ -1,7 +1,7 @@
 (function() {
 
   window.$(window.document).bind("ready", function() {
-    var data, mustache_saved, mustache_t, result, suite, transparency_t, weld_t;
+    var data, mustache_saved, mustache_t, result, transparency_t, weld_t;
     data = {
       name: "Joshua Kehn",
       interests: [
@@ -21,9 +21,7 @@
     mustache_t = window.$("#mustache");
     mustache_saved = window.$("#mustache-saved");
     result = window.$("#result");
-    result.append("fodisajfsaod");
-    suite = new window.Benchmark.Suite();
-    return suite.add("transparency", function() {
+    return new window.Benchmark.Suite().add("transparency", function() {
       return transparency_t.render(data);
     }).add("weld", function() {
       return window.weld(weld_t[0], data);

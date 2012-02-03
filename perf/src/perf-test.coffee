@@ -16,10 +16,8 @@ window.$(window.document).bind "ready", ->
   mustache_t      = window.$("#mustache")
   mustache_saved  = window.$("#mustache-saved")
   result          = window.$("#result")
-  result.append "fodisajfsaod"
-  suite = new window.Benchmark.Suite()
 
-  suite
+  new window.Benchmark.Suite()
     .add("transparency", ->
       transparency_t.render data)
 
