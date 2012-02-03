@@ -3,14 +3,16 @@
   <head>
     <title>Transparency perf test</title>
     <script src="js/benchmark.js"></script>
-    <script src="js/coffee-script.js"></script>
     <script src="js/mustache.js"></script>
     <script src="js/weld.js"></script>
     <script src="js/jquery-1.7.1.min.js"></script>
     <script src="../lib/jquery.transparency.js"></script>
+    <script src="js/perf-test.js"></script>
   </head>
   <body>
     <div>
+      <pre id="result"></pre>
+
       <div id="transparency">
         <h1 id="name">My Name</h1>
         <ul class="interests"><li class="interest">An interest</li></ul>
@@ -39,45 +41,5 @@
          </ul>
       </div>
     </div>
-
-  <script type="text/coffeescript">
-    data =
-      name: "Joshua Kehn"
-      interests: [
-        interest: "javascript"
-      ,
-        interest: "node.js"
-      ,
-        interest: "development"
-      ,
-        interest: "programming"
-      ]
-
-    weld_t           = window.$("#weld")
-    transparency_t   = window.$("#transparency")
-    mustache_t       = window.$("#mustache")
-    mustache_saved   = window.$("#mustache-saved")
-
-    console.log 'foo'
-    suite = new window.Benchmark.Suite()
-    console.log 'foo'
-    suite
-      .add("transparency", ->
-        transparency_t.render data)
-
-      .add("weld", ->
-        window.weld weld_t[0], data)
-
-      .add("mustache", ->
-        mustache_t.html window.Mustache.to_html(mustache_saved.html(), data))
-
-      .on("cycle", (event, bench) ->
-        console.log String(bench))
-
-      .on("complete", ->
-        console.log "Fastest is " + @filter("fastest").pluck("name"))
-
-      .run true
-  </script>
   </body>
 </html>
