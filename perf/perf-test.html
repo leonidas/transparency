@@ -53,22 +53,23 @@
         interest: "programming"
       ]
 
-    weld_t           = $("#weld")
-    transparency_t   = $("#transparency")
-    mustache_t       = $("#mustache")
-    mustache_saved   = $("#mustache-saved")
+    weld_t           = window.$("#weld")
+    transparency_t   = window.$("#transparency")
+    mustache_t       = window.$("#mustache")
+    mustache_saved   = window.$("#mustache-saved")
 
-    suite = new Benchmark.Suite()
-
+    console.log 'foo'
+    suite = new window.Benchmark.Suite()
+    console.log 'foo'
     suite
       .add("transparency", ->
         transparency_t.render data)
 
       .add("weld", ->
-        weld weld_t[0], data)
+        window.weld weld_t[0], data)
 
       .add("mustache", ->
-        mustache_t.html Mustache.to_html(mustache_saved.html(), data))
+        mustache_t.html window.Mustache.to_html(mustache_saved.html(), data))
 
       .on("cycle", (event, bench) ->
         console.log String(bench))

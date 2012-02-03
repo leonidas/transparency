@@ -1,77 +1,48 @@
-Benchmark     = require "benchmark"
-Mustache      = require "mustache"
-Plates        = require "plates"
-global.jQuery = require "jquery"
-{weld}        = require "weld"
-require "../src/jquery.transparency"
+jsdom = require 'jsdom'
 
+jsdom.env "perf-test.html", [
+    'js/benchmark.js'
+    'js/jquery-1.7.1.min.js'
+    'js/mustache.js'
+    'js/weld.js'
+    '../lib/jquery.transparency.js'
+  ],
+  (errors, window) ->
+    data =
+      name: "Joshua Kehn"
+      interests: [
+        interest: "javascript"
+      ,
+        interest: "node.js"
+      ,
+        interest: "development"
+      ,
+        interest: "programming"
+      ]
 
-page = jQuery('
-<div>
-  <div id="transparency">
-    <h1 id="name">My Name</h1>
-    <ul class="interests"><li class="interest">An interest</li></ul>
-  </div>
+    weld_t           = window.$("#weld")
+    transparency_t   = window.$("#transparency")
+    mustache_t       = window.$("#mustache")
+    mustache_saved   = window.$("#mustache-saved")
 
-  <div id="weld">
-    <h1 id="name">My Name</h1>
-    <ul class="interests"><li class="interest">An interest</li></ul>
-  </div>
+    console.log 'foo'
+    suite = new window.Benchmark.Suite()
+    console.log 'foo'
+    suite
+      .add("transparency", ->
+        transparency_t.render data)
 
-  <div id="mustache">
-     <h1>{{name}}</h1>
-     <ul>
-     {{#interests}}
-       <li>{{interest}}</li>
-     {{/interests}}
-     </ul>
-  </div>
+      .add("weld", ->
+        window.weld weld_t[0], data)
 
-  <div id="mustache-saved">
-     <h1>{{name}}</h1>
-     <ul>
-     {{#interests}}
-       <li>{{interest}}</li>
-     {{/interests}}
-     </ul>
-  </div>
-</div>
-')
+      .add("mustache", ->
+        mustache_t.html window.Mustache.to_html(mustache_saved.html(), data))
 
-data =
-  name: "Joshua Kehn"
-  interests: [
-    interest: "javascript"
-  ,
-    interest: "node.js"
-  ,
-    interest: "development"
-  ,
-    interest: "programming"
-  ]
+      .on("cycle", (event, bench) ->
+        console.log String(bench))
 
-weld_t           = page.find "#weld"
-transparency_t   = page.find "#transparency"
-mustache_t       = page.find "#mustache"
-mustache_saved   = page.find "#mustache-saved"
+      .on("complete", ->
+        console.log "Fastest is " + @filter("fastest").pluck("name"))
 
-suite = new Benchmark.Suite()
+      .run true
 
-suite
-  .add("transparency", ->
-    transparency_t.render data)
-
-  .add("weld", ->
-    weld weld_t[0], data)
-
-  .add("mustache", ->
-    mustache_t.html Mustache.to_html(mustache_saved.html(), data))
-
-  .on("cycle", (event, bench) ->
-    console.log String(bench))
-
-  .on("complete", ->
-    console.log page.html()
-    console.log "Fastest is " + @filter("fastest").pluck("name"))
-
-  .run true
