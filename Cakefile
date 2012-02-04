@@ -10,6 +10,7 @@ task 'build', 'compile and uglify transparency', (options) ->
   )
 
 task 'perf', 'run perf tests', (options) ->
+  invoke 'build'
   exec(
     [
       "coffee -o perf/js -c perf/src/perf-test.coffee"
