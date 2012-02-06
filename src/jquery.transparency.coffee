@@ -12,6 +12,7 @@ jQuery.fn.render = (data, directives, parent) ->
       template       = context.data('template').clone()
       template.data 'key', context.data 'key'
 
+      renderSimple     template, object
       renderValues     template, object
       renderForms      template, object
       renderDirectives template, object, directives
@@ -21,6 +22,12 @@ jQuery.fn.render = (data, directives, parent) ->
     context.empty().append result.children()
 
   return contexts
+
+renderSimple = (template, object) ->
+  unless typeof object == 'object' or object instanceof Array
+    node = template.children(0)
+    node.data 'data', object
+    renderNode node, object
 
 renderValues = (template, object) ->
   for key, value of object when typeof value != 'object'

@@ -59,3 +59,24 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should render list containing simple values", ->
+    doc = jQuery(
+     '<div>
+        <div class="comments">
+          <span></span>
+        </div>
+      </div>')
+
+    data = ["That rules", "Great post!"]
+
+    expected = jQuery(
+     '<div>
+        <div class="comments">
+          <span>That rules</span>
+          <span>Great post!</span>
+        </div>
+      </div>')
+
+    doc.find('.comments').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
