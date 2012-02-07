@@ -155,6 +155,68 @@ Result:
 </table>
 ```
 
+### Iterating over a list with simple values
+
+Template:
+
+```html
+<div>
+  <div class="comments">
+    <span></span>
+  </div>
+</div>
+```
+
+Javascript:
+
+```js
+var comments = ["That rules", "Great post!"]
+
+$('.comments').render(comments);
+```
+
+Result:
+
+```html
+<div>
+  <div class="comments">
+    <span>That rules</span>
+    <span>Great post!</span>
+  </div>
+</div>
+```
+
+### Iterating over a list with simple values, using `listElement` class
+
+Template:
+
+```html
+<div>
+  <div class="comments">
+    <label>comment</label><span class="listElement"></span>
+  </div>
+</div>
+```
+
+Javascript:
+
+```js
+var comments = ["That rules", "Great post!"]
+
+$('.comments').render(comments);
+```
+
+Result:
+
+```html
+<div>
+  <div class="comments">
+    <label>comment</label><span class="listElement">That rules</span>
+    <label>comment</label><span class="listElement">Great post!</span>
+  </div>
+</div>
+```
+
 ### Nested lists
 
 Template:
@@ -359,6 +421,23 @@ Result:
   </div>
 </div>
 ```
+
+## Development instructions
+
+You'll need node.js 0.6.x and npm.
+
+Install uglify-js and coffee-script:
+
+    npm install -g uglify-js
+    npm install -g coffee-script
+
+Run tests
+
+    npm install && npm test
+
+Generate Javascript libs
+
+    cake build
 
 ## Contributing
 
