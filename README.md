@@ -153,37 +153,6 @@ Result:
     </tr>
   </tbody>
 </table>
-```
-### Iterating over a list with simple values, using `listElement` class
-
-Template:
-
-```html
-<div>
-  <div class="comments">
-    <label>comment</label><span class="listElement"></span>
-  </div>
-</div>
-```
-
-Javascript:
-
-```js
-var comments = ["That rules", "Great post!"]
-
-$('.comments').render(comments);
-```
-
-Result:
-
-```html
-<div>
-  <div class="comments">
-    <label>comment</label><span class="listElement">That rules</span>
-    <label>comment</label><span class="listElement">Great post!</span>
-  </div>
-</div>
-```
 
 ### Iterating over a list with simple values
 
@@ -212,6 +181,37 @@ Result:
   <div class="comments">
     <span>That rules</span>
     <span>Great post!</span>
+  </div>
+</div>
+```
+
+### Iterating over a list with simple values, using `listElement` class
+
+Template:
+
+```html
+<div>
+  <div class="comments">
+    <label>comment</label><span class="listElement"></span>
+  </div>
+</div>
+```
+
+Javascript:
+
+```js
+var comments = ["That rules", "Great post!"]
+
+$('.comments').render(comments);
+```
+
+Result:
+
+```html
+<div>
+  <div class="comments">
+    <label>comment</label><span class="listElement">That rules</span>
+    <label>comment</label><span class="listElement">Great post!</span>
   </div>
 </div>
 ```
