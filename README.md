@@ -422,6 +422,23 @@ Result:
 </div>
 ```
 
+## Development instructions
+
+You'll need node.js 0.6.x and npm.
+
+Install uglify-js and coffee-script:
+
+    npm install -g uglify-js
+    npm install -g coffee-script
+
+Run tests
+
+    npm install && npm test
+
+Generate Javascript libs
+
+    cake build
+
 ## Contributing
 
 All the following are appreciated, in an asceding order of preference
