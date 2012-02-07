@@ -1,4 +1,4 @@
-jQuery.fn.render = (data, directives, parent) ->
+jQuery.fn.render = (data, directives, parentKey) ->
   contexts     = this
   data         = [data] unless data instanceof Array
   directives ||= {}
@@ -6,20 +6,17 @@ jQuery.fn.render = (data, directives, parent) ->
   for context in contexts
     context = jQuery(context)
     context.data('template', context.clone()) unless context.data 'template'
-    result = jQuery('<div></div>')
+    context.empty()
 
     for object in data
       template       = context.data('template').clone()
-      template.data 'key', context.data 'key'
 
       renderSimple     template, object
       renderValues     template, object
-      renderForms      template, object
+      renderForms      template, object, parentKey
       renderDirectives template, object, directives
       renderChildren   template, object, directives
-      result.append    template.children().clone true, true
-
-    context.empty().append result.children()
+      context.append   template.children()
 
   return contexts
 
@@ -35,11 +32,9 @@ renderValues = (template, object) ->
   for key, value of object when typeof value != 'object'
     for node in matchingElements(template, key)
       node = jQuery(node)
-      node.data 'data', object
       renderNode node, value
 
-renderForms = (template, object) ->
-  parentKey = template.data 'key'
+renderForms = (template, object, parentKey) ->
   return unless parentKey
 
   for key, value of object when typeof value != 'object'
@@ -62,8 +57,7 @@ renderDirectives = (template, object, directives) ->
 renderChildren = (template, object, directives) ->
   for key, value of object when typeof value == 'object'
     matchingElements(template, key)
-      .data('key', key)
-      .render value, directives[key], object
+      .render value, directives[key], key
 
 renderNode = (node, value, attribute) ->
   if attribute
@@ -74,7 +68,4 @@ renderNode = (node, value, attribute) ->
     node.append children
 
 matchingElements = (template, key) ->
-  template
-    .find(".#{key}")
-    .add(template.find "##{key}")
-    .add(template.find "#{key}")
+  template.find("##{key}, #{key}, .#{key}")

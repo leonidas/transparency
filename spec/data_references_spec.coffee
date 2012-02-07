@@ -3,7 +3,7 @@ require '../src/jquery.transparency'
 
 describe "Transparency", ->
 
-  it "should provide reference to original data", ->
+  xit "should provide reference to original data", ->
     doc = jQuery(
      '<div>
         <div class="person">
@@ -20,7 +20,7 @@ describe "Transparency", ->
     data = doc.find('.name').data('data')
     expect(data).toEqual(person)
 
-  it "should allow updating original data", ->
+  xit "should allow updating original data", ->
     doc = jQuery(
      '<div>
         <div class="person">
