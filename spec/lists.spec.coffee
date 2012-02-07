@@ -64,7 +64,7 @@ describe "Transparency", ->
     doc = jQuery(
      '<div>
         <div class="comments">
-          <span></span>
+          <span></span><span>blah</span>
         </div>
       </div>')
 
@@ -73,8 +73,8 @@ describe "Transparency", ->
     expected = jQuery(
      '<div>
         <div class="comments">
-          <span>That rules</span>
-          <span>Great post!</span>
+          <span>That rules</span><span>blah</span>
+          <span>Great post!</span><span>blah</span>
         </div>
       </div>')
 
