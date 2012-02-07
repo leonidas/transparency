@@ -153,6 +153,7 @@ Result:
     </tr>
   </tbody>
 </table>
+```
 
 ### Iterating over a list with simple values
 
