@@ -25,7 +25,9 @@ jQuery.fn.render = (data, directives, parent) ->
 
 renderSimple = (template, object) ->
   unless typeof object == 'object'
-    node = template.children().first()
+    node = template.find(".listElement")
+    unless (node.length) 
+      node = template.children().first()
     node.data 'data', object
     renderNode node, object
 

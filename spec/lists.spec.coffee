@@ -80,3 +80,24 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should place simple value into element with listElement class if found", ->
+    doc = jQuery(
+     '<div>
+        <div class="comments">
+          <label>comment</label><span class="listElement"></span>
+        </div>
+      </div>')
+
+    data = ["That rules", "Great post!"]
+
+    expected = jQuery(
+     '<div>
+        <div class="comments">
+          <label>comment</label><span class="listElement">That rules</span>
+          <label>comment</label><span class="listElement">Great post!</span>
+        </div>
+      </div>')
+
+    doc.find('.comments').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
