@@ -434,6 +434,10 @@ Install uglify-js and coffee-script:
 Run tests
 
     npm install && npm test
+    
+Run tests during development for more verbose assertion output
+
+    node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec
 
 Generate Javascript libs
 
