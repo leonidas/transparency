@@ -102,7 +102,7 @@ var ui = {
   'cancel-label': 'Peru' 
 };
 
-$('.container').render(hello);
+$('.ui').render(ui);
 ```
 
 Result:
