@@ -67,4 +67,4 @@ renderNode = (node, value, attribute) ->
     node.append children
 
 matchingElements = (template, key) ->
-  template.find("##{key}, #{key}, .#{key}")
+  template.find("##{key}, #{key}, .#{key}, [data-bind='#{key}']")
