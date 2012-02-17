@@ -17,6 +17,8 @@ window.$(window.document).bind "ready", ->
   mustache_saved  = window.$("#mustache-saved")
   result          = window.$("#result")
 
+  transparency_t.render data
+
   new window.Benchmark.Suite()
     .add("transparency", ->
       transparency_t.render data)
@@ -31,6 +33,7 @@ window.$(window.document).bind "ready", ->
       result.append String(bench) + '\n')
 
     .on("complete", ->
-      result.append "Fastest is " + @filter("fastest").pluck("name"))
+      result.append "Fastest is " + @filter("fastest").pluck("name") + "\n"
+      result.trigger "complete")
 
     .run true

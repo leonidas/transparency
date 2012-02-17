@@ -21,6 +21,7 @@
     mustache_t = window.$("#mustache");
     mustache_saved = window.$("#mustache-saved");
     result = window.$("#result");
+    transparency_t.render(data);
     return new window.Benchmark.Suite().add("transparency", function() {
       return transparency_t.render(data);
     }).add("weld", function() {
@@ -30,7 +31,8 @@
     }).on("cycle", function(event, bench) {
       return result.append(String(bench) + '\n');
     }).on("complete", function() {
-      return result.append("Fastest is " + this.filter("fastest").pluck("name"));
+      result.append("Fastest is " + this.filter("fastest").pluck("name") + "\n");
+      return result.trigger("complete");
     }).run(true);
   });
 

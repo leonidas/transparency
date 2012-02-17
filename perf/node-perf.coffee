@@ -9,7 +9,9 @@ jsdom.env "browser-perf.html", [
     'js/perf-test.js'
   ],
   (errors, window) ->
-    window.$(window.document).trigger("ready");
-    console.log errors
-    console.log window.$('#result').text()
+    window.$(window.document).trigger "ready"
+
+    n = 1
+    window.$('#result').bind "complete", (event) ->
+      console.log window.$('#result').text()
 
