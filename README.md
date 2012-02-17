@@ -53,11 +53,15 @@ Here's some of examples. For further details, please see the examples folder, te
 
 ### Assigning values
 
+Transparency matches keys to element id, classes and name. Values are escaped before rendering.
+
 Template:
 
 ```html
 <div class="container">
-  <span class="hello"></span><span class="goodbye" href="#"></span>
+  <div id="hello"></div>
+  <div class="goodbye"></div>
+  <span></span>
 </div>
 ```
 
@@ -66,7 +70,8 @@ Javascript:
 ```js
 var hello = {
   hello:   'Hello',
-  goodbye: 'Goodbye!'
+  goodbye: 'Goodbye!',
+  span:    '<i>See ya!</i>'
 };
 
 $('.container').render(hello);
@@ -76,7 +81,9 @@ Result:
 
 ```html
 <div class="container">
-  <span class="hello">Hello</span><span class="goodbye" href="#">Goodbye</span>
+  <div id="hello">Hello</div>
+  <div class="goodbye">Goodbye!</div>
+  <span>lt;i&gt;See Ya!&lt;/i&gt;</span>
 </div>
 ```
 
