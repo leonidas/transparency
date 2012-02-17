@@ -73,12 +73,10 @@ Javascript:
 
 ```js
 var hello = {
-  hello:          'Hello',
-  goodbye:        'Goodbye!',
-  span:           '<i>See Ya!</i>',
-
-  // Finnish i18n
-  'hi-label': 'Terve!'
+  hello:      'Hello',
+  goodbye:    'Goodbye!',
+  span:       '<i>See Ya!</i>',
+  'hi-label': 'Terve!' // Finnish i18n
 };
 
 $('.container').render(hello);
