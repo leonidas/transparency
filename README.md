@@ -53,6 +53,8 @@ Here's some of examples. For further details, please see the examples folder, te
 
 ### Assigning values
 
+You can interpolate template values by matching a Javascript object attribute name to a template CSS class name. 
+
 Template:
 
 ```html
@@ -77,6 +79,38 @@ Result:
 ```html
 <div class="container">
   <span class="hello">Hello</span><span class="goodbye" href="#">Goodbye</span>
+</div>
+```
+
+You can also match data to the template by `data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes) and reserve CSS classes for styling.
+
+Template:
+
+```html
+<div class="ui">
+  <button class="happy-button" data-bind="ok-label"></button>
+  <button class="sad-button" data-bind="cancel-label"></button>
+</div>
+```
+
+Javascript:
+
+```js
+// Finnish i18n 
+var ui = {
+  'ok-label': 'Ok',
+  'cancel-label': 'Peru' 
+};
+
+$('.ui').render(ui);
+```
+
+Result:
+
+```html
+<div class="ui">
+  <button class="happy-button" data-bind="ok-label">Ok</button>
+  <button class="sad-button" data-bind="cancel-label">Peru</button>
 </div>
 ```
 
@@ -434,6 +468,10 @@ Install uglify-js and coffee-script:
 Run tests
 
     npm install && npm test
+    
+Run tests during development for more verbose assertion output
+
+    node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec
 
 Generate Javascript libs
 

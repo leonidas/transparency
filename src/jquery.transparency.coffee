@@ -65,4 +65,4 @@ renderNode = (element, value, attribute) ->
     element.insertBefore document.createTextNode(value), element.firstChild
 
 matchingElements = (template, key) ->
-  template.find("##{key}, #{key}, .#{key}")
+  template.find("##{key}, #{key}, .#{key}, [data-bind='#{key}']")
