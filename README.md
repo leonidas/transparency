@@ -56,7 +56,7 @@ Here's some of examples. For further details, please see the examples folder, te
 Transparency binds JavaScript objects to DOM a element by id, class names,
 element name and `data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes).
 
-Values are escaped before binding.
+Values are escaped before rendering.
 
 Template:
 
