@@ -11,7 +11,9 @@
                      "Sami Hangaslammi <sami.hangaslammi@leonidasoy.fi>",
                      "Toni Jyrkinen <toni.jyrkinen@leonidasoy.fi>",
                      "Antti Tarvainen <antti.tarvainen@leonidasoy.fi>",
-                     "Tomi Laine <tomi.laine@leonidasoy.fi>"],
+                     "Tomi Laine <tomi.laine@leonidasoy.fi>",
+                     "Mikko Ohtamaa <mikko@opensourcehacker.com>"
+                     ],
   "licenses"       : ["MIT"],
   "dependencies"   : {"jsdom"        : ">=0.2.10",
                       "jquery"       : ">=1.6.x"},

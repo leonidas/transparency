@@ -27,7 +27,7 @@ describe "Transparency", ->
     res = doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
-  it "should assing data values to template", ->
+  it "should assing data values to template via CSS", ->
     doc = jQuery(
      '<div>
         <div class="container"
@@ -104,13 +104,14 @@ describe "Transparency", ->
     res = doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
-  it "should match by element id, class and name", ->
+  it "should match by element id, class, name and data-bind", ->
     doc = jQuery(
      '<div>
         <div class="container"
           <div id="my-id"></div>
           <div class="my-class"></div>
           <span></span>
+          <div data-bind="my-data"></div>
         </div>
       </div>')
 
@@ -118,6 +119,7 @@ describe "Transparency", ->
       'my-id':   'id-data'
       'my-class': 'class-data'
       span:     'name-data'
+      'my-data' : 'data-bind'
 
     expected = jQuery(
       '<div>
@@ -125,11 +127,12 @@ describe "Transparency", ->
           <div id="my-id">id-data</div>
           <div class="my-class">class-data</div>
           <span>name-data</span>
+          <div data-bind="my-data">data-bind</div>
         </div>
       </div>')
 
     res = doc.find('.container').render(data)
-    expect(doc.html()).htmlToBeEqual(expected.html())
+    expect(doc.html()).htmlToBeEqual(expected.html())    
 
   xit "should render html", ->
     doc = jQuery(

@@ -53,7 +53,10 @@ Here's some of examples. For further details, please see the examples folder, te
 
 ### Assigning values
 
-Transparency matches keys to element id, classes and name. Values are escaped before rendering.
+Transparency binds JavaScript objects to DOM a element by id, class names,
+element name and `data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes).
+
+Values are escaped before binding.
 
 Template:
 
@@ -62,6 +65,7 @@ Template:
   <div id="hello"></div>
   <div class="goodbye"></div>
   <span></span>
+  <button class="hi-button" data-bind="hi-label"></button>
 </div>
 ```
 
@@ -69,9 +73,12 @@ Javascript:
 
 ```js
 var hello = {
-  hello:   'Hello',
-  goodbye: 'Goodbye!',
-  span:    '<i>See ya!</i>'
+  hello:          'Hello',
+  goodbye:        'Goodbye!',
+  span:           '<i>See Ya!</i>',
+
+  // Finnish i18n
+  'hi-label': 'Terve!'
 };
 
 $('.container').render(hello);
@@ -84,6 +91,7 @@ Result:
   <div id="hello">Hello</div>
   <div class="goodbye">Goodbye!</div>
   <span>lt;i&gt;See Ya!&lt;/i&gt;</span>
+  <button class="hi-button" data-bind="hi-label"></button>
 </div>
 ```
 
@@ -247,10 +255,10 @@ Javascript:
 var post = {
   title:    'Hello World',
   post:     'Hi there it is me',
-  comments: [ { 
+  comments: [ {
       name: 'John',
       text: 'That rules'
-    }, { 
+    }, {
       name: 'Arnold',
       text: 'Great post!'
     }
@@ -342,7 +350,7 @@ Javascript:
 person = {
   firstname: 'Jasmine',
   lastname:  'Taylor',
-  email:     'jasmine.tailor@example.com' 
+  email:     'jasmine.tailor@example.com'
 };
 
 directives =
@@ -442,6 +450,10 @@ Run tests
 
     npm install && npm test
 
+Run tests during development for more verbose assertion output
+
+    node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec
+
 Generate Javascript libs
 
     cake build
@@ -462,9 +474,9 @@ regarding the original design and implementation. It might be worth reading as a
 
 ## Philosophy
 
-Transparency is heavily influenced by [PURE](http://beebole.com/pure/) but is even more opinionated about how 
+Transparency is heavily influenced by [PURE](http://beebole.com/pure/) but is even more opinionated about how
 templates and data bind together. Templating with Transparency is unobustrive, dead simple and just stays out of the way.
 
-Transparency relies on convention over configuration and requires you to have 1:1 match between CSS classes and 
-JSON objects. The idea is to minimize the cognitive noise you have to deal with. 
+Transparency relies on convention over configuration and requires you to have 1:1 match between CSS classes and
+JSON objects. The idea is to minimize the cognitive noise you have to deal with.
 Just call `$('.container').render(data)` and move on.
