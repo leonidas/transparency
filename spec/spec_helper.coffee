@@ -1,6 +1,7 @@
-global.jsdom  = require 'jsdom'
-global.window = jsdom.jsdom().createWindow()
-global.jQuery = require 'jquery'
+global.jsdom    = require('jsdom/lib/jsdom').jsdom
+global.document = jsdom "<html><head></head><body>hello world</body></html>"
+global.window   = document.createWindow()
+global.jQuery   = require 'jquery'
 
 beforeEach ->
   this.addMatchers
