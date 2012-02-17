@@ -91,7 +91,7 @@ Result:
   <div id="hello">Hello</div>
   <div class="goodbye">Goodbye!</div>
   <span>lt;i&gt;See Ya!&lt;/i&gt;</span>
-  <button class="hi-button" data-bind="hi-label"></button>
+  <button class="hi-button" data-bind="hi-label">Terve!</button>
 </div>
 ```
 
