@@ -1,12 +1,16 @@
 jQuery.fn.render = (objects, directives) ->
-  contexts     = this
-  objects      = [objects] unless objects instanceof Array
+  contexts = this
+  render contexts.get(), objects, directives
+  return contexts
+
+window.render = render = (contexts, objects, directives) ->
+  contexts     = [contexts] unless typeof contexts.length == 'number' # NodeList isn't an instance of Array
+  objects      = [objects]  unless objects instanceof Array
   directives ||= {}
 
   for context in contexts
     context.t ||= context.cloneNode(true)
 
-    # Cleanup the template
     while (n = context.firstChild)
       context.removeChild n
 
@@ -17,6 +21,7 @@ jQuery.fn.render = (objects, directives) ->
       renderValues     template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
+
       while (n = template.firstChild)
         context.appendChild n
 
@@ -41,8 +46,7 @@ renderDirectives = (template, object, directives) ->
 
 renderChildren = (template, object, directives) ->
   for key, value of object when typeof value == 'object'
-    jQuery(matchingElements(template, key))
-      .render value, directives[key], key
+    render matchingElements(template, key), value, directives[key]
 
 renderNode = (element, value, attribute) ->
   if attribute
