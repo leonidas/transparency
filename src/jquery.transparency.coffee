@@ -9,19 +9,19 @@ jQuery.fn.render = (objects, directives) ->
     context.empty()
 
     for object in objects
-      template       = context.data('template').clone()
+      template       = context.data('template')[0].cloneNode true
 
       renderSimple     template, object
       renderValues     template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
-      context.append   template.children()
+      context.append   template.childNodes
 
   return contexts
 
 renderSimple = (template, object) ->
   unless typeof object == 'object'
-    node = template.find(".listElement").get(0) || template.children().get(0)
+    node = template.querySelector(".listElement") || template.querySelector("*")
     renderNode node, object
 
 renderValues = (template, object) ->
@@ -38,18 +38,17 @@ renderDirectives = (template, object, directives) ->
 
 renderChildren = (template, object, directives) ->
   for key, value of object when typeof value == 'object'
-    matchingElements(template, key)
+    jQuery(matchingElements(template, key))
       .render value, directives[key], key
 
 renderNode = (element, value, attribute) ->
   if attribute
     element.setAttribute attribute, value
   else
-    # Find & remove existing text nodes
     for t in (n for n in element.childNodes when n.nodeType == 3)
       element.removeChild t
-
     element.insertBefore document.createTextNode(value), element.firstChild
 
 matchingElements = (template, key) ->
-  template.find("##{key}, #{key}, .#{key}, [data-bind='#{key}']")
+  template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+

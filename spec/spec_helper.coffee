@@ -1,6 +1,7 @@
-global.jsdom    = require('jsdom/lib/jsdom').jsdom
-global.document = jsdom "<html><head></head><body>hello world</body></html>"
+jsdom           = require('jsdom/lib/jsdom').jsdom
+global.document = jsdom "<html><head></head><body>hello world</body></html>", null, features: {QuerySelector: true}
 global.window   = document.createWindow()
+jsdom           = require 'jsdom'
 global.jQuery   = require 'jquery'
 
 beforeEach ->
