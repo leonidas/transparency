@@ -1,7 +1,6 @@
 jQuery.fn.render = (objects, directives) ->
-  contexts = this
-  render contexts.get(), objects, directives
-  return contexts
+  render this.get(), objects, directives
+  this
 
 window.render = render = (contexts, objects, directives) ->
   contexts     = [contexts] unless typeof contexts.length == 'number' # NodeList isn't an instance of Array
@@ -9,23 +8,44 @@ window.render = render = (contexts, objects, directives) ->
   directives ||= {}
 
   for context in contexts
-    context.t ||= context.cloneNode(true)
+    context.t                       ||= {}
+    parent    = context.t.parent    ||= context
+    instances = context.t.instances ||= []
+    context.t.template              ||= while n = context.firstChild
+      context.removeChild(n)
 
-    while (n = context.firstChild)
-      context.removeChild n
-
-    for object in objects
-      template       = context.t.cloneNode true
+    i = 0
+    while i < objects.length
+      object   = objects[i]
+      template = getTemplate context, i
+      i += 1
 
       renderSimple     template, object
       renderValues     template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
 
-      while (n = template.firstChild)
+      while n = template.firstChild
         context.appendChild n
 
+    # Remove leftover template instances
+    while instances.length > objects.length
+      for n in instances.pop
+        parent.removeChild n
+
   return contexts
+
+getTemplate = (context, i) ->
+  template = document.createElement 'div'
+  if i < context.t.instances.length
+    for n in context.t.instances[i]
+      template.appendChild n
+    template
+  else
+    instance = for n in context.t.template
+      template.appendChild(n.cloneNode true)
+    context.t.instances.push instance
+    template
 
 renderSimple = (template, object) ->
   unless typeof object == 'object'
@@ -51,10 +71,12 @@ renderChildren = (template, object, directives) ->
 renderNode = (element, value, attribute) ->
   if attribute
     element.setAttribute attribute, value
-  else
+  else if element?.t?.text != value
     for t in (n for n in element.childNodes when n.nodeType == 3)
       element.removeChild t
     element.insertBefore document.createTextNode(value), element.firstChild
+    element.t    ||= {}
+    element.t.text = value
 
 matchingElements = (template, key) ->
   template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
