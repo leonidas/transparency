@@ -1,4 +1,4 @@
-jQuery.fn.render = (objects, directives, parentKey) ->
+jQuery.fn.render = (objects, directives) ->
   contexts     = this
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
@@ -13,7 +13,6 @@ jQuery.fn.render = (objects, directives, parentKey) ->
 
       renderSimple     template, object
       renderValues     template, object
-      renderForms      template, object, parentKey
       renderDirectives template, object, directives
       renderChildren   template, object, directives
       context.append   template.children()
@@ -29,18 +28,6 @@ renderValues = (template, object) ->
   for key, value of object when typeof value != 'object'
     for e in matchingElements(template, key)
       renderNode e, value
-
-renderForms = (template, object, parentKey) ->
-  return unless parentKey
-
-  for key, value of object when typeof value != 'object'
-    inputName = "#{parentKey}\\[#{key}\\]"
-
-    if template.is('input') and template.attr('name') == inputName and template.attr('type') == 'text'
-      renderNode template, value, 'value'
-
-    for node in template.find("input[name=#{inputName}]")
-      renderNode node, value, 'value'
 
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
