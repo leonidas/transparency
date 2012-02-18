@@ -1,6 +1,6 @@
-jQuery.fn.render = (data, directives, parentKey) ->
+jQuery.fn.render = (objects, directives, parentKey) ->
   contexts     = this
-  data         = [data] unless data instanceof Array
+  objects      = [objects] unless objects instanceof Array
   directives ||= {}
 
   for context in contexts
@@ -8,7 +8,7 @@ jQuery.fn.render = (data, directives, parentKey) ->
     context.data('template', context.clone()) unless context.data 'template'
     context.empty()
 
-    for object in data
+    for object in objects
       template       = context.data('template').clone()
 
       renderSimple     template, object
