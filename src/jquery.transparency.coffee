@@ -1,21 +1,28 @@
+templates = []
+
 jQuery.fn.render = (objects, directives) ->
   contexts     = this
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
 
   for context in contexts
-    context = jQuery(context)
-    context.data('template', context.clone()) unless context.data 'template'
-    context.empty()
+    context.transparencyId ?= templates.length
+    t = context.cloneNode(true)
+    templates.push(t) unless templates[context.transparencyId]
+
+    # Cleanup the template
+    while (n = context.firstChild)
+      context.removeChild n
 
     for object in objects
-      template       = context.data('template')[0].cloneNode true
+      template       = (templates[context.transparencyId]).cloneNode true
 
       renderSimple     template, object
       renderValues     template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
-      context.append   template.childNodes
+      while (n = template.firstChild)
+        context.appendChild n
 
   return contexts
 
@@ -51,4 +58,3 @@ renderNode = (element, value, attribute) ->
 
 matchingElements = (template, key) ->
   template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
-
