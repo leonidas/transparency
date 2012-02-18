@@ -56,7 +56,7 @@ Here's some of examples. For further details, please see the examples folder, te
 Transparency binds JavaScript objects to DOM a element by id, class names,
 element name and `data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes).
 
-Values are escaped before binding.
+Values are escaped before rendering.
 
 Template:
 
@@ -73,12 +73,10 @@ Javascript:
 
 ```js
 var hello = {
-  hello:          'Hello',
-  goodbye:        'Goodbye!',
-  span:           '<i>See Ya!</i>',
-
-  // Finnish i18n
-  'hi-label': 'Terve!'
+  hello:      'Hello',
+  goodbye:    'Goodbye!',
+  span:       '<i>See Ya!</i>',
+  'hi-label': 'Terve!' // Finnish i18n
 };
 
 $('.container').render(hello);
@@ -91,7 +89,7 @@ Result:
   <div id="hello">Hello</div>
   <div class="goodbye">Goodbye!</div>
   <span>lt;i&gt;See Ya!&lt;/i&gt;</span>
-  <button class="hi-button" data-bind="hi-label"></button>
+  <button class="hi-button" data-bind="hi-label">Terve!</button>
 </div>
 ```
 
