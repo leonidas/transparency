@@ -16,17 +16,17 @@
         }
       ]
     };
-    weld_t = window.$("#weld");
-    transparency_t = window.$("#transparency");
-    mustache_t = window.$("#mustache");
-    mustache_saved = window.$("#mustache-saved");
+    weld_t = window.$("#weld")[0];
+    transparency_t = window.$("#transparency").get();
+    mustache_t = window.$("#mustache")[0];
+    mustache_saved = window.$("#mustache-saved").html();
     result = window.$("#result");
     return new window.Benchmark.Suite().add("transparency", function() {
-      return transparency_t.render(data);
+      return window.render(transparency_t, data);
     }).add("weld", function() {
-      return window.weld(weld_t[0], data);
+      return window.weld(weld_t, data);
     }).add("mustache", function() {
-      return mustache_t.html(window.Mustache.to_html(mustache_saved.html(), data));
+      return mustache_t.innerHTML = window.Mustache.to_html(mustache_saved, data);
     }).on("cycle", function(event, bench) {
       return result.append(String(bench) + '\n');
     }).on("complete", function() {
