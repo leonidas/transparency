@@ -1,21 +1,17 @@
-templates = []
-
 jQuery.fn.render = (objects, directives) ->
   contexts     = this
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
 
   for context in contexts
-    context.transparencyId ?= templates.length
-    t = context.cloneNode(true)
-    templates.push(t) unless templates[context.transparencyId]
+    context.t ||= context.cloneNode(true)
 
     # Cleanup the template
     while (n = context.firstChild)
       context.removeChild n
 
     for object in objects
-      template       = (templates[context.transparencyId]).cloneNode true
+      template       = context.t.cloneNode true
 
       renderSimple     template, object
       renderValues     template, object
