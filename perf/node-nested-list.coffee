@@ -1,22 +1,17 @@
 jsdom = require 'jsdom'
 
-jsdom.env
-  html:"browser-nested-list.html"
-
-  scripts: [
+jsdom.env "browser-perf.html", [
     'js/benchmark.js'
     'js/jquery-1.7.1.min.js'
     '../lib/jquery.transparency.js'
     'js/mustache.js'
     'js/weld.js'
-    'js/nested-list.js'
-  ]
-
-  features:
-    QuerySelector: true
-
-  done: (errors, window) ->
+    'js/perf-test.js'
+  ],
+  (errors, window) ->
     window.$(window.document).trigger "ready"
 
+    n = 1
     window.$('#result').bind "complete", (event) ->
       console.log window.$('#result').text()
+

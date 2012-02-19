@@ -13,7 +13,7 @@ task 'perf', 'run perf tests', (options) ->
   invoke 'build'
   exec(
     [
-      "coffee -o perf/js -c perf/src/perf-test.coffee"
+      "coffee -o perf/js -c perf/src/*.coffee"
       "cd perf && coffee node-perf.coffee && cd .."
     ].join(' && '), (err, stdout, stderr) ->
       console.log stdout.trim() if stdout
