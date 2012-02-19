@@ -9,7 +9,6 @@ window.render = render = (contexts, objects, directives) ->
 
   for context in contexts
     context.t                       ||= {}
-    parent    = context.t.parent    ||= context
     instances = context.t.instances ||= []
     context.t.template              ||= while n = context.firstChild
       context.removeChild(n)
@@ -31,7 +30,7 @@ window.render = render = (contexts, objects, directives) ->
     # Remove leftover template instances
     while instances.length > objects.length
       for n in instances.pop
-        parent.removeChild n
+        context.removeChild n
 
   return contexts
 
