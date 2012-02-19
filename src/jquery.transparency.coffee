@@ -6,41 +6,31 @@ window.t ||= {}
 
 window.t.render = render = (contexts, objects, directives) ->
   contexts     = if typeof contexts.length == 'number' then (c for c in contexts) else [contexts] # NodeList to Array
-  objects      = [objects]  unless objects instanceof Array
+  objects      = [objects] unless objects instanceof Array
   directives ||= {}
   template     = document.createElement 'div'
 
-  for context in contexts
-    parent                = context.parentNode
-    sibling               = context.nextSibling
-    context.t           ||= {}
-    context.t.instances ||= []
-    context.t.template  ||= while n = context.firstChild
-      context.removeChild(n)
+  for c in contexts
+    c.t           ||= {}
+    c.t.instances ||= []
+    c.t.template  ||= (c.removeChild n while n = c.firstChild)
+    sibling         = c.nextSibling
+    parent          = c.parentNode
+    parent?.removeChild c
 
-    parent?.removeChild context
-
-    while context.t.instances.length < objects.length
-      t = for n in context.t.template
-        n.cloneNode true
-      context.t.instances.push t
-    while context.t.instances.length > objects.length
-      for n in context.t.instances.pop
-        context.removeChild n
+    (c.t.instances.push (n.cloneNode(true) for n in c.t.template)) while c.t.instances.length < objects.length
+    (c.removeChild(n) for n in c.t.instances.pop())                while c.t.instances.length > objects.length
 
     for object, i in objects
-      for n in context.t.instances[i]
-        template.appendChild n
-
+      template.appendChild n for n in c.t.instances[i]
       renderSimple     template, object
       renderValues     template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
 
-      while n = template.firstChild
-        context.appendChild n
+      (c.appendChild n) while n = template.firstChild
 
-    if sibling then parent?.insertBefore context, sibling else parent?.appendChild context
+    if sibling then parent?.insertBefore(c, sibling) else parent?.appendChild c
   return contexts
 
 renderSimple = (template, object) ->
@@ -50,26 +40,21 @@ renderSimple = (template, object) ->
 
 renderValues = (template, object) ->
   for key, value of object when typeof value != 'object'
-    for e in matchingElements(template, key)
-      renderNode e, value
+    (renderNode e, value) for e in matchingElements(template, key)
 
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
     [key, attribute] = key.split('@')
-
-    for node in matchingElements(template, key)
-      renderNode node, directive.call(object, node), attribute
+    (renderNode node, directive.call(object, node), attribute) for node in matchingElements(template, key)
 
 renderChildren = (template, object, directives) ->
-  for key, value of object when typeof value == 'object'
-    render matchingElements(template, key), value, directives[key]
+  (render matchingElements(template, key), value, directives[key]) for key, value of object when typeof value == 'object'
 
 renderNode = (element, value, attribute) ->
   if attribute
     element.setAttribute attribute, value
   else if element?.t?.text != value
-    for t in (n for n in element.childNodes when n.nodeType == 3)
-      element.removeChild t
+    (element.removeChild t) for t in (n for n in element.childNodes when n.nodeType == 3)
     element.insertBefore document.createTextNode(value), element.firstChild
     element.t    ||= {}
     element.t.text = value
