@@ -23,7 +23,6 @@ window.t.render = render = (contexts, objects, directives) ->
 
     for object, i in objects
       template.appendChild n for n in c.t.instances[i]
-      renderSimple     template, object
       renderValues     template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
@@ -33,24 +32,19 @@ window.t.render = render = (contexts, objects, directives) ->
     if sibling then parent?.insertBefore(c, sibling) else parent?.appendChild c
   return contexts
 
-renderSimple = (template, object) ->
-  unless typeof object == 'object'
-    node = template.querySelector(".listElement") || template.querySelector("*")
-    renderNode node, object
-
 renderValues = (template, object) ->
-  for key, value of object when typeof value != 'object'
-    (renderNode e, value) for e in matchingElements(template, key)
+  setValue(template.querySelector(".listElement") || template.querySelector("*"), object) unless typeof object == 'object'
+  (setValue(e, v) for e in matchingElements(template, k)) for k, v of object when typeof v != 'object'
 
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
     [key, attribute] = key.split('@')
-    (renderNode node, directive.call(object, node), attribute) for node in matchingElements(template, key)
+    (setValue node, directive.call(object, node), attribute) for node in matchingElements(template, key)
 
 renderChildren = (template, object, directives) ->
   (render matchingElements(template, key), value, directives[key]) for key, value of object when typeof value == 'object'
 
-renderNode = (element, value, attribute) ->
+setValue = (element, value, attribute) ->
   if attribute
     element.setAttribute attribute, value
   else if element?.t?.text != value
