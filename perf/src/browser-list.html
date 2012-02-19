@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transparency perf test</title>
+    <script src="js/benchmark.js"></script>
+    <script src="js/mustache.js"></script>
+    <script src="js/weld.js"></script>
+    <script src="js/jquery-1.7.1.min.js"></script>
+    <script src="../lib/jquery.transparency.js"></script>
+    <script src="js/nested-list.js"></script>
+  </head>
+  <body>
+    <div>
+      <pre id="result"></pre>
+
+      <div id="transparency">
+        <h1 id="name">My Name</h1>
+        <ul class="interests"><li class="interest">An interest</li></ul>
+      </div>
+
+      <div id="weld">
+        <h1 id="name">My Name</h1>
+        <ul><li class="interests"><span class="interest">An interest</span></li></ul>
+      </div>
+
+      <div id="mustache">
+         <h1>{{name}}</h1>
+         <ul>
+         {{#interests}}
+           <li>{{interest}}</li>
+         {{/interests}}
+         </ul>
+      </div>
+
+      <div id="mustache-saved">
+         <h1>{{name}}</h1>
+         <ul>
+         {{#interests}}
+           <li>{{interest}}</li>
+         {{/interests}}
+         </ul>
+      </div>
+    </div>
+  </body>
+</html>

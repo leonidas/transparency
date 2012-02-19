@@ -5,18 +5,32 @@ jQuery.fn.render = (objects, directives) ->
 window.t ||= {}
 
 window.t.render = render = (contexts, objects, directives) ->
-  contexts     = [contexts] unless typeof contexts.length == 'number' # NodeList isn't an instance of Array
+  contexts     = if typeof contexts.length == 'number' then (c for c in contexts) else [contexts] # NodeList to Array
   objects      = [objects]  unless objects instanceof Array
   directives ||= {}
+  template     = document.createElement 'div'
 
   for context in contexts
-    context.t                       ||= {}
-    instances = context.t.instances ||= []
-    context.t.template              ||= while n = context.firstChild
+    parent                = context.parentNode
+    sibling               = context.nextSibling
+    context.t           ||= {}
+    context.t.instances ||= []
+    context.t.template  ||= while n = context.firstChild
       context.removeChild(n)
 
+    parent?.removeChild context
+
+    while context.t.instances.length < objects.length
+      t = for n in context.t.template
+        n.cloneNode true
+      context.t.instances.push t
+    while context.t.instances.length > objects.length
+      for n in context.t.instances.pop
+        context.removeChild n
+
     for object, i in objects
-      template = getTemplate context, i
+      for n in context.t.instances[i]
+        template.appendChild n
 
       renderSimple     template, object
       renderValues     template, object
@@ -26,24 +40,8 @@ window.t.render = render = (contexts, objects, directives) ->
       while n = template.firstChild
         context.appendChild n
 
-    # Remove leftover template instances
-    while instances.length > objects.length
-      for n in instances.pop
-        context.removeChild n
-
+    if sibling then parent?.insertBefore context, sibling else parent?.appendChild context
   return contexts
-
-getTemplate = (context, i) ->
-  template = document.createElement 'div'
-  if i < context.t.instances.length
-    for n in context.t.instances[i]
-      template.appendChild n
-    template
-  else
-    instance = for n in context.t.template
-      template.appendChild(n.cloneNode true)
-    context.t.instances.push instance
-    template
 
 renderSimple = (template, object) ->
   unless typeof object == 'object'
