@@ -15,11 +15,8 @@ window.t.render = render = (contexts, objects, directives) ->
     context.t.template              ||= while n = context.firstChild
       context.removeChild(n)
 
-    i = 0
-    while i < objects.length
-      object   = objects[i]
+    for object, i in objects
       template = getTemplate context, i
-      i += 1
 
       renderSimple     template, object
       renderValues     template, object
