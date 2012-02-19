@@ -19,7 +19,7 @@ window.$(window.document).bind "ready", ->
 
   new window.Benchmark.Suite()
     .add("transparency", ->
-      window.render transparency_t, data)
+      window.t.render transparency_t, data)
 
     .add("weld", ->
       window.weld weld_t, data)

@@ -2,7 +2,9 @@ jQuery.fn.render = (objects, directives) ->
   render this.get(), objects, directives
   this
 
-window.render = render = (contexts, objects, directives) ->
+window.t ||= {}
+
+window.t.render = render = (contexts, objects, directives) ->
   contexts     = [contexts] unless typeof contexts.length == 'number' # NodeList isn't an instance of Array
   objects      = [objects]  unless objects instanceof Array
   directives ||= {}

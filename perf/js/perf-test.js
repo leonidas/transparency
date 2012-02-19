@@ -22,7 +22,7 @@
     mustache_saved = window.$("#mustache-saved").html();
     result = window.$("#result");
     return new window.Benchmark.Suite().add("transparency", function() {
-      return window.render(transparency_t, data);
+      return window.t.render(transparency_t, data);
     }).add("weld", function() {
       return window.weld(weld_t, data);
     }).add("mustache", function() {
