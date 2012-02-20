@@ -33,8 +33,10 @@ window.t.render = render = (contexts, objects, directives) ->
   return contexts
 
 renderValues = (template, object) ->
-  setValue(template.querySelector(".listElement") || template.querySelector("*"), object) unless typeof object == 'object'
-  (setValue(e, v) for e in matchingElements(template, k)) for k, v of object when typeof v != 'object'
+  if typeof object == 'object'
+    (setValue(e, v) for e in matchingElements(template, k)) for k, v of object when typeof v != 'object'
+  else
+    setValue(template.querySelector(".listElement") || template.querySelector("*"), object)
 
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
