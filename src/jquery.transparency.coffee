@@ -13,13 +13,14 @@ window.t.render = render = (contexts, objects, directives) ->
   for c in contexts
     c.t           ||= {}
     c.t.instances ||= []
+    c.t.tc        ||= [] # Template cache. Query-cached templates are precious, so save them
     c.t.template  ||= (c.removeChild n while n = c.firstChild)
     sibling         = c.nextSibling
     parent          = c.parentNode
     parent?.removeChild c
 
-    (c.t.instances.push map(((n) -> n.cloneNode true), c.t.template)) while c.t.instances.length < objects.length
-    (c.removeChild(n) for n in c.t.instances.pop())                   while c.t.instances.length > objects.length
+    (c.t.instances.push c.t.tc.pop() || map ((n) -> n.cloneNode true), c.t.template) while objects.length > c.t.instances.length
+    (c.t.tc.push (n.removeChild n) for n in c.t.instances.pop())                     while objects.length < c.t.instances.length
 
     for i, object of objects
       template.appendChild n for n in c.t.instances[i]
