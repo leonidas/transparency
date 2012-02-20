@@ -2,10 +2,10 @@ jQuery.fn.render = (objects, directives) ->
   render this.get(), objects, directives
   this
 
-window.t ||= {}
+window.t ?= {}
 
 window.t.render = render = (contexts, objects, directives) ->
-  contexts     = if typeof contexts.length == 'number' then (c for c in contexts) else [contexts] # NodeList to Array
+  contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts] # NodeList to Array
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
   template     = document.createElement 'div'
@@ -18,15 +18,14 @@ window.t.render = render = (contexts, objects, directives) ->
     parent          = c.parentNode
     parent?.removeChild c
 
-    (c.t.instances.push (n.cloneNode(true) for n in c.t.template)) while c.t.instances.length < objects.length
-    (c.removeChild(n) for n in c.t.instances.pop())                while c.t.instances.length > objects.length
+    (c.t.instances.push map(((n) -> n.cloneNode true), c.t.template)) while c.t.instances.length < objects.length
+    (c.removeChild(n) for n in c.t.instances.pop())                   while c.t.instances.length > objects.length
 
-    for object, i in objects
+    for i, object of objects
       template.appendChild n for n in c.t.instances[i]
       renderValues     template, object
       renderDirectives template, object, directives
       renderChildren   template, object, directives
-
       (c.appendChild n) while n = template.firstChild
 
     if sibling then parent?.insertBefore(c, sibling) else parent?.appendChild c
@@ -42,16 +41,22 @@ renderDirectives = (template, object, directives) ->
     (setValue node, directive.call(object, node), attribute) for node in matchingElements(template, key)
 
 renderChildren = (template, object, directives) ->
-  (render matchingElements(template, key), value, directives[key]) for key, value of object when typeof value == 'object'
+  (render matchingElements(template, k), v, directives[k]) for k, v of object when typeof v == 'object'
 
 setValue = (element, value, attribute) ->
   if attribute
     element.setAttribute attribute, value
   else if element?.t?.text != value
-    (element.removeChild t) for t in (n for n in element.childNodes when n.nodeType == 3)
-    element.insertBefore document.createTextNode(value), element.firstChild
+    (element.removeChild t) for t in filter ((n) -> n.nodeType == TEXT_NODE), element.childNodes
     element.t    ||= {}
     element.t.text = value
+    text           = document.createTextNode(value)
+    sibling        = element.firstChild
+    if sibling then element.insertBefore(text, sibling) else element.appendChild text
 
 matchingElements = (template, key) ->
   template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+
+TEXT_NODE  = 3
+map       ?= (f, xs) -> (f x for x in xs)
+filter    ?= (p, xs) -> (x for x in xs when p(x))
