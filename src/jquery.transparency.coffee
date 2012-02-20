@@ -46,16 +46,18 @@ renderChildren = (template, object, directives) ->
 setValue = (element, value, attribute) ->
   if attribute
     element.setAttribute attribute, value
-  else if element?.t?.text != value
+  else unless element?.t?.text == value
     (element.removeChild t) for t in filter ((n) -> n.nodeType == TEXT_NODE), element.childNodes
     element.t    ||= {}
     element.t.text = value
     text           = document.createTextNode(value)
-    sibling        = element.firstChild
-    if sibling then element.insertBefore(text, sibling) else element.appendChild text
+    if fc = element.firstChild then element.insertBefore(text, fc) else element.appendChild text
 
 matchingElements = (template, key) ->
-  template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+  return [] unless fc = template.firstChild
+  fc.t         ||= {}
+  fc.t.qc      ||= {} # Query cache
+  fc.t.qc[key] ||= template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
 
 TEXT_NODE  = 3
 map       ?= (f, xs) -> (f x for x in xs)
