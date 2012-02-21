@@ -1,10 +1,10 @@
-jQuery.fn.render = (objects, directives) ->
-  render this.get(), objects, directives
+jQuery?.fn.render = (objects, directives) ->
+  Transparency.render this.get(), objects, directives
   this
 
-window.t ?= {}
+Transparency = @Transparency = {}
 
-window.t.render = render = (contexts, objects, directives) ->
+Transparency.render = (contexts, objects, directives) ->
   contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts] # NodeList to Array
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
@@ -44,7 +44,7 @@ renderDirectives = (template, object, directives) ->
     (setValue node, directive.call(object, node), attribute) for node in matchingElements(template, key)
 
 renderChildren = (template, object, directives) ->
-  (render matchingElements(template, k), v, directives[k]) for k, v of object when typeof v == 'object'
+  (Transparency.render matchingElements(template, k), v, directives[k]) for k, v of object when typeof v == 'object'
 
 setValue = (element, value, attribute) ->
   if attribute
