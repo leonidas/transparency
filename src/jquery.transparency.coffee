@@ -36,7 +36,7 @@ renderValues = (template, object) ->
   if typeof object == 'object'
     (setValue(e, v) for e in matchingElements(template, k)) for k, v of object when typeof v != 'object'
   else
-    setValue(template.querySelector(".listElement") || template.querySelector("*"), object)
+    setValue(matchingElements(template, 'listElement')[0] || template.getElementsByTagName('*')[0], object)
 
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
@@ -60,7 +60,12 @@ matchingElements = (template, key) ->
   return [] unless fc = template.firstChild
   fc.t         ||= {}
   fc.t.qc      ||= {} # Query cache
-  fc.t.qc[key] ||= template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+  fc.t.qc[key] ||= if template.querySelectorAll
+    template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+  else
+    p = (e) ->
+      e.id == key || e.nodeName.toLowerCase() == key.toLowerCase() || e.className.split(' ').indexOf(key) > -1 || e.getAttribute('data-bind') == key
+    filter p, template.getElementsByTagName '*'
 
 TEXT_NODE  = 3
 map       ?= (f, xs) -> (f x for x in xs)
