@@ -5,32 +5,52 @@ jQuery.fn.render = (objects, directives) ->
 Transparency = @Transparency = {}
 
 Transparency.render = (contexts, objects, directives) ->
-  contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts] # NodeList to Array
+  # NodeList is a live array, which sucks hard. Clone it to Array.
+  contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts]
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
 
-  for c in contexts
-    c.t           ||= {}
-    c.t.instances ||= []
-    c.t.tc        ||= [] # Template cache. Query-cached templates are precious, so save them
-    c.t.template  ||= (c.removeChild n while n = c.firstChild)
-    sibling         = c.nextSibling
-    parent          = c.parentNode
-    parent?.removeChild c
+  for context in contexts
+    # DOM manipulation is a lot faster when elements are detached. Save the original position, so we can put the context back to it's place.
+    sibling = context.nextSibling
+    parent  = context.parentNode
+    parent?.removeChild context
 
-    (c.t.instances.push c.t.tc.pop() || map ((n) -> n.cloneNode true), c.t.template) while objects.length > c.t.instances.length
-    (c.t.tc.push (n.removeChild n) for n in c.t.instances.pop())                     while objects.length < c.t.instances.length
-
-    result = c.ownerDocument.createDocumentFragment()
+    # Make sure we have right amount of template instances available
+    prepareContext context, objects
+    fragment = context.ownerDocument.createDocumentFragment()
     for object, i in objects
-      (result.appendChild n) for n in c.t.instances[i]
-      renderValues     result, object
-      renderDirectives result, object, directives
-      renderChildren   result, object, directives
-      c.appendChild    result
 
-    if sibling then parent?.insertBefore(c, sibling) else parent?.appendChild c
+      # Attach the elements from template instance to DocumentFragment for rendering
+      (fragment.appendChild n) for n in context.transparency.instances[i]
+
+      # Render the data
+      renderValues      fragment, object
+      renderDirectives  fragment, object, directives
+      renderChildren    fragment, object, directives
+
+      # Attach the results back to it's context
+      context.appendChild fragment
+
+    # Finally, put the context node back to it's original place in DOM
+    if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
   return contexts
+
+prepareContext = (context, objects) ->
+  # Extend context element with transparency hash to store the template and cached instances
+  context.transparency                ||= {}
+  context.transparency.template       ||= (context.removeChild context.firstChild while context.firstChild)
+  context.transparency.templateCache  ||= [] # Query-cached templates are precious, so save them for the future
+  context.transparency.instances      ||= [] # Currently used template instances
+
+  # Get templates from the cache or clone new ones, if the cache is empty.
+  while objects.length > context.transparency.instances.length
+    template = context.transparency.templateCache.pop() || (map ((n) -> n.cloneNode true), context.transparency.template)
+    context.transparency.instances.push template
+
+  # Remove leftover templates from DOM and save them to the template cache for later use
+  while objects.length < context.transparency.instances.length
+    context.transparency.templateCache.push ((context.removeChild n) for n in context.transparency.instances.pop())
 
 renderValues = (template, object) ->
   if typeof object == 'object'
@@ -54,22 +74,27 @@ setValue = (element, value, attribute) ->
     element.t    ||= {}
     element.t.text = value
     text           = document.createTextNode(value)
-    if fc = element.firstChild then element.insertBefore(text, fc) else element.appendChild text
+    if element.firstChild
+      element.insertBefore(text, element.firstChild)
+    else
+      element.appendChild text
 
 matchingElements = (template, key) ->
-  return [] unless fc = template.firstChild
-  fc.t         ||= {}
-  fc.t.qc      ||= {} # Query cache
-  fc.t.qc[key] ||= if template.querySelectorAll
+  return [] unless firstChild = template.firstChild
+  firstChild.transparency                 ||= {}
+  firstChild.transparency.queryCache      ||= {}
+  firstChild.transparency.queryCache[key] ||= if template.querySelectorAll
     template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
   else
-    matchPredicate = (e) ->
-      e.id == key ||
-      e.nodeName.toLowerCase() == key.toLowerCase() ||
-      e.className.split(' ').indexOf(key) > -1 ||
-      e.getAttribute('data-bind') == key
+    # Fallback for browsers which don't have implementation for DocumentFragment.querySelectorAll
+    filter elementMatcher(key), template.getElementsByTagName '*'
 
-    filter matchPredicate, template.getElementsByTagName '*'
+elementMatcher = (key) ->
+  (element) ->
+    element.id == key ||
+    element.nodeName.toLowerCase() == key.toLowerCase() ||
+    element.className.split(' ').indexOf(key) > -1 ||
+    element.getAttribute('data-bind') == key
 
 TEXT_NODE  = 3
 map       ?= (f, xs) -> (f x for x in xs)
