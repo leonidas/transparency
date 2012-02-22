@@ -38,10 +38,10 @@ Transparency.render = (contexts, objects, directives) ->
 
 prepareContext = (context, objects) ->
   # Extend context element with transparency hash to store the template and cached instances
-  context.transparency                ||= {}
-  context.transparency.template       ||= (context.removeChild context.firstChild while context.firstChild)
-  context.transparency.templateCache  ||= [] # Query-cached templates are precious, so save them for the future
-  context.transparency.instances      ||= [] # Currently used template instances
+  context.transparency               ||= {}
+  context.transparency.template      ||= (context.removeChild context.firstChild while context.firstChild)
+  context.transparency.templateCache ||= [] # Query-cached templates are precious, so save them for the future
+  context.transparency.instances     ||= [] # Currently used template instances
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while objects.length > context.transparency.instances.length
@@ -54,30 +54,32 @@ prepareContext = (context, objects) ->
 
 renderValues = (template, object) ->
   if typeof object == 'object'
-    (setValue(e, v) for e in matchingElements(template, k)) for k, v of object when typeof v != 'object'
+    for k, v of object when typeof v != 'object'
+      setText(e, v) for e in matchingElements(template, k)
   else
-    setValue(matchingElements(template, 'listElement')[0] || template.getElementsByTagName('*')[0], object)
+    setText(matchingElements(template, 'listElement')[0] || template.getElementsByTagName('*')[0], object)
 
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
-    [key, attribute] = key.split('@')
-    (setValue node, directive.call(object, node), attribute) for node in matchingElements(template, key)
+    [key, attr] = key.split('@')
+
+    for e in matchingElements(template, key)
+      v = directive.call(object, e)
+      if attr then e.setAttribute(attr, v) else setText e, v
 
 renderChildren = (template, object, directives) ->
   (Transparency.render matchingElements(template, k), v, directives[k]) for k, v of object when typeof v == 'object'
 
-setValue = (element, value, attribute) ->
-  if attribute
-    element.setAttribute attribute, value
-  else unless element?.t?.text == value
-    (element.removeChild t) for t in filter ((n) -> n.nodeType == TEXT_NODE), element.childNodes
-    element.t    ||= {}
-    element.t.text = value
-    text           = document.createTextNode(value)
-    if element.firstChild
-      element.insertBefore(text, element.firstChild)
-    else
-      element.appendChild text
+setText = (e, text) ->
+  return if e?.transparency?.text == text
+  e.transparency    ||= {}
+  e.transparency.text = text
+
+  # Remove existing text nodes
+  (e.removeChild t) for t in filter ((n) -> n.nodeType == document.TEXT_NODE), e.childNodes
+
+  textNode = document.createTextNode(text)
+  if e.firstChild then e.insertBefore(textNode, e.firstChild) else e.appendChild textNode
 
 matchingElements = (template, key) ->
   return [] unless firstChild = template.firstChild
@@ -91,11 +93,10 @@ matchingElements = (template, key) ->
 
 elementMatcher = (key) ->
   (element) ->
-    element.id == key ||
-    element.nodeName.toLowerCase() == key.toLowerCase() ||
-    element.className.split(' ').indexOf(key) > -1 ||
+    element.className.split(' ').indexOf(key) > -1         ||
+    element.id                        == key               ||
+    element.nodeName.toLowerCase()    == key.toLowerCase() ||
     element.getAttribute('data-bind') == key
 
-TEXT_NODE  = 3
 map       ?= (f, xs) -> (f x for x in xs)
 filter    ?= (p, xs) -> (x   for x in xs when p(x))
