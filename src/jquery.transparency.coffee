@@ -18,30 +18,31 @@ Transparency.render = (contexts, objects, directives) ->
 
     # Make sure we have right amount of template instances available
     prepareContext context, objects
-    fragment = context.ownerDocument.createDocumentFragment()
+
+    # Render each object to its template instance
     for object, i in objects
 
-      # Attach the elements from template instance to DocumentFragment for rendering
-      (fragment.appendChild n) for n in context.transparency.instances[i]
+      # Attach the template instance elements to DocumentFragment for rendering
+      (context.transparency.fragment.appendChild n) for n in context.transparency.instances[i]
 
-      # Render the data
-      renderValues      fragment, object
-      renderDirectives  fragment, object, directives
-      renderChildren    fragment, object, directives
+      renderValues      context.transparency.fragment, object
+      renderDirectives  context.transparency.fragment, object, directives
+      renderChildren    context.transparency.fragment, object, directives
 
-      # Attach the results back to it's context
-      context.appendChild fragment
+      # Attach the template instance nodes back to the context
+      context.appendChild context.transparency.fragment
 
     # Finally, put the context node back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
   return contexts
 
 prepareContext = (context, objects) ->
-  # Extend context element with transparency hash to store the template and cached instances
+  # Extend context element with transparency hash to store the template elements and cached instances
   context.transparency               ||= {}
   context.transparency.template      ||= (context.removeChild context.firstChild while context.firstChild)
   context.transparency.templateCache ||= [] # Query-cached templates are precious, so save them for the future
   context.transparency.instances     ||= [] # Currently used template instances
+  context.transparency.fragment      ||= context.ownerDocument.createDocumentFragment()
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while objects.length > context.transparency.instances.length
@@ -76,8 +77,9 @@ setText = (e, text) ->
   e.transparency.text = text
   textNode            = document.createTextNode(text)
 
-  # Remove existing text nodes and add the new one
-  (e.removeChild t) for t in filter ((n) -> n.nodeType == document.TEXT_NODE), e.childNodes
+  # Remove existing text nodes
+  (e.removeChild n) for n in filter ((n) -> n.nodeType == document.TEXT_NODE), e.childNodes
+
   if e.firstChild then e.insertBefore(textNode, e.firstChild) else e.appendChild textNode
 
 matchingElements = (template, key) ->
@@ -87,7 +89,7 @@ matchingElements = (template, key) ->
   firstChild.transparency.queryCache[key] ||= if template.querySelectorAll
     template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
   else
-    # Fallback for browsers which don't have implementation for DocumentFragment.querySelectorAll
+    # Fallback for browsers without DocumentFragment.querySelectorAll
     filter elementMatcher(key), template.getElementsByTagName '*'
 
 elementMatcher = (key) ->
@@ -97,5 +99,5 @@ elementMatcher = (key) ->
     element.nodeName.toLowerCase()    == key.toLowerCase() ||
     element.getAttribute('data-bind') == key
 
-map       ?= (f, xs) -> (f x for x in xs)
-filter    ?= (p, xs) -> (x   for x in xs when p(x))
+map    ?= (f, xs) -> (f x for x in xs)
+filter ?= (p, xs) -> (x   for x in xs when p(x))
