@@ -29,10 +29,10 @@ Transparency.render = (contexts, objects, directives) ->
       renderDirectives  context.transparency.fragment, object, directives
       renderChildren    context.transparency.fragment, object, directives
 
-      # Attach the template instance nodes back to the context
+      # Attach the template instance elements back to the context
       context.appendChild context.transparency.fragment
 
-    # Finally, put the context node back to it's original place in DOM
+    # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
   return contexts
 
@@ -49,7 +49,7 @@ prepareContext = (context, objects) ->
     template = context.transparency.templateCache.pop() || (map ((n) -> n.cloneNode true), context.transparency.template)
     context.transparency.instances.push template
 
-  # Remove leftover templates from DOM and save them to the template cache for later use
+  # Remove leftover templates from DOM and save them to the cache for later use.
   while objects.length < context.transparency.instances.length
     context.transparency.templateCache.push ((context.removeChild n) for n in context.transparency.instances.pop())
 
@@ -100,4 +100,4 @@ elementMatcher = (key) ->
     element.getAttribute('data-bind') == key
 
 map    ?= (f, xs) -> (f x for x in xs)
-filter ?= (p, xs) -> (x   for x in xs when p(x))
+filter ?= (p, xs) -> (x   for x in xs when p x)
