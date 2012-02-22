@@ -74,11 +74,10 @@ setText = (e, text) ->
   return if e?.transparency?.text == text
   e.transparency    ||= {}
   e.transparency.text = text
+  textNode            = document.createTextNode(text)
 
-  # Remove existing text nodes
+  # Remove existing text nodes and add the new one
   (e.removeChild t) for t in filter ((n) -> n.nodeType == document.TEXT_NODE), e.childNodes
-
-  textNode = document.createTextNode(text)
   if e.firstChild then e.insertBefore(textNode, e.firstChild) else e.appendChild textNode
 
 matchingElements = (template, key) ->
