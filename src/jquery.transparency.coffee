@@ -58,7 +58,8 @@ renderValues = (template, object) ->
     for k, v of object when typeof v != 'object'
       setText(e, v) for e in matchingElements(template, k)
   else
-    setText(matchingElements(template, 'listElement')[0] || template.getElementsByTagName('*')[0], object)
+    element = matchingElements(template, 'listElement')[0] || template.getElementsByTagName('*')[0]
+    setText(element, object) if element
 
 renderDirectives = (template, object, directives) ->
   for key, directive of directives when typeof directive == 'function'

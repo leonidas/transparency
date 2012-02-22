@@ -101,3 +101,21 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should not fail when there's no child node in the simple list template", ->
+    doc = jQuery(
+     '<div>
+        <div class="comments">
+        </div>
+      </div>')
+
+    data = ["That rules", "Great post!"]
+
+    expected = jQuery(
+     '<div>
+        <div class="comments">
+        </div>
+      </div>')
+
+    doc.find('.comments').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
