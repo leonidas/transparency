@@ -21,9 +21,8 @@
     mustache_t = window.$("#mustache")[0];
     mustache_saved = window.$("#mustache-saved").html();
     result = window.$("#result");
-    window.t.render(transparency_t, data);
     return new window.Benchmark.Suite().add("transparency", function() {
-      return window.t.render(transparency_t, data);
+      return window.Transparency.render(transparency_t, data);
     }).add("weld", function() {
       return window.weld(weld_t, data);
     }).add("mustache", function() {

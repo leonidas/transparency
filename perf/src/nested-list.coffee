@@ -17,11 +17,11 @@ window.$(window.document).bind "ready", ->
   mustache_saved  = window.$("#mustache-saved").html()
   result          = window.$("#result")
 
-  window.t.render transparency_t, data
+  # window.Transparency.render transparency_t, data
 
   new window.Benchmark.Suite()
     .add("transparency", ->
-      window.t.render transparency_t, data)
+      window.Transparency.render transparency_t, data)
 
     .add("weld", ->
       window.weld weld_t, data)

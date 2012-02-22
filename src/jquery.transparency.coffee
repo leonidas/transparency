@@ -1,4 +1,4 @@
-jQuery?.fn.render = (objects, directives) ->
+jQuery.fn.render = (objects, directives) ->
   Transparency.render this.get(), objects, directives
   this
 
@@ -8,7 +8,6 @@ Transparency.render = (contexts, objects, directives) ->
   contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts] # NodeList to Array
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
-  template     = document.createElement 'div'
 
   for c in contexts
     c.t           ||= {}
@@ -22,12 +21,13 @@ Transparency.render = (contexts, objects, directives) ->
     (c.t.instances.push c.t.tc.pop() || map ((n) -> n.cloneNode true), c.t.template) while objects.length > c.t.instances.length
     (c.t.tc.push (n.removeChild n) for n in c.t.instances.pop())                     while objects.length < c.t.instances.length
 
-    for i, object of objects
-      template.appendChild n for n in c.t.instances[i]
-      renderValues     template, object
-      renderDirectives template, object, directives
-      renderChildren   template, object, directives
-      (c.appendChild n) while n = template.firstChild
+    result = c.ownerDocument.createDocumentFragment()
+    for object, i in objects
+      (result.appendChild n) for n in c.t.instances[i]
+      renderValues     result, object
+      renderDirectives result, object, directives
+      renderChildren   result, object, directives
+      c.appendChild    result
 
     if sibling then parent?.insertBefore(c, sibling) else parent?.appendChild c
   return contexts
@@ -63,10 +63,14 @@ matchingElements = (template, key) ->
   fc.t.qc[key] ||= if template.querySelectorAll
     template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
   else
-    p = (e) ->
-      e.id == key || e.nodeName.toLowerCase() == key.toLowerCase() || e.className.split(' ').indexOf(key) > -1 || e.getAttribute('data-bind') == key
-    filter p, template.getElementsByTagName '*'
+    matchPredicate = (e) ->
+      e.id == key ||
+      e.nodeName.toLowerCase() == key.toLowerCase() ||
+      e.className.split(' ').indexOf(key) > -1 ||
+      e.getAttribute('data-bind') == key
+
+    filter matchPredicate, template.getElementsByTagName '*'
 
 TEXT_NODE  = 3
 map       ?= (f, xs) -> (f x for x in xs)
-filter    ?= (p, xs) -> (x for x in xs when p(x))
+filter    ?= (p, xs) -> (x   for x in xs when p(x))
