@@ -28,7 +28,7 @@ Transparency.render = (contexts, objects, directives) ->
       # Also, associate model object with instance element
       for n in context.transparency.instances[i]
         fragment.appendChild n 
-        if isArray
+        if isArray and n.tagName
           n.transparency ||= {}
           n.transparency.model = object
 
