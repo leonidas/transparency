@@ -5,7 +5,7 @@ jQuery.fn.render = (objects, directives) ->
 Transparency = @Transparency = {}
 
 Transparency.render = (contexts, objects, directives) ->
-  # NodeList is a live array, which sucks hard. Clone it to Array.
+  # NodeList is a live array. Clone it to Array.
   contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts]
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
@@ -46,7 +46,7 @@ prepareContext = (context, objects) ->
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while objects.length > context.transparency.instances.length
-    template = context.transparency.templateCache.pop() || (map ((n) -> n.cloneNode true), context.transparency.template)
+    template = context.transparency.templateCache.pop() || (n.cloneNode true for n in context.transparency.template)
     context.transparency.instances.push template
 
   # Remove leftover templates from DOM and save them to the cache for later use.
@@ -58,7 +58,7 @@ renderValues = (template, object) ->
     for k, v of object when typeof v != 'object'
       setText(e, v) for e in matchingElements(template, k)
   else
-    element = matchingElements(template, 'listElement')[0] || jQuery(template).children()[0]
+    element = matchingElements(template, 'listElement')[0] || template.getElementsByTagName('*')[0]
     setText(element, object) if element
 
 renderDirectives = (template, object, directives) ->
@@ -99,10 +99,6 @@ elementMatcher = (key) ->
     element.tagName.toLowerCase()     == key.toLowerCase() ||
     element.getAttribute('data-bind') == key
 
-children = (e) -> (filter ((n) -> n.nodeType == ELEMENT_NODE), e.childNodes)
-
 ELEMENT_NODE = 1
-
-map     ?= (f, xs) -> (f x for x in xs)
-filter  ?= (p, xs) -> (x   for x in xs when p x)
+filter      ?= (p, xs) -> (x for x in xs when p x)
 
