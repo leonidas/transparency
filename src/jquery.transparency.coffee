@@ -87,8 +87,22 @@ matchingElements = (template, key) ->
   return [] unless firstChild = template.firstChild
   firstChild.transparency                 ||= {}
   firstChild.transparency.queryCache      ||= {}
-  firstChild.transparency.queryCache[key] ||= jQuery(template).find "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+  firstChild.transparency.queryCache[key] ||= if template.querySelectorAll
+    template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+  else
+    filter elementMatcher(key), template.getElementsByTagName '*'
+
+elementMatcher = (key) ->
+  (element) ->
+    element.className.indexOf(key)     > -1                ||
+    element.id                        == key               ||
+    element.tagName.toLowerCase()     == key.toLowerCase() ||
+    element.getAttribute('data-bind') == key
+
+children = (e) -> (filter ((n) -> n.nodeType == ELEMENT_NODE), e.childNodes)
 
 ELEMENT_NODE = 1
-map    ?= (f, xs) -> (f x for x in xs)
-filter ?= (p, xs) -> (x   for x in xs when p x)
+
+map     ?= (f, xs) -> (f x for x in xs)
+filter  ?= (p, xs) -> (x   for x in xs when p x)
+
