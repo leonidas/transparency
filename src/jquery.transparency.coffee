@@ -7,6 +7,7 @@ Transparency = @Transparency = {}
 Transparency.render = (contexts, objects, directives) ->
   # NodeList is a live array, which sucks hard. Clone it to Array.
   contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts]
+  isArray      = objects instanceof Array
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
 
@@ -22,15 +23,18 @@ Transparency.render = (contexts, objects, directives) ->
     # Render each object to its template instance
     for object, i in objects
 
+      fragment = context.transparency.fragment
       # Attach the template instance elements to DocumentFragment for rendering
-      (context.transparency.fragment.appendChild n) for n in context.transparency.instances[i]
+      (fragment.appendChild n) for n in context.transparency.instances[i]
 
-      renderValues      context.transparency.fragment, object
-      renderDirectives  context.transparency.fragment, object, directives
-      renderChildren    context.transparency.fragment, object, directives
+      renderValues      fragment, object
+      renderDirectives  fragment, object, directives
+      renderChildren    fragment, object, directives
 
       # Attach the template instance elements back to the context
-      context.appendChild context.transparency.fragment
+      context.appendChild fragment
+
+      context.lastChild.transparency = { model : object } if isArray
 
     # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
