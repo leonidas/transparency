@@ -8,8 +8,7 @@ describe "Transparency", ->
     doc = jQuery(
      '<div>
         <div class="person">
-          <span class="name"></span>
-          <span class="email"></span>
+          <span class="name"></span><span class="email"></span>
         </div>
       </div>')
 

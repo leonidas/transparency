@@ -11,9 +11,7 @@
       doc = jQuery('<div>\
         <div class="comments">\
           <div class="comment">\
-            <span class="name"></span>\
-            <span class="text"></span>\
-          </div>\
+            <span class="name"></span><span class="text"></span></div>\
         </div>\
       </div>');
       data = [
@@ -28,11 +26,9 @@
       expected = jQuery('<div>\
         <div class="comments">\
           <div class="comment">\
-            <span class="name">John</span>\
-            <span class="text">That rules</span>\
+            <span class="name">John</span><span class="text">That rules</span>\
           </div><div class="comment">\
-            <span class="name">Arnold</span>\
-            <span class="text">Great post!</span>\
+            <span class="name">Arnold</span><span class="text">Great post!</span>\
           </div>\
         </div>\
       </div>');
@@ -61,14 +57,14 @@
       var data, doc, expected;
       doc = jQuery('<div>\
         <div class="comments">\
-          <span></span><span>blah</span>\
+          <span></span>\
+          <span>blah</span>\
         </div>\
       </div>');
       data = ["That rules", "Great post!"];
       expected = jQuery('<div>\
         <div class="comments">\
-          <span>That rules</span><span>blah</span>\
-          <span>Great post!</span><span>blah</span>\
+          <span>That rules</span><span>blah</span><span>Great post!</span><span>blah</span>\
         </div>\
       </div>');
       doc.find('.comments').render(data);

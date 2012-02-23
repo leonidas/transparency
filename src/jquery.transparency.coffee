@@ -58,8 +58,7 @@ renderValues = (template, object) ->
     for k, v of object when typeof v != 'object'
       setText(e, v) for e in matchingElements(template, k)
   else
-    element = matchingElements(template, 'listElement')[0] ||
-      (filter ((n) -> n.nodeType == document.ELEMENT_NODE), template.childNodes)[0]
+    element = matchingElements(template, 'listElement')[0] || jQuery(template).children()[0]
     setText(element, object) if element
 
 renderDirectives = (template, object, directives) ->
@@ -77,13 +76,12 @@ setText = (e, text) ->
   return if e?.transparency?.text == text
   e.transparency    ||= {}
   e.transparency.text = text
-  textNode            = document.createTextNode(text)
 
-  # Remove existing text nodes
-  (e.removeChild n) for n in filter ((n) -> n.nodeType == document.TEXT_NODE), e.childNodes
-
-  if e.firstChild then e.insertBefore(textNode, e.firstChild) else e.appendChild textNode
-
+  e = jQuery(e)
+  children = e.children().detach()
+  e.text text
+  e.append children
+  
 matchingElements = (template, key) ->
   return [] unless firstChild = template.firstChild
   firstChild.transparency                 ||= {}
@@ -96,9 +94,9 @@ matchingElements = (template, key) ->
 
 elementMatcher = (key) ->
   (element) ->
-    element.className.split(' ').indexOf(key) > -1         ||
+    element.className.indexOf(key)      > -1               ||
     element.id                        == key               ||
-    element.nodeName.toLowerCase()    == key.toLowerCase() ||
+    element.tagName.toLowerCase()     == key.toLowerCase() ||
     element.getAttribute('data-bind') == key
 
 map    ?= (f, xs) -> (f x for x in xs)

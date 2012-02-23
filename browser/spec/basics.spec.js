@@ -60,14 +60,12 @@
       </div>');
       data = {
         greeting: 'Hello',
-        name: ' World, '
+        name: 'World'
       };
       expected = jQuery('<div>\
         <div class="container">\
-          <div class="greeting">Hello\
-            <span class="name"> World, </span>\
-            <div class="greeting">Hello\
-            </div>\
+          <div class="greeting">Hello<span class="name">World</span>\
+            <div class="greeting">Hello</div>\
           </div>\
         </div>\
       </div>');

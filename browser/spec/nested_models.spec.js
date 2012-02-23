@@ -34,7 +34,7 @@
         ]
       };
       expected = jQuery('<div>\
-        <div class="container">\
+       <div class="container">\
           <h1 class="title">Hello World</h1>\
           <p class="post">Hi there it is me</p>\
           <div class="comments">\

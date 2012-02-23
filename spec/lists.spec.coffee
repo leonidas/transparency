@@ -9,9 +9,7 @@ describe "Transparency", ->
      '<div>
         <div class="comments">
           <div class="comment">
-            <span class="name"></span>
-            <span class="text"></span>
-          </div>
+            <span class="name"></span><span class="text"></span></div>
         </div>
       </div>')
 
@@ -27,11 +25,9 @@ describe "Transparency", ->
      '<div>
         <div class="comments">
           <div class="comment">
-            <span class="name">John</span>
-            <span class="text">That rules</span>
+            <span class="name">John</span><span class="text">That rules</span>
           </div><div class="comment">
-            <span class="name">Arnold</span>
-            <span class="text">Great post!</span>
+            <span class="name">Arnold</span><span class="text">Great post!</span>
           </div>
         </div>
       </div>')
@@ -65,7 +61,8 @@ describe "Transparency", ->
     doc = jQuery(
      '<div>
         <div class="comments">
-          <span></span><span>blah</span>
+          <span></span>
+          <span>blah</span>
         </div>
       </div>')
 
@@ -74,8 +71,7 @@ describe "Transparency", ->
     expected = jQuery(
      '<div>
         <div class="comments">
-          <span>That rules</span><span>blah</span>
-          <span>Great post!</span><span>blah</span>
+          <span>That rules</span><span>blah</span><span>Great post!</span><span>blah</span>
         </div>
       </div>')
 
