@@ -25,7 +25,12 @@ Transparency.render = (contexts, objects, directives) ->
 
       fragment = context.transparency.fragment
       # Attach the template instance elements to DocumentFragment for rendering
-      (fragment.appendChild n) for n in context.transparency.instances[i]
+      # Also, associate model object with instance element
+      for n in context.transparency.instances[i]
+        fragment.appendChild n 
+        if isArray
+          n.transparency ||= {}
+          n.transparency.model = object
 
       renderValues      fragment, object
       renderDirectives  fragment, object, directives
@@ -33,8 +38,6 @@ Transparency.render = (contexts, objects, directives) ->
 
       # Attach the template instance elements back to the context
       context.appendChild fragment
-
-      context.lastChild.transparency = { model : object } if isArray
 
     # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
