@@ -76,11 +76,12 @@ setText = (e, text) ->
   return if e?.transparency?.text == text
   e.transparency    ||= {}
   e.transparency.text = text
+  textNode            = e.ownerDocument.createTextNode text
+  children            = filter ((n) -> n.nodeType == ELEMENT_NODE), e.childNodes
 
-  e = jQuery(e)
-  children = e.children().detach()
-  e.text text
-  e.append children
+  (e.removeChild e.firstChild) while e.firstChild
+  e.appendChild textNode
+  (e.appendChild c) for c in children
 
 matchingElements = (template, key) ->
   return [] unless firstChild = template.firstChild
@@ -88,5 +89,6 @@ matchingElements = (template, key) ->
   firstChild.transparency.queryCache      ||= {}
   firstChild.transparency.queryCache[key] ||= jQuery(template).find "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
 
+ELEMENT_NODE = 1
 map    ?= (f, xs) -> (f x for x in xs)
 filter ?= (p, xs) -> (x   for x in xs when p x)
