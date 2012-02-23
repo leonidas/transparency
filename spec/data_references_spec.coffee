@@ -1,5 +1,6 @@
-require './spec_helper'
-require '../src/jquery.transparency'
+if typeof module != 'undefined' && module.exports
+  require './spec_helper'
+  require '../src/jquery.transparency'
 
 describe "Transparency", ->
 

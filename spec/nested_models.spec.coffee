@@ -1,5 +1,6 @@
-require './spec_helper'
-require '../src/jquery.transparency'
+if typeof module != 'undefined' && module.exports
+  require './spec_helper'
+  require '../src/jquery.transparency'
 
 describe "Transparency", ->
 
@@ -141,6 +142,8 @@ describe "Transparency", ->
                     </li>
                   </ul>
                 </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>')
@@ -230,9 +233,8 @@ describe "Transparency", ->
                   </ul>
                 </div>
               </td>
-
               <td class="testsets">
-                <div class="testset"
+                <div class="testset">
                   <a class="name" href="/Feature">Feature</a>
                   <ul class="products">
                     <li>
@@ -243,7 +245,7 @@ describe "Transparency", ->
                     </li>
                   </ul>
                 </div>
-                <div class="testset"
+                <div class="testset">
                   <a class="name" href="/NFT">NFT</a>
                   <ul class="products">
                     <li>
