@@ -30,7 +30,7 @@ Transparency.render = (contexts, objects, directives) ->
       renderChildren    context.transparency.fragment, object, directives
 
       # Attach the template instance elements back to the context
-      context.appendChild context.transparency.fragment
+      context.appendChild n while n = context.transparency.fragment.firstChild
 
     # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
@@ -42,7 +42,7 @@ prepareContext = (context, objects) ->
   context.transparency.template      ||= (context.removeChild context.firstChild while context.firstChild)
   context.transparency.templateCache ||= [] # Query-cached templates are precious, so save them for the future
   context.transparency.instances     ||= [] # Currently used template instances
-  context.transparency.fragment      ||= context.ownerDocument.createDocumentFragment()
+  context.transparency.fragment      ||= context.ownerDocument.createElement('div')
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while objects.length > context.transparency.instances.length
@@ -81,23 +81,12 @@ setText = (e, text) ->
   children = e.children().detach()
   e.text text
   e.append children
-  
+
 matchingElements = (template, key) ->
   return [] unless firstChild = template.firstChild
   firstChild.transparency                 ||= {}
   firstChild.transparency.queryCache      ||= {}
-  firstChild.transparency.queryCache[key] ||= if template.querySelectorAll
-    template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
-  else
-    # Fallback for browsers without DocumentFragment.querySelectorAll
-    filter elementMatcher(key), template.getElementsByTagName '*'
-
-elementMatcher = (key) ->
-  (element) ->
-    element.className.indexOf(key)      > -1               ||
-    element.id                        == key               ||
-    element.tagName.toLowerCase()     == key.toLowerCase() ||
-    element.getAttribute('data-bind') == key
+  firstChild.transparency.queryCache[key] ||= jQuery(template).find "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
 
 map    ?= (f, xs) -> (f x for x in xs)
 filter ?= (p, xs) -> (x   for x in xs when p x)
