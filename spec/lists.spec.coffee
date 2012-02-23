@@ -34,6 +34,8 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+    expect(doc.find('.comment').get(0).transparency.model).toEqual(data[0])
+    expectModelObjects doc.find('.comment'), data
 
   it "should handle empty lists", ->
     doc = jQuery(
@@ -62,7 +64,7 @@ describe "Transparency", ->
      '<div>
         <div class="comments">
           <span></span>
-          <span>blah</span>
+          <label>blah</label>
         </div>
       </div>')
 
@@ -71,12 +73,13 @@ describe "Transparency", ->
     expected = jQuery(
      '<div>
         <div class="comments">
-          <span>That rules</span><span>blah</span><span>Great post!</span><span>blah</span>
+          <span>That rules</span><label>blah</label><span>Great post!</span><label>blah</label>
         </div>
       </div>')
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+    expectModelObjects doc.find('span'), data
 
   it "should place simple value into element with listElement class if found", ->
     doc = jQuery(
@@ -98,6 +101,7 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+    expectModelObjects doc.find('.listElement'), data
 
   it "should not fail when there's no child node in the simple list template", ->
     doc = jQuery(
@@ -116,3 +120,7 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+expectModelObjects = (elements, data) -> 
+  for object, i in data
+    expect(elements.get(i).transparency.model).toEqual(object)
