@@ -5,7 +5,7 @@ jQuery?.fn.render = (objects, directives) ->
 window?.Transparency = Transparency = {}
 module?.exports      = Transparency
 
-Transparency.safeHtml = (str) -> ({value: str, safe: true})
+Transparency.safeHtml = (str) -> ({html: str, safeHtml: true})
 
 Transparency.render = (contexts, objects, directives) ->
   # NodeList is a live array. Clone it to Array.
@@ -76,11 +76,8 @@ renderDirectives = (template, object, directives) ->
     [key, attr] = key.split('@')
 
     for e in matchingElements(template, key)
-      v = directive.call(object, e)
-      if attr
-        e.setAttribute(attr, v)
-      else
-        if v?.safe == true then setHtml e, v.value else setText e, v
+      result = directive.call(object, e)
+      if attr then e.setAttribute(attr, result) else setText e, result
 
 renderChildren = (template, object, directives) ->
   (Transparency.render matchingElements(template, k), v, directives[k]) for k, v of object when typeof v == 'object'
@@ -89,21 +86,12 @@ setText = (e, text) ->
   return if e?.transparency?.text == text
   e.transparency    ||= {}
   e.transparency.text = text
-  textNode            = e.ownerDocument.createTextNode text
   children            = filter ((n) -> n.nodeType == ELEMENT_NODE), e.childNodes
 
   (e.removeChild e.firstChild) while e.firstChild
-  e.appendChild textNode
-  (e.appendChild c) for c in children
 
-setHtml = (e, html) ->
-  return if e?.transparency?.html == html
-  e.transparency    ||= {}
-  e.transparency.html = html
-  children            = filter ((n) -> n.nodeType == ELEMENT_NODE), e.childNodes
+  if text.safeHtml then e.innerHTML = text.html else e.appendChild e.ownerDocument.createTextNode text
 
-  (e.removeChild e.firstChild) while e.firstChild
-  e.innerHTML = html
   (e.appendChild c) for c in children
 
 matchingElements = (template, key) ->
