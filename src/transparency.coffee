@@ -2,8 +2,8 @@ jQuery?.fn.render = (objects, directives) ->
   Transparency.render this.get(), objects, directives
   this
 
-window?.Transparency = Transparency = {}
-module?.exports      = Transparency
+@Transparency    = Transparency = {}
+module?.exports  = Transparency
 
 Transparency.safeHtml = (str) -> ({html: str, safeHtml: true})
 
@@ -40,7 +40,7 @@ Transparency.render = (contexts, objects, directives) ->
       renderChildren    fragment, object, directives
 
       # Attach the template instance elements back to the context
-      context.appendChild n while n = context.transparency.fragment.firstChild
+      context.appendChild fragment.firstChild while fragment.firstChild
 
     # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
