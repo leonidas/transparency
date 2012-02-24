@@ -8,7 +8,7 @@ Transparency is a minimal template engine for jQuery. It maps JSON objects to DO
 * Directives - No custom DSL, just functions
 * Template caching - No manual template lookup/compilation/rendering
 
-For more insight please see (FAQ)[https://github.com/leonidas/transparency/blob/master/FAQ.md]
+For more insight please see [FAQ](https://github.com/leonidas/transparency/blob/master/FAQ.md)
 
 ## Usage
 
