@@ -1,4 +1,5 @@
 (function() {
+  var expectModelObjects;
 
   if (typeof module !== 'undefined' && module.exports) {
     require('./spec_helper');
@@ -33,7 +34,9 @@
         </div>\
       </div>');
       doc.find('.comments').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expect(doc.html()).htmlToBeEqual(expected.html());
+      expect(doc.find('.comment').get(0).transparency.model).toEqual(data[0]);
+      return expectModelObjects(doc.find('.comment'), data);
     });
     it("should handle empty lists", function() {
       var data, doc, expected;
@@ -58,17 +61,18 @@
       doc = jQuery('<div>\
         <div class="comments">\
           <span></span>\
-          <span>blah</span>\
+          <label>blah</label>\
         </div>\
       </div>');
       data = ["That rules", "Great post!"];
       expected = jQuery('<div>\
         <div class="comments">\
-          <span>That rules</span><span>blah</span><span>Great post!</span><span>blah</span>\
+          <span>That rules</span><label>blah</label><span>Great post!</span><label>blah</label>\
         </div>\
       </div>');
       doc.find('.comments').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expect(doc.html()).htmlToBeEqual(expected.html());
+      return expectModelObjects(doc.find('span'), data);
     });
     it("should place simple value into element with listElement class if found", function() {
       var data, doc, expected;
@@ -85,7 +89,8 @@
         </div>\
       </div>');
       doc.find('.comments').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expect(doc.html()).htmlToBeEqual(expected.html());
+      return expectModelObjects(doc.find('.listElement'), data);
     });
     return it("should not fail when there's no child node in the simple list template", function() {
       var data, doc, expected;
@@ -102,5 +107,15 @@
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
   });
+
+  expectModelObjects = function(elements, data) {
+    var i, object, _len, _results;
+    _results = [];
+    for (i = 0, _len = data.length; i < _len; i++) {
+      object = data[i];
+      _results.push(expect(elements.get(i).transparency.model).toEqual(object));
+    }
+    return _results;
+  };
 
 }).call(this);
