@@ -6,7 +6,7 @@ Transparency = @Transparency = {}
 
 Transparency.render = (contexts, objects, directives) ->
   # NodeList is a live array. Clone it to Array.
-  contexts     = if contexts.length? then Array.prototype.slice.call(contexts, 0) else [contexts]
+  contexts     = if contexts.length? then (c for c in contexts) else [contexts]
   isArray      = objects instanceof Array
   objects      = [objects] unless objects instanceof Array
   directives ||= {}
