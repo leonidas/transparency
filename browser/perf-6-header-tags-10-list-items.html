@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transparency perf test</title>
+    <script src="lib/benchmark.js"></script>
+    <script src="lib/weld.js"></script>
+    <script src="lib/handlebars-1.0.0.beta.6.js"></script>
+    <script src="lib/jquery-1.7.1.min.js"></script>
+    <script src="lib/coffee-script.js"></script>
+    <script src="../lib/transparency.js"></script>
+  </head>
+  <body>
+    <div>
+      <pre id="result"></pre>
+
+      <div id="transparency">
+        <h1 class='header'></h1>
+        <h2 class='header2'></h2>
+        <h3 class='header3'></h3>
+        <h4 class='header4'></h4>
+        <h5 class='header5'></h5>
+        <h6 class='header6'></h6>
+        <ul class='list'>
+          <li class='item'></li>
+        </ul>
+      </div>
+
+      <div id="weld">
+        <h1 class='header'></h1>
+        <h2 class='header2'></h2>
+        <h3 class='header3'></h3>
+        <h4 class='header4'></h4>
+        <h5 class='header5'></h5>
+        <h6 class='header6'></h6>
+        <ul class='list'>
+          <li class='item'></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="handlebars">
+    </div>
+
+<script type="text/coffeescript">
+
+sharedVariables =
+  header: "Header",
+  header2: "Header2",
+  header3: "Header3",
+  header4: "Header4",
+  header5: "Header5",
+  header6: "Header6",
+  list: ['10000000', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+
+results              = $("#result")
+transparencyTemplate = $("#transparency")[0]
+weldTemplate         = $("#weld")[0]
+handlebarsOutput     = $("#handlebars")
+handlebarsTemplate   = Handlebars.compile("<div><h1 class='header'>{{header}}</h1><h2 class='header2'>{{header2}}</h2><h3 class='header3'>{{header3}}</h3><h4 class='header4'>{{header4}}</h4><h5 class='header5'>{{header5}}</h5><h6 class='header6'>{{header6}}</h6><ul class='list'>{{#list}}<li class='item'>{{this}}</li>{{/list}}</ul></div>")
+
+Transparency.render transparencyTemplate, sharedVariables
+weld weldTemplate, sharedVariables
+handlebarsOutput.innerHTML = handlebarsTemplate sharedVariables
+
+new Benchmark.Suite()
+  .add("transparency", ->
+    Transparency.render transparencyTemplate, sharedVariables)
+
+  .add("weld", ->
+    weld weldTemplate, sharedVariables)
+
+  .add("handlebars", ->
+    handlebarsOutput.html handlebarsTemplate sharedVariables)
+
+  .on("cycle", (event, bench) ->
+    $("#result").append String(bench) + '\n')
+
+  .on("complete", ->
+    $("#result").append "Fastest is " + @filter("fastest").pluck("name"))
+
+  .run true
+</script>
+  </body>
+</html>
