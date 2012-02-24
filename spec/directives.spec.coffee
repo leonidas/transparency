@@ -1,6 +1,6 @@
 if typeof module != 'undefined' && module.exports
   require './spec_helper'
-  require '../src/jquery.transparency'
+  window.Transparency = require('../src/jquery.transparency')
 
 describe "Transparency", ->
 
@@ -24,6 +24,33 @@ describe "Transparency", ->
       '<div>
         <div class="person">
           <span class="name">Jasmine Taylor</span>
+          <span class="email">jasmine.tailor@example.com</span>
+        </div>
+      </div>')
+
+    doc.find('.person').render(person, directives)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should render safe html content with directives", ->
+    doc = jQuery(
+     '<div>
+        <div class="person">
+          <span class="name"></span><span class="email"></span>
+        </div>
+      </div>')
+
+    person =
+      firstname: '<b>Jasmine</b>'
+      lastname:  '<i>Taylor</i>'
+      email:     'jasmine.tailor@example.com'
+
+    directives =
+      name: (element) -> (window.Transparency.safeHtml "#{@firstname} #{@lastname}")
+
+    expected = jQuery(
+      '<div>
+        <div class="person">
+          <span class="name"><b>Jasmine</b> <i>Taylor</i></span>
           <span class="email">jasmine.tailor@example.com</span>
         </div>
       </div>')

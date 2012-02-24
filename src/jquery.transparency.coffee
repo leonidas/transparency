@@ -1,8 +1,11 @@
-jQuery.fn.render = (objects, directives) ->
+jQuery?.fn.render = (objects, directives) ->
   Transparency.render this.get(), objects, directives
   this
 
-Transparency = @Transparency = {}
+window?.Transparency = Transparency = {}
+module?.exports      = Transparency
+
+Transparency.safeHtml = (str) -> ({value: str, safe: true})
 
 Transparency.render = (contexts, objects, directives) ->
   # NodeList is a live array. Clone it to Array.
@@ -74,7 +77,10 @@ renderDirectives = (template, object, directives) ->
 
     for e in matchingElements(template, key)
       v = directive.call(object, e)
-      if attr then e.setAttribute(attr, v) else setText e, v
+      if attr
+        e.setAttribute(attr, v)
+      else
+        if v?.safe == true then setHtml e, v.value else setText e, v
 
 renderChildren = (template, object, directives) ->
   (Transparency.render matchingElements(template, k), v, directives[k]) for k, v of object when typeof v == 'object'
@@ -88,6 +94,16 @@ setText = (e, text) ->
 
   (e.removeChild e.firstChild) while e.firstChild
   e.appendChild textNode
+  (e.appendChild c) for c in children
+
+setHtml = (e, html) ->
+  return if e?.transparency?.html == html
+  e.transparency    ||= {}
+  e.transparency.html = html
+  children            = filter ((n) -> n.nodeType == ELEMENT_NODE), e.childNodes
+
+  (e.removeChild e.firstChild) while e.firstChild
+  e.innerHTML = html
   (e.appendChild c) for c in children
 
 matchingElements = (template, key) ->
@@ -108,4 +124,3 @@ elementMatcher = (key) ->
 
 ELEMENT_NODE = 1
 filter      ?= (p, xs) -> (x for x in xs when p x)
-
