@@ -2,7 +2,7 @@
 
   if (typeof module !== 'undefined' && module.exports) {
     require('./spec_helper');
-    require('../src/jquery.transparency');
+    require('../src/transparency');
   }
 
   describe("Transparency", function() {

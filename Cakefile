@@ -3,9 +3,9 @@
 task 'build', 'compile and uglify transparency', (options) ->
   exec(
     [
-      "coffee -o lib -c src/jquery.transparency.coffee"
+      "coffee -o lib -c src/transparency.coffee"
       "coffee -o browser/spec spec/*.coffee"
-      "uglifyjs lib/jquery.transparency.js > lib/jquery.transparency.min.js"
+      "uglifyjs lib/transparency.js > lib/transparency.min.js"
     ].join(' && '), (err, stdout, stderr) ->
       if err then console.log stderr.trim()
   )

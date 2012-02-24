@@ -1,6 +1,6 @@
 if typeof module != 'undefined' && module.exports
   require './spec_helper'
-  require '../src/jquery.transparency'
+  require '../src/transparency'
 
 describe "Transparency", ->
 
@@ -121,6 +121,6 @@ describe "Transparency", ->
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
-expectModelObjects = (elements, data) -> 
+expectModelObjects = (elements, data) ->
   for object, i in data
     expect(elements.get(i).transparency.model).toEqual(object)

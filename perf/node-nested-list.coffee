@@ -3,7 +3,7 @@ jsdom = require 'jsdom'
 jsdom.env "browser-perf.html", [
     'js/benchmark.js'
     'js/jquery-1.7.1.min.js'
-    '../lib/jquery.transparency.js'
+    '../lib/transparency.js'
     'js/mustache.js'
     'js/weld.js'
     'js/perf-test.js'

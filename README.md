@@ -16,12 +16,12 @@ See the examples and test Transparency at http://leonidas.github.com/transparenc
 
 ### Client-side
 
-Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/jquery.transparency.min.js)
+Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application with jQuery
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
-<script src="js/jquery.transparency.min.js"></script>
+<script src="js/transparency.min.js"></script>
 ```
 
 ### Server-side
