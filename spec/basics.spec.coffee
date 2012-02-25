@@ -4,7 +4,7 @@ if typeof module != 'undefined' && module.exports
 
 describe "Transparency", ->
 
-  it "should work with null values", ->
+  xit "should work with null values", ->
     doc = jQuery(
      '<div>
         <div class="container">
@@ -127,27 +127,6 @@ describe "Transparency", ->
           <div class="my-class">class-data</div>
           <span>name-data</span>
           <div data-bind="my-data">data-bind</div>
-        </div>
-      </div>')
-
-    res = doc.find('.container').render(data)
-    expect(doc.html()).htmlToBeEqual(expected.html())
-
-  xit "should render html", ->
-    doc = jQuery(
-     '<div>
-        <div class="container">
-          <div id="post"></div>
-        </div>
-      </div>')
-
-    data =
-      post: '<h1>This is the title</h1><p>This is the body</p>'
-
-    expected = jQuery(
-      '<div>
-        <div class="container">
-          <div id="post"><h1>This is the title</h1><p>This is the body</p></div>
         </div>
       </div>')
 

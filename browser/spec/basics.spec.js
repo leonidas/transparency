@@ -6,7 +6,7 @@
   }
 
   describe("Transparency", function() {
-    it("should work with null values", function() {
+    xit("should work with null values", function() {
       var data, doc, expected;
       doc = jQuery('<div>\
         <div class="container">\
@@ -93,7 +93,7 @@
       res = doc.find('.container').render(data);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
-    it("should match by element id, class, name and data-bind", function() {
+    return it("should match by element id, class, name and data-bind", function() {
       var data, doc, expected, res;
       doc = jQuery('<div>\
         <div class="container">\
@@ -115,24 +115,6 @@
           <div class="my-class">class-data</div>\
           <span>name-data</span>\
           <div data-bind="my-data">data-bind</div>\
-        </div>\
-      </div>');
-      res = doc.find('.container').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
-    });
-    return xit("should render html", function() {
-      var data, doc, expected, res;
-      doc = jQuery('<div>\
-        <div class="container">\
-          <div id="post"></div>\
-        </div>\
-      </div>');
-      data = {
-        post: '<h1>This is the title</h1><p>This is the body</p>'
-      };
-      expected = jQuery('<div>\
-        <div class="container">\
-          <div id="post"><h1>This is the title</h1><p>This is the body</p></div>\
         </div>\
       </div>');
       res = doc.find('.container').render(data);

@@ -25,22 +25,17 @@ Transparency.render = (contexts, objects, directives) ->
 
     # Render each object to its template instance
     for object, i in objects
+      instance = context.transparency.instances[i]
 
-      fragment = context.transparency.fragment
-      # Attach the template instance elements to DocumentFragment for rendering
-      # Also, associate model object with instance element
-      for n in context.transparency.instances[i]
-        fragment.appendChild n
+      # Associate model object with instance element
+      for n in instance.template
         if isArray and n.nodeType == ELEMENT_NODE
-          n.transparency ||= {}
+          n.transparency     ||= {}
           n.transparency.model = object
 
-      renderValues      fragment, object
-      renderDirectives  fragment, object, directives
-      renderChildren    fragment, object, directives
-
-      # Attach the template instance elements back to the context
-      context.appendChild fragment.firstChild while fragment.firstChild
+      renderValues      instance, object
+      renderDirectives  instance, object, directives
+      renderChildren    instance, object, directives
 
     # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
@@ -57,30 +52,32 @@ prepareContext = (context, objects) ->
   # Get templates from the cache or clone new ones, if the cache is empty.
   while objects.length > context.transparency.instances.length
     template = context.transparency.templateCache.pop() || (n.cloneNode true for n in context.transparency.template)
-    context.transparency.instances.push template
+    (context.appendChild n) for n in template
+    context.transparency.instances.push queryCache: {}, template: template
 
   # Remove leftover templates from DOM and save them to the cache for later use.
   while objects.length < context.transparency.instances.length
     context.transparency.templateCache.push ((context.removeChild n) for n in context.transparency.instances.pop())
 
-renderValues = (template, object) ->
+renderValues = (instance, object) ->
   if typeof object == 'object'
     for k, v of object when typeof v != 'object'
-      setText(e, v) for e in matchingElements(template, k)
+      setText(e, v) for e in matchingElements(instance, k)
   else
-    element = matchingElements(template, 'listElement')[0] || template.getElementsByTagName('*')[0]
+    element = matchingElements(instance, 'listElement')[0] ||
+      (filter ((e) -> e.nodeType == ELEMENT_NODE), instance.template)[0]
     setText(element, object) if element
 
-renderDirectives = (template, object, directives) ->
+renderDirectives = (instance, object, directives) ->
   for key, directive of directives when typeof directive == 'function'
     [key, attr] = key.split('@')
 
-    for e in matchingElements(template, key)
+    for e in matchingElements(instance, key)
       result = directive.call(object, e)
       if attr then e.setAttribute(attr, result) else setText e, result
 
-renderChildren = (template, object, directives) ->
-  (Transparency.render matchingElements(template, k), v, directives[k]) for k, v of object when typeof v == 'object'
+renderChildren = (instance, object, directives) ->
+  (Transparency.render matchingElements(instance, k), v, directives[k]) for k, v of object when typeof v == 'object'
 
 setText = (e, text) ->
   return if e?.transparency?.text == text
@@ -94,14 +91,17 @@ setText = (e, text) ->
 
   (e.appendChild c) for c in children
 
-matchingElements = (template, key) ->
-  return [] unless firstChild = template.firstChild
-  firstChild.transparency                 ||= {}
-  firstChild.transparency.queryCache      ||= {}
-  firstChild.transparency.queryCache[key] ||= if template.querySelectorAll
-    template.querySelectorAll "##{key}, #{key}, .#{key}, [data-bind='#{key}']"
+matchingElements = (instance, key) ->
+  if instance.queryCache[key]
+    instance.queryCache[key]
   else
-    filter elementMatcher(key), template.getElementsByTagName '*'
+    if !instance.elements
+      elements = instance.elements = []
+      for e in instance.template when e.nodeType == ELEMENT_NODE
+        elements.push e
+        (elements.push child) for child in e.getElementsByTagName '*'
+
+    instance.queryCache[key] = filter elementMatcher(key), instance.elements
 
 elementMatcher = (key) ->
   (element) ->
