@@ -28,10 +28,9 @@ Transparency.render = (contexts, objects, directives) ->
       instance = context.transparency.instances[i]
 
       # Associate model object with instance element
-      for n in instance.template
-        if isArray and n.nodeType == ELEMENT_NODE
-          n.transparency     ||= {}
-          n.transparency.model = object
+      for n in instance.template when isArray and n.nodeType == ELEMENT_NODE
+        n.transparency     ||= {}
+        n.transparency.model = object
 
       renderValues      instance, object
       renderDirectives  instance, object, directives
@@ -47,13 +46,17 @@ prepareContext = (context, objects) ->
   context.transparency.template      ||= (context.removeChild context.firstChild while context.firstChild)
   context.transparency.templateCache ||= [] # Query-cached templates are precious, so save them for the future
   context.transparency.instances     ||= [] # Currently used template instances
-  context.transparency.fragment      ||= context.ownerDocument.createElement('div')
+  context.transparency.indexCache    ||= {} # Indexes of matching elements. Shared cache for all instances
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while objects.length > context.transparency.instances.length
     template = context.transparency.templateCache.pop() || (n.cloneNode true for n in context.transparency.template)
     (context.appendChild n) for n in template
-    context.transparency.instances.push queryCache: {}, template: template
+    context.transparency.instances.push
+      context: context
+      queryCache: {}
+      template: template
+      elements: templateElements template
 
   # Remove leftover templates from DOM and save them to the cache for later use.
   while objects.length < context.transparency.instances.length
@@ -64,8 +67,7 @@ renderValues = (instance, object) ->
     for k, v of object when typeof v != 'object'
       setText(e, v) for e in matchingElements(instance, k)
   else
-    element = matchingElements(instance, 'listElement')[0] ||
-      (filter ((e) -> e.nodeType == ELEMENT_NODE), instance.template)[0]
+    element = matchingElements(instance, 'listElement')[0] || instance.elements[0]
     setText(element, object) if element
 
 renderDirectives = (instance, object, directives) ->
@@ -92,23 +94,37 @@ setText = (e, text) ->
   (e.appendChild c) for c in children
 
 matchingElements = (instance, key) ->
+  # Use instance cache
   if instance.queryCache[key]
     instance.queryCache[key]
+
+  # Use index cache and build instance cache
+  else if instance.context.transparency.indexCache[key]
+    instance.queryCache    ||= {}
+    instance.queryCache[key] = for i in instance.context.transparency.indexCache[key]
+      instance.elements[i]
+
+  # Build caches
   else
-    if !instance.elements
-      elements = instance.elements = []
-      for e in instance.template when e.nodeType == ELEMENT_NODE
-        elements.push e
-        (elements.push child) for child in e.getElementsByTagName '*'
+    instance.context.transparency.indexCache[key] = indexCache = []
+    instance.queryCache                         ||= {}
+    instance.queryCache[key] = for e, i in instance.elements when elementMatcher(e, key)
+      indexCache.push i
+      e
 
-    instance.queryCache[key] = filter elementMatcher(key), instance.elements
+templateElements = (template) ->
+  elements = []
+  for e in template when e.nodeType == ELEMENT_NODE
+    elements.push e
+    (elements.push child) for child in e.getElementsByTagName '*'
+  elements
 
-elementMatcher = (key) ->
-  (element) ->
-    element.className.indexOf(key)     > -1                ||
-    element.id                        == key               ||
-    element.tagName.toLowerCase()     == key.toLowerCase() ||
-    element.getAttribute('data-bind') == key
+elementMatcher = (element, key) ->
+  element.nodeType                  == ELEMENT_NODE      &&
+  element.className.split(' ').indexOf(key) > -1         ||
+  element.id                        == key               ||
+  element.tagName.toLowerCase()     == key.toLowerCase() ||
+  element.getAttribute('data-bind') == key
 
 ELEMENT_NODE = 1
 filter      ?= (p, xs) -> (x for x in xs when p x)

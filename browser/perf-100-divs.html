@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Transparency perf test</title>
+    <script src="lib/benchmark.js"></script>
+    <script src="lib/weld.js"></script>
+    <script src="lib/handlebars-1.0.0.beta.6.js"></script>
+    <script src="lib/jquery-1.7.1.min.js"></script>
+    <script src="lib/coffee-script.js"></script>
+    <script src="../lib/transparency.js"></script>
+  </head>
+  <body>
+    <div id="results">
+    </div>
+
+      <div id="transparency">
+        <div class="title"></div>
+      </div>
+
+      <div id="weld">
+        <div class="title"></div>
+      </div>
+
+      <div id="handlebars">
+      </div>
+    </div>
+<script id="handlebars-template" type="text/handlebars">
+{{#each foobar}}
+<div>{{title}}</div>
+{{/each}}
+</script>
+<script type="text/coffeescript">
+
+sharedVariables = ({title: n} for n in [1..100])
+
+# For handlebars
+foobar = foobar: sharedVariables
+
+results              = $("#results")
+transparencyTemplate = $("#transparency")[0]
+
+weldTemplate         = $("#weld")[0]
+handlebarsOutput     = $("#handlebars")
+handlebarsTemplate   = Handlebars.compile($("#handlebars-template").text())
+
+new Benchmark.Suite()
+  .add("transparency", ->
+    Transparency.render transparencyTemplate, sharedVariables)
+
+  .add("handlebars", ->
+    handlebarsTemplate foobar)
+
+  .on("cycle", (event, bench) ->
+    console.log String(bench)
+    results.append '<div>' + String(bench) + '</div>')
+
+  .on("complete", ->
+    results.append "Fastest is " + @filter("fastest").pluck("name"))
+
+  .run true
+
+
+</script>
+</body>
+</html>
