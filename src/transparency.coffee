@@ -107,4 +107,13 @@ elementMatcher = (element, key) ->
   element.getAttribute('data-bind') == key
 
 ELEMENT_NODE = 1
-filter      ?= (p, xs) -> (x for x in xs when p x)
+
+# Browser compatibility
+filter ?= (p, xs) -> (x for x in xs when p x)
+Array::filter  ?= (p) -> (x for x in this when p x)
+Array::indexOf ?= (s) ->
+  index = -1
+  for x, i in this when x == s
+    index = i
+    break;
+  index
