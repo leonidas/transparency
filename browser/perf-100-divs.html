@@ -10,23 +10,20 @@
     <script src="../lib/transparency.js"></script>
   </head>
   <body>
-    <div id="results">
-    </div>
+    <pre id="results"></pre>
 
+      <h4>Transparency</h4>
       <div id="transparency">
-        <div class="title"></div>
+        <span class="title"></span>
       </div>
 
-      <div id="weld">
-        <div class="title"></div>
-      </div>
-
+      <h4>Handlebars</h4>
       <div id="handlebars">
       </div>
     </div>
 <script id="handlebars-template" type="text/handlebars">
 {{#each foobar}}
-<div>{{title}}</div>
+<span>{{title}}</span>
 {{/each}}
 </script>
 <script type="text/coffeescript">
@@ -39,8 +36,7 @@ foobar = foobar: sharedVariables
 results              = $("#results")
 transparencyTemplate = $("#transparency")[0]
 
-weldTemplate         = $("#weld")[0]
-handlebarsOutput     = $("#handlebars")
+handlebarsOutput     = $("#handlebars")[0]
 handlebarsTemplate   = Handlebars.compile($("#handlebars-template").text())
 
 new Benchmark.Suite()
@@ -48,11 +44,11 @@ new Benchmark.Suite()
     Transparency.render transparencyTemplate, sharedVariables)
 
   .add("handlebars", ->
-    handlebarsTemplate foobar)
+    handlebarsOutput.innerHTML = handlebarsTemplate foobar)
 
   .on("cycle", (event, bench) ->
     console.log String(bench)
-    results.append '<div>' + String(bench) + '</div>')
+    results.append  String(bench) + '\n')
 
   .on("complete", ->
     results.append "Fastest is " + @filter("fastest").pluck("name"))

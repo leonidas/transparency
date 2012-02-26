@@ -13,6 +13,8 @@
     <div>
       <pre id="result"></pre>
     </div>
+
+    <h4>Transparency</h4>
     <div id="transparency">
       <h1 class='header'></h1>
       <h2 class='header2'></h2>
@@ -25,18 +27,7 @@
       </ul>
     </div>
 
-    <div id="weld">
-      <h1 class='header'></h1>
-      <h2 class='header2'></h2>
-      <h3 class='header3'></h3>
-      <h4 class='header4'></h4>
-      <h5 class='header5'></h5>
-      <h6 class='header6'></h6>
-      <ul class='list'>
-        <li class='item'></li>
-      </ul>
-    </div>
-
+    <h4>Handlebars</h4>
     <div id="handlebars">
     </div>
 
@@ -53,23 +44,15 @@ sharedVariables =
 
 results              = $("#result")
 transparencyTemplate = $("#transparency")[0]
-weldTemplate         = $("#weld")[0]
-handlebarsOutput     = $("#handlebars")
+handlebarsOutput     = $("#handlebars")[0]
 handlebarsTemplate   = Handlebars.compile("<div><h1 class='header'>{{header}}</h1><h2 class='header2'>{{header2}}</h2><h3 class='header3'>{{header3}}</h3><h4 class='header4'>{{header4}}</h4><h5 class='header5'>{{header5}}</h5><h6 class='header6'>{{header6}}</h6><ul class='list'>{{#list}}<li class='item'>{{this}}</li>{{/list}}</ul></div>")
-
-Transparency.render transparencyTemplate, sharedVariables
-weld weldTemplate, sharedVariables
-handlebarsOutput.innerHTML = handlebarsTemplate sharedVariables
 
 new Benchmark.Suite()
   .add("transparency", ->
     Transparency.render transparencyTemplate, sharedVariables)
 
-  .add("weld", ->
-    weld weldTemplate, sharedVariables)
-
   .add("handlebars", ->
-    handlebarsOutput.html handlebarsTemplate sharedVariables)
+    handlebarsOutput.innerHTML = handlebarsTemplate sharedVariables)
 
   .on("cycle", (event, bench) ->
     $("#result").append String(bench) + '\n')
