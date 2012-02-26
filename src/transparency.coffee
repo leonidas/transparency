@@ -53,10 +53,10 @@ prepareContext = (context, objects) ->
     template = context.transparency.templateCache.pop() || (n.cloneNode true for n in context.transparency.template)
     (context.appendChild n) for n in template
     context.transparency.instances.push
-      context: context
+      context:    context
       queryCache: {}
-      template: template
-      elements: templateElements template
+      template:   template
+      elements:   templateElements template
 
   # Remove leftover templates from DOM and save them to the cache for later use.
   while objects.length < context.transparency.instances.length
