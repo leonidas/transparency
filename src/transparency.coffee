@@ -77,7 +77,7 @@ renderDirectives = (instance, model, directives) ->
 
 renderChildren = (instance, model, directives, context) ->
   for key, value of model when typeof value == 'object'
-    Transparency.render e, value, directives[key] for e in matchingElements(instance, key)
+    Transparency.render element, value, directives[key] for element in matchingElements(instance, key)
 
 setText = (e, text) ->
   return if e?.transparency?.text == text
