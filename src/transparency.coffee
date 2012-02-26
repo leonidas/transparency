@@ -1,5 +1,5 @@
-jQuery?.fn.render = (objects, directives) ->
-  Transparency.render this.get(), objects, directives
+jQuery?.fn.render = (models, directives) ->
+  Transparency.render this.get(), models, directives
   this
 
 @Transparency    = Transparency = {}
@@ -7,10 +7,10 @@ module?.exports  = Transparency
 
 Transparency.safeHtml = (str) -> ({html: str, safeHtml: true})
 
-Transparency.render = (contexts, objects, directives) ->
+Transparency.render = (contexts, models, directives) ->
   # NodeList is a live array. Clone it to Array.
   contexts     = if contexts.length? then (c for c in contexts) else [contexts]
-  objects      = [objects] unless objects instanceof Array
+  models       = [models] unless models instanceof Array
   directives ||= {}
 
   for context in contexts
@@ -20,26 +20,26 @@ Transparency.render = (contexts, objects, directives) ->
     parent?.removeChild context
 
     # Make sure we have right amount of template instances available
-    prepareContext context, objects
+    prepareContext context, models
 
-    # Render each object to its template instance
-    for object, i in objects
+    # Render each model to its template instance
+    for model, i in models
       instance = context.transparency.instances[i]
 
       # Associate model with instance elements
-      for n in instance.elements
-        n.transparency     ||= {}
-        n.transparency.model = object
+      for e in instance.elements
+        e.transparency     ||= {}
+        e.transparency.model = model
 
-      renderValues      instance, object
-      renderDirectives  instance, object, directives
-      renderChildren    instance, object, directives, context
+      renderValues      instance, model
+      renderDirectives  instance, model, directives
+      renderChildren    instance, model, directives, context
 
     # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
   return contexts
 
-prepareContext = (context, objects) ->
+prepareContext = (context, models) ->
   # Extend context element with transparency hash to store the template elements and cached instances
   context.transparency                ||= {}
   context.transparency.template       ||= (context.removeChild context.firstChild while context.firstChild)
@@ -47,7 +47,7 @@ prepareContext = (context, objects) ->
   context.transparency.instances      ||= [] # Currently used template instances
 
   # Get templates from the cache or clone new ones, if the cache is empty.
-  while objects.length > context.transparency.instances.length
+  while models.length > context.transparency.instances.length
     template = context.transparency.templateCache.pop() || (n.cloneNode true for n in context.transparency.template)
     (context.appendChild n) for n in template
     context.transparency.instances.push
@@ -56,27 +56,27 @@ prepareContext = (context, objects) ->
       elements:   elementNodes template
 
   # Remove leftover templates from DOM and save them to the cache for later use.
-  while objects.length < context.transparency.instances.length
+  while models.length < context.transparency.instances.length
     context.transparency.templateCache.push ((context.removeChild n) for n in context.transparency.instances.pop())
 
-renderValues = (instance, object) ->
-  if typeof object == 'object'
-    for k, v of object when typeof v != 'object'
-      setText(e, v) for e in matchingElements(instance, k)
+renderValues = (instance, model) ->
+  if typeof model == 'object'
+    for key, value of model when typeof value != 'object'
+      setText(element, value) for element in matchingElements(instance, key)
   else
     element = matchingElements(instance, 'listElement')[0] || instance.elements[0]
-    setText(element, object) if element
+    setText(element, model) if element
 
-renderDirectives = (instance, object, directives) ->
+renderDirectives = (instance, model, directives) ->
   for key, directive of directives when typeof directive == 'function'
     [key, attr] = key.split('@')
 
     for e in matchingElements(instance, key)
-      result = directive.call(object, e)
+      result = directive.call(model, e)
       if attr then e.setAttribute(attr, result) else setText e, result
 
-renderChildren = (instance, object, directives, context) ->
-  for key, value of object when typeof value == 'object'
+renderChildren = (instance, model, directives, context) ->
+  for key, value of model when typeof value == 'object'
     Transparency.render e, value, directives[key] for e in matchingElements(instance, key)
 
 setText = (e, text) ->
