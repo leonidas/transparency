@@ -83,7 +83,7 @@ setText = (e, text) ->
   return if e?.transparency?.text == text
   e.transparency    ||= {}
   e.transparency.text = text
-  children            = filter ((n) -> n.nodeType == ELEMENT_NODE), e.childNodes
+  children            = (n for n in e.childNodes when n.nodeType == ELEMENT_NODE)
 
   (e.removeChild e.firstChild) while e.firstChild
   if text.safeHtml then e.innerHTML = text.html else e.appendChild e.ownerDocument.createTextNode text
@@ -109,8 +109,6 @@ elementMatcher = (element, key) ->
 ELEMENT_NODE = 1
 
 # Browser compatibility
-filter ?= (p, xs) -> (x for x in xs when p x)
-Array::filter  ?= (p) -> (x for x in this when p x)
 Array::indexOf ?= (s) ->
   index = -1
   for x, i in this when x == s
