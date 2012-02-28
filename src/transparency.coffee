@@ -48,16 +48,19 @@ prepareContext = (context, models) ->
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while models.length > context.transparency.instances.length
-    template = context.transparency.templateCache.pop() || (n.cloneNode true for n in context.transparency.template)
-    (context.appendChild n) for n in template
-    context.transparency.instances.push
-      queryCache: {}
-      template:   template
-      elements:   elementNodes template
+    instance = context.transparency.templateCache.pop() ||
+      {
+        queryCache: {}
+        template:   (template = (n.cloneNode true for n in context.transparency.template))
+        elements:   elementNodes template
+      }
+    (context.appendChild n) for n in instance.template
+    context.transparency.instances.push instance
 
   # Remove leftover templates from DOM and save them to the cache for later use.
   while models.length < context.transparency.instances.length
-    context.transparency.templateCache.push ((context.removeChild n) for n in context.transparency.instances.pop())
+    context.transparency.templateCache.push instance = context.transparency.instances.pop()
+    (n.parentNode.removeChild n) for n in instance.template
 
 renderValues = (instance, model) ->
   if typeof model == 'object'

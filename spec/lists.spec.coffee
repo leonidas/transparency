@@ -121,6 +121,67 @@ describe "Transparency", ->
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
+  it "should match table rows to the number of model objects", ->
+    doc = jQuery(
+     '<div>
+        <table>
+          <tbody class="users">
+            <tr>
+              <td class="username"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>')
+
+    doc.find("tbody.users").render [{username:'user1'}, {username:'user2'}]
+    expect(doc.html()).htmlToBeEqual('
+      <table>
+        <tbody class="users">
+          <tr>
+            <td class="username">user1</td>
+          </tr>
+          <tr>
+            <td class="username">user2</td>
+          </tr>
+        </tbody>
+      </table>')
+
+    doc.find("tbody.users").render [username:'user1']
+    expect(doc.html()).htmlToBeEqual('
+      <table>
+        <tbody class="users">
+          <tr>
+            <td class="username">user1</td>
+          </tr>
+        </tbody>
+      </table>')
+
+    doc.find("tbody.users").render [{username:'user1'}, {username:'user3'}]
+    expect(doc.html()).htmlToBeEqual('
+      <table>
+        <tbody class="users">
+          <tr>
+            <td class="username">user1</td>
+          </tr>
+          <tr>
+            <td class="username">user3</td>
+          </tr>
+        </tbody>
+      </table>')
+
+    doc.find("tbody.users").render [{username:'user4'}, {username:'user3'}]
+    expect(doc.html()).htmlToBeEqual('
+      <table>
+        <tbody class="users">
+          <tr>
+            <td class="username">user4</td>
+          </tr>
+          <tr>
+            <td class="username">user3</td>
+          </tr>
+        </tbody>
+      </table>')
+
 expectModelObjects = (elements, data) ->
   for object, i in data
     expect(elements.get(i).transparency.model).toEqual(object)

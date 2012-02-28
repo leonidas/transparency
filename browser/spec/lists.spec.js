@@ -92,7 +92,7 @@
       expect(doc.html()).htmlToBeEqual(expected.html());
       return expectModelObjects(doc.find('.listElement'), data);
     });
-    return it("should not fail when there's no child node in the simple list template", function() {
+    it("should not fail when there's no child node in the simple list template", function() {
       var data, doc, expected;
       doc = jQuery('<div>\
         <div class="comments">\
@@ -105,6 +105,85 @@
       </div>');
       doc.find('.comments').render(data);
       return expect(doc.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should match table rows to the number of model objects", function() {
+      var doc;
+      doc = jQuery('<div>\
+        <table>\
+          <tbody class="users">\
+            <tr>\
+              <td class="username"></td>\
+            </tr>\
+          </tbody>\
+        </table>\
+      </div>');
+      doc.find("tbody.users").render([
+        {
+          username: 'user1'
+        }, {
+          username: 'user2'
+        }
+      ]);
+      expect(doc.html()).htmlToBeEqual('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user1</td>\
+          </tr>\
+          <tr>\
+            <td class="username">user2</td>\
+          </tr>\
+        </tbody>\
+      </table>');
+      doc.find("tbody.users").render([
+        {
+          username: 'user1'
+        }
+      ]);
+      expect(doc.html()).htmlToBeEqual('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user1</td>\
+          </tr>\
+        </tbody>\
+      </table>');
+      doc.find("tbody.users").render([
+        {
+          username: 'user1'
+        }, {
+          username: 'user3'
+        }
+      ]);
+      expect(doc.html()).htmlToBeEqual('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user1</td>\
+          </tr>\
+          <tr>\
+            <td class="username">user3</td>\
+          </tr>\
+        </tbody>\
+      </table>');
+      doc.find("tbody.users").render([
+        {
+          username: 'user4'
+        }, {
+          username: 'user3'
+        }
+      ]);
+      return expect(doc.html()).htmlToBeEqual('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user4</td>\
+          </tr>\
+          <tr>\
+            <td class="username">user3</td>\
+          </tr>\
+        </tbody>\
+      </table>');
     });
   });
 
