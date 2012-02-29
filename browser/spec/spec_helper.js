@@ -15,7 +15,7 @@
       htmlToBeEqual: function(expected) {
         var actual, formatHtml;
         formatHtml = function(html) {
-          return html.replace(/\s/g, '');
+          return html.replace(/\s/g, '').toLowerCase;
         };
         actual = formatHtml(this.actual);
         expected = formatHtml(expected);

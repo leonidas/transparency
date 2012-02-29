@@ -16,7 +16,7 @@ beforeEach ->
         #html.replace(/\s\s+/g, '').replace(/></g, '>\n<').split('\n')
 
       formatHtml = (html) ->
-        html.replace(/\s/g, '')
+        html.replace(/\s/g, '').toLowerCase
 
       actual   = formatHtml(@actual)
       expected = formatHtml(expected)
