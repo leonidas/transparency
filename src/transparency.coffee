@@ -103,7 +103,6 @@ elementNodes = (template) ->
   elements
 
 elementMatcher = (element, key) ->
-  element.nodeType                  == ELEMENT_NODE      &&
   element.className.split(' ').indexOf(key) > -1         ||
   element.id                        == key               ||
   element.tagName.toLowerCase()     == key.toLowerCase() ||
