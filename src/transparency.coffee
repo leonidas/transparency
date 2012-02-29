@@ -8,8 +8,8 @@ module?.exports  = Transparency
 Transparency.safeHtml = (str) -> ({html: str, safeHtml: true})
 
 Transparency.render = (contexts, models, directives) ->
-  # NodeList is a live array. Clone it to Array.
-  contexts     = if contexts.length? then (c for c in contexts) else [contexts]
+  # NodeList is a live array. Clone it to Array
+  contexts     = if contexts.length? and contexts[0] then (c for c in contexts) else [contexts]
   models       = [models] unless models instanceof Array
   directives ||= {}
 
@@ -90,7 +90,7 @@ setText = (e, text) ->
 
   (e.removeChild e.firstChild) while e.firstChild
 
-  if inputRegex.test e.nodeName
+  if e.nodeName.toLowerCase() == 'input'
     e.setAttribute 'value', text
   else if text.safeHtml
     e.innerHTML = text.html
@@ -116,7 +116,6 @@ elementMatcher = (element, key) ->
   element.nodeName.toLowerCase()    == key.toLowerCase() ||
   element.getAttribute('data-bind') == key
 
-inputRegex   = /input|option/i
 ELEMENT_NODE = 1
 
 # Browser compatibility

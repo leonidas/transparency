@@ -7,27 +7,60 @@
   }
 
   describe("Transparency", function() {
-    return it("should render objects to form input elements", function() {
+    it("should render values to form inputs and textarea elements", function() {
       var data, doc, expected;
-      doc = document.createElement('div');
-      doc.innerHTML = '\
-        <form id="edit">\
-          <input name="name" type="text" />\
-          <input name="job" type="text" />\
-        </form>';
-      data = [
-        {
-          name: 'John',
-          job: 'Milkman'
-        }
-      ];
-      expected = jQuery('<div>\
-        <form id="edit">\
-          <input name="name" type="text" value="John"/>\
-          <input name="job" type="text" value="Milkman"/>\
-        </form>\
-      </div>');
+      doc = document.createElement('form');
+      doc.innerHTML = '<input name="name" type="text" />\
+      <input name="job" type="text" />\
+      <textarea name="resume"></textarea>';
+      data = {
+        name: 'John',
+        job: 'Milkman',
+        resume: "Jack of all trades"
+      };
+      expected = document.createElement('form');
+      expected.innerHTML = '<input name="name" type="text" value="John"/>\
+      <input name="job" type="text" value="Milkman"/>\
+      <textarea name="resume">Jack of all trades</textarea>';
       Transparency.render(doc, data);
+      return expect(doc.innerHTML).htmlToBeEqual(expected.innerHTML);
+    });
+    return it("should render values to option elements", function() {
+      var data, directives, doc, expected;
+      doc = document.createElement('form');
+      doc.innerHTML = '\
+      <select id="states">\
+        <option class="state"></option>\
+      </select>';
+      data = {
+        states: [
+          {
+            id: 1,
+            state: 'Alabama'
+          }, {
+            id: 2,
+            state: 'Alaska'
+          }, {
+            id: 3,
+            state: 'Arizona'
+          }
+        ]
+      };
+      directives = {
+        states: {
+          'state@value': function() {
+            return this.id;
+          }
+        }
+      };
+      expected = jQuery('<form\
+        <select id="states">\
+          <option class="state" value="1">Alabama</option>\
+          <option class="state" value="2">Alaska</option>\
+          <option class="state" value="3">Arizona</option>\
+        </select>\
+      </form>');
+      Transparency.render(doc, data, directives);
       return expect(doc.innerHTML).htmlToBeEqual(expected.html());
     });
   });
