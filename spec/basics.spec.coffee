@@ -4,7 +4,7 @@ if typeof module != 'undefined' && module.exports
 
 describe "Transparency", ->
 
-  xit "should work with null values", ->
+  it "should work with null values", ->
     doc = jQuery(
      '<div>
         <div class="container">
