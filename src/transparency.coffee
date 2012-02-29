@@ -89,7 +89,14 @@ setText = (e, text) ->
   children            = (n for n in e.childNodes when n.nodeType == ELEMENT_NODE)
 
   (e.removeChild e.firstChild) while e.firstChild
-  if text.safeHtml then e.innerHTML = text.html else e.appendChild e.ownerDocument.createTextNode text
+
+  if inputRegex.test e.nodeName
+    e.setAttribute 'value', text
+  else if text.safeHtml
+    e.innerHTML = text.html
+  else
+    e.appendChild e.ownerDocument.createTextNode text
+
   (e.appendChild c) for c in children
 
 matchingElements = (instance, key) ->
@@ -103,11 +110,13 @@ elementNodes = (template) ->
   elements
 
 elementMatcher = (element, key) ->
-  element.className.split(' ').indexOf(key) > -1         ||
   element.id                        == key               ||
-  element.tagName.toLowerCase()     == key.toLowerCase() ||
+  element.className.split(' ').indexOf(key) > -1         ||
+  element.name                      == key               ||
+  element.nodeName.toLowerCase()    == key.toLowerCase() ||
   element.getAttribute('data-bind') == key
 
+inputRegex   = /input|option/i
 ELEMENT_NODE = 1
 
 # Browser compatibility
@@ -115,5 +124,5 @@ Array::indexOf ?= (s) ->
   index = -1
   for x, i in this when x == s
     index = i
-    break;
+    break
   index

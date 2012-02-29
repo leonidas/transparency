@@ -6,7 +6,7 @@
   }
 
   describe("Transparency", function() {
-    xit("should work with null values", function() {
+    it("should work with null values", function() {
       var data, doc, expected;
       doc = jQuery('<div>\
         <div class="container">\
