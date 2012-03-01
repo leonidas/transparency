@@ -124,30 +124,34 @@
           username: 'user2'
         }
       ]);
-      expect(doc.html()).htmlToBeEqual('\
-      <table>\
-        <tbody class="users">\
-          <tr>\
-            <td class="username">user1</td>\
-          </tr>\
-          <tr>\
-            <td class="username">user2</td>\
-          </tr>\
-        </tbody>\
-      </table>');
+      expect(doc.html()).htmlToBeEqual(jQuery('\
+      <div>\
+        <table>\
+          <tbody class="users">\
+            <tr>\
+              <td class="username">user1</td>\
+            </tr>\
+            <tr>\
+              <td class="username">user2</td>\
+            </tr>\
+          </tbody>\
+        </table>\
+      </div>').html());
       doc.find("tbody.users").render([
         {
           username: 'user1'
         }
       ]);
-      expect(doc.html()).htmlToBeEqual('\
-      <table>\
-        <tbody class="users">\
-          <tr>\
-            <td class="username">user1</td>\
-          </tr>\
-        </tbody>\
-      </table>');
+      expect(doc.html()).htmlToBeEqual(jQuery('\
+      <div>\
+        <table>\
+          <tbody class="users">\
+            <tr>\
+              <td class="username">user1</td>\
+            </tr>\
+          </tbody>\
+        </table>\
+      </div>').html());
       doc.find("tbody.users").render([
         {
           username: 'user1'
@@ -155,17 +159,19 @@
           username: 'user3'
         }
       ]);
-      expect(doc.html()).htmlToBeEqual('\
-      <table>\
-        <tbody class="users">\
-          <tr>\
-            <td class="username">user1</td>\
-          </tr>\
-          <tr>\
-            <td class="username">user3</td>\
-          </tr>\
-        </tbody>\
-      </table>');
+      expect(doc.html()).htmlToBeEqual(jQuery('\
+      <div>\
+        <table>\
+          <tbody class="users">\
+            <tr>\
+              <td class="username">user1</td>\
+            </tr>\
+            <tr>\
+              <td class="username">user3</td>\
+            </tr>\
+          </tbody>\
+        </table>\
+      </div>').html());
       doc.find("tbody.users").render([
         {
           username: 'user4'
@@ -173,17 +179,19 @@
           username: 'user3'
         }
       ]);
-      return expect(doc.html()).htmlToBeEqual('\
-      <table>\
-        <tbody class="users">\
-          <tr>\
-            <td class="username">user4</td>\
-          </tr>\
-          <tr>\
-            <td class="username">user3</td>\
-          </tr>\
-        </tbody>\
-      </table>');
+      return expect(doc.html()).htmlToBeEqual(jQuery('\
+      <div>\
+        <table>\
+          <tbody class="users">\
+            <tr>\
+              <td class="username">user4</td>\
+            </tr>\
+            <tr>\
+              <td class="username">user3</td>\
+            </tr>\
+          </tbody>\
+        </table>\
+      </div').html());
     });
   });
 

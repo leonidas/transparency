@@ -7,7 +7,6 @@
     global.window = document.createWindow();
     jsdom = require('jsdom');
     global.jQuery = require('jquery');
-    jsdom.dom.level3.core.DocumentFragment.prototype.__proto__ = jsdom.dom.level3.core.Element.prototype;
   }
 
   beforeEach(function() {
@@ -15,7 +14,7 @@
       htmlToBeEqual: function(expected) {
         var actual, formatHtml;
         formatHtml = function(html) {
-          return html.replace(/\s/g, '').toLowerCase;
+          return html.replace(/\s/g, '').toLowerCase();
         };
         actual = formatHtml(this.actual);
         expected = formatHtml(expected);
