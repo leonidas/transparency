@@ -132,3 +132,30 @@ describe "Transparency", ->
 
     res = doc.find('.container').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should ignore functions in objects", ->
+    doc = jQuery(
+     '<div>
+        <div class="container">
+          <div class="hello"></div>
+          <div class="goodbye"></div>
+          <div class="skipped"></div>
+        </div>
+      </div>')
+
+    data =
+      hello:   'Hello'
+      goodbye: 5
+      skipped: () -> "hello"
+
+    expected = jQuery(
+      '<div>
+        <div class="container">
+          <div class="hello">Hello</div>
+          <div class="goodbye">5</div>
+          <div class="skipped"></div>
+        </div>
+      </div>')
+
+    res = doc.find('.container').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
