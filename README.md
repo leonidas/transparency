@@ -1,72 +1,60 @@
-Transparency is a minimal template engine for jQuery. It maps JSON objects to DOM elements with zero configuration.
+Transparency is a minimal template engine for browser. It maps JSON objects to DOM elements with zero configuration.
 
 ## Features
 
 * Data binding by convention - No extra markup in the views
-* Collection rendering - No need for loops and partials
+* Collection rendering - No loops and partials
 * Nested objects and collections - No configuration, just conventions
 * Directives - No custom DSL, just functions
 * Template caching - No manual template lookup/compilation/rendering
+* Performant - In most real-world cases, it's faster than any other template engine or hand-crafted bingings (*)
+* Compatible - Tested on IE6+, Chrome and Firefox.
 
-For more insight please see [FAQ](https://github.com/leonidas/transparency/blob/master/FAQ.md)
+More details about design principles, performance measurements and specific use cases is available at
+[FAQ](https://github.com/leonidas/transparency/blob/master/FAQ.md)
 
-## Usage
+(*) Take this with grain of salt, as "real-world performance" isn't that easy to measure and Transparency is
+smart enough to avoid any extra work (this actually boosts your "real world performance", a lot!). One easy-to-run
+performance test is available at [jsperf.com](http://jsperf.com/dom-vs-innerhtml-based-templating/366). 
+See others at the `browser` folder.
 
-See the examples and test Transparency at http://leonidas.github.com/transparency/
+## Try it
 
-### Client-side
+See live examples and play around at http://leonidas.github.com/transparency/
+
+## Use it
 
 Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
-and include it to your application with jQuery
+and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself 
+as a plugin.
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/transparency.min.js"></script>
 ```
 
-### Server-side
-
-Define jQuery and Transparency as dependencies in package.json
-
-```javascript
-{
-    "name": "hello-server",
-    "dependencies": {
-      "express":      "2.5.5",
-      "jquery":       ">= 1.6.3",
-      "transparency": ">= 0.2.0"
-  }
-}
-```
-
-Require and use as usual
-
-```javascript
-var $ = require("jquery");
-require("transparency");
-
-var template = $('<div><h1 class="title"></h1></div>');
-var result   = template.render({title: "Hello world!"}).html();
-```
+For server-side use, see `spec` folder and awesome [jsdom](https://github.com/tmpvar/jsdom) for the details.
 
 ## Examples
 
-Here's some of examples. For further details, please see the examples folder, tests and the source code.
+Here's some of examples. For further details, please see `examples` folder, unit tests and the source code.
 
 ### Assigning values
 
-Transparency binds JavaScript objects to DOM a element by id, class names,
-element name and `data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes).
+Transparency binds JavaScript objects to DOM a element by `id`, `class`,`element name`, `name` attribute and 
+`data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes)
+.
 
 Values are escaped before rendering.
 
 Template:
 
 ```html
-<div class="container">
+<div id="container">
   <div id="hello"></div>
   <div class="goodbye"></div>
   <span></span>
+  <input type="text" name="greeting" />
   <button class="hi-button" data-bind="hi-label"></button>
 </div>
 ```
@@ -78,10 +66,15 @@ var hello = {
   hello:      'Hello',
   goodbye:    'Goodbye!',
   span:       '<i>See Ya!</i>',
+  greeting:   'Howdy!',
   'hi-label': 'Terve!' // Finnish i18n
 };
 
-$('.container').render(hello);
+// with jQuery
+$('#container').render(hello);
+
+// ..or without
+Transparency.render(document.getElementById('container'), hello);
 ```
 
 Result:
@@ -91,6 +84,7 @@ Result:
   <div id="hello">Hello</div>
   <div class="goodbye">Goodbye!</div>
   <span>lt;i&gt;See Ya!&lt;/i&gt;</span>
+  <input type="text" name="greeting" value="Howdy!" />
   <button class="hi-button" data-bind="hi-label">Terve!</button>
 </div>
 ```
@@ -100,74 +94,34 @@ Result:
 Template:
 
 ```html
-<table >
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Activity</th>
-      <th>Comment</th>
-      <th>Name</th>
-    </tr>
-  </head>
-  <tbody class="activities">
-    <tr class="activity">
-      <td class="date"></td>
-      <td class="activity"></td>
-      <td class="comment"></td>
-      <td class="name"></td>
-    </tr>
-  </tbody>
-</table>
+<ul id="activities">
+  <li class="activity"></li>
+</ul>
 ```
 
 Javascript:
 
 ```js
 var activities = [
-  {
-    date:     '2011-08-23',
-    activity: 'Jogging',
-    comment:  'Early morning run',
-    name:     'Harry Potter'
-  },
-  {
-    date:     '2011-09-04',
-    activity: 'Gym',
-    comment:  'Chest workout',
-    name:     'Batman'
-  }
+  {activity: 'Jogging'},
+  {activity: 'Gym'},
+  {activity: 'Sky Diving'},
 ];
 
-$('.activities').render(activities);
+$('#activities').render(activities);
+
+// or
+Transparency.render(document.getElementById('activities'), activities);
 ```
 
 Result:
 
 ```html
-<table class="activities">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Activity</th>
-      <th>Comment</th>
-      <th>Name</th>
-    </th>
-  </thead>
-  <tbody class="activities">
-    <tr class="activity">
-      <td class="date">2011-08-23</td>
-      <td class="activity">Jogging</td>
-      <td class="comment">Early morning run</td>
-      <td class="name">Harry Potter</td>
-    </tr>
-    <tr class="activity">
-      <td class="date">2011-09-04</td>
-      <td class="activity">Gym</td>
-      <td class="comment">Chest workout</td>
-      <td class="name">Batman</td>
-    </tr>
-  </tbody>
-</table>
+<ul id="activities">
+  <li class="activity">Jogging</li>
+  <li class="activity">Gym</li>
+  <li class="activity">Sky Diving</li>
+</ul>
 ```
 
 ### Iterating over a list with simple values
@@ -333,7 +287,13 @@ Result:
 
 ### Directives
 
-Directives are used for calculated values and setting element attributes. In addition to having an access to the current data object through `this`, directives also have access to the current element as a parameter, which makes it easy to, e.g., selectively hide it.
+Directives are used for calculated values and setting element attributes. In addition to having an access to the 
+current data object through `this`, directives also have access to the current element as a parameter, 
+which makes it easy to, e.g., selectively hide it.
+
+Note: Directives are about to change for more consistent design and functionality. Syntax for attribute
+assignment will change:
+https://github.com/leonidas/transparency/issues/26
 
 Template:
 
