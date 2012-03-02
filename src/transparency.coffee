@@ -64,7 +64,7 @@ prepareContext = (context, models) ->
 
 renderValues = (instance, model) ->
   if typeof model == 'object'
-    for key, value of model when typeof value != 'object'
+    for key, value of model when (typeof value != 'object' && typeof value != 'function')
       setText(element, value) for element in matchingElements(instance, key)
   else
     element = matchingElements(instance, 'listElement')[0] || instance.elements[0]
