@@ -93,7 +93,7 @@
       res = doc.find('.container').render(data);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
-    return it("should match by element id, class, name and data-bind", function() {
+    it("should match by element id, class, name and data-bind", function() {
       var data, doc, expected, res;
       doc = jQuery('<div>\
         <div class="container">\
@@ -115,6 +115,32 @@
           <div class="my-class">class-data</div>\
           <span>name-data</span>\
           <div data-bind="my-data">data-bind</div>\
+        </div>\
+      </div>');
+      res = doc.find('.container').render(data);
+      return expect(doc.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should ignore functions in objects", function() {
+      var data, doc, expected, res;
+      doc = jQuery('<div>\
+        <div class="container">\
+          <div class="hello"></div>\
+          <div class="goodbye"></div>\
+          <div class="skipped"></div>\
+        </div>\
+      </div>');
+      data = {
+        hello: 'Hello',
+        goodbye: 5,
+        skipped: function() {
+          return "hello";
+        }
+      };
+      expected = jQuery('<div>\
+        <div class="container">\
+          <div class="hello">Hello</div>\
+          <div class="goodbye">5</div>\
+          <div class="skipped"></div>\
         </div>\
       </div>');
       res = doc.find('.container').render(data);
