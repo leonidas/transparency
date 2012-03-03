@@ -7,7 +7,7 @@ Transparency is a minimal template engine for browser. It maps JSON objects to D
 * Nested objects and collections - No configuration, just conventions
 * Directives - No custom DSL, just functions
 * Template caching - No manual template lookup/compilation/rendering
-* Fast - In most real-world cases, it's faster than other template engines or hand-crafted bindings (*)
+* Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
 * Compatible - Tested on IE6+, Chrome and Firefox.
 
 More details about design principles, performance measurements and specific use cases is available at
