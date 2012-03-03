@@ -7,16 +7,15 @@ Transparency is a minimal template engine for browser. It maps JSON objects to D
 * Nested objects and collections - No configuration, just conventions
 * Directives - No custom DSL, just functions
 * Template caching - No manual template lookup/compilation/rendering
-* Performant - In most real-world cases, it's faster than any other template engine or hand-crafted bingings (*)
+* Fast - In most real-world cases, it's faster than other template engines or hand-crafted bindings (*)
 * Compatible - Tested on IE6+, Chrome and Firefox.
 
 More details about design principles, performance measurements and specific use cases is available at
 [FAQ](https://github.com/leonidas/transparency/blob/master/FAQ.md)
 
-(*) Take this with grain of salt, as "real-world performance" isn't that easy to measure and Transparency is
-smart enough to avoid any extra work (this actually boosts your "real world performance", a lot!). One easy-to-run
-performance test is available at [jsperf.com](http://jsperf.com/dom-vs-innerhtml-based-templating/366). 
-See others at the `browser` folder.
+(*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway,
+[jsperf.com](http://jsperf.com/dom-vs-innerhtml-based-templating/366) should give you an idea. 
+If interested, see other performance tests at `browser` folder.
 
 ## Try it
 
@@ -124,7 +123,7 @@ Result:
 </ul>
 ```
 
-### Iterating over a list with simple values
+#### Iterating over a list with plain values
 
 Template:
 
@@ -155,7 +154,7 @@ Result:
 </div>
 ```
 
-### Iterating over a list with simple values, using `listElement` class
+#### Iterating over a list with plain values, using `listElement` class
 
 Template:
 
@@ -291,8 +290,8 @@ Directives are used for calculated values and setting element attributes. In add
 current data object through `this`, directives also have access to the current element as a parameter, 
 which makes it easy to, e.g., selectively hide it.
 
-Note: Directives are about to change for more consistent design and functionality. Syntax for attribute
-assignment will change:
+Note: Directives are about to change for more consistent design and functionality. Also syntax for attribute
+assignment is about to change. See details at
 https://github.com/leonidas/transparency/issues/26
 
 Template:
@@ -432,12 +431,4 @@ agree on design.
 There's [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
 regarding the original design and implementation. It might be worth reading as an introduction.
 
-## Philosophy
-
-Transparency is heavily influenced by [PURE](http://beebole.com/pure/) but is even more opinionated about how
-templates and data bind together. Templating with Transparency is unobustrive, dead simple and just stays out of the way.
-
-Transparency relies on convention over configuration and requires you to have 1:1 match between CSS classes and
-JSON objects. The idea is to minimize the cognitive noise you have to deal with.
-Just call `$('.container').render(data)` and move on.
 
