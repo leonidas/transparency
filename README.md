@@ -286,13 +286,13 @@ Result:
 
 ### Directives
 
-Directives are used for calculated values and setting element attributes. In addition to having an access to the 
-current data object through `this`, directives also have access to the current element as a parameter, 
-which makes it easy to, e.g., selectively hide it.
+Directives are functions used for manipulating text or html values and setting element attributes. 
+In addition to having an access to the current data object through `this`, directives also receive the 
+current element as a parameter, which makes it easy to, e.g, hide it.
 
-Note: Directives are about to change for more consistent design and functionality. Also syntax for attribute
-assignment is about to change. See details at
-https://github.com/leonidas/transparency/issues/26
+The return value of a directive function can be either string or object. If the return value is string, it get assigned 
+to the matching elements as text content. If the return values is an object, keys can be either `text`, `html` or any
+valid element attribute, e.g., class, src or href. Values are assigned accordingly to the matching elements.
 
 Template:
 
@@ -313,8 +313,8 @@ person = {
 };
 
 directives =
-  name:         function(element) { return this.firstname + " " + this.lastname; }
-  'email@href': function(element) { return "mailto:" + this.email; }
+  name:  function(element) { return this.firstname + " " + this.lastname; }
+  email: function(element) { return href: "mailto:" + this.email; }
 };
 
 $('.person').render(person, directives);
@@ -324,7 +324,7 @@ Result:
 
 ```html
 <div class="person">
-  <span class="name">Jasmine Taylor</span>
+  <span class="name"><b>Jasmine Taylor</b></span>
   <a class="email" href="mailto:jasmine.tailor@example.com">jasmine.tailor@example.com</a>
 </div>
 ```
@@ -365,7 +365,7 @@ person = {
   ]
 };
 
-nameDecorator = function() { return this.firstname + " " + this.lastname };
+nameDecorator = function() { return html: "<b>" + this.firstname + " " + this.lastname + "</b>"};
 
 directives = {
   name: nameDecorator,
@@ -381,15 +381,15 @@ Result:
 
 ```html
 <div class="person">
-  <span class="name">Jasmine Taylor</span>
+  <span class="name"><b>Jasmine Taylor</b></span>
   <span class="email">jasmine.taylor@example.com</span>
   <div class="friends">
     <div class="friend">
-      <span class="name">John Mayer</span>
+      <span class="name"><b>John Mayer</b></span>
       <span class="email">john.mayer@example.com</span>
     </div>
     <div class="friend">
-      <span class="name">Damien Rice</span>
+      <span class="name"><b>Damien Rice</b></span>
       <span class="email">damien.rice@example.com</span>
     </div>
   </div>
