@@ -324,7 +324,7 @@ Result:
 
 ```html
 <div class="person">
-  <span class="name"><b>Jasmine Taylor</b></span>
+  <span class="name">Jasmine Taylor</span>
   <a class="email" href="mailto:jasmine.tailor@example.com">jasmine.tailor@example.com</a>
 </div>
 ```
