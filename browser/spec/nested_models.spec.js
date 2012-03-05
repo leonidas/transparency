@@ -199,16 +199,22 @@
       };
       directives = {
         profiles: {
-          'name@href': function(elem, data) {
-            return "/" + this.name;
+          name: function() {
+            return {
+              href: "/" + this.name
+            };
           },
           testsets: {
-            'name@href': function(elem, data) {
-              return "/" + this.name;
+            name: function() {
+              return {
+                href: "/" + this.name
+              };
             },
             products: {
-              'name@href': function(elem, data) {
-                return "/" + this.name;
+              name: function() {
+                return {
+                  href: "/" + this.name
+                };
               }
             }
           }
