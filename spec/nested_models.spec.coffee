@@ -188,11 +188,11 @@ describe "Transparency", ->
 
     directives =
       profiles:
-        'name@href': (elem, data) -> "/#{@name}"
+        name: () -> href: "/#{@name}"
         testsets:
-          'name@href': (elem, data) -> "/#{@name}"
+          name: () -> href: "/#{@name}"
           products:
-           'name@href': (elem, data) -> "/#{@name}"
+            name: () -> href: "/#{@name}"
 
     expected = jQuery(
      '<div>

@@ -46,7 +46,7 @@ describe "Transparency", ->
 
     directives =
       states:
-        'state@value': () -> @id
+        state: () -> value: @id
 
     expected = jQuery(
      '<form

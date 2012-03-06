@@ -32,11 +32,11 @@
       doc.find('.person').render(person, directives);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
-    it("should render safe html content with directives", function() {
+    it("should render html content with directives", function() {
       var directives, doc, expected, person;
       doc = jQuery('<div>\
         <div class="person">\
-          <span class="name"></span><span class="email"></span>\
+          <div class="name"><div>FOOBAR</div></div><span class="email"></span>\
         </div>\
       </div>');
       person = {
@@ -46,15 +46,21 @@
       };
       directives = {
         name: function(element) {
-          return window.Transparency.safeHtml("" + this.firstname + " " + this.lastname);
+          return {
+            html: "" + this.firstname + " " + this.lastname
+          };
         }
       };
       expected = jQuery('<div>\
         <div class="person">\
-          <span class="name"><b>Jasmine</b> <i>Taylor</i></span>\
+          <div class="name"><b>Jasmine</b> <i>Taylor</i><div>FOOBAR</div></div>\
           <span class="email">jasmine.tailor@example.com</span>\
         </div>\
       </div>');
+      doc.find('.person').render({
+        firstname: "Hello",
+        lastname: "David"
+      }, directives);
       doc.find('.person').render(person, directives);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
