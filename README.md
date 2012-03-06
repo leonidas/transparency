@@ -286,12 +286,12 @@ Result:
 
 ### Directives
 
-Directives are functions used for manipulating text or html values and setting element attributes. 
+Directives are used for manipulating text or html values and setting element attributes. 
 In addition to having an access to the current data object through `this`, directives also receive the 
 current element as a parameter, which makes it easy to, e.g, hide it.
 
 The return value of a directive function can be either string or object. If the return value is string, it is assigned 
-to the matching elements as text content. If the return values is an object, keys can be either `text`, `html` or any
+to the matching elements as text content. If the return value is an object, keys can be either `text`, `html` or any
 valid element attribute, e.g., class, src or href. Values are assigned accordingly to the matching elements.
 
 Template:
