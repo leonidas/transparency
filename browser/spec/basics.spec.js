@@ -1,11 +1,51 @@
 (function() {
+  var Transparency;
 
   if (typeof module !== 'undefined' && module.exports) {
     require('./spec_helper');
-    require('../src/transparency');
+    Transparency = require('../src/transparency');
   }
 
   describe("Transparency", function() {
+    it("should ignore null context", function() {
+      var data, doc, expected;
+      doc = jQuery('<div>\
+      </div>');
+      data = {
+        hello: 'Hello'
+      };
+      expected = jQuery('<div>\
+      </div>');
+      Transparency.render(doc.find('.container').get(0), data);
+      return expect(doc.html()).htmlToBeEqual(expected.html());
+    });
+    it("should work with null values", function() {
+      var data, doc, expected;
+      doc = jQuery('<div>\
+        <div class="container">\
+          <div class="hello"></div>\
+          <div class="goodbye"></div>\
+        </div>\
+      </div>');
+      data = null;
+      expected = jQuery('<div>\
+        <div class="container">\
+        </div>\
+      </div>');
+      doc.find('.container').render(data);
+      expect(doc.html()).htmlToBeEqual(expected.html());
+      data = {
+        hello: 'Hello'
+      };
+      expected = jQuery('<div>\
+        <div class="container">\
+          <div class="hello">Hello</div>\
+          <div class="goodbye"></div>\
+        </div>\
+      </div>');
+      doc.find('.container').render(data);
+      return expect(doc.html()).htmlToBeEqual(expected.html());
+    });
     it("should work with null values", function() {
       var data, doc, expected;
       doc = jQuery('<div>\
