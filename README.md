@@ -314,7 +314,7 @@ person = {
 
 directives =
   name:  function(element) { return this.firstname + " " + this.lastname; }
-  email: function(element) { return href: "mailto:" + this.email; }
+  email: function(element) { return {href: "mailto:" + this.email}; }
 };
 
 $('.person').render(person, directives);
@@ -365,7 +365,7 @@ person = {
   ]
 };
 
-nameDecorator = function() { return html: "<b>" + this.firstname + " " + this.lastname + "</b>"};
+nameDecorator = function() { return {html: "<b>" + this.firstname + " " + this.lastname + "</b>"}; };
 
 directives = {
   name: nameDecorator,
