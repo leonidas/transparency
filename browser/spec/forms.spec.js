@@ -48,8 +48,10 @@
       };
       directives = {
         states: {
-          'state@value': function() {
-            return this.id;
+          state: function() {
+            return {
+              value: this.id
+            };
           }
         }
       };

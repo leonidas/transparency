@@ -5,8 +5,6 @@ jQuery?.fn.render = (models, directives) ->
 @Transparency    = Transparency = {}
 module?.exports  = Transparency
 
-Transparency.safeHtml = (str) -> ({html: str, safeHtml: true})
-
 Transparency.render = (contexts, models, directives) ->
   return unless contexts
   models     ||= []
@@ -73,33 +71,37 @@ renderValues = (instance, model) ->
     setText(element, model) if element
 
 renderDirectives = (instance, model, directives) ->
-  for key, directive of directives when typeof directive == 'function'
-    [key, attr] = key.split('@')
+  for key, directiveFunction of directives when typeof directiveFunction == 'function'
 
-    for e in matchingElements(instance, key)
-      result = directive.call(model, e)
-      if attr then e.setAttribute(attr, result) else setText e, result
+    for element in matchingElements(instance, key)
+      directive = directiveFunction.call(model, element)
+      directive = text: directive if typeof directive == 'string'
 
-renderChildren = (instance, model, directives, context) ->
+      setText element, directive.text
+      setHtml element, directive.html
+      for attr, value of directive when attr != 'html' and attr != 'text'
+        element.setAttribute attr, value
+
+renderChildren = (instance, model, directives, contextd) ->
   for key, value of model when typeof value == 'object'
     Transparency.render element, value, directives[key] for element in matchingElements(instance, key)
 
-setText = (e, text) ->
-  return if e?.transparency?.text == text
-  e.transparency    ||= {}
-  e.transparency.text = text
-  children            = (n for n in e.childNodes when n.nodeType == ELEMENT_NODE)
+setContent = (callback) ->
+  (e, content) ->
+    return if !e or !content? or e.transparency.content == content
+    e.transparency.content    = content
+    e.transparency.children ||= (n for n in e.childNodes when n.nodeType == ELEMENT_NODE)
 
-  (e.removeChild e.firstChild) while e.firstChild
+    (e.removeChild e.firstChild) while e.firstChild
+    callback e, content
+    (e.appendChild c) for c in e.transparency.children
 
+setHtml = setContent (e, html) -> e.innerHTML = html
+setText = setContent (e, text) ->
   if e.nodeName.toLowerCase() == 'input'
     e.setAttribute 'value', text
-  else if text.safeHtml
-    e.innerHTML = text.html
   else
     e.appendChild e.ownerDocument.createTextNode text
-
-  (e.appendChild c) for c in children
 
 matchingElements = (instance, key) ->
   instance.queryCache[key] ||= (e for e in instance.elements when elementMatcher e, key)

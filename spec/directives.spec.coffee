@@ -31,11 +31,11 @@ describe "Transparency", ->
     doc.find('.person').render(person, directives)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
-  it "should render safe html content with directives", ->
+  it "should render html content with directives", ->
     doc = jQuery(
      '<div>
         <div class="person">
-          <span class="name"></span><span class="email"></span>
+          <div class="name"><div>FOOBAR</div></div><span class="email"></span>
         </div>
       </div>')
 
@@ -45,16 +45,18 @@ describe "Transparency", ->
       email:     'jasmine.tailor@example.com'
 
     directives =
-      name: (element) -> (window.Transparency.safeHtml "#{@firstname} #{@lastname}")
+      name: (element) ->
+        html: "#{@firstname} #{@lastname}"
 
     expected = jQuery(
       '<div>
         <div class="person">
-          <span class="name"><b>Jasmine</b> <i>Taylor</i></span>
+          <div class="name"><b>Jasmine</b> <i>Taylor</i><div>FOOBAR</div></div>
           <span class="email">jasmine.tailor@example.com</span>
         </div>
       </div>')
 
+    doc.find('.person').render({firstname: "Hello", lastname: "David"}, directives)
     doc.find('.person').render(person, directives)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
