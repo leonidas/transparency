@@ -55,12 +55,6 @@ as a plugin.
 
 For server-side use, see `spec` folder and the awesome [jsdom](https://github.com/tmpvar/jsdom) for the details.
 
-## Getting help
-
-* [FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
-* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
-* Google Groups: transparencyjs@googlegroups.com
-
 ## Examples
 
 ### Assigning values
@@ -421,18 +415,25 @@ Result:
 </div>
 ```
 
-## Development instructions
+## Getting help
 
-You'll need node.js 0.6.x and npm.
+* [FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
+* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
+* Google Groups: transparencyjs@googlegroups.com
 
-Install uglify-js and coffee-script:
+## Development environment
 
+You need node.js 0.6.x and npm.
+
+Install dependencies:
+
+    npm install
     npm install -g uglify-js
     npm install -g coffee-script
 
 Run tests
 
-    npm install && npm test
+    npm test
 
 Run tests during development for more verbose assertion output
 
