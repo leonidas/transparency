@@ -1,6 +1,6 @@
 # Synopsis 
 
-Transparency binds data to DOM with zero configuration. Just call render.
+Transparency binds data to DOM with zero configuration. Just call `.render(data)`.
 
 ```html
 <div id="template">
