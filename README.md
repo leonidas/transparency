@@ -1,5 +1,28 @@
 Transparency is a minimal template engine for browser. It maps JSON objects to DOM elements with zero configuration.
 
+```html
+<div id="template">
+  <span class="greeting"></span>
+  <span class="name"></span>
+</div>
+```
+```js
+var hello = {
+  greeting: 'Hello',
+  name:     'world!'
+};
+
+$('#template').render(hello);
+```
+```html
+<div id="template">
+  <span class="greeting">Hello</span>
+  <span class="name">world!</span>
+</div>
+```
+
+
+
 ## Features
 
 * Data binding by convention - No extra markup in the views
