@@ -19,11 +19,12 @@ If interested, see other performance tests at `browser` folder.
 
 ## Try it
 
-See live examples and play around at http://leonidas.github.com/transparency/
+See the interactive examples at http://leonidas.github.com/transparency/
 
 ## Use it
 
-Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
+Install with `npm install transparency` or get the 
+[compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself 
 as a plugin.
 
@@ -32,7 +33,12 @@ as a plugin.
 <script src="js/transparency.min.js"></script>
 ```
 
-For server-side use, see `spec` folder and awesome [jsdom](https://github.com/tmpvar/jsdom) for the details.
+For server-side use, see `spec` folder and the awesome [jsdom](https://github.com/tmpvar/jsdom) for the details.
+
+## Getting help
+
+* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
+* Google Groups: transparencyjs@googlegroups.com
 
 ## Examples
 
@@ -41,8 +47,7 @@ Here's some of examples. For further details, please see `examples` folder, unit
 ### Assigning values
 
 Transparency binds JavaScript objects to DOM a element by `id`, `class`,`element name`, `name` attribute and 
-`data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes)
-.
+`data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes).
 
 Values are escaped before rendering.
 
@@ -287,12 +292,15 @@ Result:
 ### Directives
 
 Directives are used for manipulating text or html values and setting element attributes. 
-In addition to having an access to the current data object through `this`, directives also receive the 
-current element as a parameter, which makes it easy to, e.g, hide it.
+In addition to having an access to the current data object through `this`, directives also receive 
+index number and current element as a parameter, which makes it easy to, e.g., add `even` and `odd` classes or
+hide elements.
 
 The return value of a directive function can be either string or object. If the return value is string, it is assigned 
 to the matching elements as text content. If the return value is an object, keys can be either `text`, `html` or any
 valid element attribute, e.g., `class`, `src` or `href`. Values are assigned accordingly to the matching elements.
+
+If both `text` and `html` are present, `html` overrides the text content.
 
 Template:
 
@@ -313,8 +321,8 @@ person = {
 };
 
 directives =
-  name:  function(element) { return this.firstname + " " + this.lastname; }
-  email: function(element) { return {href: "mailto:" + this.email}; }
+  name:  function(element, index) { return this.firstname + " " + this.lastname; }
+  email: function(element, index) { return {href: "mailto:" + this.email}; }
 };
 
 $('.person').render(person, directives);
