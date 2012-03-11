@@ -10,8 +10,8 @@ Transparency is a minimal template engine for browser. It maps JSON objects to D
 * Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
 * Compatible - Tested on IE6+, Chrome and Firefox.
 
-More details about design principles, performance measurements and specific use cases is available at
-[FAQ](https://github.com/leonidas/transparency/blob/master/FAQ.md)
+More details about design principles and specific use cases is available at
+[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
 
 (*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway,
 [jsperf.com](http://jsperf.com/dom-vs-innerhtml-based-templating/366) should give you an idea. 
