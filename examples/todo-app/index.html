@@ -31,7 +31,6 @@
         tasks.on 'update', ->
           tasks.render data
 
-
         $('#add-task').submit (event) ->
           event.preventDefault()
           data.push task: input.val()
@@ -39,8 +38,8 @@
           tasks.trigger 'update'
 
         tasks.on 'click', '.delete', (event) ->
-          taskName = event.target.transparency.model.task
-          data     = _.reject(data, (e) -> e.task == taskName)
+          model = event.target.transparency.model
+          data  = _.reject(data, (e) -> e.task == model.task)
           tasks.trigger 'update'
 
         tasks.trigger 'update'
