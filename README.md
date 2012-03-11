@@ -1,4 +1,6 @@
-Transparency is a minimal template engine for browser. It maps JSON objects to DOM elements with zero configuration.
+# Synopsis 
+
+Transparency binds data to DOM with zero configuration. Just call render.
 
 ```html
 <div id="template">
@@ -21,8 +23,6 @@ $('#template').render(hello);
 </div>
 ```
 
-
-
 ## Features
 
 * Data binding by convention - No extra markup in the views
@@ -31,10 +31,7 @@ $('#template').render(hello);
 * Directives - No custom DSL, just functions
 * Template caching - No manual template lookup/compilation/rendering
 * Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
-* Compatible - Tested on IE6+, Chrome and Firefox.
-
-More details about design principles and specific use cases is available at
-[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
+* Compatible - Tested on IE6+, Chrome and Firefox
 
 (*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway,
 [jsperf.com](http://jsperf.com/dom-vs-innerhtml-based-templating/366) should give you an idea. 
@@ -60,6 +57,7 @@ For server-side use, see `spec` folder and the awesome [jsdom](https://github.co
 
 ## Getting help
 
+* [FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
 * IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
 * Google Groups: transparencyjs@googlegroups.com
 
