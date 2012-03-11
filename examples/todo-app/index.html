@@ -25,7 +25,7 @@
         input = $('input[name="task"]')
         tasks = $('#tasks')
 
-        tasks.bind 'update', ->
+        tasks.on 'update', ->
           tasks.render data
 
         $('#add-task').submit (event) ->
@@ -34,8 +34,8 @@
           input.val ""
           tasks.trigger 'update'
 
-        $('input[type="checkbox"]').live 'click', (event) ->
-          taskName = $(event.target).next().text()
+        tasks.on 'click', 'input[type="checkbox"]', (event) ->
+          taskName = event.target.transparency.model.task
           data     = _.reject(data, (e) -> e.task == taskName)
           tasks.trigger 'update'
 
