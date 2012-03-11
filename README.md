@@ -65,14 +65,10 @@ For server-side use, see `spec` folder and the awesome [jsdom](https://github.co
 
 ## Examples
 
-Here's some of examples. For further details, please see `examples` folder, unit tests and the source code.
-
 ### Assigning values
 
 Transparency binds JavaScript objects to DOM a element by `id`, `class`,`element name`, `name` attribute and 
-`data-bind`[HTML5 data attribute](http://www.w3.org/TR/html5/elements.html#embedding-custom-non-visible-data-with-the-data-attributes).
-
-Values are escaped before rendering.
+`data-bind` attribute. Values are escaped before rendering.
 
 Template:
 
