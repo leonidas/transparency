@@ -23,17 +23,16 @@ Transparency.render = (contexts, models, directives) ->
     prepareContext context, models
 
     # Render each model to its template instance
-    for model, i in models
-      instance = context.transparency.instances[i]
+    for model, index in models
+      instance = context.transparency.instances[index]
 
       # Associate model with instance elements
       for e in instance.elements
-        e.transparency     ||= {}
         e.transparency.model = model
 
       renderValues      instance, model
-      renderDirectives  instance, model, directives
-      renderChildren    instance, model, directives, context
+      renderDirectives  instance, model, directives, index
+      renderChildren    instance, model, directives
 
     # Finally, put the context element back to it's original place in DOM
     if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
@@ -62,6 +61,11 @@ prepareContext = (context, models) ->
     context.transparency.templateCache.push instance = context.transparency.instances.pop()
     (n.parentNode.removeChild n) for n in instance.template
 
+  # Return the original attribute values
+  for instance in context.transparency.instances
+    for e in instance.elements
+      (e.setAttribute attr, value) for attr, value of e.transparency.attributes
+
 renderValues = (instance, model) ->
   if typeof model == 'object'
     for key, value of model when (typeof value != 'object' && typeof value != 'function')
@@ -70,19 +74,22 @@ renderValues = (instance, model) ->
     element = matchingElements(instance, 'listElement')[0] || instance.elements[0]
     setText(element, model) if element
 
-renderDirectives = (instance, model, directives) ->
+renderDirectives = (instance, model, directives, index) ->
   for key, directiveFunction of directives when typeof directiveFunction == 'function'
 
     for element in matchingElements(instance, key)
-      directive = directiveFunction.call(model, element)
+      directive = directiveFunction.call(model, element, index)
       directive = text: directive if typeof directive == 'string'
 
       setText element, directive.text
       setHtml element, directive.html
       for attr, value of directive when attr != 'html' and attr != 'text'
+        # Save the original attribute value for the instance reuse
+        element.transparency.attributes       ||= {}
+        element.transparency.attributes[attr] ||= element.getAttribute attr
         element.setAttribute attr, value
 
-renderChildren = (instance, model, directives, contextd) ->
+renderChildren = (instance, model, directives) ->
   for key, value of model when typeof value == 'object'
     Transparency.render element, value, directives[key] for element in matchingElements(instance, key)
 
@@ -109,8 +116,11 @@ matchingElements = (instance, key) ->
 elementNodes = (template) ->
   elements = []
   for e in template when e.nodeType == ELEMENT_NODE
+    e.transparency ||= {}
     elements.push e
-    (elements.push child) for child in e.getElementsByTagName '*'
+    for child in e.getElementsByTagName '*'
+      child.transparency ||= {}
+      elements.push child
   elements
 
 elementMatcher = (element, key) ->

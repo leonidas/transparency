@@ -64,7 +64,7 @@
       doc.find('.person').render(person, directives);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
-    return it("should handle nested directives", function() {
+    it("should handle nested directives", function() {
       var directives, doc, expected, nameDecorator, person;
       doc = jQuery('<div>\
         <div class="person">\
@@ -120,6 +120,40 @@
         </div>\
       </div>');
       doc.find('.person').render(person, directives);
+      return expect(doc.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should restore the original attributes", function() {
+      var directives, doc, expected, persons;
+      doc = jQuery('<div>\
+        <ul id="persons">\
+          <li class="person"></li>\
+        </ul>\
+      </div>');
+      persons = [
+        {
+          person: "me"
+        }, {
+          person: "you"
+        }, {
+          person: "others"
+        }
+      ];
+      directives = {
+        person: function(element, i) {
+          return {
+            "class": element.className + (i % 2 ? " odd" : " even")
+          };
+        }
+      };
+      expected = jQuery('<div>\
+        <ul id="persons">\
+          <li class="person even">me</li>\
+          <li class="person odd">you</li>\
+          <li class="person even">others</li>\
+        </ul>\
+      </div>');
+      doc.find('#persons').render(persons, directives);
+      doc.find('#persons').render(persons, directives);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
   });

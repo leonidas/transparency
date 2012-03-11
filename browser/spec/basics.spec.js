@@ -16,10 +16,10 @@
       };
       expected = jQuery('<div>\
       </div>');
-      Transparency.render(doc.find('.container').get(0), data);
+      window.Transparency.render(doc.find('.container').get(0), data);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
-    it("should work with null values", function() {
+    it("should work with null data", function() {
       var data, doc, expected;
       doc = jQuery('<div>\
         <div class="container">\

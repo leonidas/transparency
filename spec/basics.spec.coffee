@@ -16,10 +16,10 @@ describe "Transparency", ->
       '<div>
       </div>')
 
-    Transparency.render doc.find('.container').get(0), data
+    window.Transparency.render doc.find('.container').get(0), data
     expect(doc.html()).htmlToBeEqual(expected.html())
 
-  it "should work with null values", ->
+  it "should work with null data", ->
     doc = jQuery(
      '<div>
         <div class="container">

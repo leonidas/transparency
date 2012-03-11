@@ -116,3 +116,38 @@ describe "Transparency", ->
 
     doc.find('.person').render(person, directives)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should restore the original attributes", ->
+    doc = jQuery(
+     '<div>
+        <ul id="persons">
+          <li class="person"></li>
+        </ul>
+      </div>')
+
+    persons = [
+      person: "me"
+    ,
+      person: "you"
+    ,
+      person: "others"
+    ]
+
+    directives =
+      person: (element, i) ->
+        class: element.className + (if i % 2 then " odd" else " even")
+
+    expected = jQuery(
+      '<div>
+        <ul id="persons">
+          <li class="person even">me</li>
+          <li class="person odd">you</li>
+          <li class="person even">others</li>
+        </ul>
+      </div>')
+
+    doc.find('#persons').render(persons, directives)
+
+    # Render twice to make sure the class names are not duplicated
+    doc.find('#persons').render(persons, directives)
+    expect(doc.html()).htmlToBeEqual(expected.html())
