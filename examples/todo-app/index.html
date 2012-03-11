@@ -14,9 +14,12 @@
       <input type="text" name="task" />
       <input type="submit" value="Add" />
     </form>
-    <div id="tasks">
-      <div><input type="checkbox"/><span class="task"></span></div>
-    </div>
+    <table id="tasks">
+      <tr>
+        <td class="task"></td>
+        <td><a class="delete" href="#">delete</a></td>
+      </tr>
+    </table>
 
     <script type="text/coffeescript">
       data = [{task: "Foo"}, {task: "Bar"}]
@@ -28,13 +31,14 @@
         tasks.on 'update', ->
           tasks.render data
 
+
         $('#add-task').submit (event) ->
           event.preventDefault()
           data.push task: input.val()
           input.val ""
           tasks.trigger 'update'
 
-        tasks.on 'click', 'input[type="checkbox"]', (event) ->
+        tasks.on 'click', '.delete', (event) ->
           taskName = event.target.transparency.model.task
           data     = _.reject(data, (e) -> e.task == taskName)
           tasks.trigger 'update'
