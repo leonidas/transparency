@@ -11,7 +11,7 @@ Transparency.render = (contexts, models, directives) ->
   directives ||= {}
   # Context may be NodeList. Clone it to Array
   contexts     = if contexts.length? and contexts[0] then (c for c in contexts) else [contexts]
-  models       = [models] unless models instanceof Array
+  models       = [models] unless Array.isArray models
 
   for context in contexts
     # DOM manipulation is a lot faster when elements are detached. Save the original position, so we can put the context back to it's place.
@@ -139,3 +139,8 @@ Array::indexOf ?= (s) ->
     index = i
     break
   index
+
+# http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/
+Array.isArray ?= (ob) ->
+  Object.prototype.toString.call(ob) == '[object Array]'
+
