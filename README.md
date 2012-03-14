@@ -33,18 +33,14 @@ $('#template').render(hello);
 * Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
 * Compatible - Tested on IE6+, Chrome and Firefox
 
-More info
-
-* [Demo website](http://leonidas.github.com/transparency/)
-* [Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
-
 (*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway,
 [jsperf.com](http://jsperf.com/dom-vs-innerhtml-based-templating/366) should give you an idea. 
-If interested, see other performance tests at `browser` folder.
+If interested, see other performance tests at `browser` folder. See also 
+[Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions).
 
 ## Try it
 
-See the interactive examples at http://leonidas.github.com/transparency/
+[Demo website](http://leonidas.github.com/transparency/) with interactive examples.
 
 ## Use it
 
