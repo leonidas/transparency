@@ -33,8 +33,13 @@ $('#template').render(hello);
 * Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
 * Compatible - Tested on IE6+, Chrome and Firefox
 
-(*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway,
-[jsperf.com](http://jsperf.com/dom-vs-innerhtml-based-templating/366) should give you an idea. 
+(*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway, jsperf.com
+should give an idea:  
+http://jsperf.com/transparency-vs-handlebars-finite-list/3  
+http://jsperf.com/transparency-vs-handlebars-infinite-list/3  
+http://jsperf.com/dom-vs-innerhtml-based-templating/366
+
+
 If interested, see other performance tests at `browser` folder. See also 
 [Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions).
 
