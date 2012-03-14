@@ -18,7 +18,7 @@
       jade: ".person\n  .firstname\n  .lastname\n  .address\n    .street\n    .zip\n      span.city"
     },
     "directives": {
-      coffee: "person =\n  firstname: 'Jasmine'\n  lastname:  'Taylor'\n  email:     'jasmine.tailor@example.com'\n\ndirectives =\n  name:         -> \"\#{@firstname} \#{@lastname}\"\n  'email@href': -> \"mailto:\#{@email}\"\n\n$('.person').render person, directives",
+      coffee: "person =\n  firstname: 'Jasmine'\n  lastname:  'Taylor'\n  email:     'jasmine.tailor@example.com'\n\ndirectives =\n  name:  -> \"\#{@firstname} \#{@lastname}\"\n  email: -> href: \"mailto:\#{@email}\"\n\n$('.person').render person, directives",
       jade: ".person\n  .name\n  a.email"
     },
     "nested-directives": {

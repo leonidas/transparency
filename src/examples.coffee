@@ -111,8 +111,8 @@ window.examples =
         email:     'jasmine.tailor@example.com'
 
       directives =
-        name:         -> "\#{@firstname} \#{@lastname}"
-        'email@href': -> "mailto:\#{@email}"
+        name:  -> "\#{@firstname} \#{@lastname}"
+        email: -> href: "mailto:\#{@email}"
 
       $('.person').render person, directives
       """
