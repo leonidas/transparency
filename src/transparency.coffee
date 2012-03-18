@@ -1,11 +1,11 @@
-jQuery?.fn.render = (models, directives) ->
-  Transparency.render this.get(), models, directives
+jQuery?.fn.render = (models, directives, regen) ->
+  Transparency.render this.get(), models, directives, regen
   this
 
 @Transparency    = Transparency = {}
 module?.exports  = Transparency
 
-Transparency.render = (contexts, models, directives) ->
+Transparency.render = (contexts, models, directives, regen) ->
   return unless contexts
   models     ||= []
   directives ||= {}
@@ -18,6 +18,10 @@ Transparency.render = (contexts, models, directives) ->
     sibling = context.nextSibling
     parent  = context.parentNode
     parent?.removeChild context
+
+    # Forget all caching for this model
+    if regen
+      context.transparency = {}
 
     # Make sure we have right amount of template instances available
     prepareContext context, models
