@@ -75,19 +75,68 @@ renderValues = (instance, model) ->
     setText(element, model) if element
 
 renderDirectives = (instance, model, directives, index) ->
+  renderFunctionDirectives instance, model, directives, index
+  renderObjectDirectives instance, model, directives, index
+
+renderFunctionDirectives = (instance, model, directives, index) ->
   for key, directiveFunction of directives when typeof directiveFunction == 'function'
 
     for element in matchingElements(instance, key)
       directive = directiveFunction.call(model, element, index)
+
+      if not directive
+        # Directive function returned no value, meaning
+        # it most likely did element in-place manipulation
+        # on element parameter
+        continue
+
       directive = text: directive if typeof directive == 'string'
 
       setText element, directive.text
       setHtml element, directive.html
+
       for attr, value of directive when attr != 'html' and attr != 'text'
+
         # Save the original attribute value for the instance reuse
+
         element.transparency.attributes       ||= {}
         element.transparency.attributes[attr] ||= element.getAttribute attr
         element.setAttribute attr, value
+
+renderObjectDirectives = (instance, model, directives, index) ->
+
+  # Support object like directives
+  for key, directive of directives when typeof directive == 'object'
+
+    for element in matchingElements(instance, key)
+
+        # Handle element body value setting
+        if directive.text
+          setText element, directive.text.call(model, element, index)
+
+        if directive.html
+          value = directive.htmt.call(model, element, index)
+          if value
+            # html() is allowed to do in-place manipulation
+            setHtml element, value
+
+        for attr, value of directive when attr != 'html' and attr != 'text'
+
+          if typeof value == 'object'
+            # Nested directive, recurse into the matched object
+            renderObjectDirectives element, model, value, index
+            continue
+
+          # Do attribute function set/call
+          if typeof value == 'string'
+            # Input given as fixed string
+          else if typeof value == 'function'
+            srcValue = element.getAttribute attr
+            value = value.call(model, srcValue, index)
+          else
+            throw new Error "Unknown nested directive"
+
+          element.setAttribute attr, value
 
 renderChildren = (instance, model, directives) ->
   for key, value of model when typeof value == 'object'
