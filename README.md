@@ -49,10 +49,14 @@ If interested, see other performance tests at `browser` folder. See also
 
 ## Use it
 
-Install with `npm install transparency` or get the 
+Get the 
 [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself 
-as a plugin.
+as a plugin. 
+
+Node users can also install via NPM:
+
+        npm install transparency  
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
