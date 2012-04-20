@@ -139,21 +139,18 @@
         <div class="container">\
           <div id="my-id"></div>\
           <div class="my-class"></div>\
-          <span></span>\
           <div data-bind="my-data"></div>\
         </div>\
       </div>');
       data = {
         'my-id': 'id-data',
         'my-class': 'class-data',
-        span: 'name-data',
         'my-data': 'data-bind'
       };
       expected = jQuery('<div>\
         <div class="container">\
           <div id="my-id">id-data</div>\
           <div class="my-class">class-data</div>\
-          <span>name-data</span>\
           <div data-bind="my-data">data-bind</div>\
         </div>\
       </div>');
