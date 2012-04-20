@@ -1,4 +1,4 @@
-# Synopsis 
+# Synopsis
 
 Transparency is a (client-side) template engine which binds data to DOM with zero configuration. Just call `.render(data)`.
 
@@ -34,13 +34,13 @@ $('#template').render(hello);
 * Compatible - Tested on IE6+, Chrome and Firefox
 
 (*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway, jsperf.com
-should give an idea:  
-http://jsperf.com/transparency-vs-handlebars-finite-list/3  
-http://jsperf.com/transparency-vs-handlebars-infinite-list/3  
+should give an idea:
+http://jsperf.com/transparency-vs-handlebars-finite-list/3
+http://jsperf.com/transparency-vs-handlebars-infinite-list/3
 http://jsperf.com/dom-vs-innerhtml-based-templating/366
 
 
-If interested, see other performance tests at `browser` folder. See also 
+If interested, see other performance tests at `browser` folder. See also
 [Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions).
 
 ## Try it
@@ -49,14 +49,14 @@ If interested, see other performance tests at `browser` folder. See also
 
 ## Use it
 
-Get the 
+Get the
 [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
-and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself 
-as a plugin. 
+and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
+as a plugin.
 
 Node users can also install via NPM:
 
-        npm install transparency  
+        npm install transparency
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
@@ -69,7 +69,7 @@ For server-side use, see `spec` folder and the awesome [jsdom](https://github.co
 
 ### Assigning values
 
-Transparency binds JavaScript objects to DOM a element by `id`, `class`,`element name`, `name` attribute and 
+Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
 `data-bind` attribute. Values are escaped before rendering.
 
 Template:
@@ -78,7 +78,6 @@ Template:
 <div id="container">
   <div id="hello"></div>
   <div class="goodbye"></div>
-  <span></span>
   <input type="text" name="greeting" />
   <button class="hi-button" data-bind="hi-label"></button>
 </div>
@@ -89,8 +88,7 @@ Javascript:
 ```js
 var hello = {
   hello:      'Hello',
-  goodbye:    'Goodbye!',
-  span:       '<i>See Ya!</i>',
+  goodbye:    '<i>Goodbye!</i>',
   greeting:   'Howdy!',
   'hi-label': 'Terve!' // Finnish i18n
 };
@@ -107,8 +105,7 @@ Result:
 ```html
 <div class="container">
   <div id="hello">Hello</div>
-  <div class="goodbye">Goodbye!</div>
-  <span>lt;i&gt;See Ya!&lt;/i&gt;</span>
+  <div class="goodbye">lt;i&gt;Goodbye!&lt;/i&gt;</div>
   <input type="text" name="greeting" value="Howdy!" />
   <button class="hi-button" data-bind="hi-label">Terve!</button>
 </div>
@@ -312,12 +309,12 @@ Result:
 
 ### Directives
 
-Directives are used for manipulating text or html values and setting element attributes. 
-In addition to having an access to the current data object through `this`, directives also receive 
+Directives are used for manipulating text or html values and setting element attributes.
+In addition to having an access to the current data object through `this`, directives also receive
 index number and current element as a parameter, which makes it easy to, e.g., add `even` and `odd` classes or
 hide elements.
 
-The return value of a directive function can be either string or object. If the return value is string, it is assigned 
+The return value of a directive function can be either string or object. If the return value is string, it is assigned
 to the matching elements as text content. If the return value is an object, keys can be either `text`, `html` or any
 valid element attribute, e.g., `class`, `src` or `href`. Values are assigned accordingly to the matching elements.
 

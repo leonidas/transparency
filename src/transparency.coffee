@@ -127,7 +127,6 @@ elementMatcher = (element, key) ->
   element.id                        == key               ||
   element.className.split(' ').indexOf(key) > -1         ||
   element.name                      == key               ||
-  element.nodeName.toLowerCase()    == key.toLowerCase() ||
   element.getAttribute('data-bind') == key
 
 ELEMENT_NODE = 1
