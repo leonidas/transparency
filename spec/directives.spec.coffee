@@ -151,3 +151,41 @@ describe "Transparency", ->
     # Render twice to make sure the class names are not duplicated
     doc.find('#persons').render(persons, directives)
     expect(doc.html()).htmlToBeEqual(expected.html())
+
+  it "should except the element has been manipulated in-place if directive functions return void", ->
+    doc = jQuery(
+     '<div>
+        <ul id="persons">
+          <li class="person"></li>
+        </ul>
+      </div>')
+
+    persons = [
+      person: "me"
+    ,
+      person: "you"
+    ,
+      person: "others"
+    ]
+
+    directives =
+      person: (elem, i) ->
+        elem = jQuery elem
+        elem.attr("foobar", "foo")
+        elem.text("daa")
+        return 
+
+    expected = jQuery(
+      '<div>
+        <ul id="persons">
+          <li class="person" foobar="foo">daa</li>
+          <li class="person" foobar="foo">daa</li>
+          <li class="person" foobar="foo">daa</li>
+        </ul>
+      </div>')
+
+    doc.find('#persons').render(persons, directives)
+
+    # Render twice to make sure the class names are not duplicated
+    doc.find('#persons').render(persons, directives)
+    expect(doc.html()).htmlToBeEqual(expected.html())
