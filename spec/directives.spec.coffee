@@ -183,7 +183,7 @@ describe "Transparency", ->
           <li class="person" foobar="foo">daa</li>
         </ul>
       </div>')
-    debugger;
+
     doc.find('#persons').render(persons, directives)
 
     # Render twice to make sure the class names are not duplicated
