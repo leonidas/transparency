@@ -450,6 +450,8 @@ Run tests during development for more verbose assertion output
 Generate Javascript libs
 
     cake build
+    
+Use [debugger statement to debug spec scripts](http://bytes.goodeggsinc.com/post/11587373922/debugging-jasmine-node-and-coffeescript-specs).
 
 ## Contributing
 
