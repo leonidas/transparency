@@ -79,6 +79,13 @@ renderDirectives = (instance, model, directives, index) ->
 
     for element in matchingElements(instance, key)
       directive = directiveFunction.call(model, element, index)
+
+      if not directive
+        # Directive function returned no value, meaning
+        # it most likely did element in-place manipulation
+        # on element parameter
+        continue
+
       directive = text: directive if typeof directive == 'string'
 
       setText element, directive.text
