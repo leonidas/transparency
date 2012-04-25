@@ -1,10 +1,10 @@
 if typeof module != 'undefined' && module.exports
   require './spec_helper'
-  require '../src/transparency'
+  window.Transparency = Transparency = require '../src/transparency'
 
 describe "Transparency", ->
 
-  it "should handle list of objects", ->
+  it "should render list of objects", ->
     doc = jQuery(
      '<div>
         <div class="comments">
@@ -34,10 +34,10 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
-    expect(doc.find('.comment').get(0).transparency.model).toEqual(data[0])
+    expect(window.Transparency.data(doc.find('.comment').get(0)).model).toEqual(data[0])
     expectModelObjects doc.find('.comment'), data
 
-  it "should handle empty lists", ->
+  it "should render empty lists", ->
     doc = jQuery(
      '<div>
         <div class="comments">
@@ -57,6 +57,31 @@ describe "Transparency", ->
       </div>')
 
     doc.find('.comments').render(data)
+    expect(doc.html()).htmlToBeEqual(expected.html())
+
+  # Fails with IE8
+  it "should render lists with duplicate content", ->
+    doc = jQuery(
+     '<div>
+        <div id="items">
+          <div class="name"></div>
+        </div>
+      </div>')
+
+    data = [
+      name: "Same"
+    , name: "Same"
+    ]
+
+    expected = jQuery(
+     '<div>
+        <div id="items">
+          <div class="name">Same</div>
+          <div class="name">Same</div>
+        </div>
+      </div>')
+
+    doc.find('#items').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
 
   it "should render list containing simple values", ->
@@ -192,4 +217,4 @@ describe "Transparency", ->
 
 expectModelObjects = (elements, data) ->
   for object, i in data
-    expect(elements.get(i).transparency.model).toEqual(object)
+    expect(window.Transparency.data(elements.get(i)).model).toEqual(object)

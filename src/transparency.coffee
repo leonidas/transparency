@@ -1,15 +1,31 @@
 jQuery?.fn.render = (models, directives) ->
-  Transparency.render this.get(), models, directives
+  T.render this.get(), models, directives
   this
 
-@Transparency    = Transparency = {}
-module?.exports  = Transparency
+# Export for browsers
+@Transparency = Transparency = {}
 
-Transparency.render = (contexts, models, directives) ->
+# Export for Node.js
+module?.exports = Transparency
+
+# For internal use
+T = Transparency
+
+# Simple jQuery.data implementation, as extending DOM elements directly with expando objects leads to bugs and memory leaks on IE
+# http://perfectionkills.com/whats-wrong-with-extending-the-dom/
+expando = "transparency-" + Math.random()
+uid     = 0
+cache   = {}
+
+T.data = (element) ->
+  id  = element[expando] ?= uid++
+  val = cache[id] ||= {}
+
+T.render = (contexts, models, directives) ->
   return unless contexts
   models     ||= []
   directives ||= {}
-  # Context may be NodeList. Clone it to Array
+  # Context may be a NodeList. Clone it to Array
   contexts     = if contexts.length? and contexts[0] then (c for c in contexts) else [contexts]
   models       = [models] unless Array.isArray models
 
@@ -23,12 +39,13 @@ Transparency.render = (contexts, models, directives) ->
     prepareContext context, models
 
     # Render each model to its template instance
+    contextData = T.data context
     for model, index in models
-      instance = context.transparency.instances[index]
+      instance = contextData.instances[index]
 
       # Associate model with instance elements
       for e in instance.elements
-        e.transparency.model = model
+        T.data(e).model = model
 
       renderValues      instance, model
       renderDirectives  instance, model, directives, index
@@ -39,32 +56,29 @@ Transparency.render = (contexts, models, directives) ->
   return contexts
 
 prepareContext = (context, models) ->
-  # Extend context element with transparency hash to store the template elements and cached instances
-  context.transparency                ||= {}
-  context.transparency.template       ||= (context.removeChild context.firstChild while context.firstChild)
-  context.transparency.templateCache  ||= [] # Query-cached templates are precious, so save them for the future
-  context.transparency.instances      ||= [] # Currently used template instances
+  contextData                 = T.data context
+  contextData.template      ||= (context.removeChild context.firstChild while context.firstChild)
+  contextData.instanceCache ||= [] # Query-cached template instances are precious, so save them for the future
+  contextData.instances     ||= [] # Currently used template instances
 
   # Get templates from the cache or clone new ones, if the cache is empty.
-  while models.length > context.transparency.instances.length
-    instance = context.transparency.templateCache.pop() ||
-      {
-        queryCache: {}
-        template:   (template = (n.cloneNode true for n in context.transparency.template))
-        elements:   elementNodes template
-      }
+  while models.length > contextData.instances.length
+    instance              = contextData.instanceCache.pop() || {}
+    instance.queryCache ||= {}
+    instance.template   ||= (n.cloneNode true for n in contextData.template)
+    instance.elements   ||= elementNodes instance.template
     (context.appendChild n) for n in instance.template
-    context.transparency.instances.push instance
+    contextData.instances.push instance
 
   # Remove leftover templates from DOM and save them to the cache for later use.
-  while models.length < context.transparency.instances.length
-    context.transparency.templateCache.push instance = context.transparency.instances.pop()
+  while models.length < contextData.instances.length
+    contextData.instanceCache.push instance = contextData.instances.pop()
     (n.parentNode.removeChild n) for n in instance.template
 
-  # Return the original attribute values
-  for instance in context.transparency.instances
+  # Restore the original attribute values
+  for instance in contextData.instances
     for e in instance.elements
-      (e.setAttribute attr, value) for attr, value of e.transparency.attributes
+      (e.setAttribute attr, value) for attr, value of T.data(e).attributes
 
 renderValues = (instance, model) ->
   if typeof model == 'object'
@@ -84,24 +98,26 @@ renderDirectives = (instance, model, directives, index) ->
       setText element, directive.text
       setHtml element, directive.html
       for attr, value of directive when attr != 'html' and attr != 'text'
-        # Save the original attribute value for the instance reuse
-        element.transparency.attributes       ||= {}
-        element.transparency.attributes[attr] ||= element.getAttribute attr
+        # Save the original attribute values, so they can be restored when the instance is reused
+        elementData = T.data element
+        elementData.attributes       ||= {}
+        elementData.attributes[attr] ||= element.getAttribute attr
         element.setAttribute attr, value
 
 renderChildren = (instance, model, directives) ->
   for key, value of model when typeof value == 'object'
-    Transparency.render element, value, directives[key] for element in matchingElements(instance, key)
+    T.render element, value, directives[key] for element in matchingElements(instance, key)
 
 setContent = (callback) ->
   (e, content) ->
-    return if !e or !content? or e.transparency.content == content
-    e.transparency.content    = content
-    e.transparency.children ||= (n for n in e.childNodes when n.nodeType == ELEMENT_NODE)
+    eData = T.data(e)
+    return if !e or !content? or eData.content == content
+    eData.content    = content
+    eData.children ||= (n for n in e.childNodes when n.nodeType == ELEMENT_NODE)
 
     (e.removeChild e.firstChild) while e.firstChild
     callback e, content
-    (e.appendChild c) for c in e.transparency.children
+    (e.appendChild c) for c in eData.children
 
 setHtml = setContent (e, html) -> e.innerHTML = html
 setText = setContent (e, text) ->
@@ -116,10 +132,8 @@ matchingElements = (instance, key) ->
 elementNodes = (template) ->
   elements = []
   for e in template when e.nodeType == ELEMENT_NODE
-    e.transparency ||= {}
     elements.push e
     for child in e.getElementsByTagName '*'
-      child.transparency ||= {}
       elements.push child
   elements
 
