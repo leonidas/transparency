@@ -65,7 +65,7 @@ prepareContext = (context, models) ->
   while models.length > contextData.instances.length
     instance              = contextData.instanceCache.pop() || {}
     instance.queryCache ||= {}
-    instance.template   ||= (n.cloneNode true for n in contextData.template)
+    instance.template   ||= (clone n for n in contextData.template when n?.nodeType == ELEMENT_NODE)
     instance.elements   ||= elementNodes instance.template
     (context.appendChild n) for n in instance.template
     contextData.instances.push instance
@@ -131,7 +131,7 @@ matchingElements = (instance, key) ->
 
 elementNodes = (template) ->
   elements = []
-  for e in template when e.nodeType == ELEMENT_NODE
+  for e in template when e?.nodeType == ELEMENT_NODE
     elements.push e
     for child in e.getElementsByTagName '*'
       elements.push child
@@ -144,6 +144,19 @@ elementMatcher = (element, key) ->
   element.getAttribute('data-bind') == key
 
 ELEMENT_NODE = 1
+
+# IE8 <= fails to clone detached nodes properly. See jQuery.clone for the details
+# jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
+# jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
+clone = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
+    (node) -> node.cloneNode true
+  else
+    (node) ->
+      div = document.createElement "div"
+      div.innerHTML = node.outerHTML;
+      # In IE property == attribute. Remove the expando attribute, otherwise the original and the cloned element would share the Transparency data object
+      div.firstChild?.removeAttribute expando
+      div.firstChild
 
 # Browser compatibility
 Array::indexOf ?= (s) ->
