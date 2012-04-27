@@ -11,15 +11,9 @@ module?.exports = Transparency
 # For internal use
 T = Transparency
 
-# Simple jQuery.data implementation, as extending DOM elements directly with expando objects leads to bugs and memory leaks on IE
-# http://perfectionkills.com/whats-wrong-with-extending-the-dom/
-expando = "transparency-" + Math.random()
-uid     = 0
-cache   = {}
-
-T.data = (element) ->
-  id  = element[expando] ?= uid++
-  val = cache[id] ||= {}
+expando = 'transparency'
+T.data  = (element) ->
+  element[expando] ||= {}
 
 T.render = (contexts, models, directives) ->
   return unless contexts
@@ -65,7 +59,7 @@ prepareContext = (context, models) ->
   while models.length > contextData.instances.length
     instance              = contextData.instanceCache.pop() || {}
     instance.queryCache ||= {}
-    instance.template   ||= (clone n for n in contextData.template when n?.nodeType == ELEMENT_NODE)
+    instance.template   ||= (clone n for n in contextData.template when n.nodeType == ELEMENT_NODE)
     instance.elements   ||= elementNodes instance.template
     (context.appendChild n) for n in instance.template
     contextData.instances.push instance
@@ -131,7 +125,7 @@ matchingElements = (instance, key) ->
 
 elementNodes = (template) ->
   elements = []
-  for e in template when e?.nodeType == ELEMENT_NODE
+  for e in template when e.nodeType == ELEMENT_NODE
     elements.push e
     for child in e.getElementsByTagName '*'
       elements.push child
@@ -144,6 +138,8 @@ elementMatcher = (element, key) ->
   element.getAttribute('data-bind') == key
 
 ELEMENT_NODE = 1
+
+# Browser compatibility shims
 
 # IE8 <= fails to clone detached nodes properly. See jQuery.clone for the details
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
@@ -158,10 +154,10 @@ clone = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:
       div.firstChild?.removeAttribute expando
       div.firstChild
 
-# Browser compatibility
-Array::indexOf ?= (s) ->
+# http://stackoverflow.com/questions/1744310/how-to-fix-array-indexof-in-javascript-for-ie-browsers
+Array::indexOf ?= (obj) ->
   index = -1
-  for x, i in this when x == s
+  for x, i in this when x == obj
     index = i
     break
   index
