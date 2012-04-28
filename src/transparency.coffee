@@ -59,7 +59,7 @@ prepareContext = (context, models) ->
   while models.length > contextData.instances.length
     instance              = contextData.instanceCache.pop() || {}
     instance.queryCache ||= {}
-    instance.template   ||= (clone n for n in contextData.template when n.nodeType == ELEMENT_NODE)
+    instance.template   ||= (cloneNode n for n in contextData.template when n.nodeType == ELEMENT_NODE)
     instance.elements   ||= elementNodes instance.template
     (context.appendChild n) for n in instance.template
     contextData.instances.push instance
@@ -120,9 +120,6 @@ setText = setContent (e, text) ->
   else
     e.appendChild e.ownerDocument.createTextNode text
 
-matchingElements = (instance, key) ->
-  instance.queryCache[key] ||= (e for e in instance.elements when elementMatcher e, key)
-
 elementNodes = (template) ->
   elements = []
   for e in template when e.nodeType == ELEMENT_NODE
@@ -130,6 +127,9 @@ elementNodes = (template) ->
     for child in e.getElementsByTagName '*'
       elements.push child
   elements
+
+matchingElements = (instance, key) ->
+  instance.queryCache[key] ||= (e for e in instance.elements when elementMatcher e, key)
 
 elementMatcher = (element, key) ->
   element.id                        == key               ||
@@ -144,14 +144,16 @@ ELEMENT_NODE = 1
 # IE8 <= fails to clone detached nodes properly. See jQuery.clone for the details
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
 # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
-clone = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
+cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
     (node) -> node.cloneNode true
   else
     (node) ->
       div = document.createElement "div"
       div.innerHTML = node.outerHTML;
-      # In IE property == attribute. Remove the expando attribute, otherwise the original and the cloned element would share the Transparency data object
-      div.firstChild?.removeAttribute expando
+      # In IE expando property == attribute (IE8 and below). Attributes are copied from the original element to the clone.
+      # Remove the expando attribute from the copy, otherwise the original and the cloned element would share the Transparency data object
+      # http://msdn.microsoft.com/en-us/library/ie/gg622931(v=vs.85).aspx
+      div.firstChild.removeAttribute expando
       div.firstChild
 
 # http://stackoverflow.com/questions/1744310/how-to-fix-array-indexof-in-javascript-for-ie-browsers
@@ -163,6 +165,6 @@ Array::indexOf ?= (obj) ->
   index
 
 # http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/
-Array.isArray ?= (ob) ->
-  Object.prototype.toString.call(ob) == '[object Array]'
+Array.isArray ?= (obj) ->
+  Object.prototype.toString.call(obj) == '[object Array]'
 
