@@ -13,6 +13,9 @@ T = Transparency
 
 expando = 'transparency'
 T.data  = (element) ->
+  # Expanding DOM element with a JS object is generally unsafe.
+  # However, as references to expanded DOM elements are never lost, no memory leaks are introduced
+  # http://perfectionkills.com/whats-wrong-with-extending-the-dom/
   element[expando] ||= {}
 
 T.render = (contexts, models, directives) ->
@@ -160,6 +163,7 @@ cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav
       # In IE expando property == attribute (IE8 and below). Attributes are copied from the original element to the clone.
       # Remove the expando attribute from the copy, otherwise the original and the cloned element would share the Transparency data object
       # http://msdn.microsoft.com/en-us/library/ie/gg622931(v=vs.85).aspx
+      # http://webreflection.blogspot.com/2009/04/divexpando-null-or-divremoveattributeex.html
       div.firstChild.removeAttribute expando
       div.firstChild
 
