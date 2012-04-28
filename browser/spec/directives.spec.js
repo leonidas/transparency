@@ -122,7 +122,7 @@
       doc.find('.person').render(person, directives);
       return expect(doc.html()).htmlToBeEqual(expected.html());
     });
-    return it("should restore the original attributes", function() {
+    it("should restore the original attributes", function() {
       var directives, doc, expected, persons;
       doc = jQuery('<div>\
         <ul id="persons">\
@@ -152,6 +152,41 @@
           <li class="person even">others</li>\
         </ul>\
       </div>');
+      doc.find('#persons').render(persons, directives);
+      doc.find('#persons').render(persons, directives);
+      return expect(doc.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should except the element has been manipulated in-place if directive functions return void", function() {
+      var directives, doc, expected, persons;
+      doc = jQuery('<div>\
+        <ul id="persons">\
+          <li class="person"></li>\
+        </ul>\
+      </div>');
+      persons = [
+        {
+          person: "me"
+        }, {
+          person: "you"
+        }, {
+          person: "others"
+        }
+      ];
+      directives = {
+        person: function(elem, i) {
+          elem = jQuery(elem);
+          elem.attr("foobar", "foo");
+          elem.text("daa");
+        }
+      };
+      expected = jQuery('<div>\
+        <ul id="persons">\
+          <li class="person" foobar="foo">daa</li>\
+          <li class="person" foobar="foo">daa</li>\
+          <li class="person" foobar="foo">daa</li>\
+        </ul>\
+      </div>');
+      debugger;
       doc.find('#persons').render(persons, directives);
       doc.find('#persons').render(persons, directives);
       return expect(doc.html()).htmlToBeEqual(expected.html());
