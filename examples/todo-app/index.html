@@ -14,12 +14,12 @@
       <input type="text" name="task" />
       <input type="submit" value="Add" />
     </form>
-    <table id="tasks">
-      <tr>
-        <td class="task"></td>
-        <td><a class="delete" href="#">delete</a></td>
-      </tr>
-    </table>
+
+
+
+    <ul id="tasks">
+      <li><span class="task"></span>&nbsp;<a class="delete" href="#">delete</a></li>
+    </ul>
 
     <script type="text/coffeescript">
       data = [{task: "Foo"}, {task: "Bar"}]
