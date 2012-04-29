@@ -173,7 +173,7 @@ describe "Transparency", ->
         elem = jQuery elem
         elem.attr("foobar", "foo")
         elem.text("daa")
-        return 
+        return
 
     expected = jQuery(
       '<div>
@@ -183,7 +183,6 @@ describe "Transparency", ->
           <li class="person" foobar="foo">daa</li>
         </ul>
       </div>')
-    debugger;
     doc.find('#persons').render(persons, directives)
 
     # Render twice to make sure the class names are not duplicated

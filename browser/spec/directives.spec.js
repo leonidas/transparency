@@ -186,7 +186,6 @@
           <li class="person" foobar="foo">daa</li>\
         </ul>\
       </div>');
-      debugger;
       doc.find('#persons').render(persons, directives);
       doc.find('#persons').render(persons, directives);
       return expect(doc.html()).htmlToBeEqual(expected.html());
