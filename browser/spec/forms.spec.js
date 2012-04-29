@@ -1,15 +1,14 @@
 (function() {
-  var Transparency;
 
   if (typeof module !== 'undefined' && module.exports) {
     require('./spec_helper');
-    Transparency = require('../src/transparency');
+    window.Transparency = require('../src/transparency');
   }
 
   describe("Transparency", function() {
     it("should render values to form inputs and textarea elements", function() {
       var data, doc, expected;
-      doc = document.createElement('form');
+      doc = document.createElement('div');
       doc.innerHTML = '<input name="name" type="text" />\
       <input name="job" type="text" />\
       <textarea name="resume"></textarea>';
@@ -18,14 +17,14 @@
         job: 'Milkman',
         resume: "Jack of all trades"
       };
-      expected = document.createElement('form');
+      expected = document.createElement('div');
       expected.innerHTML = '<input name="name" type="text" value="John"/>\
       <input name="job" type="text" value="Milkman"/>\
       <textarea name="resume">Jack of all trades</textarea>';
-      Transparency.render(doc, data);
+      jQuery(doc).render(data);
       return expect(doc.innerHTML).htmlToBeEqual(expected.innerHTML);
     });
-    return it("should render values to option elements", function() {
+    it("should render values to option elements", function() {
       var data, directives, doc, expected;
       doc = document.createElement('form');
       doc.innerHTML = '\
@@ -62,8 +61,43 @@
           <option class="state" value="3">Arizona</option>\
         </select>\
       </form>');
-      Transparency.render(doc, data, directives);
+      jQuery(doc).render(data, directives);
       return expect(doc.innerHTML).htmlToBeEqual(expected.html());
+    });
+    return it("should handle nested options", function() {
+      var data, doc, expected;
+      doc = jQuery('<div>\
+        <div class="container">\
+          <h1 class="title"></h1>\
+          <p class="post"></p>\
+          <select class="comments">\
+            <option class="comment">test</option>\
+          </select>\
+        </div>\
+      </div>');
+      data = {
+        title: 'Hello World',
+        post: 'Hi there it is me',
+        comments: [
+          {
+            comment: 'John'
+          }, {
+            comment: 'Arnold'
+          }
+        ]
+      };
+      expected = jQuery('<div>\
+        <div class="container">\
+          <h1 class="title">Hello World</h1>\
+          <p class="post">Hi there it is me</p>\
+          <select class="comments">\
+            <option class="comment">John</option>\
+            <option class="comment">Arnold</option>\
+          </select>\
+        </div>\
+      </div>');
+      doc.find('.container').render(data);
+      return expect(doc.html()).htmlToBeEqual(expected.html());
     });
   });
 
