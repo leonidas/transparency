@@ -421,7 +421,23 @@ Result:
   </div>
 </div>
 ```
-.
+
+## Debugging templates, data and Transparency
+
+http://leonidas.github.com/transparency/ is great place to fiddle around with your data and templates.
+
+To enable debug mode, open the javascript console in your browser and write 
+`Transparency.debug = true <press enter>`. Modify the data or the template to trigger rendering and 
+review the debug messages.
+
+To debug your own site, just call `Transparency.debug = true` before rendering the problematic template. 
+Afterwards, the debug messages can be disabled again to avoid unnecessary messages.
+
+```javascript
+Transparency.debug = true;
+$('container').render(data);
+Transparency.debug = false;
+```
 
 ## Getting help
 
