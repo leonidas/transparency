@@ -1,6 +1,6 @@
 if typeof module != 'undefined' && module.exports
   require './spec_helper'
-  Transparency = require '../src/transparency'
+  window.Transparency = require '../src/transparency'
 
 describe "Transparency", ->
 
