@@ -48,17 +48,15 @@ describe "Transparency", ->
       states:
         state: () -> value: @id
 
-    expected = jQuery(
-     '<form
-        <select id="states">
-          <option class="state" value="1">Alabama</option>
-          <option class="state" value="2">Alaska</option>
-          <option class="state" value="3">Arizona</option>
-        </select>
-      </form>')
+    expected = '
+      <select id="states">
+        <option class="state" value="1">Alabama</option>
+        <option class="state" value="2">Alaska</option>
+        <option class="state" value="3">Arizona</option>
+      </select>'
 
     jQuery(doc).render data, directives
-    expect(doc.innerHTML).htmlToBeEqual(expected.html())
+    expect(doc.innerHTML).htmlToBeEqual(expected)
 
   it "should handle nested options", ->
     doc = jQuery(

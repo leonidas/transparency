@@ -54,15 +54,14 @@
           }
         }
       };
-      expected = jQuery('<form\
-        <select id="states">\
-          <option class="state" value="1">Alabama</option>\
-          <option class="state" value="2">Alaska</option>\
-          <option class="state" value="3">Arizona</option>\
-        </select>\
-      </form>');
+      expected = '\
+      <select id="states">\
+        <option class="state" value="1">Alabama</option>\
+        <option class="state" value="2">Alaska</option>\
+        <option class="state" value="3">Arizona</option>\
+      </select>';
       jQuery(doc).render(data, directives);
-      return expect(doc.innerHTML).htmlToBeEqual(expected.html());
+      return expect(doc.innerHTML).htmlToBeEqual(expected);
     });
     return it("should handle nested options", function() {
       var data, doc, expected;
