@@ -19,6 +19,7 @@ T.data  = (element) ->
   element[expando] ||= {}
 
 T.render = (context, models, directives) ->
+  debug "Context", context, "Models", models, "Directives", directives
   return unless context
   models     ||= []
   directives ||= {}
@@ -36,6 +37,7 @@ T.render = (context, models, directives) ->
   contextData = T.data context
   for model, index in models
     instance = contextData.instances[index]
+    debug "Model", model, "Template instance", instance
 
     # Associate model with instance elements
     for e in instance.elements
@@ -45,7 +47,7 @@ T.render = (context, models, directives) ->
     renderDirectives  instance, model, directives, index
     renderChildren    instance, model, directives
 
-  # Finally, put the context element back to it's original place in DOM
+  # Finally, put the context element back to its original place in DOM
   if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
   context
 
@@ -54,6 +56,7 @@ prepareContext = (context, models) ->
   contextData.template      ||= (context.removeChild context.firstChild while context.firstChild)
   contextData.instanceCache ||= [] # Query-cached template instances are precious, so save them for the future
   contextData.instances     ||= [] # Currently used template instances
+  debug "Template", contextData.template
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while models.length > contextData.instances.length
@@ -136,13 +139,18 @@ elementNodes = (template) ->
   elements
 
 matchingElements = (instance, key) ->
-  instance.queryCache[key] ||= (e for e in instance.elements when elementMatcher e, key)
+  elements = instance.queryCache[key] ||= (e for e in instance.elements when elementMatcher e, key)
+  debug "Matching elements for '#{key}'", elements
+  elements
 
 elementMatcher = (element, key) ->
   element.id                        == key               ||
   element.className.split(' ').indexOf(key) > -1         ||
   element.name                      == key               ||
   element.getAttribute('data-bind') == key
+
+debug = (messages...) ->
+  console?.log m for m in messages if T.debug
 
 ELEMENT_NODE = 1
 
