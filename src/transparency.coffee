@@ -1,5 +1,5 @@
 jQuery?.fn.render = (models, directives) ->
-  T.render this.get(), models, directives
+  (T.render t, models, directives) for t in this
   this
 
 # Export for browsers
@@ -18,39 +18,36 @@ T.data  = (element) ->
   # http://perfectionkills.com/whats-wrong-with-extending-the-dom/
   element[expando] ||= {}
 
-T.render = (contexts, models, directives) ->
-  return unless contexts
+T.render = (context, models, directives) ->
+  return unless context
   models     ||= []
   directives ||= {}
-  # Context may be a NodeList. Clone it to Array
-  contexts     = if contexts.length? and contexts[0] then (c for c in contexts) else [contexts]
   models       = [models] unless Array.isArray models
 
-  for context in contexts
-    # DOM manipulation is a lot faster when elements are detached. Save the original position, so we can put the context back to it's place.
-    sibling = context.nextSibling
-    parent  = context.parentNode
-    parent?.removeChild context
+  # DOM manipulation is a lot faster when elements are detached. Save the original position, so we can put the context back to it's place.
+  sibling = context.nextSibling
+  parent  = context.parentNode
+  parent?.removeChild context
 
-    # Make sure we have right amount of template instances available
-    prepareContext context, models
+  # Make sure we have right amount of template instances available
+  prepareContext context, models
 
-    # Render each model to its template instance
-    contextData = T.data context
-    for model, index in models
-      instance = contextData.instances[index]
+  # Render each model to its template instance
+  contextData = T.data context
+  for model, index in models
+    instance = contextData.instances[index]
 
-      # Associate model with instance elements
-      for e in instance.elements
-        T.data(e).model = model
+    # Associate model with instance elements
+    for e in instance.elements
+      T.data(e).model = model
 
-      renderValues      instance, model
-      renderDirectives  instance, model, directives, index
-      renderChildren    instance, model, directives
+    renderValues      instance, model
+    renderDirectives  instance, model, directives, index
+    renderChildren    instance, model, directives
 
-    # Finally, put the context element back to it's original place in DOM
-    if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
-  return contexts
+  # Finally, put the context element back to it's original place in DOM
+  if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
+  context
 
 prepareContext = (context, models) ->
   contextData                 = T.data context
