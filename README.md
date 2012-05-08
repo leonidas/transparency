@@ -426,17 +426,10 @@ Result:
 
 http://leonidas.github.com/transparency/ is great place to fiddle around with your data and templates.
 
-To enable debug mode, open the javascript console in your browser and write 
-`Transparency.debug = true <press enter>`. Modify the data or the template to trigger rendering and 
-review the debug messages.
-
-To debug your own site, just call `Transparency.debug = true` before rendering the problematic template. 
-Afterwards, the debug messages can be disabled again to avoid unnecessary messages.
+To enable debug mode, call `.render` with a `{debug: true}` config and open the javascript console.
 
 ```javascript
-Transparency.debug = true;
-$('container').render(data);
-Transparency.debug = false;
+$('container').render(data, {}, {debug: true});
 ```
 
 ## Getting help
@@ -466,7 +459,7 @@ Run tests during development for more verbose assertion output
 Generate Javascript libs
 
     cake build
-    
+
 Use [debugger statement to debug spec scripts](http://bytes.goodeggsinc.com/post/11587373922/debugging-jasmine-node-and-coffeescript-specs).
 
 ## Contributing

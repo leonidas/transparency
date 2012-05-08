@@ -1,5 +1,5 @@
-jQuery?.fn.render = (models, directives) ->
-  (T.render t, models, directives) for t in this
+jQuery?.fn.render = (models, directives, config) ->
+  (T.render t, models, directives, config) for t in this
   this
 
 # Export for browsers
@@ -18,8 +18,16 @@ T.data  = (element) ->
   # http://perfectionkills.com/whats-wrong-with-extending-the-dom/
   element[expando] ||= {}
 
-T.render = (context, models, directives) ->
-  debug "Context", context, "Models", models, "Directives", directives
+debug     = null
+debugMode = (debug) ->
+  if debug and console?
+    (messages...) -> console.log m for m in messages
+  else
+    () ->
+
+T.render = (context, models, directives, config) ->
+  debug = debugMode config?.debug
+  debug "Context", context, "Models", models, "Directives", directives, "Config", config
   return unless context
   models     ||= []
   directives ||= {}
@@ -148,9 +156,6 @@ elementMatcher = (element, key) ->
   element.className.split(' ').indexOf(key) > -1         ||
   element.name                      == key               ||
   element.getAttribute('data-bind') == key
-
-debug = (messages...) ->
-  console?.log m for m in messages if T.debug
 
 ELEMENT_NODE = 1
 
