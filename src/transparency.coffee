@@ -198,6 +198,7 @@ Array::isArray ?= (obj) ->
 isDate = (obj) ->
   Object.prototype.toString.call(obj) == '[object Date]'
 
+# https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/toISOString
 pad = (n) ->
   if n < 10 then "0#{n}" else n.toString()
 
