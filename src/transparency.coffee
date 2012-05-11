@@ -1,5 +1,5 @@
 jQuery?.fn.render = (models, directives, config) ->
-  (T.render t, models, directives, config) for t in this
+  T.render context, models, directives, config for context in this
   this
 
 # Export for browsers
@@ -27,7 +27,7 @@ debugMode = (debug) ->
 
 T.render = (context, models, directives, config) ->
   debug = debugMode config?.debug
-  debug "Context", context, "Models", models, "Directives", directives, "Config", config
+  debug "Context:", context, "Models:", models, "Directives:", directives, "Config:", config
   return unless context
   models     ||= []
   directives ||= {}
@@ -45,7 +45,7 @@ T.render = (context, models, directives, config) ->
   contextData = T.data context
   for model, index in models
     instance = contextData.instances[index]
-    debug "Model", model, "Template instance", instance
+    debug "Model:", model, "Template instance for the model:", instance
 
     # Associate model with instance elements
     for e in instance.elements
@@ -64,7 +64,7 @@ prepareContext = (context, models) ->
   contextData.template      ||= (context.removeChild context.firstChild while context.firstChild)
   contextData.instanceCache ||= [] # Query-cached template instances are precious, so save them for the future
   contextData.instances     ||= [] # Currently used template instances
-  debug "Template", contextData.template
+  debug "Original template", contextData.template
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while models.length > contextData.instances.length
@@ -148,7 +148,7 @@ elementNodes = (template) ->
 
 matchingElements = (instance, key) ->
   elements = instance.queryCache[key] ||= (e for e in instance.elements when elementMatcher e, key)
-  debug "Matching elements for '#{key}'", elements
+  debug "Matching elements for '#{key}':", elements
   elements
 
 elementMatcher = (element, key) ->
@@ -170,7 +170,7 @@ cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav
     (node) ->
       div = document.createElement "div"
       div.innerHTML = node.outerHTML;
-      # In IE expando property == attribute (IE8 and below). Attributes are copied from the original element to the clone.
+      # In IE expando property == attribute (IE8 and below) and attributes are copied from the original element to the cloned one.
       # Remove the expando attribute from the copy, otherwise the original and the cloned element would share the Transparency data object
       # http://msdn.microsoft.com/en-us/library/ie/gg622931(v=vs.85).aspx
       # http://webreflection.blogspot.com/2009/04/divexpando-null-or-divremoveattributeex.html
