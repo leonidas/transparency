@@ -87,8 +87,13 @@ prepareContext = (context, models) ->
 
 renderValues = (instance, model) ->
   if typeof model == 'object'
-    for key, value of model when (typeof value != 'object' && typeof value != 'function')
-      setText(element, value) for element in matchingElements(instance, key)
+    for key, value of model
+      value = value.toISOString() if isDate value
+
+      if typeof value != 'object' and typeof value != 'function'
+        setText(element, value) for element in matchingElements(instance, key)
+
+  # No models, just plain values
   else
     element = matchingElements(instance, 'listElement')[0] || instance.elements[0]
     setText(element, model) if element
@@ -186,6 +191,17 @@ Array::indexOf ?= (obj) ->
   index
 
 # http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/
-Array.isArray ?= (obj) ->
+Array::isArray ?= (obj) ->
   Object.prototype.toString.call(obj) == '[object Array]'
+
+# https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
+isDate = (obj) ->
+  Object.prototype.toString.call(obj) == '[object Date]'
+
+pad = (n) ->
+  if n < 10 then "0#{n}" else n.toString()
+
+Date::toISOString ?= ->
+  @getUTCFullYear() + "-" + pad(@getUTCMonth() + 1) + "-" + pad(@getUTCDate()) + "T" + pad(@getUTCHours()) + ":" + pad(@getUTCMinutes()) + ":" + pad(@getUTCSeconds()) + "." + String((@getUTCMilliseconds() / 1000).toFixed(3)).slice(2, 5) + "Z"
+
 

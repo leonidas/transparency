@@ -143,6 +143,25 @@ describe "Transparency", ->
     template.render data
     expect(template.html()).htmlToBeEqual expected.html()
 
+  it "should work with date objects", ->
+    template = $ """
+      <div class="container">
+        <div class="best_before"></div>
+      </div>
+      """
+
+    data =
+      best_before: new Date "2008-04-12"
+
+    expected = $ """
+      <div class="container">
+        <div class="best_before">2008-04-12T00:00:00.000Z</div>
+      </div>
+      """
+
+    template.render data
+    expect(template.html()).htmlToBeEqual expected.html()
+
   it "should ignore functions in models", ->
     template = $ """
       <div class="container">
