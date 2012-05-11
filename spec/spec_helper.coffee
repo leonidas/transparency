@@ -1,10 +1,3 @@
-if typeof module != 'undefined' && module.exports
-  jsdom           = require('jsdom/lib/jsdom').jsdom
-  global.document = jsdom "<html><head></head><body>hello world</body></html>"
-  global.window   = document.createWindow()
-  jsdom           = require 'jsdom'
-  global.jQuery   = require 'jquery'
-
 beforeEach ->
   this.addMatchers
     htmlToBeEqual: (expected) ->
