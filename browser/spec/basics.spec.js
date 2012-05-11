@@ -77,7 +77,7 @@
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
-    return it("should ignore functions in models", function() {
+    it("should ignore functions in models", function() {
       var data, expected, template;
       template = $("<div class=\"container\">\n  <div class=\"hello\"></div>\n  <div class=\"goodbye\"></div>\n  <div class=\"skipped\"></div>\n</div>");
       data = {
@@ -88,6 +88,17 @@
         }
       };
       expected = $("<div class=\"container\">\n  <div class=\"hello\">Hello</div>\n  <div class=\"goodbye\">5</div>\n  <div class=\"skipped\"></div>\n</div>");
+      template.render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should preserve text between template elements", function() {
+      var data, expected, template;
+      template = $("<li class=\"foo\">\n<span data-bind=\"begin\"></span> - <span data-bind=\"end\"></span>\n</li>");
+      data = {
+        begin: 'asdf',
+        end: 'fdsa'
+      };
+      expected = $("<li class=\"foo\">\n<span data-bind=\"begin\">asdf</span> - <span data-bind=\"end\">fdsa</span>\n</li>");
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });

@@ -70,7 +70,7 @@ prepareContext = (context, models) ->
   while models.length > contextData.instances.length
     instance              = contextData.instanceCache.pop() || {}
     instance.queryCache ||= {}
-    instance.template   ||= (cloneNode n for n in contextData.template when n.nodeType == ELEMENT_NODE)
+    instance.template   ||= (cloneNode n for n in contextData.template)
     instance.elements   ||= elementNodes instance.template
     (context.appendChild n) for n in instance.template
     contextData.instances.push instance

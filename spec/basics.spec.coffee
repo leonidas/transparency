@@ -158,12 +158,32 @@ describe "Transparency", ->
       skipped: () -> "hello"
 
     expected = $ """
-        <div class="container">
-          <div class="hello">Hello</div>
-          <div class="goodbye">5</div>
-          <div class="skipped"></div>
-        </div>
-        """
+      <div class="container">
+        <div class="hello">Hello</div>
+        <div class="goodbye">5</div>
+        <div class="skipped"></div>
+      </div>
+      """
+
+    template.render data
+    expect(template.html()).htmlToBeEqual expected.html()
+
+  it "should preserve text between template elements", ->
+    template = $ """
+      <li class="foo">
+      <span data-bind="begin"></span> - <span data-bind="end"></span>
+      </li>
+      """
+
+    data =
+      begin: 'asdf'
+      end:   'fdsa'
+
+    expected = $ """
+      <li class="foo">
+      <span data-bind="begin">asdf</span> - <span data-bind="end">fdsa</span>
+      </li>
+      """
 
     template.render data
     expect(template.html()).htmlToBeEqual expected.html()
