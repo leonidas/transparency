@@ -19,7 +19,7 @@
     });
     it("should render empty container for null data", function() {
       var data, expected, template;
-      template = $("<div class=\"container\">\n  <div class=\"hello\"></div>\n  <div class=\"goodbye\"></div>\n</div>");
+      template = jQuery("<div class=\"container\">\n  <div class=\"hello\"></div>\n  <div class=\"goodbye\"></div>\n</div>");
       data = null;
       expected = $("<div class=\"container\">\n</div>");
       template.render(data);
@@ -80,9 +80,9 @@
       var data, expected, template;
       template = $("<div class=\"container\">\n  <div class=\"best_before\"></div>\n</div>");
       data = {
-        best_before: new Date("2008-04-12")
+        best_before: new Date(0)
       };
-      expected = $("<div class=\"container\">\n  <div class=\"best_before\">2008-04-12T00:00:00.000Z</div>\n</div>");
+      expected = $("<div class=\"container\">\n  <div class=\"best_before\">1970-01-01T00:00:00.000Z</div>\n</div>");
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });

@@ -4,7 +4,7 @@
   if (typeof module !== "undefined" && module !== null ? module.exports : void 0) {
     global.document = require('jsdom/lib/jsdom').jsdom("<!DOCTYPE html>\n<html>\n  <head>\n  </head>\n  <body>\n  </body>\n</html>");
     global.window = document.createWindow();
-    global.$ = global.jQuery = require('jquery').create(window);
+    global.jQuery = global.$ = require('jquery').create(window);
   }
 
   beforeEach(function() {

@@ -13,7 +13,7 @@ describe "Transparency", ->
     expect(template.html()).htmlToBeEqual expected.html()
 
   it "should render empty container for null data", ->
-    template = $ """
+    template = jQuery """
       <div class="container">
         <div class="hello"></div>
         <div class="goodbye"></div>
@@ -146,11 +146,11 @@ describe "Transparency", ->
       """
 
     data =
-      best_before: new Date "2008-04-12"
+      best_before: new Date 0
 
     expected = $ """
       <div class="container">
-        <div class="best_before">2008-04-12T00:00:00.000Z</div>
+        <div class="best_before">1970-01-01T00:00:00.000Z</div>
       </div>
       """
 

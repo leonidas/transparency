@@ -122,7 +122,7 @@ renderDirectives = (instance, model, directives, index) ->
         element.setAttribute attr, value
 
 renderChildren = (instance, model, directives) ->
-  for key, value of model when typeof value == 'object'
+  for key, value of model when typeof value == 'object' and not isDate value
     T.render element, value, directives[key] for element in matchingElements(instance, key)
 
 setContent = (callback) ->
@@ -191,7 +191,7 @@ Array::indexOf ?= (obj) ->
   index
 
 # http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/
-Array::isArray ?= (obj) ->
+Array.isArray ?= (obj) ->
   Object.prototype.toString.call(obj) == '[object Array]'
 
 # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
@@ -202,7 +202,7 @@ isDate = (obj) ->
 pad = (n) ->
   if n < 10 then "0#{n}" else n.toString()
 
-Date::toISOString ?= ->
+Date::toISOString ?= () ->
   @getUTCFullYear() + "-" + pad(@getUTCMonth() + 1) + "-" + pad(@getUTCDate()) + "T" + pad(@getUTCHours()) + ":" + pad(@getUTCMinutes()) + ":" + pad(@getUTCSeconds()) + "." + String((@getUTCMilliseconds() / 1000).toFixed(3)).slice(2, 5) + "Z"
 
 

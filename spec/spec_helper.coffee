@@ -10,7 +10,7 @@ if module?.exports
     """
 
   global.window = document.createWindow()
-  global.$ = global.jQuery = require('jquery').create window
+  global.jQuery = global.$ = require('jquery').create window
 
 beforeEach ->
   this.addMatchers
