@@ -23,6 +23,10 @@ $('#template').render(hello);
 </div>
 ```
 
+## Status
+
+[![Build Status](https://secure.travis-ci.org/leonidas/transparency.png?branch=master)](http://travis-ci.org/leonidas/transparency)
+
 ## Features
 
 * Data binding by convention - No extra markup in the views
