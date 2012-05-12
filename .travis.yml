@@ -11,4 +11,10 @@ node_js:
 notifications:
   email:
     - jarno.keskikangas@leonidasoy.fi
-  irc: "irc.freenode.org#transparency.js"
+  irc:
+    channels:
+      -"irc.freenode.org#transparency.js"
+    use_notice: true
+    skip_join:  true
+    template:
+      - "http://travis-ci.org/leonidas/transparency : %{message}"
