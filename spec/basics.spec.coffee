@@ -1,6 +1,6 @@
 if module?.exports
   require './spec_helper'
-  Transparency = require '../src/transparency'
+  window.Transparency = require '../src/transparency'
 
 describe "Transparency", ->
 
@@ -9,7 +9,7 @@ describe "Transparency", ->
     data     = hello: 'Hello'
     expected = $ '<div></div>'
 
-    Transparency.render template.find('#not_found')[0], data
+    window.Transparency.render template.find('#not_found')[0], data
     expect(template.html()).htmlToBeEqual expected.html()
 
   it "should render empty container for null data", ->

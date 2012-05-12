@@ -2,10 +2,9 @@
 (function() {
 
   if (typeof module !== "undefined" && module !== null ? module.exports : void 0) {
-    require('./node_helper');
+    require('./spec_helper');
+    window.Transparency = require('../src/transparency');
   }
-
-  require('./spec_helper');
 
   describe("Transparency", function() {
     it("should ignore null context", function() {
@@ -15,21 +14,21 @@
         hello: 'Hello'
       };
       expected = $('<div></div>');
-      Transparency.render(template.find('#not_found')[0], data);
+      window.Transparency.render(template.find('#not_found')[0], data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should render empty container for null data", function() {
       var data, expected, template;
-      template = $("<div>\n  <div class=\"container\">\n    <div class=\"hello\"></div>\n    <div class=\"goodbye\"></div>\n  </div>\n</div>");
+      template = $("<div class=\"container\">\n  <div class=\"hello\"></div>\n  <div class=\"goodbye\"></div>\n</div>");
       data = null;
-      expected = $("<div>\n  <div class=\"container\">\n  </div>\n</div>");
-      template.find('.container').render(data);
+      expected = $("<div class=\"container\">\n</div>");
+      template.render(data);
       expect(template.html()).htmlToBeEqual(expected.html());
       data = {
         hello: 'Hello'
       };
-      expected = $("<div>\n  <div class=\"container\">\n    <div class=\"hello\">Hello</div>\n    <div class=\"goodbye\"></div>\n  </div>\n</div>");
-      template.find('.container').render(data);
+      expected = $("<div class=\"container\">\n  <div class=\"hello\">Hello</div>\n  <div class=\"goodbye\"></div>\n</div>");
+      template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should ignore null values", function() {
@@ -44,7 +43,7 @@
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should match model keys to template by element id, class, name attribute and data-bind attribute", function() {
-      var data, expected, res, template;
+      var data, expected, template;
       template = $("<div class=\"container\">\n  <div id=\"my-id\"></div>\n  <div class=\"my-class\"></div>\n  <div data-bind=\"my-data\"></div>\n</div>");
       data = {
         'my-id': 'id-data',
@@ -52,7 +51,7 @@
         'my-data': 'data-bind'
       };
       expected = $("<div class=\"container\">\n  <div id=\"my-id\">id-data</div>\n  <div class=\"my-class\">class-data</div>\n  <div data-bind=\"my-data\">data-bind</div>\n</div>");
-      res = template.render(data);
+      template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should handle nested templates", function() {
