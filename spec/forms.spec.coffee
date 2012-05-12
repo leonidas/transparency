@@ -1,5 +1,6 @@
-require './node_helper' if module?.exports
-require './spec_helper'
+if module?.exports
+  require './spec_helper'
+  Transparency = require '../src/transparency'
 
 describe "Transparency", ->
 

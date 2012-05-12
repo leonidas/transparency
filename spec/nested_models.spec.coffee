@@ -1,6 +1,6 @@
-if typeof module != 'undefined' && module.exports
+if module?.exports
   require './spec_helper'
-  require '../src/transparency'
+  Transparency = require '../src/transparency'
 
 describe "Transparency", ->
 

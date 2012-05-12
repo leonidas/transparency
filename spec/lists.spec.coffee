@@ -1,6 +1,6 @@
-if typeof module != 'undefined' && module.exports
+if module?.exports
   require './spec_helper'
-  window.Transparency = Transparency = require '../src/transparency'
+  Transparency = require '../src/transparency'
 
 describe "Transparency", ->
 
@@ -34,7 +34,7 @@ describe "Transparency", ->
 
     doc.find('.comments').render(data)
     expect(doc.html()).htmlToBeEqual(expected.html())
-    expect(window.Transparency.data(doc.find('.comment').get(0)).model).toEqual(data[0])
+    expect(Transparency.data(doc.find('.comment').get(0)).model).toEqual(data[0])
     expectModelObjects doc.find('.comment'), data
 
   it "should render empty lists", ->
@@ -217,4 +217,4 @@ describe "Transparency", ->
 
 expectModelObjects = (elements, data) ->
   for object, i in data
-    expect(window.Transparency.data(elements.get(i)).model).toEqual(object)
+    expect(Transparency.data(elements.get(i)).model).toEqual(object)

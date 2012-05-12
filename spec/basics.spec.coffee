@@ -1,5 +1,6 @@
-require './node_helper' if module?.exports
-require './spec_helper'
+if module?.exports
+  require './spec_helper'
+  Transparency = require '../src/transparency'
 
 describe "Transparency", ->
 
@@ -13,24 +14,20 @@ describe "Transparency", ->
 
   it "should render empty container for null data", ->
     template = $ """
-      <div>
-        <div class="container">
-          <div class="hello"></div>
-          <div class="goodbye"></div>
-        </div>
+      <div class="container">
+        <div class="hello"></div>
+        <div class="goodbye"></div>
       </div>
       """
 
     data = null
 
     expected = $ """
-      <div>
-        <div class="container">
-        </div>
+      <div class="container">
       </div>
       """
 
-    template.find('.container').render data
+    template.render data
     expect(template.html()).htmlToBeEqual expected.html()
 
     # Assert that the template is still available
@@ -38,15 +35,13 @@ describe "Transparency", ->
       hello: 'Hello'
 
     expected = $ """
-      <div>
-        <div class="container">
-          <div class="hello">Hello</div>
-          <div class="goodbye"></div>
-        </div>
+      <div class="container">
+        <div class="hello">Hello</div>
+        <div class="goodbye"></div>
       </div>
       """
 
-    template.find('.container').render data
+    template.render data
     expect(template.html()).htmlToBeEqual expected.html()
 
   it "should ignore null values", ->
@@ -93,7 +88,7 @@ describe "Transparency", ->
       </div>
       """
 
-    res = template.render data
+    template.render data
     expect(template.html()).htmlToBeEqual expected.html()
 
   it "should handle nested templates", ->
