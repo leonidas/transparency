@@ -173,14 +173,17 @@ cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav
     (node) -> node.cloneNode true
   else
     (node) ->
-      div = document.createElement "div"
-      div.innerHTML = node.outerHTML;
-      # In IE expando property == attribute (IE8 and below) and attributes are copied from the original element to the cloned one.
-      # Remove the expando attribute from the copy, otherwise the original and the cloned element would share the Transparency data object
-      # http://msdn.microsoft.com/en-us/library/ie/gg622931(v=vs.85).aspx
-      # http://webreflection.blogspot.com/2009/04/divexpando-null-or-divremoveattributeex.html
-      div.firstChild.removeAttribute expando
-      div.firstChild
+      if node.nodeType == ELEMENT_NODE
+        div = document.createElement "div"
+        div.innerHTML = node.outerHTML;
+        # In IE expando property == attribute (IE8 and below) and attributes are copied from the original element to the cloned one.
+        # Remove the expando attribute from the copy, otherwise the original and the cloned element would share the Transparency data object
+        # http://msdn.microsoft.com/en-us/library/ie/gg622931(v=vs.85).aspx
+        # http://webreflection.blogspot.com/2009/04/divexpando-null-or-divremoveattributeex.html
+        div.firstChild.removeAttribute expando
+        div.firstChild
+      else
+        node.cloneNode true
 
 # http://stackoverflow.com/questions/1744310/how-to-fix-array-indexof-in-javascript-for-ie-browsers
 Array::indexOf ?= (obj) ->
