@@ -83,7 +83,7 @@ prepareContext = (context, models) ->
   # Restore the original attribute values
   for instance in contextData.instances
     for e in instance.elements
-      (e.setAttribute attr, value) for attr, value of T.data(e).attributes
+      (setAttribute e, attr, value) for attr, value of T.data(e).attributes
 
 renderValues = (instance, model) ->
   if typeof model == 'object'
@@ -119,7 +119,7 @@ renderDirectives = (instance, model, directives, index) ->
         elementData = T.data element
         elementData.attributes       ||= {}
         elementData.attributes[attr] ||= element.getAttribute attr
-        element.setAttribute attr, value
+        setAttribute element, attr, value
 
 renderChildren = (instance, model, directives) ->
   for key, value of model when typeof value == 'object' and not isDate value
@@ -139,9 +139,17 @@ setContent = (callback) ->
 setHtml = setContent (e, html) -> e.innerHTML = html
 setText = setContent (e, text) ->
   if e.nodeName.toLowerCase() == 'input'
-    e.setAttribute 'value', text
+    setAttribute e, 'value', text
   else
     e.appendChild e.ownerDocument.createTextNode text
+
+setAttribute = (element, attr, value) ->
+  if attr == 'class'
+    element.className = value
+  else if element[attr]
+    element[attr] = value
+  else
+    element.setAttribute attr, value
 
 elementNodes = (template) ->
   elements = []
@@ -206,6 +214,7 @@ pad = (n) ->
   if n < 10 then "0#{n}" else n.toString()
 
 Date::toISOString ?= () ->
-  @getUTCFullYear() + "-" + pad(@getUTCMonth() + 1) + "-" + pad(@getUTCDate()) + "T" + pad(@getUTCHours()) + ":" + pad(@getUTCMinutes()) + ":" + pad(@getUTCSeconds()) + "." + String((@getUTCMilliseconds() / 1000).toFixed(3)).slice(2, 5) + "Z"
+  "#{@getUTCFullYear()}-#{pad @getUTCMonth() + 1}-#{pad @getUTCDate()}" +
+  "T#{pad @getUTCHours()}:#{pad @getUTCMinutes()}:#{pad @getUTCSeconds()}.#{String((@getUTCMilliseconds() / 1000).toFixed 3).slice 2, 5}Z"
 
 
