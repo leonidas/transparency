@@ -14,4 +14,7 @@ notifications:
   irc:
     channels:
       - "irc.freenode.org#transparency.js"
-
+    use_notice: true
+    skip_join:  true
+    template:
+      - "http://travis-ci.org/leonidas/transparency : %{message}"
