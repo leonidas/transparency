@@ -13,4 +13,5 @@ notifications:
     - jarno.keskikangas@leonidasoy.fi
   irc:
     channels:
-      -"irc.freenode.org#transparency.js"
+      - "irc.freenode.org#transparency.js"
+
