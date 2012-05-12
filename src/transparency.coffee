@@ -173,14 +173,14 @@ cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav
     (node) -> node.cloneNode true
   else
     (node) ->
-      if node.nodeType == ELEMENT_NODE
+      if node.nodeType == ELEMENT_NODE && node.nodeName.toLowerCase() != "option"
         div = document.createElement "div"
-        div.innerHTML = node.outerHTML;
+        div.innerHTML = node.outerHTML
         # In IE expando property == attribute (IE8 and below) and attributes are copied from the original element to the cloned one.
         # Remove the expando attribute from the copy, otherwise the original and the cloned element would share the Transparency data object
         # http://msdn.microsoft.com/en-us/library/ie/gg622931(v=vs.85).aspx
         # http://webreflection.blogspot.com/2009/04/divexpando-null-or-divremoveattributeex.html
-        div.firstChild.removeAttribute expando
+        div.firstChild?.removeAttribute expando
         div.firstChild
       else
         node.cloneNode true
