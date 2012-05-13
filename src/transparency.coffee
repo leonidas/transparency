@@ -115,10 +115,6 @@ renderDirectives = (instance, model, directives, index) ->
       setText element, directive.text
       setHtml element, directive.html
       for attr, value of directive when attr != 'html' and attr != 'text'
-        # Save the original attribute values, so they can be restored when the instance is reused
-        elementData = T.data element
-        elementData.attributes       ||= {}
-        elementData.attributes[attr] ||= element.getAttribute attr
         setAttribute element, attr, value
 
 renderChildren = (instance, model, directives) ->
@@ -126,29 +122,32 @@ renderChildren = (instance, model, directives) ->
     T.render element, value, directives[key] for element in matchingElements(instance, key)
 
 setContent = (callback) ->
-  (e, content) ->
-    eData = T.data(e)
-    return if !e or !content? or eData.content == content
-    eData.content    = content
-    eData.children ||= (n for n in e.childNodes when n.nodeType == ELEMENT_NODE)
+  (element, content) ->
+    elementData = T.data element
+    return if !element or !content? or elementData.content == content
+    elementData.content    = content
+    elementData.children ||= (n for n in element.childNodes when n.nodeType == ELEMENT_NODE)
 
-    (e.removeChild e.firstChild) while e.firstChild
-    callback e, content
-    (e.appendChild c) for c in eData.children
+    (element.removeChild element.firstChild) while element.firstChild
+    callback element, content
+    (element.appendChild c) for c in elementData.children
 
-setHtml = setContent (e, html) -> e.innerHTML = html
-setText = setContent (e, text) ->
-  if e.nodeName.toLowerCase() == 'input'
-    setAttribute e, 'value', text
+setHtml = setContent (element, html) -> element.innerHTML = html
+setText = setContent (element, text) ->
+  if element.nodeName.toLowerCase() == 'input'
+    setAttribute element, 'value', text
   else
-    e.appendChild e.ownerDocument.createTextNode text
+    element.appendChild element.ownerDocument.createTextNode text
 
 setAttribute = (element, attr, value) ->
+  # Save the original attribute values, so they can be restored when the instance is reused
+  elementData = T.data element
+  elementData.attributes       ||= {}
   if attr == 'class'
+    elementData.attributes[attr] ||= element.className
     element.className = value
-  else if element[attr]
-    element[attr] = value
   else
+    elementData.attributes[attr] ||= element.getAttribute attr
     element.setAttribute attr, value
 
 elementNodes = (template) ->
@@ -181,6 +180,8 @@ cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav
     (node) -> node.cloneNode true
   else
     (node) ->
+      # .outerHTML fails for option elements, probably related to
+      # http://support.microsoft.com/default.aspx?scid=kb;en-us;276228
       if node.nodeType == ELEMENT_NODE && node.nodeName.toLowerCase() != "option"
         div = document.createElement "div"
         div.innerHTML = node.outerHTML
@@ -191,7 +192,9 @@ cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav
         div.firstChild?.removeAttribute expando
         div.firstChild
       else
-        node.cloneNode true
+        clone = node.cloneNode true
+        clone.removeAttribute expando if node.nodeName.toLowerCase() == "option"
+        clone
 
 # http://stackoverflow.com/questions/1744310/how-to-fix-array-indexof-in-javascript-for-ie-browsers
 Array::indexOf ?= (obj) ->
