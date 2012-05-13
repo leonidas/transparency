@@ -69,7 +69,7 @@ For server-side use, see `spec` folder and the awesome [jsdom](https://github.co
 
 ## Examples
 
-### Assigning values
+### Binding values
 
 Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
 `data-bind` attribute. Values are escaped before rendering.
@@ -113,7 +113,7 @@ Result:
 </div>
 ```
 
-### Iterating over a list
+### Rendering a list of models
 
 Template:
 
@@ -148,14 +148,22 @@ Result:
 </ul>
 ```
 
-#### Iterating over a list with plain values
+#### Rendering a list with plain values
+
+With plain values, Transparency can't guess how you would like to bind the data to DOM, so a bit of
+help is needed. Directive functions are just for that. Directives are defined as an object of functions.
+Keys are matched to dom elements and each model is passed for the functions as `this` parameter, one by one.
+
+Access to the plain values within the directive function is provided through `this.value`. There's a whole
+lot more to say about the directives, but that's all we need for now. For further examples, see
+section [Directives](https://github.com/leonidas/transparency#directives).
 
 Template:
 
 ```html
 <div>
   <div class="comments">
-    <span></span>
+    <label>Comments:</label><span class="comment"></span>
   </div>
 </div>
 ```
@@ -163,9 +171,18 @@ Template:
 Javascript:
 
 ```js
-var comments = ["That rules", "Great post!"]
+var comments, directives;
 
-$('.comments').render(comments);
+comments = ["That rules", "Great post!"];
+
+# See section 'Directives' for the details
+directives = {
+  comment: function() {
+    return this.value;
+  }
+};
+
+$('.comments').render(comments, directives);
 ```
 
 Result:
@@ -173,39 +190,8 @@ Result:
 ```html
 <div>
   <div class="comments">
-    <span>That rules</span>
-    <span>Great post!</span>
-  </div>
-</div>
-```
-
-#### Iterating over a list with plain values, using `listElement` class
-
-Template:
-
-```html
-<div>
-  <div class="comments">
-    <label>comment</label><span class="listElement"></span>
-  </div>
-</div>
-```
-
-Javascript:
-
-```js
-var comments = ["That rules", "Great post!"]
-
-$('.comments').render(comments);
-```
-
-Result:
-
-```html
-<div>
-  <div class="comments">
-    <label>comment</label><span class="listElement">That rules</span>
-    <label>comment</label><span class="listElement">Great post!</span>
+    <label>Comments</label><span class="comment">That rules</span>
+    <label>Comments</label><span class="comment">Great post!</span>
   </div>
 </div>
 ```

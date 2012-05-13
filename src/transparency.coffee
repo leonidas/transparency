@@ -86,23 +86,18 @@ prepareContext = (context, models) ->
       (setAttribute e, attr, value) for attr, value of T.data(e).attributes
 
 renderValues = (instance, model) ->
-  if typeof model == 'object'
-    for key, value of model
+    for key, value of model when typeof model == 'object'
       value = value.toISOString() if isDate value
 
       if typeof value != 'object' and typeof value != 'function'
         setText(element, value) for element in matchingElements(instance, key)
 
-  # No models, just plain values
-  else
-    element = matchingElements(instance, 'listElement')[0] || instance.elements[0]
-    setText(element, model) if element
-
 renderDirectives = (instance, model, directives, index) ->
   for key, directiveFunction of directives when typeof directiveFunction == 'function'
 
-    for element in matchingElements(instance, key)
-      directive = directiveFunction.call(model, element, index)
+    for element in matchingElements instance, key
+      directive =
+        directiveFunction.call (if typeof model == 'object' then model else value: model), element, index
 
       if not directive
         # Directive function returned no value, meaning
@@ -110,7 +105,7 @@ renderDirectives = (instance, model, directives, index) ->
         # on element parameter
         continue
 
-      directive = text: directive if typeof directive == 'string'
+      directive = text: directive if typeof directive != 'object'
 
       setText element, directive.text
       setHtml element, directive.html

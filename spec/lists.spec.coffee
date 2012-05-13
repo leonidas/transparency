@@ -78,48 +78,31 @@ describe "Transparency", ->
     template.render data
     expect(template.html()).htmlToBeEqual expected.html()
 
-  it "should render list containing simple values", ->
+  it "should render plain values with 'this.value' directives", ->
     template = $ """
       <div class="comments">
-        <span></span>
-        <label>blah</label>
+        <label>Comment:</label>
+        <span class="comment"></span>
       </div>
       """
 
-    data = ["That rules", "Great post!"]
+    data       = ["That rules", "Great post!", 5]
+    directives = comment: () -> @value
 
     expected = $ """
       <div class="comments">
-        <span>That rules</span>
-        <label>blah</label>
-        <span>Great post!</span>
-        <label>blah</label>
+        <label>Comment:</label>
+        <span class="comment">That rules</span>
+        <label>Comment:</label>
+        <span class="comment">Great post!</span>
+        <label>Comment:</label>
+        <span class="comment">5</span>
       </div>
       """
 
-    template.render data
+    template.render data, directives
     expect(template.html()).htmlToBeEqual expected.html()
-    expectModelObjects template.find('span'), data
-
-  it "should place simple value into element with listElement class if found", ->
-    template = $ """
-      <div class="comments">
-        <label>comment</label><span class="listElement"></span>
-      </div>
-      """
-
-    data = ["That rules", "Great post!"]
-
-    expected = $ """
-      <div class="comments">
-        <label>comment</label><span class="listElement">That rules</span>
-        <label>comment</label><span class="listElement">Great post!</span>
-      </div>
-      """
-
-    template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
-    expectModelObjects template.find('.listElement'), data
+    #expectModelObjects template.find('.listElement'), data
 
   it "should not fail when there's no child node in the simple list template", ->
     template = $ """

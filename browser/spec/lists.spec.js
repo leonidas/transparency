@@ -48,23 +48,18 @@
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
-    it("should render list containing simple values", function() {
-      var data, expected, template;
-      template = $("<div class=\"comments\">\n  <span></span>\n  <label>blah</label>\n</div>");
-      data = ["That rules", "Great post!"];
-      expected = $("<div class=\"comments\">\n  <span>That rules</span>\n  <label>blah</label>\n  <span>Great post!</span>\n  <label>blah</label>\n</div>");
-      template.render(data);
-      expect(template.html()).htmlToBeEqual(expected.html());
-      return expectModelObjects(template.find('span'), data);
-    });
-    it("should place simple value into element with listElement class if found", function() {
-      var data, expected, template;
-      template = $("<div class=\"comments\">\n  <label>comment</label><span class=\"listElement\"></span>\n</div>");
-      data = ["That rules", "Great post!"];
-      expected = $("<div class=\"comments\">\n  <label>comment</label><span class=\"listElement\">That rules</span>\n  <label>comment</label><span class=\"listElement\">Great post!</span>\n</div>");
-      template.render(data);
-      expect(template.html()).htmlToBeEqual(expected.html());
-      return expectModelObjects(template.find('.listElement'), data);
+    it("should render plain values with 'this.value' directives", function() {
+      var data, directives, expected, template;
+      template = $("<div class=\"comments\">\n  <label>Comment:</label>\n  <span class=\"comment\"></span>\n</div>");
+      data = ["That rules", "Great post!", 5];
+      directives = {
+        comment: function() {
+          return this.value;
+        }
+      };
+      expected = $("<div class=\"comments\">\n  <label>Comment:</label>\n  <span class=\"comment\">That rules</span>\n  <label>Comment:</label>\n  <span class=\"comment\">Great post!</span>\n  <label>Comment:</label>\n  <span class=\"comment\">5</span>\n</div>");
+      template.render(data, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should not fail when there's no child node in the simple list template", function() {
       var data, expected, template;
