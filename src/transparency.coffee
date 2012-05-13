@@ -140,7 +140,7 @@ setText = setContent (element, text) ->
     element.appendChild element.ownerDocument.createTextNode text
 
 setAttribute = (element, attr, value) ->
-  # Save the original attribute values, so they can be restored when the instance is reused
+  # Save the original value, so it can be restored before the instance is reused
   elementData = T.data element
   elementData.attributes       ||= {}
   if attr == 'class'
@@ -171,50 +171,22 @@ elementMatcher = (element, key) ->
 
 ELEMENT_NODE = 1
 
-# Browser compatibility shims
-
-# IE8 <= fails to clone detached nodes properly. See jQuery.clone for the details
+# IE8 <= fails to clone detached nodes properly, shim with jQuery if available
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
 # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
-cloneNode = if document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
-    (node) -> node.cloneNode true
-  else
-    (node) ->
-      # .outerHTML fails for option elements, probably related to
-      # http://support.microsoft.com/default.aspx?scid=kb;en-us;276228
-      if node.nodeType == ELEMENT_NODE && node.nodeName.toLowerCase() != "option"
-        div = document.createElement "div"
-        div.innerHTML = node.outerHTML
-        # In IE expando property == attribute (IE8 and below) and attributes are copied from the original element to the cloned one.
-        # Remove the expando attribute from the copy, otherwise the original and the cloned element would share the Transparency data object
-        # http://msdn.microsoft.com/en-us/library/ie/gg622931(v=vs.85).aspx
-        # http://webreflection.blogspot.com/2009/04/divexpando-null-or-divremoveattributeex.html
-        div.firstChild?.removeAttribute expando
-        div.firstChild
-      else
-        clone = node.cloneNode true
-        clone.removeAttribute expando if node.nodeName.toLowerCase() == "option"
-        clone
+html5Clone = () -> document.createElement("nav").cloneNode( true ).outerHTML != "<:nav></:nav>"
 
-# http://stackoverflow.com/questions/1744310/how-to-fix-array-indexof-in-javascript-for-ie-browsers
-Array::indexOf ?= (obj) ->
-  index = -1
-  for x, i in this when x == obj
-    index = i
-    break
-  index
+cloneNode = if not html5Clone() then (node) -> jQuery(node).clone()[0] else (node) -> node.cloneNode true
 
-# http://perfectionkills.com/instanceof-considered-harmful-or-how-to-write-a-robust-isarray/
-Array.isArray ?= (obj) ->
-  Object.prototype.toString.call(obj) == '[object Array]'
+Array::indexOf ?= (obj) -> jQuery.inArray obj, this
+
+Array.isArray ?= (obj) -> jQuery.isArray obj
 
 # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
-isDate = (obj) ->
-  Object.prototype.toString.call(obj) == '[object Date]'
+isDate = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
 
 # https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/toISOString
-pad = (n) ->
-  if n < 10 then "0#{n}" else n.toString()
+pad = (n) -> if n < 10 then "0#{n}" else n.toString()
 
 Date::toISOString ?= () ->
   "#{@getUTCFullYear()}-#{pad @getUTCMonth() + 1}-#{pad @getUTCDate()}" +

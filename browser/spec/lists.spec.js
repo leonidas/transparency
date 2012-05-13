@@ -9,13 +9,8 @@
 
   describe("Transparency", function() {
     it("should render list of objects", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-        <div class="comments">\
-          <div class="comment">\
-            <span class="name"></span><span class="text"></span></div>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"comments\">\n  <div class=\"comment\">\n    <span class=\"name\"></span><span class=\"text\"></span>\n  </div>\n</div>");
       data = [
         {
           name: 'John',
@@ -25,45 +20,23 @@
           text: 'Great post!'
         }
       ];
-      expected = jQuery('<div>\
-        <div class="comments">\
-          <div class="comment">\
-            <span class="name">John</span><span class="text">That rules</span>\
-          </div><div class="comment">\
-            <span class="name">Arnold</span><span class="text">Great post!</span>\
-          </div>\
-        </div>\
-      </div>');
-      doc.find('.comments').render(data);
-      expect(doc.html()).htmlToBeEqual(expected.html());
-      expect(window.Transparency.data(doc.find('.comment').get(0)).model).toEqual(data[0]);
-      return expectModelObjects(doc.find('.comment'), data);
+      expected = $("<div class=\"comments\">\n  <div class=\"comment\">\n    <span class=\"name\">John</span><span class=\"text\">That rules</span>\n  </div><div class=\"comment\">\n    <span class=\"name\">Arnold</span><span class=\"text\">Great post!</span>\n  </div>\n</div>");
+      template.render(data);
+      expect(template.html()).htmlToBeEqual(expected.html());
+      expect(template.find('.comment')[0].transparency.model).toEqual(data[0]);
+      return expectModelObjects(template.find('.comment'), data);
     });
     it("should render empty lists", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-        <div class="comments">\
-          <div class="comment">\
-            <span class="name"></span>\
-            <span class="text"></span>\
-          </div>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"comments\">\n  <div class=\"comment\">\n    <span class=\"name\"></span>\n    <span class=\"text\"></span>\n  </div>\n</div>");
       data = [];
-      expected = jQuery('<div>\
-        <div class="comments">\
-        </div>\
-      </div>');
-      doc.find('.comments').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div class=\"comments\">\n</div>");
+      template.render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should render lists with duplicate content", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-        <div id="items">\
-          <div class="name"></div>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div id=\"items\">\n  <div class=\"name\"></div>\n</div>");
       data = [
         {
           name: "Same"
@@ -71,151 +44,106 @@
           name: "Same"
         }
       ];
-      expected = jQuery('<div>\
-        <div id="items">\
-          <div class="name">Same</div>\
-          <div class="name">Same</div>\
-        </div>\
-      </div>');
-      doc.find('#items').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div id=\"items\">\n  <div class=\"name\">Same</div>\n  <div class=\"name\">Same</div>\n</div>");
+      template.render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should render list containing simple values", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-        <div class="comments">\
-          <span></span>\
-          <label>blah</label>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"comments\">\n  <span></span>\n  <label>blah</label>\n</div>");
       data = ["That rules", "Great post!"];
-      expected = jQuery('<div>\
-        <div class="comments">\
-          <span>That rules</span><label>blah</label><span>Great post!</span><label>blah</label>\
-        </div>\
-      </div>');
-      doc.find('.comments').render(data);
-      expect(doc.html()).htmlToBeEqual(expected.html());
-      return expectModelObjects(doc.find('span'), data);
+      expected = $("<div class=\"comments\">\n  <span>That rules</span>\n  <label>blah</label>\n  <span>Great post!</span>\n  <label>blah</label>\n</div>");
+      template.render(data);
+      expect(template.html()).htmlToBeEqual(expected.html());
+      return expectModelObjects(template.find('span'), data);
     });
     it("should place simple value into element with listElement class if found", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-        <div class="comments">\
-          <label>comment</label><span class="listElement"></span>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"comments\">\n  <label>comment</label><span class=\"listElement\"></span>\n</div>");
       data = ["That rules", "Great post!"];
-      expected = jQuery('<div>\
-        <div class="comments">\
-          <label>comment</label><span class="listElement">That rules</span>\
-          <label>comment</label><span class="listElement">Great post!</span>\
-        </div>\
-      </div>');
-      doc.find('.comments').render(data);
-      expect(doc.html()).htmlToBeEqual(expected.html());
-      return expectModelObjects(doc.find('.listElement'), data);
+      expected = $("<div class=\"comments\">\n  <label>comment</label><span class=\"listElement\">That rules</span>\n  <label>comment</label><span class=\"listElement\">Great post!</span>\n</div>");
+      template.render(data);
+      expect(template.html()).htmlToBeEqual(expected.html());
+      return expectModelObjects(template.find('.listElement'), data);
     });
     it("should not fail when there's no child node in the simple list template", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-        <div class="comments">\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"comments\">\n</div>");
       data = ["That rules", "Great post!"];
-      expected = jQuery('<div>\
-        <div class="comments">\
-        </div>\
-      </div>');
-      doc.find('.comments').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div class=\"comments\">\n</div>");
+      template.find('.comments').render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     return it("should match table rows to the number of model objects", function() {
-      var doc;
-      doc = jQuery('<div>\
-        <table>\
-          <tbody class="users">\
-            <tr>\
-              <td class="username"></td>\
-            </tr>\
-          </tbody>\
-        </table>\
-      </div>');
-      doc.find("tbody.users").render([
+      var template;
+      template = $("<table>\n  <tbody class=\"users\">\n    <tr>\n      <td class=\"username\">foobar</td>\n    </tr>\n  </tbody>\n</table>");
+      template.find(".users").render([
         {
           username: 'user1'
         }, {
           username: 'user2'
         }
       ]);
-      expect(doc.html()).htmlToBeEqual(jQuery('\
-      <div>\
-        <table>\
-          <tbody class="users">\
-            <tr>\
-              <td class="username">user1</td>\
-            </tr>\
-            <tr>\
-              <td class="username">user2</td>\
-            </tr>\
-          </tbody>\
-        </table>\
-      </div>').html());
-      doc.find("tbody.users").render([
+      expect(template.html()).htmlToBeEqual($('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user1</td>\
+          </tr>\
+          <tr>\
+            <td class="username">user2</td>\
+          </tr>\
+        </tbody>\
+      </table>').html());
+      template.find(".users").render([
         {
           username: 'user1'
         }
       ]);
-      expect(doc.html()).htmlToBeEqual(jQuery('\
-      <div>\
-        <table>\
-          <tbody class="users">\
-            <tr>\
-              <td class="username">user1</td>\
-            </tr>\
-          </tbody>\
-        </table>\
-      </div>').html());
-      doc.find("tbody.users").render([
+      expect(template.html()).htmlToBeEqual($('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user1</td>\
+          </tr>\
+        </tbody>\
+      </table>').html());
+      template.find(".users").render([
         {
           username: 'user1'
         }, {
           username: 'user3'
         }
       ]);
-      expect(doc.html()).htmlToBeEqual(jQuery('\
-      <div>\
-        <table>\
-          <tbody class="users">\
-            <tr>\
-              <td class="username">user1</td>\
-            </tr>\
-            <tr>\
-              <td class="username">user3</td>\
-            </tr>\
-          </tbody>\
-        </table>\
-      </div>').html());
-      doc.find("tbody.users").render([
+      expect(template.html()).htmlToBeEqual(jQuery('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user1</td>\
+          </tr>\
+          <tr>\
+            <td class="username">user3</td>\
+          </tr>\
+        </tbody>\
+      </table>').html());
+      template.find(".users").render([
         {
           username: 'user4'
         }, {
           username: 'user3'
         }
       ]);
-      return expect(doc.html()).htmlToBeEqual(jQuery('\
-      <div>\
-        <table>\
-          <tbody class="users">\
-            <tr>\
-              <td class="username">user4</td>\
-            </tr>\
-            <tr>\
-              <td class="username">user3</td>\
-            </tr>\
-          </tbody>\
-        </table>\
-      </div').html());
+      return expect(template.html()).htmlToBeEqual($('\
+      <table>\
+        <tbody class="users">\
+          <tr>\
+            <td class="username">user4</td>\
+          </tr>\
+          <tr>\
+            <td class="username">user3</td>\
+          </tr>\
+        </tbody>\
+      </table>').html());
     });
   });
 
