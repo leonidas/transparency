@@ -164,23 +164,22 @@ matchingElements = (instance, key) ->
   elements
 
 elementMatcher = (element, key) ->
-  element.id                        == key               ||
-  element.className.split(' ').indexOf(key) > -1         ||
-  element.name                      == key               ||
+  element.id                        == key       ||
+  element.className.split(' ').indexOf(key) > -1 ||
+  element.name                      == key       ||
   element.getAttribute('data-bind') == key
 
 ELEMENT_NODE = 1
 
-# IE8 <= fails to clone detached nodes properly, shim with jQuery if available
+# IE8 <= fails to clone detached nodes properly, shim with jQuery
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
 # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
 html5Clone = () -> document.createElement("nav").cloneNode( true ).outerHTML != "<:nav></:nav>"
 
 cloneNode = if not html5Clone() then (node) -> jQuery(node).clone()[0] else (node) -> node.cloneNode true
 
+Array.isArray  ?= (obj) -> jQuery.isArray obj
 Array::indexOf ?= (obj) -> jQuery.inArray obj, this
-
-Array.isArray ?= (obj) -> jQuery.isArray obj
 
 # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
 isDate = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
@@ -190,6 +189,5 @@ pad = (n) -> if n < 10 then "0#{n}" else n.toString()
 
 Date::toISOString ?= () ->
   "#{@getUTCFullYear()}-#{pad @getUTCMonth() + 1}-#{pad @getUTCDate()}" +
-  "T#{pad @getUTCHours()}:#{pad @getUTCMinutes()}:#{pad @getUTCSeconds()}.#{String((@getUTCMilliseconds() / 1000).toFixed 3).slice 2, 5}Z"
-
-
+  "T#{pad @getUTCHours()}:#{pad @getUTCMinutes()}:#{pad @getUTCSeconds()}" +
+  ".#{String((@getUTCMilliseconds() / 1000).toFixed 3).slice 2, 5}Z"
