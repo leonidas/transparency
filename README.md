@@ -175,7 +175,7 @@ var comments, directives;
 
 comments = ["That rules", "Great post!"];
 
-# See section 'Directives' for the details
+// See section 'Directives' for the details
 directives = {
   comment: function() {
     return this.value;
