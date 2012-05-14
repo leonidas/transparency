@@ -9,12 +9,8 @@
 
   describe("Transparency", function() {
     it("should calculate values with directives", function() {
-      var directives, doc, expected, person;
-      doc = jQuery('<div>\
-        <div class="person">\
-          <span class="name"></span><span class="email"></span>\
-        </div>\
-      </div>');
+      var directives, expected, person, template;
+      template = $("<div class=\"person\">\n  <span class=\"name\"></span><span class=\"email\"></span>\n</div>");
       person = {
         firstname: 'Jasmine',
         lastname: 'Taylor',
@@ -25,22 +21,13 @@
           return "" + this.firstname + " " + this.lastname;
         }
       };
-      expected = jQuery('<div>\
-        <div class="person">\
-          <span class="name">Jasmine Taylor</span>\
-          <span class="email">jasmine.tailor@example.com</span>\
-        </div>\
-      </div>');
-      doc.find('.person').render(person, directives);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div class=\"person\">\n  <span class=\"name\">Jasmine Taylor</span>\n  <span class=\"email\">jasmine.tailor@example.com</span>\n</div>");
+      template.render(person, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should render html content with directives", function() {
-      var directives, doc, expected, person;
-      doc = jQuery('<div>\
-        <div class="person">\
-          <div class="name"><div>FOOBAR</div></div><span class="email"></span>\
-        </div>\
-      </div>');
+      var directives, expected, person, template;
+      template = $("<div class=\"person\">\n  <div class=\"name\"><div>FOOBAR</div></div><span class=\"email\"></span>\n</div>");
       person = {
         firstname: '<b>Jasmine</b>',
         lastname: '<i>Taylor</i>',
@@ -53,33 +40,17 @@
           };
         }
       };
-      expected = jQuery('<div>\
-        <div class="person">\
-          <div class="name"><b>Jasmine</b> <i>Taylor</i><div>FOOBAR</div></div>\
-          <span class="email">jasmine.tailor@example.com</span>\
-        </div>\
-      </div>');
-      doc.find('.person').render({
+      expected = $("<div class=\"person\">\n  <div class=\"name\"><b>Jasmine</b> <i>Taylor</i><div>FOOBAR</div></div>\n  <span class=\"email\">jasmine.tailor@example.com</span>\n</div>");
+      template.render({
         firstname: "Hello",
         lastname: "David"
       }, directives);
-      doc.find('.person').render(person, directives);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      template.render(person, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should handle nested directives", function() {
-      var directives, doc, expected, nameDecorator, person;
-      doc = jQuery('<div>\
-        <div class="person">\
-          <span class="name"></span>\
-          <span class="email"></span>\
-          <div class="friends">\
-            <div class="friend">\
-              <span class="name"></span>\
-              <span class="email"></span>\
-            </div>\
-          </div>\
-        </div>\
-      </div>');
+      var directives, expected, nameDecorator, person, template;
+      template = $("<div class=\"person\">\n  <span class=\"name\"></span>\n  <span class=\"email\"></span>\n  <div class=\"friends\">\n    <div class=\"friend\">\n      <span class=\"name\"></span>\n      <span class=\"email\"></span>\n    </div>\n  </div>\n</div>");
       person = {
         firstname: 'Jasmine',
         lastname: 'Taylor',
@@ -105,32 +76,13 @@
           name: nameDecorator
         }
       };
-      expected = jQuery('<div>\
-        <div class="person">\
-          <span class="name">Jasmine Taylor</span>\
-          <span class="email">jasmine.taylor@example.com</span>\
-          <div class="friends">\
-            <div class="friend">\
-              <span class="name">John Mayer</span>\
-              <span class="email">john.mayer@example.com</span>\
-            </div>\
-            <div class="friend">\
-              <span class="name">Damien Rice</span>\
-              <span class="email">damien.rice@example.com</span>\
-            </div>\
-          </div>\
-        </div>\
-      </div>');
-      doc.find('.person').render(person, directives);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div class=\"person\">\n  <span class=\"name\">Jasmine Taylor</span>\n  <span class=\"email\">jasmine.taylor@example.com</span>\n  <div class=\"friends\">\n    <div class=\"friend\">\n      <span class=\"name\">John Mayer</span>\n      <span class=\"email\">john.mayer@example.com</span>\n    </div>\n    <div class=\"friend\">\n      <span class=\"name\">Damien Rice</span>\n      <span class=\"email\">damien.rice@example.com</span>\n    </div>\n  </div>\n</div>");
+      template.render(person, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should restore the original attributes", function() {
-      var directives, doc, expected, persons;
-      doc = jQuery('<div>\
-        <ul id="persons">\
-          <li class="person"></li>\
-        </ul>\
-      </div>');
+      var directives, expected, persons, template;
+      template = $("<ul id=\"persons\">\n  <li class=\"person\"></li>\n</ul>");
       persons = [
         {
           person: "me"
@@ -147,24 +99,14 @@
           };
         }
       };
-      expected = jQuery('<div>\
-        <ul id="persons">\
-          <li class="person even">me</li>\
-          <li class="person odd">you</li>\
-          <li class="person even">others</li>\
-        </ul>\
-      </div>');
-      doc.find('#persons').render(persons, directives);
-      doc.find('#persons').render(persons, directives);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<ul id=\"persons\">\n  <li class=\"person even\">me</li>\n  <li class=\"person odd\">you</li>\n  <li class=\"person even\">others</li>\n</ul>");
+      template.render(persons, directives);
+      template.render(persons, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     return it("should except the element has been manipulated in-place if directive functions return void", function() {
-      var directives, doc, expected, persons;
-      doc = jQuery('<div>\
-        <ul id="persons">\
-          <li class="person"></li>\
-        </ul>\
-      </div>');
+      var directives, expected, persons, template;
+      template = $("<ul id=\"persons\">\n  <li class=\"person\"></li>\n</ul>");
       persons = [
         {
           person: "me"
@@ -181,16 +123,10 @@
           elem.text("daa");
         }
       };
-      expected = jQuery('<div>\
-        <ul id="persons">\
-          <li class="person" foobar="foo">daa</li>\
-          <li class="person" foobar="foo">daa</li>\
-          <li class="person" foobar="foo">daa</li>\
-        </ul>\
-      </div>');
-      doc.find('#persons').render(persons, directives);
-      doc.find('#persons').render(persons, directives);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<ul id=\"persons\">\n  <li class=\"person\" foobar=\"foo\">daa</li>\n  <li class=\"person\" foobar=\"foo\">daa</li>\n  <li class=\"person\" foobar=\"foo\">daa</li>\n</ul>");
+      template.render(persons, directives);
+      template.render(persons, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
   });
 
