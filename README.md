@@ -148,7 +148,7 @@ Result:
 </ul>
 ```
 
-#### Rendering a list with plain values
+#### Rendering a list of plain values
 
 With plain values, Transparency can't guess how you would like to bind the data to DOM, so a bit of
 help is needed. Directive functions are just for that. Directives are defined as an object of functions.
