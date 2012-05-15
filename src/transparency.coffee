@@ -115,14 +115,9 @@ setContent = (callback) ->
     (element.appendChild c) for c in elementData.children
 
 setHtml = setContent (element, html) -> element.innerHTML = html
-setText = setContent (element, text) ->
-  if element.nodeName.toLowerCase() == 'input'
-    setAttribute element, 'value', text
-  else
-    element.appendChild element.ownerDocument.createTextNode text
+setText = setContent (element, text) -> element.appendChild element.ownerDocument.createTextNode text
 
-getText = (element) ->
-  "todo"
+getText = (element) -> "todo"
 
 setAttribute = (element, attribute, value) ->
   value = value.toString() if isDate value
