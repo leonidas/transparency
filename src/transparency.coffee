@@ -21,9 +21,8 @@ T.data  = (element) ->
 debug     = null
 debugMode = (debug) ->
   if debug and console?
-    (messages...) -> console.log m for m in messages
-  else
-    () ->
+  then (messages...) -> console.log m for m in messages
+  else () ->
 
 T.render = (context, models, directives, config) ->
   debug = debugMode config?.debug
@@ -52,7 +51,7 @@ T.render = (context, models, directives, config) ->
 
     renderValues      instance, model
     renderDirectives  instance, model, index, directives
-    renderChildren    instance, model, directives
+    renderChildren    instance, model, directives, config
 
   # Finally, put the context element back to its original place in DOM
   if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
@@ -85,25 +84,24 @@ prepareContext = (context, models) ->
       (setAttribute e, attr, value) for attr, value of T.data(e).attributes
 
 renderValues = (instance, model) ->
-    for key, value of model when typeof model == 'object'
-      value = value.toISOString() if isDate value
+    for key, value of model when typeof model == 'object' and isPlainValue value
+      for element in matchingElements instance, key
 
-      if typeof value != 'object' and typeof value != 'function'
-        setText(element, value) for element in matchingElements(instance, key)
+        if element.nodeName.toLowerCase() == 'input'
+        then setAttribute element, 'value', value
+        else setAttribute element, 'text', value
 
 renderDirectives = (instance, model, index, directives) ->
-  for key, attributes of directives # when typeof when typeof element == object
-    #throw new Error "Transparency: Directives should be two-dimensional objects, e.g., directive[element][attribute] = function(){}"
-
+  for key, attributes of directives
     for element in matchingElements instance, key
       for attribute, directive of attributes when typeof directive == 'function'
 
         value = directive.call (if typeof model == 'object' then model else value: model), element, index
         setAttribute element, attribute, value if value
 
-renderChildren = (instance, model, directives) ->
+renderChildren = (instance, model, directives, config) ->
   for key, value of model when typeof value == 'object' and not isDate value
-    T.render element, value, directives[key] for element in matchingElements(instance, key)
+    T.render element, value, directives[key], config for element in matchingElements instance, key
 
 setContent = (callback) ->
   (element, content) ->
@@ -127,6 +125,8 @@ getText = (element) ->
   "todo"
 
 setAttribute = (element, attribute, value) ->
+  value = value.toString() if isDate value
+
   # Save the original value, so it can be restored before the instance is reused
   elementData = T.data element
   elementData.attributes ||= {}
@@ -148,8 +148,7 @@ elementNodes = (template) ->
   elements = []
   for e in template when e.nodeType == ELEMENT_NODE
     elements.push e
-    for child in e.getElementsByTagName '*'
-      elements.push child
+    elements.push child for child in e.getElementsByTagName '*'
   elements
 
 matchingElements = (instance, key) ->
@@ -168,8 +167,11 @@ ELEMENT_NODE = 1
 # IE8 <= fails to clone detached nodes properly, shim with jQuery
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
 # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
-html5Clone = () -> document.createElement("nav").cloneNode( true ).outerHTML != "<:nav></:nav>"
-cloneNode  = if not html5Clone() then (node) -> jQuery(node).clone()[0] else (node) -> node.cloneNode true
+html5Clone = () -> document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
+cloneNode  =
+  if html5Clone()
+  then (node) -> node.cloneNode true
+  else (node) -> jQuery(node).clone()[0]
 
 Array.isArray  ?= (obj) -> jQuery.isArray obj
 Array::indexOf ?= (obj) -> jQuery.inArray obj, this
@@ -177,10 +179,4 @@ Array::indexOf ?= (obj) -> jQuery.inArray obj, this
 # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
 isDate = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
 
-# https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/toISOString
-pad = (n) -> if n < 10 then "0#{n}" else n.toString()
-
-Date::toISOString ?= () ->
-  "#{@getUTCFullYear()}-#{pad @getUTCMonth() + 1}-#{pad @getUTCDate()}" +
-  "T#{pad @getUTCHours()}:#{pad @getUTCMinutes()}:#{pad @getUTCSeconds()}" +
-  ".#{String((@getUTCMilliseconds() / 1000).toFixed 3).slice 2, 5}Z"
+isPlainValue = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'

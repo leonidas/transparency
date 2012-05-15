@@ -76,13 +76,13 @@
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
-    it("should work with date objects", function() {
+    it("should convert date objects to strings", function() {
       var data, expected, template;
       template = $("<div class=\"container\">\n  <div class=\"best_before\"></div>\n</div>");
       data = {
         best_before: new Date(0)
       };
-      expected = $("<div class=\"container\">\n  <div class=\"best_before\">1970-01-01T00:00:00.000Z</div>\n</div>");
+      expected = $("<div class=\"container\">\n  <div class=\"best_before\">" + ((new Date(0)).toString()) + "</div>\n</div>");
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });

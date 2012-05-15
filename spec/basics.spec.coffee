@@ -138,7 +138,7 @@ describe "Transparency", ->
     template.render data
     expect(template.html()).htmlToBeEqual expected.html()
 
-  it "should work with date objects", ->
+  it "should convert date objects to strings", ->
     template = $ """
       <div class="container">
         <div class="best_before"></div>
@@ -150,7 +150,7 @@ describe "Transparency", ->
 
     expected = $ """
       <div class="container">
-        <div class="best_before">1970-01-01T00:00:00.000Z</div>
+        <div class="best_before">#{(new Date 0).toString()}</div>
       </div>
       """
 
