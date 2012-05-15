@@ -48,11 +48,10 @@ T.render = (context, models, directives, config) ->
     debug "Model:", model, "Template instance for the model:", instance
 
     # Associate model with instance elements
-    for e in instance.elements
-      T.data(e).model = model
+    T.data(e).model = model for e in instance.elements
 
     renderValues      instance, model
-    renderDirectives  instance, model, directives, index
+    renderDirectives  instance, model, index, directives
     renderChildren    instance, model, directives
 
   # Finally, put the context element back to its original place in DOM
@@ -92,25 +91,16 @@ renderValues = (instance, model) ->
       if typeof value != 'object' and typeof value != 'function'
         setText(element, value) for element in matchingElements(instance, key)
 
-renderDirectives = (instance, model, directives, index) ->
-  for key, directiveFunction of directives when typeof directiveFunction == 'function'
+renderDirectives = (instance, model, index, directives) ->
+  for key, attributes of directives # when typeof when typeof element == object
+    #throw new Error "Transparency: Directives should be two-dimensional objects, e.g., directive[element][attribute] = function(){}"
 
     for element in matchingElements instance, key
-      directive =
-        directiveFunction.call (if typeof model == 'object' then model else value: model), element, index
 
-      if not directive
-        # Directive function returned no value, meaning
-        # it most likely did element in-place manipulation
-        # on element parameter
-        continue
+      for attribute, directive of attributes when typeof directive == 'function'
+        value = directive.call (if typeof model == 'object' then model else value: model), element, index
 
-      directive = text: directive if typeof directive != 'object'
-
-      setText element, directive.text
-      setHtml element, directive.html
-      for attr, value of directive when attr != 'html' and attr != 'text'
-        setAttribute element, attr, value
+        setAttribute element, attribute, value if value
 
 renderChildren = (instance, model, directives) ->
   for key, value of model when typeof value == 'object' and not isDate value
@@ -134,16 +124,26 @@ setText = setContent (element, text) ->
   else
     element.appendChild element.ownerDocument.createTextNode text
 
-setAttribute = (element, attr, value) ->
+getText = (element) ->
+  "todo"
+
+setAttribute = (element, attribute, value) ->
   # Save the original value, so it can be restored before the instance is reused
   elementData = T.data element
-  elementData.attributes       ||= {}
-  if attr == 'class'
-    elementData.attributes[attr] ||= element.className
-    element.className = value
-  else
-    elementData.attributes[attr] ||= element.getAttribute attr
-    element.setAttribute attr, value
+  elementData.attributes ||= {}
+  switch attribute
+    when 'text'
+      elementData.attributes['text'] ||= getText element
+      setText element, value
+    when 'html'
+      elementData.attributes['html'] ||= element.innerHTML
+      setHtml element, value
+    when 'class'
+      elementData.attributes['class'] ||= element.className
+      element.className = value
+    else
+      elementData.attributes[attribute] ||= element.getAttribute attribute
+      element.setAttribute attribute, value
 
 elementNodes = (template) ->
   elements = []

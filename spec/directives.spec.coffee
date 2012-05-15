@@ -17,7 +17,8 @@ describe "Transparency", ->
       email:     'jasmine.tailor@example.com'
 
     directives =
-      name: (element) -> "#{@firstname} #{@lastname}"
+      name:
+        text: () -> "#{@firstname} #{@lastname}"
 
     expected = $ """
       <div class="person">
@@ -42,8 +43,8 @@ describe "Transparency", ->
       email:     'jasmine.tailor@example.com'
 
     directives =
-      name: (element) ->
-        html: "#{@firstname} #{@lastname}"
+      name:
+        html: () -> "#{@firstname} #{@lastname}"
 
     expected = $ """
       <div class="person">
@@ -86,9 +87,11 @@ describe "Transparency", ->
 
     nameDecorator = (element) -> "#{@firstname} #{@lastname}"
     directives =
-      name: nameDecorator
+      name:
+        text: nameDecorator
       friends:
-        name: nameDecorator
+        name:
+          text: nameDecorator
 
 
     expected = $ """
@@ -127,8 +130,8 @@ describe "Transparency", ->
     ]
 
     directives =
-      person: (element, i) ->
-        class: element.className + (if i % 2 then " odd" else " even")
+      person:
+        class: (element, i) -> element.className + (if i % 2 then " odd" else " even")
 
     expected = $ """
       <ul id="persons">
@@ -160,17 +163,18 @@ describe "Transparency", ->
     ]
 
     directives =
-      person: (elem, i) ->
-        elem = jQuery elem
-        elem.attr("foobar", "foo")
-        elem.text("daa")
-        return
+      person:
+        html: (elem, i) ->
+          elem = jQuery elem
+          elem.attr "foobar", "foo"
+          elem.text i+1
+          return
 
     expected = $ """
       <ul id="persons">
-        <li class="person" foobar="foo">daa</li>
-        <li class="person" foobar="foo">daa</li>
-        <li class="person" foobar="foo">daa</li>
+        <li class="person" foobar="foo">1</li>
+        <li class="person" foobar="foo">2</li>
+        <li class="person" foobar="foo">3</li>
       </ul>
       """
 

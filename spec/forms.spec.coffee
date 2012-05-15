@@ -31,37 +31,30 @@ describe "Transparency", ->
 
   it "should render values to option elements", ->
     template = $ """
-      <form>
-        <select id="states">
-          <option class="state"></option>
-        </select>
-      </form>
+      <select id="states">
+        <option class="state"></option>
+      </select>
       """
 
-    data =
-      states: [
-        id: 1
-        state: 'Alabama'
-      ,
-        id: 2
-        state: 'Alaska'
-      ,
-        id: 3
-        state: 'Arizona'
-      ]
+    data = [
+      id: 1
+      state: 'Alabama'
+    ,
+      id: 2
+      state: 'Alaska'
+    ,
+      id: 3
+      state: 'Arizona'
+    ]
 
-    directives =
-      states:
-        state: () -> value: @id
+    directives = state: value: -> @id
 
     expected = $ """
-      <form>
-        <select id="states">
-          <option class="state" value="1">Alabama</option>
-          <option class="state" value="2">Alaska</option>
-          <option class="state" value="3">Arizona</option>
-        </select>
-      </form>
+      <select id="states">
+        <option class="state" value="1">Alabama</option>
+        <option class="state" value="2">Alaska</option>
+        <option class="state" value="3">Arizona</option>
+      </select>
       """
 
     template.render data, directives

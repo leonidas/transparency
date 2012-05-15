@@ -17,8 +17,10 @@
         email: 'jasmine.tailor@example.com'
       };
       directives = {
-        name: function(element) {
-          return "" + this.firstname + " " + this.lastname;
+        name: {
+          text: function() {
+            return "" + this.firstname + " " + this.lastname;
+          }
         }
       };
       expected = $("<div class=\"person\">\n  <span class=\"name\">Jasmine Taylor</span>\n  <span class=\"email\">jasmine.tailor@example.com</span>\n</div>");
@@ -34,10 +36,10 @@
         email: 'jasmine.tailor@example.com'
       };
       directives = {
-        name: function(element) {
-          return {
-            html: "" + this.firstname + " " + this.lastname
-          };
+        name: {
+          html: function() {
+            return "" + this.firstname + " " + this.lastname;
+          }
         }
       };
       expected = $("<div class=\"person\">\n  <div class=\"name\"><b>Jasmine</b> <i>Taylor</i><div>FOOBAR</div></div>\n  <span class=\"email\">jasmine.tailor@example.com</span>\n</div>");
@@ -71,9 +73,13 @@
         return "" + this.firstname + " " + this.lastname;
       };
       directives = {
-        name: nameDecorator,
+        name: {
+          text: nameDecorator
+        },
         friends: {
-          name: nameDecorator
+          name: {
+            text: nameDecorator
+          }
         }
       };
       expected = $("<div class=\"person\">\n  <span class=\"name\">Jasmine Taylor</span>\n  <span class=\"email\">jasmine.taylor@example.com</span>\n  <div class=\"friends\">\n    <div class=\"friend\">\n      <span class=\"name\">John Mayer</span>\n      <span class=\"email\">john.mayer@example.com</span>\n    </div>\n    <div class=\"friend\">\n      <span class=\"name\">Damien Rice</span>\n      <span class=\"email\">damien.rice@example.com</span>\n    </div>\n  </div>\n</div>");
@@ -93,10 +99,10 @@
         }
       ];
       directives = {
-        person: function(element, i) {
-          return {
-            "class": element.className + (i % 2 ? " odd" : " even")
-          };
+        person: {
+          "class": function(element, i) {
+            return element.className + (i % 2 ? " odd" : " even");
+          }
         }
       };
       expected = $("<ul id=\"persons\">\n  <li class=\"person even\">me</li>\n  <li class=\"person odd\">you</li>\n  <li class=\"person even\">others</li>\n</ul>");
@@ -117,13 +123,15 @@
         }
       ];
       directives = {
-        person: function(elem, i) {
-          elem = jQuery(elem);
-          elem.attr("foobar", "foo");
-          elem.text("daa");
+        person: {
+          html: function(elem, i) {
+            elem = jQuery(elem);
+            elem.attr("foobar", "foo");
+            elem.text(i + 1);
+          }
         }
       };
-      expected = $("<ul id=\"persons\">\n  <li class=\"person\" foobar=\"foo\">daa</li>\n  <li class=\"person\" foobar=\"foo\">daa</li>\n  <li class=\"person\" foobar=\"foo\">daa</li>\n</ul>");
+      expected = $("<ul id=\"persons\">\n  <li class=\"person\" foobar=\"foo\">1</li>\n  <li class=\"person\" foobar=\"foo\">2</li>\n  <li class=\"person\" foobar=\"foo\">3</li>\n</ul>");
       template.render(persons, directives);
       template.render(persons, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());

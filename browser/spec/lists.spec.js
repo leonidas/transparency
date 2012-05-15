@@ -53,8 +53,10 @@
       template = $("<div class=\"comments\">\n  <label>Comment:</label>\n  <span class=\"comment\"></span>\n</div>");
       data = ["That rules", "Great post!", 5];
       directives = {
-        comment: function() {
-          return this.value;
+        comment: {
+          text: function() {
+            return this.value;
+          }
         }
       };
       expected = $("<div class=\"comments\">\n  <label>Comment:</label>\n  <span class=\"comment\">That rules</span>\n  <label>Comment:</label>\n  <span class=\"comment\">Great post!</span>\n  <label>Comment:</label>\n  <span class=\"comment\">5</span>\n</div>");

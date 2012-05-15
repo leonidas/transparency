@@ -22,31 +22,27 @@
     });
     it("should render values to option elements", function() {
       var data, directives, expected, template;
-      template = $("<form>\n  <select id=\"states\">\n    <option class=\"state\"></option>\n  </select>\n</form>");
-      data = {
-        states: [
-          {
-            id: 1,
-            state: 'Alabama'
-          }, {
-            id: 2,
-            state: 'Alaska'
-          }, {
-            id: 3,
-            state: 'Arizona'
-          }
-        ]
-      };
+      template = $("<select id=\"states\">\n  <option class=\"state\"></option>\n</select>");
+      data = [
+        {
+          id: 1,
+          state: 'Alabama'
+        }, {
+          id: 2,
+          state: 'Alaska'
+        }, {
+          id: 3,
+          state: 'Arizona'
+        }
+      ];
       directives = {
-        states: {
-          state: function() {
-            return {
-              value: this.id
-            };
+        state: {
+          value: function() {
+            return this.id;
           }
         }
       };
-      expected = $("<form>\n  <select id=\"states\">\n    <option class=\"state\" value=\"1\">Alabama</option>\n    <option class=\"state\" value=\"2\">Alaska</option>\n    <option class=\"state\" value=\"3\">Arizona</option>\n  </select>\n</form>");
+      expected = $("<select id=\"states\">\n  <option class=\"state\" value=\"1\">Alabama</option>\n  <option class=\"state\" value=\"2\">Alaska</option>\n  <option class=\"state\" value=\"3\">Arizona</option>\n</select>");
       template.render(data, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });

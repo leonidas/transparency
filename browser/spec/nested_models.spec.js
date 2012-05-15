@@ -201,22 +201,22 @@
       };
       directives = {
         profiles: {
-          name: function() {
-            return {
-              href: "/" + this.name
-            };
+          name: {
+            href: function() {
+              return "/" + this.name;
+            }
           },
           testsets: {
-            name: function() {
-              return {
-                href: "/" + this.name
-              };
+            name: {
+              href: function() {
+                return "/" + this.name;
+              }
             },
             products: {
-              name: function() {
-                return {
-                  href: "/" + this.name
-                };
+              name: {
+                href: function() {
+                  return "/" + this.name;
+                }
               }
             }
           }
