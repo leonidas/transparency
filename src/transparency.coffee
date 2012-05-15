@@ -96,10 +96,9 @@ renderDirectives = (instance, model, index, directives) ->
     #throw new Error "Transparency: Directives should be two-dimensional objects, e.g., directive[element][attribute] = function(){}"
 
     for element in matchingElements instance, key
-
       for attribute, directive of attributes when typeof directive == 'function'
-        value = directive.call (if typeof model == 'object' then model else value: model), element, index
 
+        value = directive.call (if typeof model == 'object' then model else value: model), element, index
         setAttribute element, attribute, value if value
 
 renderChildren = (instance, model, directives) ->
@@ -170,8 +169,7 @@ ELEMENT_NODE = 1
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
 # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
 html5Clone = () -> document.createElement("nav").cloneNode( true ).outerHTML != "<:nav></:nav>"
-
-cloneNode = if not html5Clone() then (node) -> jQuery(node).clone()[0] else (node) -> node.cloneNode true
+cloneNode  = if not html5Clone() then (node) -> jQuery(node).clone()[0] else (node) -> node.cloneNode true
 
 Array.isArray  ?= (obj) -> jQuery.isArray obj
 Array::indexOf ?= (obj) -> jQuery.inArray obj, this
