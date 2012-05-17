@@ -19,13 +19,13 @@ T.data  = (element) ->
   element[expando] ||= {}
 
 debug     = null
-debugMode = (debug) ->
-  if debug and console?
+debugMode = (config) ->
+  if config?.debug and console?
   then (messages...) -> console.log m for m in messages
   else () ->
 
 T.render = (context, models, directives, config) ->
-  debug = debugMode config?.debug
+  debug = debugMode config
   debug "Context:", context, "Models:", models, "Directives:", directives, "Config:", config
   return unless context
   models     ||= []
