@@ -138,7 +138,7 @@
     });
     return it("should provide current attribute value as a parameter for the directives", function() {
       var data, directives, expected, template;
-      template = $("<div id=\"template\">\n  <li class=\"name\">Hello, </li>\n</div>");
+      template = $("<div id=\"template\">\n  <div class=\"name\">Hello, <span>Br, Transparency</span></div>\n</div>");
       data = {
         name: "World"
       };
@@ -149,7 +149,7 @@
           }
         }
       };
-      expected = $("<div id=\"template\">\n  <li class=\"name\">Hello, World!</li>\n</div>");
+      expected = $("<div id=\"template\">\n  <div class=\"name\">Hello, World!<span>Br, Transparency</span></div>\n</div>");
       template.render(data, directives);
       template.render(data, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
