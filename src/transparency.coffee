@@ -32,7 +32,8 @@ T.render = (context, models, directives, config) ->
   directives ||= {}
   models       = [models] unless Array.isArray models
 
-  # DOM manipulation is a lot faster when elements are detached. Save the original position, so we can put the context back to it's place.
+  # DOM manipulation is a lot faster when elements are detached.
+  # Save the original position, so we can put the context back to it's place.
   sibling = context.nextSibling
   parent  = context.parentNode
   parent?.removeChild context
@@ -54,13 +55,17 @@ T.render = (context, models, directives, config) ->
     renderChildren    instance, model, directives, config
 
   # Finally, put the context element back to its original place in DOM
-  if sibling then parent?.insertBefore(context, sibling) else parent?.appendChild context
+  if sibling
+  then parent?.insertBefore context, sibling
+  else parent?.appendChild context
+
+  # Return the context to support jQuery-like chaining
   context
 
 prepareContext = (context, models) ->
   contextData                 = T.data context
   contextData.template      ||= (context.removeChild context.firstChild while context.firstChild)
-  contextData.instanceCache ||= [] # Query-cached template instances are precious, so save them for the future
+  contextData.instanceCache ||= [] # Query-cached template instances are precious, save them for the future
   contextData.instances     ||= [] # Currently used template instances
   debug "Original template", contextData.template
 
@@ -95,6 +100,9 @@ renderDirectives = (instance, model, index, directives) ->
   model = if typeof model == 'object' then model else value: model
 
   for key, attributes of directives
+    unless typeof attributes == 'object'
+      throw new Error "Directive syntax is directive[element][attribute] = function(params)"
+
     for element in matchingElements instance, key
       for attribute, directive of attributes when typeof directive == 'function'
 
@@ -109,7 +117,8 @@ renderChildren = (instance, model, directives, config) ->
 setContent = (callback) ->
   (element, content) ->
     elementData = T.data element
-    return if !element or !content? or elementData.content == content
+    return if elementData.content == content
+
     elementData.content    = content
     elementData.children ||= (n for n in element.childNodes when n.nodeType == ELEMENT_NODE)
 

@@ -207,3 +207,18 @@ describe "Transparency", ->
     template.render data, directives
     template.render data, directives
     expect(template.html()).htmlToBeEqual expected.html()
+
+  it "should throw an error unless directives are syntactically correct", ->
+    template = $ """
+      <div id="template">
+        <div class="name"></div>
+      </div>
+      """
+
+    data = name: "World"
+
+    directives =
+      name: (elem, i, value) -> value + @name + "!"
+
+    expect(-> template.render data, directives)
+    .toThrow new Error "Directive syntax is directive[element][attribute] = function(params)"

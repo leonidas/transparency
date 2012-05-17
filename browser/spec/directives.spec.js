@@ -136,7 +136,7 @@
       template.render(persons, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
-    return it("should provide current attribute value as a parameter for the directives", function() {
+    it("should provide current attribute value as a parameter for the directives", function() {
       var data, directives, expected, template;
       template = $("<div id=\"template\">\n  <div class=\"name\">Hello, <span>Br, Transparency</span></div>\n</div>");
       data = {
@@ -153,6 +153,21 @@
       template.render(data, directives);
       template.render(data, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should throw an error unless directives are syntactically correct", function() {
+      var data, directives, template;
+      template = $("<div id=\"template\">\n  <div class=\"name\"></div>\n</div>");
+      data = {
+        name: "World"
+      };
+      directives = {
+        name: function(elem, i, value) {
+          return value + this.name + "!";
+        }
+      };
+      return expect(function() {
+        return template.render(data, directives);
+      }).toThrow(new Error("Directive syntax is directive[element][attribute] = function(params)"));
     });
   });
 
