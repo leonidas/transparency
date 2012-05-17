@@ -8,7 +8,7 @@
   }
 
   describe("Transparency", function() {
-    it("should calculate values with directives", function() {
+    it("should execute directive functions and assign return values to the matching attributes", function() {
       var directives, expected, person, template;
       template = $("<div class=\"person\">\n  <span class=\"name\"></span><span class=\"email\"></span>\n</div>");
       person = {
@@ -27,7 +27,7 @@
       template.render(person, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
-    it("should render html content with directives", function() {
+    it("should allow setting html content with directives", function() {
       var directives, expected, person, template;
       template = $("<div class=\"person\">\n  <div class=\"name\"><div>FOOBAR</div></div><span class=\"email\"></span>\n</div>");
       person = {
@@ -110,7 +110,7 @@
       template.render(persons, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
-    return it("should except the element has been manipulated in-place if directive functions return void", function() {
+    it("should allow directives without a return value", function() {
       var directives, expected, persons, template;
       template = $("<ul id=\"persons\">\n  <li class=\"person\"></li>\n</ul>");
       persons = [
@@ -134,6 +134,24 @@
       expected = $("<ul id=\"persons\">\n  <li class=\"person\" foobar=\"foo\">1</li>\n  <li class=\"person\" foobar=\"foo\">2</li>\n  <li class=\"person\" foobar=\"foo\">3</li>\n</ul>");
       template.render(persons, directives);
       template.render(persons, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should provide current attribute value as a parameter for the directives", function() {
+      var data, directives, expected, template;
+      template = $("<div id=\"template\">\n  <li class=\"name\">Hello, </li>\n</div>");
+      data = {
+        name: "World"
+      };
+      directives = {
+        name: {
+          text: function(elem, i, value) {
+            return value + this.name + "!";
+          }
+        }
+      };
+      expected = $("<div id=\"template\">\n  <li class=\"name\">Hello, World!</li>\n</div>");
+      template.render(data, directives);
+      template.render(data, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
   });

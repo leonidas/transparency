@@ -4,7 +4,7 @@ if module?.exports
 
 describe "Transparency", ->
 
-  it "should calculate values with directives", ->
+  it "should execute directive functions and assign return values to the matching attributes", ->
     template = $ """
       <div class="person">
         <span class="name"></span><span class="email"></span>
@@ -30,7 +30,7 @@ describe "Transparency", ->
     template.render person, directives
     expect(template.html()).htmlToBeEqual expected.html()
 
-  it "should render html content with directives", ->
+  it "should allow setting html content with directives", ->
     template = $ """
       <div class="person">
         <div class="name"><div>FOOBAR</div></div><span class="email"></span>
@@ -93,7 +93,6 @@ describe "Transparency", ->
         name:
           text: nameDecorator
 
-
     expected = $ """
       <div class="person">
         <span class="name">Jasmine Taylor</span>
@@ -147,7 +146,7 @@ describe "Transparency", ->
     template.render persons, directives
     expect(template.html()).htmlToBeEqual expected.html()
 
-  it "should except the element has been manipulated in-place if directive functions return void", ->
+  it "should allow directives without a return value", ->
     template = $ """
       <ul id="persons">
         <li class="person"></li>
@@ -182,4 +181,29 @@ describe "Transparency", ->
 
     # Render twice to make sure the class names are not duplicated
     template.render persons, directives
+    expect(template.html()).htmlToBeEqual expected.html()
+
+  it "should provide current attribute value as a parameter for the directives", ->
+    template = $ """
+      <div id="template">
+        <li class="name">Hello, </li>
+      </div>
+      """
+
+    data = name: "World"
+
+    directives =
+      name:
+        text: (elem, i, value) ->
+          value + @name + "!"
+
+    expected = $ """
+      <div id="template">
+        <li class="name">Hello, World!</li>
+      </div>
+      """
+
+    # Render twice to make sure the text content is not duplicated
+    template.render data, directives
+    template.render data, directives
     expect(template.html()).htmlToBeEqual expected.html()

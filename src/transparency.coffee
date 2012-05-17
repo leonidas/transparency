@@ -81,23 +81,26 @@ prepareContext = (context, models) ->
   # Restore the original attribute values
   for instance in contextData.instances
     for e in instance.elements
-      (setAttribute e, attr, value) for attr, value of T.data(e).attributes
+      (attr e, attribute, value) for attribute, value of T.data(e).attributes
 
 renderValues = (instance, model) ->
     for key, value of model when typeof model == 'object' and isPlainValue value
       for element in matchingElements instance, key
 
         if element.nodeName.toLowerCase() == 'input'
-        then setAttribute element, 'value', value
-        else setAttribute element, 'text', value
+        then attr element, 'value', value
+        else attr element, 'text',  value
 
 renderDirectives = (instance, model, index, directives) ->
+  model = if typeof model == 'object' then model else value: model
+
   for key, attributes of directives
     for element in matchingElements instance, key
       for attribute, directive of attributes when typeof directive == 'function'
 
-        value = directive.call (if typeof model == 'object' then model else value: model), element, index
-        setAttribute element, attribute, value if value
+        oldValue = attr element, attribute
+        value    = directive.call model, element, index, oldValue
+        attr element, attribute, value if value
 
 renderChildren = (instance, model, directives, config) ->
   for key, value of model when typeof value == 'object' and not isDate value
@@ -117,9 +120,7 @@ setContent = (callback) ->
 setHtml = setContent (element, html) -> element.innerHTML = html
 setText = setContent (element, text) -> element.appendChild element.ownerDocument.createTextNode text
 
-getText = (element) -> "todo"
-
-setAttribute = (element, attribute, value) ->
+attr = (element, attribute, value) ->
   value = value.toString() if isDate value
 
   # Save the original value, so it can be restored before the instance is reused
@@ -127,17 +128,19 @@ setAttribute = (element, attribute, value) ->
   elementData.attributes ||= {}
   switch attribute
     when 'text'
-      elementData.attributes['text'] ||= getText element
-      setText element, value
+      elementData.attributes['text'] ||= element.textContent || element.innerText
+      setText element, value if value
     when 'html'
       elementData.attributes['html'] ||= element.innerHTML
-      setHtml element, value
+      setHtml element, value if value
     when 'class'
       elementData.attributes['class'] ||= element.className
-      element.className = value
+      element.className = value if value
     else
       elementData.attributes[attribute] ||= element.getAttribute attribute
-      element.setAttribute attribute, value
+      element.setAttribute attribute, value if value
+
+  elementData.attributes[attribute]
 
 elementNodes = (template) ->
   elements = []
@@ -158,6 +161,7 @@ elementMatcher = (element, key) ->
   element.getAttribute('data-bind') == key
 
 ELEMENT_NODE = 1
+TEXT_NODE    = 3
 
 # IE8 <= fails to clone detached nodes properly, shim with jQuery
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
