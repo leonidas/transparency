@@ -186,7 +186,7 @@ describe "Transparency", ->
   it "should provide current attribute value as a parameter for the directives", ->
     template = $ """
       <div id="template">
-        <li class="name">Hello, </li>
+        <div class="name">Hello, <span>Br, Transparency</span></div>
       </div>
       """
 
@@ -199,7 +199,7 @@ describe "Transparency", ->
 
     expected = $ """
       <div id="template">
-        <li class="name">Hello, World!</li>
+        <div class="name">Hello, World!<span>Br, Transparency</span></div>
       </div>
       """
 

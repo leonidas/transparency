@@ -120,6 +120,9 @@ setContent = (callback) ->
 setHtml = setContent (element, html) -> element.innerHTML = html
 setText = setContent (element, text) -> element.appendChild element.ownerDocument.createTextNode text
 
+getText = (element) ->
+  (child.nodeValue for child in element.childNodes when child.nodeType == TEXT_NODE).join ''
+
 attr = (element, attribute, value) ->
   value = value.toString() if isDate value
 
@@ -128,7 +131,7 @@ attr = (element, attribute, value) ->
   elementData.attributes ||= {}
   switch attribute
     when 'text'
-      elementData.attributes['text'] ||= element.textContent || element.innerText
+      elementData.attributes['text'] ||= getText element
       setText element, value if value
     when 'html'
       elementData.attributes['html'] ||= element.innerHTML
