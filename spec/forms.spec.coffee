@@ -7,8 +7,8 @@ describe "Transparency", ->
   it "should render values to form inputs and textarea elements", ->
     template = $ """
       <div>
-        <input name="name" type="text" />
-        <input name="job" type="text" />
+        <input name="name"/>
+        <input name="job"/>
         <textarea name="resume"></textarea>
       </div>
       """
@@ -20,8 +20,8 @@ describe "Transparency", ->
 
     expected = $ """
       <div>
-        <input name="name" type="text" value="John"/>
-        <input name="job" type="text" value="Milkman"/>
+        <input name="name" value="John"/>
+        <input name="job" value="Milkman"/>
         <textarea name="resume">Jack of all trades</textarea>
       </div>
       """

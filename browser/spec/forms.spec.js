@@ -10,13 +10,13 @@
   describe("Transparency", function() {
     it("should render values to form inputs and textarea elements", function() {
       var data, expected, template;
-      template = $("<div>\n  <input name=\"name\" type=\"text\" />\n  <input name=\"job\" type=\"text\" />\n  <textarea name=\"resume\"></textarea>\n</div>");
+      template = $("<div>\n  <input name=\"name\"/>\n  <input name=\"job\"/>\n  <textarea name=\"resume\"></textarea>\n</div>");
       data = {
         name: 'John',
         job: 'Milkman',
         resume: "Jack of all trades"
       };
-      expected = $("<div>\n  <input name=\"name\" type=\"text\" value=\"John\"/>\n  <input name=\"job\" type=\"text\" value=\"Milkman\"/>\n  <textarea name=\"resume\">Jack of all trades</textarea>\n</div>");
+      expected = $("<div>\n  <input name=\"name\" value=\"John\"/>\n  <input name=\"job\" value=\"Milkman\"/>\n  <textarea name=\"resume\">Jack of all trades</textarea>\n</div>");
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });

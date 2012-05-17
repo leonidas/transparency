@@ -188,11 +188,11 @@ describe "Transparency", ->
 
     directives =
       profiles:
-        name: href: -> "/#{@name}"
+        name: href: -> "http://www.example.com/#{@name}"
         testsets:
-          name: href: -> "/#{@name}"
+          name: href: -> "http://www.example.com/#{@name}"
           products:
-            name: href: -> "/#{@name}"
+            name: href: -> "http://www.example.com/#{@name}"
 
     expected = jQuery(
      '<div>
@@ -200,10 +200,10 @@ describe "Transparency", ->
           <thead>
             <tr class="profiles">
               <th>
-                <a class="name" href="/Core">Core</a>
+                <a class="name" href="http://www.example.com/Core">Core</a>
               </th>
               <th>
-                <a class="name" href="/Handset">Handset</a>
+                <a class="name" href="http://www.example.com/Handset">Handset</a>
               </th>
             </tr>
           </thead>
@@ -211,48 +211,48 @@ describe "Transparency", ->
             <tr class="profiles">
               <td class="testsets">
                 <div class="testset">
-                  <a class="name" href="/Sanity">Sanity</a>
+                  <a class="name" href="http://www.example.com/Sanity">Sanity</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/N900">N900</a>
+                      <a class="name" href="http://www.example.com/N900">N900</a>
                     </li>
                     <li>
-                      <a class="name" href="/Lenovo">Lenovo</a>
+                      <a class="name" href="http://www.example.com/Lenovo">Lenovo</a>
                     </li>
                   </ul>
                 </div>
                 <div class="testset">
-                  <a class="name" href="/Acceptance">Acceptance</a>
+                  <a class="name" href="http://www.example.com/Acceptance">Acceptance</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/Netbook">Netbook</a>
+                      <a class="name" href="http://www.example.com/Netbook">Netbook</a>
                     </li>
                     <li>
-                      <a class="name" href="/Pinetrail">Pinetrail</a>
+                      <a class="name" href="http://www.example.com/Pinetrail">Pinetrail</a>
                     </li>
                   </ul>
                 </div>
               </td>
               <td class="testsets">
                 <div class="testset">
-                  <a class="name" href="/Feature">Feature</a>
+                  <a class="name" href="http://www.example.com/Feature">Feature</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/N900">N900</a>
+                      <a class="name" href="http://www.example.com/N900">N900</a>
                     </li>
                     <li>
-                      <a class="name" href="/Lenovo">Lenovo</a>
+                      <a class="name" href="http://www.example.com/Lenovo">Lenovo</a>
                     </li>
                   </ul>
                 </div>
                 <div class="testset">
-                  <a class="name" href="/NFT">NFT</a>
+                  <a class="name" href="http://www.example.com/NFT">NFT</a>
                   <ul class="products">
                     <li>
-                      <a class="name" href="/Netbook">Netbook</a>
+                      <a class="name" href="http://www.example.com/Netbook">Netbook</a>
                     </li>
                     <li>
-                      <a class="name" href="/iCDK">iCDK</a>
+                      <a class="name" href="http://www.example.com/iCDK">iCDK</a>
                     </li>
                   </ul>
                 </div>
