@@ -8,7 +8,7 @@
   }
 
   describe("Transparency", function() {
-    it("should execute directive functions and assign return values to the matching attributes", function() {
+    it("should execute directive function and assign return value to the matching element attribute", function() {
       var directives, expected, person, template;
       template = $("<div class=\"person\">\n  <span class=\"name\"></span><span class=\"email\"></span>\n</div>");
       person = {
@@ -69,7 +69,7 @@
           }
         ]
       };
-      nameDecorator = function(element) {
+      nameDecorator = function() {
         return "" + this.firstname + " " + this.lastname;
       };
       directives = {
@@ -100,8 +100,8 @@
       ];
       directives = {
         person: {
-          "class": function(element, i) {
-            return element.className + (i % 2 ? " odd" : " even");
+          "class": function(params) {
+            return params.element.className + (params.index % 2 ? " odd" : " even");
           }
         }
       };
@@ -124,14 +124,15 @@
       ];
       directives = {
         person: {
-          html: function(elem, i) {
-            elem = jQuery(elem);
+          html: function(params) {
+            var elem;
+            elem = $(params.element);
             elem.attr("foobar", "foo");
-            elem.text(i + 1);
+            elem.text("" + params.index);
           }
         }
       };
-      expected = $("<ul id=\"persons\">\n  <li class=\"person\" foobar=\"foo\">1</li>\n  <li class=\"person\" foobar=\"foo\">2</li>\n  <li class=\"person\" foobar=\"foo\">3</li>\n</ul>");
+      expected = $("<ul id=\"persons\">\n  <li class=\"person\" foobar=\"foo\">0</li>\n  <li class=\"person\" foobar=\"foo\">1</li>\n  <li class=\"person\" foobar=\"foo\">2</li>\n</ul>");
       template.render(persons, directives);
       template.render(persons, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
@@ -144,8 +145,8 @@
       };
       directives = {
         name: {
-          text: function(elem, i, value) {
-            return value + this.name + "!";
+          text: function(params) {
+            return params.value + this.name + "!";
           }
         }
       };
@@ -161,8 +162,8 @@
         name: "World"
       };
       directives = {
-        name: function(elem, i, value) {
-          return value + this.name + "!";
+        name: function() {
+          return "!";
         }
       };
       return expect(function() {

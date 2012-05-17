@@ -107,7 +107,7 @@ renderDirectives = (instance, model, index, directives) ->
       for attribute, directive of attributes when typeof directive == 'function'
 
         oldValue = attr element, attribute
-        value    = directive.call model, element, index, oldValue
+        value    = directive.call model, element: element, index: index, value: oldValue
         attr element, attribute, value if value
 
 renderChildren = (instance, model, directives, config) ->

@@ -4,7 +4,7 @@ if module?.exports
 
 describe "Transparency", ->
 
-  it "should execute directive functions and assign return values to the matching attributes", ->
+  it "should execute directive function and assign return value to the matching element attribute", ->
     template = $ """
       <div class="person">
         <span class="name"></span><span class="email"></span>
@@ -17,8 +17,7 @@ describe "Transparency", ->
       email:     'jasmine.tailor@example.com'
 
     directives =
-      name:
-        text: () -> "#{@firstname} #{@lastname}"
+      name: text: -> "#{@firstname} #{@lastname}"
 
     expected = $ """
       <div class="person">
@@ -44,7 +43,7 @@ describe "Transparency", ->
 
     directives =
       name:
-        html: () -> "#{@firstname} #{@lastname}"
+        html: -> "#{@firstname} #{@lastname}"
 
     expected = $ """
       <div class="person">
@@ -85,13 +84,11 @@ describe "Transparency", ->
         email:     'damien.rice@example.com'
       ]
 
-    nameDecorator = (element) -> "#{@firstname} #{@lastname}"
+    nameDecorator = -> "#{@firstname} #{@lastname}"
     directives =
-      name:
-        text: nameDecorator
+      name: text: nameDecorator
       friends:
-        name:
-          text: nameDecorator
+        name: text: nameDecorator
 
     expected = $ """
       <div class="person">
@@ -130,7 +127,7 @@ describe "Transparency", ->
 
     directives =
       person:
-        class: (element, i) -> element.className + (if i % 2 then " odd" else " even")
+        class: (params) -> params.element.className + (if params.index % 2 then " odd" else " even")
 
     expected = $ """
       <ul id="persons">
@@ -163,17 +160,17 @@ describe "Transparency", ->
 
     directives =
       person:
-        html: (elem, i) ->
-          elem = jQuery elem
+        html: (params) ->
+          elem = $ params.element
           elem.attr "foobar", "foo"
-          elem.text i+1
+          elem.text "" + params.index
           return
 
     expected = $ """
       <ul id="persons">
+        <li class="person" foobar="foo">0</li>
         <li class="person" foobar="foo">1</li>
         <li class="person" foobar="foo">2</li>
-        <li class="person" foobar="foo">3</li>
       </ul>
       """
 
@@ -194,8 +191,8 @@ describe "Transparency", ->
 
     directives =
       name:
-        text: (elem, i, value) ->
-          value + @name + "!"
+        text: (params) ->
+          params.value + @name + "!"
 
     expected = $ """
       <div id="template">
@@ -218,7 +215,7 @@ describe "Transparency", ->
     data = name: "World"
 
     directives =
-      name: (elem, i, value) -> value + @name + "!"
+      name: -> "!"
 
     expect(-> template.render data, directives)
     .toThrow new Error "Directive syntax is directive[element][attribute] = function(params)"
