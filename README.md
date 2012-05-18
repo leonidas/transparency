@@ -150,7 +150,7 @@ Result:
 </ul>
 ```
 
-#### Rendering a list with plain values
+#### Rendering a list of plain values
 
 With plain values, Transparency can't guess how you would like to bind the data to DOM, so a bit of
 help is needed. Directives are just for that.
@@ -176,7 +176,7 @@ var comments, directives;
 
 comments = ["That rules", "Great post!"];
 
-# See section 'Directives' for the details
+// See section 'Directives' for the details
 directives = {
   comment: {
     text: function() {
