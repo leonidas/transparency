@@ -1,6 +1,6 @@
 # Synopsis
 
-Transparency is a dead simple (client-side) template engine which binds data to DOM. Just call `.render(data)`.
+Transparency is a client-side template engine which binds data to DOM. Just call `.render(data)`.
 
 ```html
 <div id="template">
