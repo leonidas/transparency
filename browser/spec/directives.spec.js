@@ -163,7 +163,7 @@
       };
       directives = {
         name: function() {
-          return "!";
+          return "" + this.name + "!";
         }
       };
       return expect(function() {

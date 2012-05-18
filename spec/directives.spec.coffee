@@ -42,8 +42,7 @@ describe "Transparency", ->
       email:     'jasmine.tailor@example.com'
 
     directives =
-      name:
-        html: -> "#{@firstname} #{@lastname}"
+      name: html: -> "#{@firstname} #{@lastname}"
 
     expected = $ """
       <div class="person">
@@ -190,9 +189,7 @@ describe "Transparency", ->
     data = name: "World"
 
     directives =
-      name:
-        text: (params) ->
-          params.value + @name + "!"
+      name: text: (params) -> params.value + @name + "!"
 
     expected = $ """
       <div id="template">
@@ -212,10 +209,8 @@ describe "Transparency", ->
       </div>
       """
 
-    data = name: "World"
-
-    directives =
-      name: -> "!"
+    data       = name: "World"
+    directives = name: -> "#{@name}!"
 
     expect(-> template.render data, directives)
     .toThrow new Error "Directive syntax is directive[element][attribute] = function(params)"

@@ -1,6 +1,6 @@
 # Synopsis
 
-Transparency is a (client-side) template engine which binds data to DOM with zero configuration. Just call `.render(data)`.
+Transparency is a dead simple (client-side) template engine which binds data to DOM. Just call `.render(data)`.
 
 ```html
 <div id="template">
@@ -8,6 +8,7 @@ Transparency is a (client-side) template engine which binds data to DOM with zer
   <span class="name"></span>
 </div>
 ```
+
 ```js
 var hello = {
   greeting: 'Hello',
@@ -16,6 +17,7 @@ var hello = {
 
 $('#template').render(hello);
 ```
+
 ```html
 <div id="template">
   <span class="greeting">Hello</span>
@@ -30,8 +32,8 @@ $('#template').render(hello);
 * Data binding by convention - No extra markup in the views
 * Collection rendering - No loops and partials
 * Nested objects and collections - No configuration, just conventions
-* Directives - No custom DSL, just functions
-* Template caching - No manual template lookup/compilation/rendering
+* Directives - No DSL, just functions
+* Cached templates by default - No separate lookup/compile/use steps
 * Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
 * Compatible - Tested on IE6+, Chrome and Firefox
 
@@ -56,14 +58,14 @@ Get the
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
 
-Node users can also install via NPM:
-
-        npm install transparency
-
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/transparency.min.js"></script>
 ```
+
+Node users can also install via NPM:
+
+`npm install transparency`
 
 For server-side use, see `spec` folder and the awesome [jsdom](https://github.com/tmpvar/jsdom) for the details.
 
@@ -151,11 +153,10 @@ Result:
 #### Rendering a list with plain values
 
 With plain values, Transparency can't guess how you would like to bind the data to DOM, so a bit of
-help is needed. Directive functions are just for that. Directives are defined as an object of functions.
-Keys are matched to dom elements and each model is passed for the functions as `this` parameter, one by one.
+help is needed. Directives are just for that.
 
-Access to the plain values within the directive function is provided through `this.value`. There's a whole
-lot more to say about the directives, but that's all we need for now. For further examples, see
+Access to the plain values within the directives is provided through `this.value`. There's a whole
+lot more to say about the directives, but that's all we need for now. For the details, see
 section [Directives](https://github.com/leonidas/transparency#directives).
 
 Template:
@@ -177,8 +178,10 @@ comments = ["That rules", "Great post!"];
 
 # See section 'Directives' for the details
 directives = {
-  comment: function() {
-    return this.value;
+  comment: {
+    text: function() {
+      return this.value;
+    }
   }
 };
 
@@ -297,16 +300,20 @@ Result:
 
 ### Directives
 
-Directives are used for manipulating text or html values and setting element attributes.
-In addition to having an access to the current data object through `this`, directives also receive
-index number and current element as a parameter, which makes it easy to, e.g., add `even` and `odd` classes or
-hide elements.
+Directives are actions Transparency performs while rendering the templates. They can be used for setting element
+`text` or `html` content and attribute values, e.g., `class`, `src` or `href`.
 
-The return value of a directive function can be either string or object. If the return value is string, it is assigned
-to the matching elements as text content. If the return value is an object, keys can be either `text`, `html` or any
-valid element attribute, e.g., `class`, `src` or `href`. Values are assigned accordingly to the matching elements.
+Directives are plain javascript functions defined in a two-dimensional object literal, i.e.,
 
-If both `text` and `html` are present, `html` overrides the text content.
+`directives[element][attribute] = function(params) {...}`
+
+where `element` is value of `id`, `class`, `name` attribute or `data-bind` attribute of the target element. Similarly,
+`attribute` is the name of the target attribute.
+
+Directive functions receive current model as `this` paramater. In addition, they receive current element as
+`params.element`, current index as `params.index` and current value as `params.value`.
+
+The return value of a directive function is assigned to the matching element's attribute. The return value should be string.
 
 Template:
 
@@ -320,15 +327,26 @@ Template:
 Javascript:
 
 ```js
+var person, directives;
+
 person = {
   firstname: 'Jasmine',
   lastname:  'Taylor',
   email:     'jasmine.tailor@example.com'
 };
 
-directives =
-  name:  function(element, index) { return this.firstname + " " + this.lastname; }
-  email: function(element, index) { return {href: "mailto:" + this.email}; }
+directives = {
+  name: {
+    html: function(params) {
+      return "<b>" + this.firstname + " " + this.lastname + "</b>";
+    }
+  },
+
+  email: {
+    href: function(params) {
+      return this.email;
+    }
+  }
 };
 
 $('.person').render(person, directives);
@@ -338,7 +356,7 @@ Result:
 
 ```html
 <div class="person">
-  <span class="name">Jasmine Taylor</span>
+  <span class="name"><b>Jasmine Taylor</b></span>
   <a class="email" href="mailto:jasmine.tailor@example.com">jasmine.tailor@example.com</a>
 </div>
 ```
@@ -379,12 +397,13 @@ person = {
   ]
 };
 
-nameDecorator = function() { return {html: "<b>" + this.firstname + " " + this.lastname + "</b>"}; };
+nameDecorator = function() { "<b>" + this.firstname + " " + this.lastname + "</b>"; };
 
 directives = {
-  name: nameDecorator,
+  name: { html: nameDecorator },
+
   friends: {
-    name: nameDecorator
+    name: { html: nameDecorator }
   }
 };
 
