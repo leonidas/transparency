@@ -108,7 +108,7 @@ renderDirectives = (instance, model, index, directives) ->
 
         oldValue = attr element, attribute
         value    = directive.call model, element: element, index: index, value: oldValue
-        attr element, attribute, value if value
+        attr element, attribute, value if value?
 
 renderChildren = (instance, model, directives, config) ->
   for key, value of model when typeof value == 'object' and not isDate value
