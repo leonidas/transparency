@@ -100,7 +100,7 @@
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
-    return it("should preserve text between template elements", function() {
+    it("should preserve text between template elements", function() {
       var data, expected, template;
       template = $("<li class=\"foo\">\n<span data-bind=\"begin\"></span> - <span data-bind=\"end\"></span>\n</li>");
       data = {
@@ -108,6 +108,19 @@
         end: 'fdsa'
       };
       expected = $("<li class=\"foo\">\n<span data-bind=\"begin\">asdf</span> - <span data-bind=\"end\">fdsa</span>\n</li>");
+      template.render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
+    });
+    return it("should render empty string, zero and other falsy values", function() {
+      var data, expected, template;
+      template = $("<div id=\"root\">\n    <span id=\"number\">234</span>\n    <span id=\"bool\">foo</span>\n    <span id=\"dec\">1.234</span>\n    <span id=\"str\">abc</span>\n</div>​");
+      data = {
+        number: 0,
+        bool: false,
+        dec: 0.0,
+        str: ""
+      };
+      expected = $("<div id=\"root\">\n   <span id=\"number\">0</span>\n   <span id=\"bool\">false</span>\n   <span id=\"dec\">0</span>\n   <span id=\"str\"></span>\n </div>​");
       template.render(data);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });

@@ -201,3 +201,31 @@ describe "Transparency", ->
 
     template.render data
     expect(template.html()).htmlToBeEqual expected.html()
+
+  it "should render empty string, zero and other falsy values", ->
+    template = $ """
+      <div id="root">
+          <span id="number">234</span>
+          <span id="bool">foo</span>
+          <span id="dec">1.234</span>
+          <span id="str">abc</span>
+      </div>​
+      """
+
+    data =
+      number: 0
+      bool: false
+      dec: 0.0
+      str: ""
+
+    expected = $ """
+     <div id="root">
+        <span id="number">0</span>
+        <span id="bool">false</span>
+        <span id="dec">0</span>
+        <span id="str"></span>
+      </div>​
+      """
+
+    template.render data
+    expect(template.html()).htmlToBeEqual expected.html()

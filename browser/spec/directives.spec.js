@@ -155,6 +155,41 @@
       template.render(data, directives);
       return expect(template.html()).htmlToBeEqual(expected.html());
     });
+    it("should render directives returning empty string, zero and other falsy values", function() {
+      var data, directives, expected, template;
+      template = $("<div id=\"root\">\n    <span id=\"d_number\">234</span>\n    <span id=\"d_bool\">foo</span>\n    <span id=\"d_dec\">1.234</span>\n    <span id=\"d_str\">abc</span>\n</div>​");
+      data = {
+        number: 0,
+        bool: false,
+        dec: 0.0,
+        str: ""
+      };
+      directives = {
+        d_number: {
+          text: function() {
+            return this.number;
+          }
+        },
+        d_bool: {
+          text: function() {
+            return this.bool;
+          }
+        },
+        d_dec: {
+          text: function() {
+            return this.dec;
+          }
+        },
+        d_str: {
+          text: function() {
+            return this.str;
+          }
+        }
+      };
+      expected = $("<div id=\"root\">\n   <span id=\"d_number\">0</span>\n   <span id=\"d_bool\">false</span>\n   <span id=\"d_dec\">0</span>\n   <span id=\"d_str\"></span>\n </div>​");
+      template.render(data, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
+    });
     return it("should throw an error unless directives are syntactically correct", function() {
       var data, directives, template;
       template = $("<div id=\"template\">\n  <div class=\"name\"></div>\n</div>");

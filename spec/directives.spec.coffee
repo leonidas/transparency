@@ -202,6 +202,40 @@ describe "Transparency", ->
     template.render data, directives
     expect(template.html()).htmlToBeEqual expected.html()
 
+  it "should render directives returning empty string, zero and other falsy values", ->
+    template = $ """
+      <div id="root">
+          <span id="d_number">234</span>
+          <span id="d_bool">foo</span>
+          <span id="d_dec">1.234</span>
+          <span id="d_str">abc</span>
+      </div>​
+      """
+
+    data =
+      number: 0
+      bool: false
+      dec: 0.0
+      str: ""
+
+    directives =
+      d_number: text: -> @number
+      d_bool:   text: -> @bool
+      d_dec:    text: -> @dec
+      d_str:    text: -> @str
+
+    expected = $ """
+     <div id="root">
+        <span id="d_number">0</span>
+        <span id="d_bool">false</span>
+        <span id="d_dec">0</span>
+        <span id="d_str"></span>
+      </div>​
+      """
+
+    template.render data, directives
+    expect(template.html()).htmlToBeEqual expected.html()
+
   it "should throw an error unless directives are syntactically correct", ->
     template = $ """
       <div id="template">

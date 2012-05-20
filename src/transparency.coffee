@@ -90,6 +90,7 @@ prepareContext = (context, models) ->
 
 renderValues = (instance, model) ->
     for key, value of model when typeof model == 'object' and isPlainValue value
+      #console.log "TEXT: " + value
       for element in matchingElements instance, key
 
         if element.nodeName.toLowerCase() == 'input'
@@ -133,7 +134,7 @@ getText = (element) ->
   (child.nodeValue for child in element.childNodes when child.nodeType == TEXT_NODE).join ''
 
 attr = (element, attribute, value) ->
-  value = value.toString() if isDate value
+  value = value.toString() if value? and typeof value != 'string'
 
   # Save the original value, so it can be restored before the instance is reused
   elementData = T.data element
@@ -141,16 +142,16 @@ attr = (element, attribute, value) ->
   switch attribute
     when 'text'
       elementData.attributes['text'] ||= getText element
-      setText element, value if value
+      setText element, value if value?
     when 'html'
       elementData.attributes['html'] ||= element.innerHTML
-      setHtml element, value if value
+      setHtml element, value if value?
     when 'class'
       elementData.attributes['class'] ||= element.className
-      element.className = value if value
+      element.className = value if value?
     else
       elementData.attributes[attribute] ||= element.getAttribute attribute
-      element.setAttribute attribute, value if value
+      element.setAttribute attribute, value if value?
 
   elementData.attributes[attribute]
 
