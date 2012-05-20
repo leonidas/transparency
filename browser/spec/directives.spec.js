@@ -141,12 +141,12 @@
       var data, directives, expected, template;
       template = $("<div id=\"template\">\n  <div class=\"name\">Hello, <span>Br, Transparency</span></div>\n</div>");
       data = {
-        name: "World"
+        me: "World"
       };
       directives = {
         name: {
           text: function(params) {
-            return params.value + this.name + "!";
+            return params.value + this.me + "!";
           }
         }
       };

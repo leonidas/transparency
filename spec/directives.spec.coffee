@@ -186,10 +186,10 @@ describe "Transparency", ->
       </div>
       """
 
-    data = name: "World"
+    data = me: "World"
 
     directives =
-      name: text: (params) -> params.value + @name + "!"
+      name: text: (params) -> params.value + @me + "!"
 
     expected = $ """
       <div id="template">

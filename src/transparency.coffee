@@ -86,11 +86,10 @@ prepareContext = (context, models) ->
   # Restore the original attribute values
   for instance in contextData.instances
     for e in instance.elements
-      (attr e, attribute, value) for attribute, value of T.data(e).attributes
+      (attr e, attribute, value) for attribute, value of T.data(e).originalAttributes
 
 renderValues = (instance, model) ->
     for key, value of model when typeof model == 'object' and isPlainValue value
-      #console.log "TEXT: " + value
       for element in matchingElements instance, key
 
         if element.nodeName.toLowerCase() == 'input'
@@ -107,8 +106,7 @@ renderDirectives = (instance, model, index, directives) ->
     for element in matchingElements instance, key
       for attribute, directive of attributes when typeof directive == 'function'
 
-        oldValue = attr element, attribute
-        value    = directive.call model, element: element, index: index, value: oldValue
+        value = directive.call model, element: element, index: index, value: attr element, attribute
         attr element, attribute, value if value?
 
 renderChildren = (instance, model, directives, config) ->
@@ -138,22 +136,25 @@ attr = (element, attribute, value) ->
 
   # Save the original value, so it can be restored before the instance is reused
   elementData = T.data element
-  elementData.attributes ||= {}
+  elementData.originalAttributes ||= {}
+
   switch attribute
     when 'text'
-      elementData.attributes['text'] ||= getText element
+      elementData.originalAttributes['text'] ||= getText element
       setText element, value if value?
+      getText element
     when 'html'
-      elementData.attributes['html'] ||= element.innerHTML
+      elementData.originalAttributes['html'] ||= element.innerHTML
       setHtml element, value if value?
+      element.innerHTML
     when 'class'
-      elementData.attributes['class'] ||= element.className
+      elementData.originalAttributes['class'] ||= element.className
       element.className = value if value?
+      element.className
     else
-      elementData.attributes[attribute] ||= element.getAttribute attribute
+      elementData.originalAttributes[attribute] ||= element.getAttribute attribute
       element.setAttribute attribute, value if value?
-
-  elementData.attributes[attribute]
+      element.getAttribute attribute
 
 elementNodes = (template) ->
   elements = []
