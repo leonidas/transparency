@@ -2,16 +2,13 @@
 ((root, factory) ->
 
   # AMD
-  if define?.amd
-    define ['jquery'], factory $
+  if define?.amd then define ['jquery'], factory
 
   # Node.js
-  else if module?.exports
-    module.exports = factory $
+  else if module?.exports then module.exports = factory $
 
   # Browser global
-  else
-    root.Transparency = factory $
+  else root.Transparency = factory $
 
 ) this, ($) ->
 
