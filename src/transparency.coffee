@@ -202,5 +202,5 @@
 
   isPlainValue = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
 
-  # Module exports
+  # Return module exports
   render: render
