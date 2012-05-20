@@ -9,7 +9,8 @@
     module.exports = factory $
 
   # Browser global
-  else root.Transparency = factory $
+  else
+    root.Transparency = factory $
 
 ) this, ($) ->
 
