@@ -182,4 +182,4 @@ describe "Transparency", ->
 
 expectModelObjects = (elements, data) ->
   for object, i in data
-    expect(window.Transparency.data(elements.get(i)).model).toEqual(object)
+    expect(elements[i].transparency.model).toEqual(object)

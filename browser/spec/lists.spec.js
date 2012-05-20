@@ -149,7 +149,7 @@
     _results = [];
     for (i = _i = 0, _len = data.length; _i < _len; i = ++_i) {
       object = data[i];
-      _results.push(expect(window.Transparency.data(elements.get(i)).model).toEqual(object));
+      _results.push(expect(elements[i].transparency.model).toEqual(object));
     }
     return _results;
   };
