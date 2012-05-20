@@ -1,3 +1,4 @@
+# Adapted from https://github.com/umdjs/umd
 ((root, factory) ->
 
   # AMD
