@@ -26,15 +26,18 @@
     # http://perfectionkills.com/whats-wrong-with-extending-the-dom/
     element[expando] ||= {}
 
-  debug     = null
-  debugMode = (config) ->
+  nullLogger    = () ->
+  consoleLogger = (messages...) -> console.log m for m in messages
+
+  log    = null
+  logger = (config) ->
     if config?.debug and console?
-    then (messages...) -> console.log m for m in messages
-    else () ->
+    then consoleLogger
+    else nullLogger
 
   render = (context, models, directives, config) ->
-    debug = debugMode config
-    debug "Context:", context, "Models:", models, "Directives:", directives, "Config:", config
+    log = logger config
+    log "Context:", context, "Models:", models, "Directives:", directives, "Config:", config
     return unless context
     models     ||= []
     directives ||= {}
@@ -53,7 +56,7 @@
     contextData = data context
     for model, index in models
       instance = contextData.instances[index]
-      debug "Model:", model, "Template instance for the model:", instance
+      log "Model:", model, "Template instance for the model:", instance
 
       # Associate model with instance elements
       data(e).model = model for e in instance.elements
@@ -75,7 +78,7 @@
     contextData.template      ||= (context.removeChild context.firstChild while context.firstChild)
     contextData.instanceCache ||= [] # Query-cached template instances are precious, save them for the future
     contextData.instances     ||= [] # Currently used template instances
-    debug "Original template", contextData.template
+    log "Original template", contextData.template
 
     # Get templates from the cache or clone new ones, if the cache is empty.
     while models.length > contextData.instances.length
@@ -173,7 +176,7 @@
 
   matchingElements = (instance, key) ->
     elements = instance.queryCache[key] ||= (e for e in instance.elements when elementMatcher e, key)
-    debug "Matching elements for '#{key}':", elements
+    log "Matching elements for '#{key}':", elements
     elements
 
   elementMatcher = (element, key) ->
