@@ -317,25 +317,29 @@
           if (value != null) {
             setText(element, value);
           }
-          return getText(element);
+          break;
         case 'html':
           (_base1 = elementData.originalAttributes)['html'] || (_base1['html'] = element.innerHTML);
           if (value != null) {
             setHtml(element, value);
           }
-          return element.innerHTML;
+          break;
         case 'class':
           (_base2 = elementData.originalAttributes)['class'] || (_base2['class'] = element.className);
           if (value != null) {
             element.className = value;
           }
-          return element.className;
+          break;
         default:
           (_base3 = elementData.originalAttributes)[attribute] || (_base3[attribute] = element.getAttribute(attribute));
           if (value != null) {
             element.setAttribute(attribute, value);
           }
-          return element.getAttribute(attribute);
+      }
+      if (value != null) {
+        return value;
+      } else {
+        return elementData.originalAttributes[attribute];
       }
     };
     elementNodes = function(template) {
