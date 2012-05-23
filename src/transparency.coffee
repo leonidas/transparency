@@ -145,7 +145,7 @@
   attr = (element, attribute, value) ->
     value = value.toString() if value? and typeof value != 'string'
 
-    # Save the original value, so it can be restored before the instance is reused
+    # Save the original value, so it can be restored when the instance is reused
     elementData = data element
     elementData.originalAttributes ||= {}
 
@@ -153,19 +153,17 @@
       when 'text'
         elementData.originalAttributes['text'] ||= getText element
         setText element, value if value?
-        getText element
       when 'html'
         elementData.originalAttributes['html'] ||= element.innerHTML
         setHtml element, value if value?
-        element.innerHTML
       when 'class'
         elementData.originalAttributes['class'] ||= element.className
         element.className = value if value?
-        element.className
       else
         elementData.originalAttributes[attribute] ||= element.getAttribute attribute
         element.setAttribute attribute, value if value?
-        element.getAttribute attribute
+
+    if value? then value else elementData.originalAttributes[attribute]
 
   elementNodes = (template) ->
     elements = []
