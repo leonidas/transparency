@@ -54,7 +54,7 @@ handlebarsOutput.innerHTML = handlebarsTemplate foobar
 
 new Benchmark.Suite()
   .add("transparency", ->
-    Transparency.render transparencyTemplate, sharedVariables)
+    Transparency.render transparencyTemplate, sharedVariables, children: item: text: -> @value)
 
   .add("handlebars", ->
     handlebarsOutput.innerHTML = handlebarsTemplate foobar)

@@ -49,7 +49,7 @@ handlebarsTemplate   = Handlebars.compile("<div><h1 class='header'>{{header}}</h
 
 new Benchmark.Suite()
   .add("transparency", ->
-    Transparency.render transparencyTemplate, sharedVariables)
+    Transparency.render transparencyTemplate, sharedVariables, list: item: text: -> @value)
 
   .add("handlebars", ->
     handlebarsOutput.innerHTML = handlebarsTemplate sharedVariables)
