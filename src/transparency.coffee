@@ -13,7 +13,7 @@
 ) this, ($) ->
 
   register = ($) ->
-    $?.fn.render = (models, directives, config) ->
+    $.fn.render = (models, directives, config) ->
       render context, models, directives, config for context in this
       this
 

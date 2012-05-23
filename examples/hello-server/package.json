@@ -6,6 +6,6 @@
       "coffee-script": ">= 1.3.3",
       "express":       ">= 2.5.9",
       "jquery":        ">= 1.7.2",
-      "transparency":  ">= 0.6.3"},
+      "transparency":  ">= 0.6.4"},
     "scripts": {"start": "coffee app.coffee"}
 }

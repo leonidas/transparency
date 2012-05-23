@@ -1,6 +1,10 @@
-express = require "express"
-$       = require "jquery"
-require("transparency").register $
+express      = require "express"
+jsdom        = require("jsdom").jsdom
+$            = require "jquery"
+transparency = require "transparency"
+
+# Register transparency as a plugin for the given jQuery instance
+transparency.register $
 
 app = express.createServer()
 
@@ -14,9 +18,48 @@ app.configure "development", ->
   )
 
 app.get "/", (req, res) ->
-  template = $ '<div><h1 class="title"></h1></div>'
-  result   = template.render title: "Hello World!"
-  res.send template.html()
+
+  data = [
+    title: "Hello"
+  ,
+    title: "Howdy"
+  ,
+    title: "Cheers"
+  ,
+    title: "Byebye"
+  ]
+
+  ### templating with jsdom - uncomment to use
+  doc = jsdom """
+    <div id="templates">
+
+      <!-- Items template -->
+      <ul id="items">
+        <li class="title"></li>
+      </ul>
+
+      <!-- Person template -->
+      <div class="person">
+        <div class="name"></div>
+        <div class="email"></div>
+      </div>
+
+    </div>
+    """
+
+  template = doc.getElementById "items"
+  result   = transparency.render template, data
+  res.send template.outerHTML
+  ###
+
+  # templating with jQuery - remove is using jsdom
+  template = $ """
+    <ul id="items">
+      <li class="title"></li>
+    </ul>
+    """
+  result = template.render data
+  res.send template[0].outerHTML
 
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
