@@ -1,8 +1,8 @@
 express = require "express"
 $       = require "jquery"
-require "transparency"
+require("transparency").register $
 
-app = module.exports = express.createServer()
+app = express.createServer()
 
 app.configure ->
   app.use app.router
@@ -15,8 +15,8 @@ app.configure "development", ->
 
 app.get "/", (req, res) ->
   template = $ '<div><h1 class="title"></h1></div>'
-  result   = template.render title: "Hello world!"
-  res.send result.html()
+  result   = template.render title: "Hello World!"
+  res.send template.html()
 
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env

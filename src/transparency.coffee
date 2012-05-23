@@ -1,20 +1,23 @@
 # Adapted from https://github.com/umdjs/umd
 ((root, factory) ->
-
   # AMD
   if define?.amd then define ['jquery'], factory
 
   # Node.js
-  else if module?.exports then module.exports = factory $
+  else if module?.exports
+    module.exports = factory if $? then $ else fn: {}
 
   # Browser global
-  else root.Transparency = factory $
+  else root.Transparency = factory if $? then $ else fn: {}
 
 ) this, ($) ->
 
-  $?.fn.render = (models, directives, config) ->
-    render context, models, directives, config for context in this
-    this
+  register = ($) ->
+    $?.fn.render = (models, directives, config) ->
+      render context, models, directives, config for context in this
+      this
+
+  register $
 
   expando = 'transparency'
   data    = (element) ->
@@ -187,7 +190,7 @@
   # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
   html5Clone = () -> document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
   cloneNode  =
-    if html5Clone()
+    if not document? or html5Clone()
     then (node) -> node.cloneNode true
     else (node) -> $(node).clone()[0]
 
@@ -201,3 +204,4 @@
 
   # Return module exports
   render: render
+  register: register
