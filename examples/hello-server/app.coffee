@@ -52,7 +52,7 @@ app.get "/", (req, res) ->
   res.send template.outerHTML
   ###
 
-  # templating with jQuery - remove is using jsdom
+  # templating with jQuery - remove if using jsdom
   template = $ """
     <ul id="items">
       <li class="title"></li>
