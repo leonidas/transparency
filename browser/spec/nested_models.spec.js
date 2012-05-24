@@ -9,19 +9,8 @@
 
   describe("Transparency", function() {
     it("should handle nested lists", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-       <div class="container">\
-          <h1 class="title"></h1>\
-          <p class="post"></p>\
-          <div class="comments">\
-            <div class="comment">\
-              <span class="name"></span>\
-              <span class="text"></span>\
-            </div>\
-          </div>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"container\">\n   <h1 class=\"title\"></h1>\n   <p class=\"post\"></p>\n   <div class=\"comments\">\n     <div class=\"comment\">\n       <span class=\"name\"></span>\n       <span class=\"text\"></span>\n     </div>\n   </div>\n </div>");
       data = {
         title: 'Hello World',
         post: 'Hi there it is me',
@@ -35,35 +24,13 @@
           }
         ]
       };
-      expected = jQuery('<div>\
-       <div class="container">\
-          <h1 class="title">Hello World</h1>\
-          <p class="post">Hi there it is me</p>\
-          <div class="comments">\
-            <div class="comment">\
-              <span class="name">John</span>\
-              <span class="text">That rules</span>\
-            </div>\
-            <div class="comment">\
-              <span class="name">Arnold</span>\
-              <span class="text">Great post!</span>\
-            </div>\
-          </div>\
-        </div>\
-      </div>');
-      doc.find('.container').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div class=\"container\">\n  <h1 class=\"title\">Hello World</h1>\n  <p class=\"post\">Hi there it is me</p>\n  <div class=\"comments\">\n    <div class=\"comment\">\n      <span class=\"name\">John</span>\n      <span class=\"text\">That rules</span>\n    </div>\n    <div class=\"comment\">\n      <span class=\"name\">Arnold</span>\n      <span class=\"text\">Great post!</span>\n    </div>\n  </div>\n</div>");
+      template.render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should handle nested lists with overlapping attributes", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-       <div class="container">\
-          <p class="tweet"></p>\
-          <div class="responses">\
-            <p class="tweet"></p>\
-          </div>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"container\">\n  <p class=\"tweet\"></p>\n  <div class=\"responses\">\n    <p class=\"tweet\"></p>\n  </div>\n</div>");
       data = {
         responses: [
           {
@@ -74,30 +41,13 @@
         ],
         tweet: 'Jasmine is great!'
       };
-      expected = jQuery('<div>\
-       <div class="container">\
-          <p class="tweet">Jasmine is great!</p>\
-          <div class="responses">\
-            <p class="tweet">It truly is!</p>\
-            <p class="tweet">I prefer JsUnit</p>\
-          </div>\
-        </div>\
-      </div>');
-      doc.find('.container').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div class=\"container\">\n  <p class=\"tweet\">Jasmine is great!</p>\n  <div class=\"responses\">\n    <p class=\"tweet\">It truly is!</p>\n    <p class=\"tweet\">I prefer JsUnit</p>\n  </div>\n</div>");
+      template.render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     it("should handle nested objects", function() {
-      var data, doc, expected;
-      doc = jQuery('<div>\
-       <div class="container">\
-          <div class="firstname"></div>\
-          <div class="lastname"></div>\
-          <div class="address">\
-            <div class="street"></div>\
-            <div class="zip"><span class="city"></span></div>\
-          </div>\
-        </div>\
-      </div>');
+      var data, expected, template;
+      template = $("<div class=\"container\">\n  <div class=\"firstname\"></div>\n  <div class=\"lastname\"></div>\n  <div class=\"address\">\n    <div class=\"street\"></div>\n    <div class=\"zip\"><span class=\"city\"></span></div>\n  </div>\n</div>");
       data = {
         firstname: 'John',
         lastname: 'Wayne',
@@ -107,46 +57,13 @@
           zip: '94199'
         }
       };
-      expected = jQuery('<div>\
-       <div class="container">\
-          <div class="firstname">John</div>\
-          <div class="lastname">Wayne</div>\
-          <div class="address">\
-            <div class="street">4th Street</div>\
-            <div class="zip">94199<span class="city">San Francisco</span></div>\
-          </div>\
-        </div>\
-      </div>');
-      doc.find('.container').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<div class=\"container\">\n  <div class=\"firstname\">John</div>\n  <div class=\"lastname\">Wayne</div>\n  <div class=\"address\">\n    <div class=\"street\">4th Street</div>\n    <div class=\"zip\">94199<span class=\"city\">San Francisco</span></div>\n  </div>\n</div>");
+      template.render(data);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
     return it("should handle tables with dynamic headers", function() {
-      var data, directives, doc, expected;
-      doc = jQuery('<div>\
-       <table class="test_reports">\
-          <thead>\
-            <tr class="profiles">\
-              <th>\
-                <a class="name" href="#"></a>\
-              </th>\
-            </tr>\
-          </thead>\
-          <tbody>\
-            <tr class="profiles">\
-              <td class="testsets">\
-                <div class="testset">\
-                  <a class="name" href="#"></a>\
-                  <ul class="products">\
-                    <li>\
-                      <a class="name" href="#"></a>\
-                    </li>\
-                  </ul>\
-                </div>\
-              </td>\
-            </tr>\
-          </tbody>\
-        </table>\
-      </div>');
+      var data, directives, expected, template;
+      template = $("<table class=\"test_reports\">\n  <thead>\n    <tr class=\"profiles\">\n      <th>\n        <a class=\"name\" href=\"#\">profile</a>\n      </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr class=\"profiles\">\n      <td class=\"testsets\">\n        <div class=\"testset\">\n          <a class=\"name\" href=\"#\">testset</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"#\">product</a>\n            </li>\n          </ul>\n        </div>\n      </td>\n    </tr>\n  </tbody>\n</table>");
       data = {
         release: "1.2",
         profiles: [
@@ -222,74 +139,9 @@
           }
         }
       };
-      expected = jQuery('<div>\
-       <table class="test_reports">\
-          <thead>\
-            <tr class="profiles">\
-              <th>\
-                <a class="name" href="http://www.example.com/Core">Core</a>\
-              </th>\
-              <th>\
-                <a class="name" href="http://www.example.com/Handset">Handset</a>\
-              </th>\
-            </tr>\
-          </thead>\
-          <tbody>\
-            <tr class="profiles">\
-              <td class="testsets">\
-                <div class="testset">\
-                  <a class="name" href="http://www.example.com/Sanity">Sanity</a>\
-                  <ul class="products">\
-                    <li>\
-                      <a class="name" href="http://www.example.com/N900">N900</a>\
-                    </li>\
-                    <li>\
-                      <a class="name" href="http://www.example.com/Lenovo">Lenovo</a>\
-                    </li>\
-                  </ul>\
-                </div>\
-                <div class="testset">\
-                  <a class="name" href="http://www.example.com/Acceptance">Acceptance</a>\
-                  <ul class="products">\
-                    <li>\
-                      <a class="name" href="http://www.example.com/Netbook">Netbook</a>\
-                    </li>\
-                    <li>\
-                      <a class="name" href="http://www.example.com/Pinetrail">Pinetrail</a>\
-                    </li>\
-                  </ul>\
-                </div>\
-              </td>\
-              <td class="testsets">\
-                <div class="testset">\
-                  <a class="name" href="http://www.example.com/Feature">Feature</a>\
-                  <ul class="products">\
-                    <li>\
-                      <a class="name" href="http://www.example.com/N900">N900</a>\
-                    </li>\
-                    <li>\
-                      <a class="name" href="http://www.example.com/Lenovo">Lenovo</a>\
-                    </li>\
-                  </ul>\
-                </div>\
-                <div class="testset">\
-                  <a class="name" href="http://www.example.com/NFT">NFT</a>\
-                  <ul class="products">\
-                    <li>\
-                      <a class="name" href="http://www.example.com/Netbook">Netbook</a>\
-                    </li>\
-                    <li>\
-                      <a class="name" href="http://www.example.com/iCDK">iCDK</a>\
-                    </li>\
-                  </ul>\
-                </div>\
-              </td>\
-            </tr>\
-          </tbody>\
-        </table>\
-      </div>');
-      doc.find('.test_reports').render(data, directives);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      expected = $("<table class=\"test_reports\">\n  <thead>\n    <tr class=\"profiles\">\n      <th>\n        <a class=\"name\" href=\"http://www.example.com/Core\">Core</a>\n      </th>\n      <th>\n        <a class=\"name\" href=\"http://www.example.com/Handset\">Handset</a>\n      </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr class=\"profiles\">\n      <td class=\"testsets\">\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/Sanity\">Sanity</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/N900\">N900</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Lenovo\">Lenovo</a>\n            </li>\n          </ul>\n        </div>\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/Acceptance\">Acceptance</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Netbook\">Netbook</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Pinetrail\">Pinetrail</a>\n            </li>\n          </ul>\n        </div>\n      </td>\n      <td class=\"testsets\">\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/Feature\">Feature</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/N900\">N900</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Lenovo\">Lenovo</a>\n            </li>\n          </ul>\n        </div>\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/NFT\">NFT</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Netbook\">Netbook</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/iCDK\">iCDK</a>\n            </li>\n          </ul>\n        </div>\n      </td>\n    </tr>\n  </tbody>\n</table>");
+      template.render(data, directives);
+      return expect(template.html()).htmlToBeEqual(expected.html());
     });
   });
 

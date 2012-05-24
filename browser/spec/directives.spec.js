@@ -101,7 +101,7 @@
       directives = {
         person: {
           "class": function(params) {
-            return params.element.className + (params.index % 2 ? " odd" : " even");
+            return params.value + (params.index % 2 ? " odd" : " even");
           }
         }
       };
