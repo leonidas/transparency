@@ -126,7 +126,7 @@ describe "Transparency", ->
 
     directives =
       person:
-        class: (params) -> params.element.className + (if params.index % 2 then " odd" else " even")
+        class: (params) -> params.value + (if params.index % 2 then " odd" else " even")
 
     expected = $ """
       <ul id="persons">

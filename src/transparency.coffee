@@ -94,11 +94,6 @@
       contextData.instanceCache.push instance = contextData.instances.pop()
       (n.parentNode.removeChild n) for n in instance.template
 
-    # Restore the original attribute values
-    for instance in contextData.instances
-      for e in instance.elements
-        (attr e, attribute, value) for attribute, value of data(e).originalAttributes
-
   renderValues = (instance, model) ->
       for key, value of model when typeof model == 'object' and isPlainValue value
         for element in matchingElements instance, key
