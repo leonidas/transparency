@@ -44,6 +44,13 @@ for more information.
 
 [Demo website](http://leonidas.github.com/transparency/) with interactive examples.
 
+## Community
+
+Getting help and support
+
+* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
+* Google Groups: transparencyjs@googlegroups.com
+
 ## Use it
 
 Get the
@@ -434,36 +441,12 @@ To enable debug mode, call `.render` with a `{debug: true}` config and open the 
 $('container').render(data, {}, {debug: true});
 ```
 
-## Getting help
-
-* [FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
-* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
-* Google Groups: transparencyjs@googlegroups.com
 
 ## Development environment
 
-You need node.js 0.6.x and npm.
-
-Install dependencies:
-
-    npm install
-    npm install -g uglify-js
-    npm install -g coffee-script
-
-Run tests
-
-    npm test
-
-Run tests during development for more verbose assertion output
-
-    node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec
-
-Generate Javascript libs
-
-    cake build
-
-Use [debugger statement to debug spec scripts](http://bytes.goodeggsinc.com/post/11587373922/debugging-jasmine-node-and-coffeescript-specs).
-
+* [Transparency development instructions](https://github.com/leonidas/transparency/wiki/Developing-Transparency)
+* [Debugging and unit tests](https://github.com/leonidas/transparency/wiki/Debugging-and-running-spec-tests)
+ 
 ## Contributing
 
 All the following are appreciated, in an asceding order of preference
