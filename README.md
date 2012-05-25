@@ -30,7 +30,7 @@ $('#template').render(hello);
 ## Features
 
 * [Fast - in most cases the fastest client-side template engine](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance) 
-* Data binding by convention - no extra markup polluting your HTML code
+* Data binding by convention - no extra markup polluting your HTML code. The templates can be directly embedded into HTML as hidden payload without confusing HTML editors. 
 * Templating directives written in Javascript - no need to learn yet another micro programming language
 * Compatible - Tested on IE8+, Chrome, Firefox, iOS, Android and others
 * Collection rendering - you don't need to write loops in templates
