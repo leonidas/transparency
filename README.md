@@ -29,23 +29,16 @@ $('#template').render(hello);
 
 ## Features
 
-* Data binding by convention - No extra markup in the views
-* Collection rendering - No loops and partials
-* Nested objects and collections - No configuration, just conventions
-* Directives - No DSL, just functions
-* Cached templates by default - No separate lookup/compile/use steps
-* Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
-* Compatible - Tested on IE6+, Chrome and Firefox
+* [Fast - in most cases the fastest client-side template engine](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance) 
+* Data binding by convention - no extra markup polluting your HTML code
+* Templating directives written in Javascript - no need to learn yet another micro programming language
+* Compatible - Tested on IE8+, Chrome, Firefox, iOS, Android and others
+* Collection rendering - you don't need to write loops in templates
 
-(*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway, jsperf.com
-should give an idea:
-http://jsperf.com/transparency-vs-handlebars-finite-list/3
-http://jsperf.com/transparency-vs-handlebars-infinite-list/3
-http://jsperf.com/dom-vs-innerhtml-based-templating/366
+Please see [Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
+for more information.
 
-
-If interested, see other performance tests at `browser` folder. See also
-[Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions).
+*Note: Older IE browsers might not be fully supported.*
 
 ## Try it
 
@@ -57,6 +50,8 @@ Get the
 [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
+
+[For more complex use case examples, see User manual wiki](https://github.com/leonidas/transparency/wiki/User-Manual)
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
