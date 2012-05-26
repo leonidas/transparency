@@ -38,30 +38,45 @@ $('#template').render(hello);
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
 IE browsers requires jQuery.
 
-## Try it
+## Fiddle
 
-[Demo website](http://leonidas.github.com/transparency/) with interactive examples.
+[Project home page](http://leonidas.github.com/transparency/) with interactive examples.
 
-## Use it
+## Install
+
+#### Browser
 
 Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
-
-[For more complex use case examples, see User manual wiki](https://github.com/leonidas/transparency/wiki/User-Manual)
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/transparency.min.js"></script>
 ```
 
-Node users can also install via NPM:
+#### AMD
+
+```javascript
+require(['jquery', 'transparency'], function($, transparency){
+  // With jQuery
+  $('#template').render(data);
+  
+  // Without jQuery
+  transparency.render(document.getElementById('template'), data);
+});
+```
+
+#### Node.js
 
 `npm install transparency`
 
-For server-side use, see `spec` folder and the awesome [jsdom](https://github.com/tmpvar/jsdom) for the details.
+For server-side use, see 
+[examples/hello-server](https://github.com/leonidas/transparency/tree/master/examples/hello-server).
 
-## Examples
+## Use
+
+[For more complex use case examples, see User manual](https://github.com/leonidas/transparency/wiki/User-Manual)
 
 ### Binding values
 
