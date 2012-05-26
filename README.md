@@ -455,19 +455,11 @@ $('container').render(data, {}, {debug: true});
 
 ## Development environment
 
-You need node.js 0.6.x and npm.
+Install node.js 0.6.x and npm. Then, in the project folder
 
-Install dependencies
-
-    npm install
-
-Run tests
-
-    npm test
-
-Generate Javascript libs
-
-    npm run-script build
+    $ npm install           # Install dependencies
+    $ npm test              # Run the tests
+    $ npm run-script build  # Generate JavaScript libs
     
 For further information, see [Transparency wiki](https://github.com/leonidas/transparency/wiki).
 
