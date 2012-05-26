@@ -457,25 +457,19 @@ $('container').render(data, {}, {debug: true});
 
 You need node.js 0.6.x and npm.
 
-Install dependencies:
+Install dependencies
 
     npm install
-    npm install -g uglify-js
-    npm install -g coffee-script
 
 Run tests
 
     npm test
 
-Run tests during development for more verbose assertion output
-
-    node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec
-
 Generate Javascript libs
 
-    cake build
-
-Use [debugger statement to debug spec scripts](http://bytes.goodeggsinc.com/post/11587373922/debugging-jasmine-node-and-coffeescript-specs).
+    npm run-script build
+    
+For further information, see [Transparency wiki](https://github.com/leonidas/transparency/wiki).
 
 ## Contributing
 
@@ -489,6 +483,10 @@ In case the contribution is going to change Transparency API, please create a ti
 agree on design.
 
 There's [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
-regarding the original design and implementation. It might be worth reading as an introduction.
+regarding the original design and implementation. It's a bit outdated, but might be worth reading as an introduction.
+
+There's also [an article](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance)
+explaining the main optimization techniques used by Transparency. It will definitely help understanding why certain things
+are done.
 
 
