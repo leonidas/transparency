@@ -1,6 +1,6 @@
 {
   "name"           : "transparency",
-  "version"        : "0.6.6",
+  "version"        : "0.6.7",
   "main"           : "lib/transparency",
   "description"    : "Transparency is a minimal template engine for browsers. It maps JSON objects to DOM elements with zero configuration.",
   "homepage"       : "https://github.com/leonidas/transparency",
@@ -19,9 +19,9 @@
   "dependencies"   : {"jsdom"        : ">=0.2.10"},
   "devDependencies": {"jasmine-node" : ">=1.0.x",
                       "coffee-script": ">=1.2.x",
-                      "jquery"       : ">=1.6.x",
+                      "jquery"       : ">=1.7.x",
                       "uglify-js"    : ">=1.2.5"},
   "scripts"        : {"test": "jasmine-node --coffee spec",
-                      "perf": "node spec/perf.js",
+                      "build": "cake build",
                       "pre-publish": "cake build"}
 }
