@@ -5,7 +5,7 @@ Transparency is a client-side template engine which binds data to DOM. Just call
 ```html
 <div id="template">
   <span class="greeting"></span>
-  <span class="name"></span>
+  <span data-bind="name"></span>
 </div>
 ```
 
@@ -21,7 +21,7 @@ $('#template').render(hello);
 ```html
 <div id="template">
   <span class="greeting">Hello</span>
-  <span class="name">world!</span>
+  <span data-bind="name">world!</span>
 </div>
 ```
 
@@ -29,16 +29,14 @@ $('#template').render(hello);
 
 ## Features
 
-* [Fast - in most cases the fastest client-side template engine](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance) 
-* Data binding by convention - no extra markup polluting your HTML code. The templates can be directly embedded into HTML as hidden payload without confusing HTML editors. 
-* Templating directives written in Javascript - no need to learn yet another micro programming language
-* Compatible - Tested on IE8+, Chrome, Firefox, iOS, Android and others
-* Collection rendering - you don't need to write loops in templates
+* Semantic data binding - No `<%=foo%>` or `{{foo}}` assignments polluting the HTML
+* Collection rendering - No need for hand-written loops in the HTML
+* Valid HTML templates - Write templates as a part of the HTML, in plain HTML. Use any HTML editor you like
+* Plain JavaScript logic - All the power without learning yet another micro programming language
+* [Blazing fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance) - Templates are cached and optimized automatically
 
-Please see [Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
-for more information.
-
-*Note: Older IE browsers might not be fully supported.*
+Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
+IE browsers requires jQuery.
 
 ## Try it
 
@@ -46,8 +44,7 @@ for more information.
 
 ## Use it
 
-Get the
-[compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
+Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
 
