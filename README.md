@@ -40,15 +40,15 @@ IE browsers requires jQuery.
 
 ## Fiddle
 
-[Project home page](http://leonidas.github.com/transparency/) with interactive examples.
+[Try Transparency](http://leonidas.github.com/transparency/) with interactive examples.
 
 ## Install
-
-#### Browser
 
 Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
+
+#### Browser
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
@@ -76,11 +76,12 @@ For server-side use, see
 
 ## Use
 
-[For more complex use case examples, see User manual](https://github.com/leonidas/transparency/wiki/User-Manual)
+Here's short, detailed and dense examples how to use Transparency. For more elaborate examples, see 
+[User manual](https://github.com/leonidas/transparency/wiki/User-Manual). Feel free to add your own examples, too!
 
 ### Binding values
 
-Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
+By default, Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
 `data-bind` attribute. Values are escaped before rendering.
 
 Template:
