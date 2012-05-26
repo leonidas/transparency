@@ -318,7 +318,7 @@ Directives are plain javascript functions defined in a two-dimensional object li
 where `element` is value of `id`, `class`, `name` attribute or `data-bind` attribute of the target element. Similarly,
 `attribute` is the name of the target attribute.
 
-When a directive function is executed, `this` is bound to the current model object. In addition, directive function 
+When a directive function is executed, `this` is bound to the current model object. In addition, the directive function 
 receives current element as `params.element`, current index as `params.index` and current value as `params.value`.
 
 The return value of a directive function is assigned to the matching element attribute. The return value should be 
