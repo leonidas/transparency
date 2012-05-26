@@ -38,6 +38,11 @@ $('#template').render(hello);
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
 IE browsers requires jQuery.
 
+## Community
+
+* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
+* Google Groups: transparencyjs@googlegroups.com
+
 ## Fiddle
 
 [Try Transparency](http://leonidas.github.com/transparency/) with interactive examples.
@@ -76,8 +81,9 @@ For server-side use, see
 
 ## Use
 
-Here are short, detailed and dense examples how to use Transparency. For more elaborate examples, see 
-[User manual](https://github.com/leonidas/transparency/wiki/User-Manual). Feel free to add your own examples, too!
+Here are short, detailed and sometimes dense examples how to use Transparency. For more elaborate examples, see 
+[User manual](https://github.com/leonidas/transparency/wiki/User-Manual) and 
+[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions). Feel free to add your own examples, too!
 
 ### Binding values
 
@@ -447,12 +453,6 @@ To enable debug mode, call `.render` with a `{debug: true}` config and open the 
 ```javascript
 $('container').render(data, {}, {debug: true});
 ```
-
-## Getting help
-
-* [FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
-* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
-* Google Groups: transparencyjs@googlegroups.com
 
 ## Development environment
 
