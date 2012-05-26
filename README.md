@@ -76,7 +76,7 @@ For server-side use, see
 
 ## Use
 
-Here's short, detailed and dense examples how to use Transparency. For more elaborate examples, see 
+Here are short, detailed and dense examples how to use Transparency. For more elaborate examples, see 
 [User manual](https://github.com/leonidas/transparency/wiki/User-Manual). Feel free to add your own examples, too!
 
 ### Binding values
@@ -318,16 +318,17 @@ Directives are plain javascript functions defined in a two-dimensional object li
 where `element` is value of `id`, `class`, `name` attribute or `data-bind` attribute of the target element. Similarly,
 `attribute` is the name of the target attribute.
 
-Directive functions receive current model as `this` paramater. In addition, they receive current element as
-`params.element`, current index as `params.index` and current value as `params.value`.
+When a directive function is executed, `this` is bound to the current model object. In addition, directive function 
+receives current element as `params.element`, current index as `params.index` and current value as `params.value`.
 
-The return value of a directive function is assigned to the matching element's attribute. The return value should be string.
+The return value of a directive function is assigned to the matching element attribute. The return value should be 
+string, number or date.
 
 Template:
 
 ```html
 <div class="person">
-  <span class="name"></span>
+  <span class="name">My name is </span>
   <a class="email"></a>
 </div>
 ```
@@ -345,8 +346,8 @@ person = {
 
 directives = {
   name: {
-    html: function(params) {
-      return "<b>" + this.firstname + " " + this.lastname + "</b>";
+    text: function(params) {
+      return params.value + this.firstname + " " + this.lastname;
     }
   },
 
@@ -364,7 +365,7 @@ Result:
 
 ```html
 <div class="person">
-  <span class="name"><b>Jasmine Taylor</b></span>
+  <span class="name">My name is Jasmine Taylor</span>
   <a class="email" href="mailto:jasmine.tailor@example.com">jasmine.tailor@example.com</a>
 </div>
 ```
@@ -457,11 +458,14 @@ $('container').render(data, {}, {debug: true});
 
 Install node.js 0.6.x and npm. Then, in the project folder
 
-    $ npm install           # Install dependencies
+    $ npm install           # Install the dependencies
     $ npm test              # Run the tests
-    $ npm run-script build  # Generate JavaScript libs
+    $ npm run-script build  # Generate JavaScript libs from the CoffeeScript sources
     
 For further information, see [Transparency wiki](https://github.com/leonidas/transparency/wiki).
+
+There's also [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
+regarding the original design and implementation. It's a bit outdated, but might be worth reading as an introduction.
 
 ## Contributing
 
@@ -471,14 +475,5 @@ All the following are appreciated, in an asceding order of preference
 2. Pull request with a failing unit test
 3. Pull request with unit tests and corresponding implementation
 
-In case the contribution is going to change Transparency API, please create a ticket first in order to discuss and
+In case the contribution is changing Transparency API, please create a ticket first in order to discuss and
 agree on design.
-
-There's [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
-regarding the original design and implementation. It's a bit outdated, but might be worth reading as an introduction.
-
-There's also [an article](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance)
-explaining the main optimization techniques used by Transparency. It will definitely help understanding why certain things
-are done.
-
-
