@@ -5,7 +5,7 @@ Transparency is a client-side template engine which binds data to DOM. Just call
 ```html
 <div id="template">
   <span class="greeting"></span>
-  <span class="name"></span>
+  <span data-bind="name"></span>
 </div>
 ```
 
@@ -21,7 +21,7 @@ $('#template').render(hello);
 ```html
 <div id="template">
   <span class="greeting">Hello</span>
-  <span class="name">world!</span>
+  <span data-bind="name">world!</span>
 </div>
 ```
 
@@ -29,51 +29,59 @@ $('#template').render(hello);
 
 ## Features
 
-* Data binding by convention - No extra markup in the views
-* Collection rendering - No loops and partials
-* Nested objects and collections - No configuration, just conventions
-* Directives - No DSL, just functions
-* Cached templates by default - No separate lookup/compile/use steps
-* Fast - In most real-world cases, it's faster than any other template engine or hand-crafted bindings (*)
-* Compatible - Tested on IE6+, Chrome and Firefox
+* **Semantic data binding** - No `<%=foo%>` or `{{foo}}` assignments polluting the HTML
+* **Collection rendering** - No need for hand-written loops in the HTML
+* **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML. Use any HTML editor you like
+* **Plain JavaScript logic** - All the power without learning yet another micro programming language
+* **[Blazing fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance)** - Templates are cached and optimized automatically
 
-(*) Take with a grain of salt, as "real-world performance" isn't that easy to define or measure. Anyway, jsperf.com
-should give an idea:
-http://jsperf.com/transparency-vs-handlebars-finite-list/3
-http://jsperf.com/transparency-vs-handlebars-infinite-list/3
-http://jsperf.com/dom-vs-innerhtml-based-templating/366
+Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
+IE browsers requires jQuery.
 
+## Fiddle
 
-If interested, see other performance tests at `browser` folder. See also
-[Frequently asked questions](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions).
+[Try Transparency](http://leonidas.github.com/transparency/) with interactive examples.
 
-## Try it
+## Install
 
-[Demo website](http://leonidas.github.com/transparency/) with interactive examples.
-
-## Use it
-
-Get the
-[compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
+Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
+
+#### Browser
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/transparency.min.js"></script>
 ```
 
-Node users can also install via NPM:
+#### AMD
+
+```javascript
+require(['jquery', 'transparency'], function($, transparency){
+  // With jQuery
+  $('#template').render(data);
+  
+  // Without jQuery
+  transparency.render(document.getElementById('template'), data);
+});
+```
+
+#### Node.js
 
 `npm install transparency`
 
-For server-side use, see `spec` folder and the awesome [jsdom](https://github.com/tmpvar/jsdom) for the details.
+For server-side use, see 
+[examples/hello-server](https://github.com/leonidas/transparency/tree/master/examples/hello-server).
 
-## Examples
+## Use
+
+Here's short, detailed and dense examples how to use Transparency. For more elaborate examples, see 
+[User manual](https://github.com/leonidas/transparency/wiki/User-Manual). Feel free to add your own examples, too!
 
 ### Binding values
 
-Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
+By default, Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
 `data-bind` attribute. Values are escaped before rendering.
 
 Template:
