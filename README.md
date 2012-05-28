@@ -33,10 +33,10 @@ $('#template').render(hello);
 * **Collection rendering** - No need for hand-written loops in the HTML
 * **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML. Use any HTML editor you like
 * **Plain JavaScript logic** - All the power without learning yet another micro programming language
-* **[Blazing fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance)** - Templates are cached and optimized automatically
 
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
-IE browsers requires jQuery.
+IE browsers requires jQuery. It's [reasonable fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance),
+but not the blazing-fast-superstar.
 
 ## Community
 
