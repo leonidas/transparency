@@ -187,8 +187,14 @@
   html5Clone = () -> document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
   cloneNode  =
     if not document? or html5Clone()
-    then (node) -> node.cloneNode true
-    else (node) -> $(node).clone()[0]
+      (node) -> node.cloneNode true
+    else
+      (node) ->
+        clone = $(node).clone()[0]
+        if clone.nodeType == ELEMENT_NODE
+          clone[expando] = null
+          clone.removeAttribute expando
+        clone
 
   Array.isArray  ?= (obj) -> $.isArray obj
   Array::indexOf ?= (obj) -> $.inArray obj, this
