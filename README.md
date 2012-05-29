@@ -37,7 +37,7 @@ $('#template').render(hello);
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
 IE browsers requires jQuery. Transparency is 
 [reasonable fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance),
-but not a blazing-fast-superstar.
+but not blazing-fast-superstar.
 
 ## Community
 
