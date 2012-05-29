@@ -32,11 +32,17 @@ $('#template').render(hello);
 * **Semantic data binding** - No `<%=foo%>` or `{{foo}}` assignments polluting the HTML
 * **Collection rendering** - No need for hand-written loops in the HTML
 * **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML. Use any HTML editor you like
-* **Plain JavaScript logic** - All the power without learning yet another micro programming language
-* **[Blazing fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance)** - Templates are cached and optimized automatically
+* **Plain JavaScript for logic** - All the power without learning yet another micro programming language
 
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
-IE browsers requires jQuery.
+IE browsers requires jQuery. Transparency is 
+[reasonable fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance),
+but not blazing-fast-superstar.
+
+## Community
+
+* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
+* Google Groups: transparencyjs@googlegroups.com
 
 ## Fiddle
 
@@ -76,8 +82,9 @@ For server-side use, see
 
 ## Use
 
-Here's short, detailed and dense examples how to use Transparency. For more elaborate examples, see 
-[User manual](https://github.com/leonidas/transparency/wiki/User-Manual). Feel free to add your own examples, too!
+Here are short, detailed and sometimes dense examples how to use Transparency. For more elaborate examples, see 
+[User manual](https://github.com/leonidas/transparency/wiki/User-Manual) and 
+[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions). Feel free to add your own examples, too!
 
 ### Binding values
 
@@ -318,16 +325,17 @@ Directives are plain javascript functions defined in a two-dimensional object li
 where `element` is value of `id`, `class`, `name` attribute or `data-bind` attribute of the target element. Similarly,
 `attribute` is the name of the target attribute.
 
-Directive functions receive current model as `this` paramater. In addition, they receive current element as
-`params.element`, current index as `params.index` and current value as `params.value`.
+When a directive function is executed, `this` is bound to the current model object. In addition, the directive function 
+receives current element as `params.element`, current index as `params.index` and current value as `params.value`.
 
-The return value of a directive function is assigned to the matching element's attribute. The return value should be string.
+The return value of a directive function is assigned to the matching element attribute. The return value should be 
+string, number or date.
 
 Template:
 
 ```html
 <div class="person">
-  <span class="name"></span>
+  <span class="name">My name is </span>
   <a class="email"></a>
 </div>
 ```
@@ -345,8 +353,8 @@ person = {
 
 directives = {
   name: {
-    html: function(params) {
-      return "<b>" + this.firstname + " " + this.lastname + "</b>";
+    text: function(params) {
+      return params.value + this.firstname + " " + this.lastname;
     }
   },
 
@@ -364,7 +372,7 @@ Result:
 
 ```html
 <div class="person">
-  <span class="name"><b>Jasmine Taylor</b></span>
+  <span class="name">My name is Jasmine Taylor</span>
   <a class="email" href="mailto:jasmine.tailor@example.com">jasmine.tailor@example.com</a>
 </div>
 ```
@@ -447,35 +455,18 @@ To enable debug mode, call `.render` with a `{debug: true}` config and open the 
 $('container').render(data, {}, {debug: true});
 ```
 
-## Getting help
-
-* [FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions)
-* IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
-* Google Groups: transparencyjs@googlegroups.com
-
 ## Development environment
 
-You need node.js 0.6.x and npm.
+Install node.js 0.6.x and npm. Then, in the project folder
 
-Install dependencies:
+    $ npm install           # Install the dependencies
+    $ npm test              # Run the tests
+    $ npm run-script build  # Generate JavaScript libs from the CoffeeScript sources
+    
+For further information, see [Transparency wiki](https://github.com/leonidas/transparency/wiki).
 
-    npm install
-    npm install -g uglify-js
-    npm install -g coffee-script
-
-Run tests
-
-    npm test
-
-Run tests during development for more verbose assertion output
-
-    node_modules/jasmine-node/bin/jasmine-node --coffee --verbose spec
-
-Generate Javascript libs
-
-    cake build
-
-Use [debugger statement to debug spec scripts](http://bytes.goodeggsinc.com/post/11587373922/debugging-jasmine-node-and-coffeescript-specs).
+There's also [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
+regarding the original design and implementation. It's a bit outdated, but might be worth reading as an introduction.
 
 ## Contributing
 
@@ -485,10 +476,5 @@ All the following are appreciated, in an asceding order of preference
 2. Pull request with a failing unit test
 3. Pull request with unit tests and corresponding implementation
 
-In case the contribution is going to change Transparency API, please create a ticket first in order to discuss and
+In case the contribution is changing Transparency API, please create a ticket first in order to discuss and
 agree on design.
-
-There's [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
-regarding the original design and implementation. It might be worth reading as an introduction.
-
-
