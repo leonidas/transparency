@@ -192,7 +192,8 @@
       (node) ->
         clone = $(node).clone()[0]
         if clone.nodeType == ELEMENT_NODE
-          clone[expando] = null
+          clone[expando] = undefined
+          clone.setAttribute expando, ""
           clone.removeAttribute expando
         clone
 
