@@ -19,7 +19,7 @@
   "dependencies"   : {"jsdom"        : ">=0.2.10"},
   "devDependencies": {"jasmine-node" : ">=1.0.x",
                       "coffee-script": ">=1.2.x",
-                      "jquery"       : ">=1.7.x",
+                      "jquery"       : ">=1.6.x",
                       "uglify-js"    : ">=1.2.5"},
   "scripts"        : {"test": "jasmine-node --coffee spec",
                       "build": "cake build",
