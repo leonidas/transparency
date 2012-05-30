@@ -123,7 +123,7 @@ describe "Transparency", ->
         <thead>
           <tr class="profiles">
             <th>
-              <a class="name" href="#">profile</a>
+              <a class="name" href="http://www.example.com">profile</a>
             </th>
           </tr>
         </thead>
@@ -131,10 +131,10 @@ describe "Transparency", ->
           <tr class="profiles">
             <td class="testsets">
               <div class="testset">
-                <a class="name" href="#">testset</a>
+                <a class="name" href="http://www.example.com">testset</a>
                 <ul class="products">
                   <li>
-                    <a class="name" href="#">product</a>
+                    <a class="name" href="http://www.example.com">product</a>
                   </li>
                 </ul>
               </div>
@@ -257,5 +257,109 @@ describe "Transparency", ->
       </table>
       """
 
-    template.render(data, directives)
+    template.render data, directives
+    expect(template.html()).htmlToBeEqual expected.html()
+
+  it "should handle nested objects", ->
+    template = $ """
+      <div id="archive">
+        <a href="http://www.example.com" class="yeartitle"><span class="year"></span></a>
+        <div class="payslips">
+          <a href="http://www.example.com" class="payslip">
+            <span data-id="#" class="id"></span>
+            <span class="date PayDate"></span>
+            <span class="payment">
+            <span class="NetPayment"></span>
+            <span>EUR</span></span>
+            <span class="payer Payer"></span>
+          </a>
+        </div>
+      </div>
+      """
+
+    directives = payslips: id: "data-id": -> @id
+
+    data = [
+      year: "2012"
+      payslips: [
+        id: "265"
+        PayDate: "10.04.2012"
+        NetPayment: "2100.00"
+        Payer: "Pullikala Paallikko Oy"
+      ,
+        id: "271"
+        PayDate: "10.04.2012"
+        NetPayment: "2100.00"
+        Payer: "Pullikala Paallikko Oy"
+      ,
+        id: "270"
+        PayDate: "10.04.2012"
+        NetPayment: "2100.00"
+        Payer: "Pullikala Paallikko Oy"
+      ,
+        id: "269"
+        PayDate: "10.04.2012"
+        NetPayment: "2100.00"
+        Payer: "Pullikala Paallikko Oy"
+      ,
+        id: "272"
+        PayDate: "10.02.2012"
+        NetPayment: "2112.00"
+        Payer: "Pulli Oy"
+      ]
+    ]
+
+    expected = $ """
+      <div id="archive">
+        <a href="http://www.example.com" class="yeartitle"><span class="year">2012</span></a>
+        <div class="payslips">
+          <a href="http://www.example.com" class="payslip">
+            <span data-id="265" class="id">265</span>
+            <span class="date PayDate">10.04.2012</span>
+            <span class="payment">
+            <span class="NetPayment">2100.00</span>
+            <span>EUR</span></span>
+            <span class="payer Payer">Pullikala Paallikko Oy</span>
+          </a>
+
+          <a href="http://www.example.com" class="payslip">
+            <span data-id="271" class="id">271</span>
+            <span class="date PayDate">10.04.2012</span>
+            <span class="payment">
+            <span class="NetPayment">2100.00</span>
+            <span>EUR</span></span>
+            <span class="payer Payer">Pullikala Paallikko Oy</span>
+          </a>
+
+          <a href="http://www.example.com" class="payslip">
+            <span data-id="270" class="id">270</span>
+            <span class="date PayDate">10.04.2012</span>
+            <span class="payment">
+            <span class="NetPayment">2100.00</span>
+            <span>EUR</span></span>
+            <span class="payer Payer">Pullikala Paallikko Oy</span>
+          </a>
+
+          <a href="http://www.example.com" class="payslip">
+            <span data-id="269" class="id">269</span>
+            <span class="date PayDate">10.04.2012</span>
+            <span class="payment">
+            <span class="NetPayment">2100.00</span>
+            <span>EUR</span></span>
+            <span class="payer Payer">Pullikala Paallikko Oy</span>
+          </a>
+
+          <a href="http://www.example.com" class="payslip">
+            <span data-id="272" class="id">272</span>
+            <span class="date PayDate">10.02.2012</span>
+            <span class="payment">
+            <span class="NetPayment">2112.00</span>
+            <span>EUR</span></span>
+            <span class="payer Payer">Pulli Oy</span>
+          </a>
+        </div>
+      </div>
+      """
+
+    template.render data, directives
     expect(template.html()).htmlToBeEqual expected.html()

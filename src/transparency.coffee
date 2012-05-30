@@ -192,9 +192,8 @@
       (node) ->
         clone = $(node).clone()[0]
         if clone.nodeType == ELEMENT_NODE
-          clone[expando] = undefined
-          clone.setAttribute expando, ""
           clone.removeAttribute expando
+          (element.removeAttribute expando) for element in clone.getElementsByTagName '*'
         clone
 
   Array.isArray  ?= (obj) -> $.isArray obj
