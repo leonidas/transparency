@@ -27,7 +27,7 @@ describe "Transparency", ->
       """
 
     template.render person, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should allow setting html content with directives", ->
     template = $ """
@@ -53,7 +53,7 @@ describe "Transparency", ->
 
     template.render {firstname: "Hello", lastname: "David"}, directives
     template.render person, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should handle nested directives", ->
     template = $ """
@@ -107,7 +107,7 @@ describe "Transparency", ->
       """
 
     template.render person, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should restore the original attributes", ->
     template = $ """
@@ -140,7 +140,7 @@ describe "Transparency", ->
 
     # Render twice to make sure the class names are not duplicated
     template.render persons, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should allow directives without a return value", ->
     template = $ """
@@ -177,7 +177,7 @@ describe "Transparency", ->
 
     # Render twice to make sure the class names are not duplicated
     template.render persons, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should provide current attribute value as a parameter for the directives", ->
     template = $ """
@@ -200,7 +200,7 @@ describe "Transparency", ->
     # Render twice to make sure the text content is not duplicated
     template.render data, directives
     template.render data, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should render directives returning empty string, zero and other falsy values", ->
     template = $ """
@@ -234,7 +234,7 @@ describe "Transparency", ->
       """
 
     template.render data, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should throw an error unless directives are syntactically correct", ->
     template = $ """

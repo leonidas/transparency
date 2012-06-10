@@ -32,7 +32,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
     expect(template.find('.comment')[0].transparency.model).toEqual(data[0])
     expectModelObjects template.find('.comment'), data
 
@@ -54,7 +54,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should render lists with duplicate content", ->
     template = $ """
@@ -76,7 +76,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should render plain values with 'this.value' directives", ->
     template = $ """
@@ -101,7 +101,7 @@ describe "Transparency", ->
       """
 
     template.render data, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
     #expectModelObjects template.find('.listElement'), data
 
   it "should not fail when there's no child node in the simple list template", ->
@@ -118,7 +118,7 @@ describe "Transparency", ->
       """
 
     template.find('.comments').render data
-    expect(template.html()).htmlToBeEqual(expected.html())
+    expect(template).htmlToBeEqual(expected)
 
   it "should match table rows to the number of model objects", ->
     template = $ """
@@ -132,7 +132,7 @@ describe "Transparency", ->
       """
 
     template.find(".users").render [{username:'user1'}, {username:'user2'}]
-    expect(template.html()).htmlToBeEqual $('
+    expect(template).htmlToBeEqual $('
       <table>
         <tbody class="users">
           <tr>
@@ -142,20 +142,20 @@ describe "Transparency", ->
             <td class="username">user2</td>
           </tr>
         </tbody>
-      </table>').html()
+      </table>')
 
     template.find(".users").render [username:'user1']
-    expect(template.html()).htmlToBeEqual $('
+    expect(template).htmlToBeEqual $('
       <table>
         <tbody class="users">
           <tr>
             <td class="username">user1</td>
           </tr>
         </tbody>
-      </table>').html()
+      </table>')
 
     template.find(".users").render [{username:'user1'}, {username:'user3'}]
-    expect(template.html()).htmlToBeEqual(jQuery('
+    expect(template).htmlToBeEqual(jQuery('
       <table>
         <tbody class="users">
           <tr>
@@ -165,10 +165,10 @@ describe "Transparency", ->
             <td class="username">user3</td>
           </tr>
         </tbody>
-      </table>').html())
+      </table>'))
 
     template.find(".users").render [{username:'user4'}, {username:'user3'}]
-    expect(template.html()).htmlToBeEqual $('
+    expect(template).htmlToBeEqual $('
       <table>
         <tbody class="users">
           <tr>
@@ -178,7 +178,7 @@ describe "Transparency", ->
             <td class="username">user3</td>
           </tr>
         </tbody>
-      </table>').html()
+      </table>')
 
 expectModelObjects = (elements, data) ->
   for object, i in data

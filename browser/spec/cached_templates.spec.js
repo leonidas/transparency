@@ -40,7 +40,7 @@
       </div>');
       doc.find('.container').render(data);
       doc.find('.container').render(data);
-      return expect(doc.html()).htmlToBeEqual(expected.html());
+      return expect(doc).htmlToBeEqual(expected);
     });
   });
 

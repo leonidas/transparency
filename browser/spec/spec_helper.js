@@ -14,10 +14,10 @@
         formatHtml = function(html) {
           return html.replace(/\s/g, '').toLowerCase();
         };
-        actual = formatHtml(this.actual);
-        expected = formatHtml(expected);
+        actual = formatHtml(this.actual.html());
+        expected = formatHtml(expected.html());
         this.message = function() {
-          return actual + '\n\n' + expected;
+          return '\n' + actual + '\n' + expected;
         };
         return actual === expected;
       }

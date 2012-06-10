@@ -22,7 +22,7 @@
       ];
       expected = $("<div class=\"comments\">\n  <div class=\"comment\">\n    <span class=\"name\">John</span><span class=\"text\">That rules</span>\n  </div><div class=\"comment\">\n    <span class=\"name\">Arnold</span><span class=\"text\">Great post!</span>\n  </div>\n</div>");
       template.render(data);
-      expect(template.html()).htmlToBeEqual(expected.html());
+      expect(template).htmlToBeEqual(expected);
       expect(template.find('.comment')[0].transparency.model).toEqual(data[0]);
       return expectModelObjects(template.find('.comment'), data);
     });
@@ -32,7 +32,7 @@
       data = [];
       expected = $("<div class=\"comments\">\n</div>");
       template.render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     it("should render lists with duplicate content", function() {
       var data, expected, template;
@@ -46,7 +46,7 @@
       ];
       expected = $("<div id=\"items\">\n  <div class=\"name\">Same</div>\n  <div class=\"name\">Same</div>\n</div>");
       template.render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     it("should render plain values with 'this.value' directives", function() {
       var data, directives, expected, template;
@@ -61,7 +61,7 @@
       };
       expected = $("<div class=\"comments\">\n  <label>Comment:</label>\n  <span class=\"comment\">That rules</span>\n  <label>Comment:</label>\n  <span class=\"comment\">Great post!</span>\n  <label>Comment:</label>\n  <span class=\"comment\">5</span>\n</div>");
       template.render(data, directives);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     it("should not fail when there's no child node in the simple list template", function() {
       var data, expected, template;
@@ -69,7 +69,7 @@
       data = ["That rules", "Great post!"];
       expected = $("<div class=\"comments\">\n</div>");
       template.find('.comments').render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     return it("should match table rows to the number of model objects", function() {
       var template;
@@ -81,7 +81,7 @@
           username: 'user2'
         }
       ]);
-      expect(template.html()).htmlToBeEqual($('\
+      expect(template).htmlToBeEqual($('\
       <table>\
         <tbody class="users">\
           <tr>\
@@ -91,20 +91,20 @@
             <td class="username">user2</td>\
           </tr>\
         </tbody>\
-      </table>').html());
+      </table>'));
       template.find(".users").render([
         {
           username: 'user1'
         }
       ]);
-      expect(template.html()).htmlToBeEqual($('\
+      expect(template).htmlToBeEqual($('\
       <table>\
         <tbody class="users">\
           <tr>\
             <td class="username">user1</td>\
           </tr>\
         </tbody>\
-      </table>').html());
+      </table>'));
       template.find(".users").render([
         {
           username: 'user1'
@@ -112,7 +112,7 @@
           username: 'user3'
         }
       ]);
-      expect(template.html()).htmlToBeEqual(jQuery('\
+      expect(template).htmlToBeEqual(jQuery('\
       <table>\
         <tbody class="users">\
           <tr>\
@@ -122,7 +122,7 @@
             <td class="username">user3</td>\
           </tr>\
         </tbody>\
-      </table>').html());
+      </table>'));
       template.find(".users").render([
         {
           username: 'user4'
@@ -130,7 +130,7 @@
           username: 'user3'
         }
       ]);
-      return expect(template.html()).htmlToBeEqual($('\
+      return expect(template).htmlToBeEqual($('\
       <table>\
         <tbody class="users">\
           <tr>\
@@ -140,7 +140,7 @@
             <td class="username">user3</td>\
           </tr>\
         </tbody>\
-      </table>').html());
+      </table>'));
     });
   });
 

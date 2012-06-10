@@ -27,7 +27,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should render values to option elements", ->
     template = $ """
@@ -51,14 +51,15 @@ describe "Transparency", ->
 
     expected = $ """
       <select id="states">
-        <option class="state" value="1">Alabama</option>
+        <option class="state" value="1" selected="selected">Alabama</option>
         <option class="state" value="2">Alaska</option>
         <option class="state" value="3">Arizona</option>
       </select>
       """
 
     template.render data, directives
-    expect(template.html()).htmlToBeEqual expected.html()
+    template.children().first().attr 'selected', 'selected'
+    expect(template).htmlToBeEqual expected
 
   it "should handle nested options elements", ->
     template = $ """
@@ -84,11 +85,12 @@ describe "Transparency", ->
         <h1 class="title">Hello World</h1>
         <p class="post">Hi there it is me</p>
         <select class="comments">
-          <option class="comment">John</option>
+          <option class="comment" selected="selected">John</option>
           <option class="comment">Arnold</option>
         </select>
       </div>
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    template.find(".comment").first().attr 'selected', 'selected'
+    expect(template).htmlToBeEqual expected

@@ -19,10 +19,10 @@ beforeEach ->
       formatHtml = (html) ->
         html.replace(/\s/g, '').toLowerCase()
 
-      actual   = formatHtml(@actual)
-      expected = formatHtml(expected)
+      actual   = formatHtml(@actual.html())
+      expected = formatHtml(expected.html())
 
       this.message = () ->
-        actual + '\n\n' + expected
+        '\n' + actual + '\n' + expected
 
       actual == expected

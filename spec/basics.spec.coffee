@@ -10,7 +10,7 @@ describe "Transparency", ->
     expected = $ '<div></div>'
 
     window.Transparency.render template.find('#not_found')[0], data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should render empty container for null data", ->
     template = jQuery """
@@ -28,7 +28,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
     # Assert that the template is still available
     data =
@@ -42,7 +42,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should ignore null values", ->
     template = $ """
@@ -64,7 +64,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should match model keys to template by element id, class, name attribute and data-bind attribute", ->
     template = $ """
@@ -89,7 +89,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should handle nested templates", ->
     template = $ """
@@ -114,7 +114,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should work with numeric values", ->
     template = $ """
@@ -136,7 +136,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should convert date objects to strings", ->
     template = $ """
@@ -155,7 +155,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should ignore functions in models", ->
     template = $ """
@@ -180,7 +180,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should preserve text between template elements", ->
     template = $ """
@@ -200,7 +200,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected
 
   it "should render empty string, zero and other falsy values", ->
     template = $ """
@@ -228,4 +228,4 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template.html()).htmlToBeEqual expected.html()
+    expect(template).htmlToBeEqual expected

@@ -26,7 +26,7 @@
       };
       expected = $("<div class=\"container\">\n  <h1 class=\"title\">Hello World</h1>\n  <p class=\"post\">Hi there it is me</p>\n  <div class=\"comments\">\n    <div class=\"comment\">\n      <span class=\"name\">John</span>\n      <span class=\"text\">That rules</span>\n    </div>\n    <div class=\"comment\">\n      <span class=\"name\">Arnold</span>\n      <span class=\"text\">Great post!</span>\n    </div>\n  </div>\n</div>");
       template.render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     it("should handle nested lists with overlapping attributes", function() {
       var data, expected, template;
@@ -43,7 +43,7 @@
       };
       expected = $("<div class=\"container\">\n  <p class=\"tweet\">Jasmine is great!</p>\n  <div class=\"responses\">\n    <p class=\"tweet\">It truly is!</p>\n    <p class=\"tweet\">I prefer JsUnit</p>\n  </div>\n</div>");
       template.render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     it("should handle nested objects", function() {
       var data, expected, template;
@@ -59,7 +59,7 @@
       };
       expected = $("<div class=\"container\">\n  <div class=\"firstname\">John</div>\n  <div class=\"lastname\">Wayne</div>\n  <div class=\"address\">\n    <div class=\"street\">4th Street</div>\n    <div class=\"zip\">94199<span class=\"city\">San Francisco</span></div>\n  </div>\n</div>");
       template.render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     it("should handle tables with dynamic headers", function() {
       var data, directives, expected, template;
@@ -141,7 +141,7 @@
       };
       expected = $("<table class=\"test_reports\">\n  <thead>\n    <tr class=\"profiles\">\n      <th>\n        <a class=\"name\" href=\"http://www.example.com/Core\">Core</a>\n      </th>\n      <th>\n        <a class=\"name\" href=\"http://www.example.com/Handset\">Handset</a>\n      </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr class=\"profiles\">\n      <td class=\"testsets\">\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/Sanity\">Sanity</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/N900\">N900</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Lenovo\">Lenovo</a>\n            </li>\n          </ul>\n        </div>\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/Acceptance\">Acceptance</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Netbook\">Netbook</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Pinetrail\">Pinetrail</a>\n            </li>\n          </ul>\n        </div>\n      </td>\n      <td class=\"testsets\">\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/Feature\">Feature</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/N900\">N900</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Lenovo\">Lenovo</a>\n            </li>\n          </ul>\n        </div>\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com/NFT\">NFT</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/Netbook\">Netbook</a>\n            </li>\n            <li>\n              <a class=\"name\" href=\"http://www.example.com/iCDK\">iCDK</a>\n            </li>\n          </ul>\n        </div>\n      </td>\n    </tr>\n  </tbody>\n</table>");
       template.render(data, directives);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     return it("should handle nested objects", function() {
       var data, directives, expected, template;
@@ -190,7 +190,7 @@
       ];
       expected = $("<div id=\"archive\">\n  <a href=\"http://www.example.com\" class=\"yeartitle\"><span class=\"year\">2012</span></a>\n  <div class=\"payslips\">\n    <a href=\"http://www.example.com\" class=\"payslip\">\n      <span data-id=\"265\" class=\"id\">265</span>\n      <span class=\"date PayDate\">10.04.2012</span>\n      <span class=\"payment\">\n      <span class=\"NetPayment\">2100.00</span>\n      <span>EUR</span></span>\n      <span class=\"payer Payer\">Pullikala Paallikko Oy</span>\n    </a>\n\n    <a href=\"http://www.example.com\" class=\"payslip\">\n      <span data-id=\"271\" class=\"id\">271</span>\n      <span class=\"date PayDate\">10.04.2012</span>\n      <span class=\"payment\">\n      <span class=\"NetPayment\">2100.00</span>\n      <span>EUR</span></span>\n      <span class=\"payer Payer\">Pullikala Paallikko Oy</span>\n    </a>\n\n    <a href=\"http://www.example.com\" class=\"payslip\">\n      <span data-id=\"270\" class=\"id\">270</span>\n      <span class=\"date PayDate\">10.04.2012</span>\n      <span class=\"payment\">\n      <span class=\"NetPayment\">2100.00</span>\n      <span>EUR</span></span>\n      <span class=\"payer Payer\">Pullikala Paallikko Oy</span>\n    </a>\n\n    <a href=\"http://www.example.com\" class=\"payslip\">\n      <span data-id=\"269\" class=\"id\">269</span>\n      <span class=\"date PayDate\">10.04.2012</span>\n      <span class=\"payment\">\n      <span class=\"NetPayment\">2100.00</span>\n      <span>EUR</span></span>\n      <span class=\"payer Payer\">Pullikala Paallikko Oy</span>\n    </a>\n\n    <a href=\"http://www.example.com\" class=\"payslip\">\n      <span data-id=\"272\" class=\"id\">272</span>\n      <span class=\"date PayDate\">10.02.2012</span>\n      <span class=\"payment\">\n      <span class=\"NetPayment\">2112.00</span>\n      <span>EUR</span></span>\n      <span class=\"payer Payer\">Pulli Oy</span>\n    </a>\n  </div>\n</div>");
       template.render(data, directives);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
   });
 

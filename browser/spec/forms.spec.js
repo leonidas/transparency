@@ -18,7 +18,7 @@
       };
       expected = $("<div>\n  <input name=\"name\" value=\"John\"/>\n  <input name=\"job\" value=\"Milkman\"/>\n  <textarea name=\"resume\">Jack of all trades</textarea>\n</div>");
       template.render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      return expect(template).htmlToBeEqual(expected);
     });
     it("should render values to option elements", function() {
       var data, directives, expected, template;
@@ -42,9 +42,10 @@
           }
         }
       };
-      expected = $("<select id=\"states\">\n  <option class=\"state\" value=\"1\">Alabama</option>\n  <option class=\"state\" value=\"2\">Alaska</option>\n  <option class=\"state\" value=\"3\">Arizona</option>\n</select>");
+      expected = $("<select id=\"states\">\n  <option class=\"state\" value=\"1\" selected=\"selected\">Alabama</option>\n  <option class=\"state\" value=\"2\">Alaska</option>\n  <option class=\"state\" value=\"3\">Arizona</option>\n</select>");
       template.render(data, directives);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      template.children().first().attr('selected', 'selected');
+      return expect(template).htmlToBeEqual(expected);
     });
     return it("should handle nested options elements", function() {
       var data, expected, template;
@@ -60,9 +61,10 @@
           }
         ]
       };
-      expected = $("<div class=\"container\">\n  <h1 class=\"title\">Hello World</h1>\n  <p class=\"post\">Hi there it is me</p>\n  <select class=\"comments\">\n    <option class=\"comment\">John</option>\n    <option class=\"comment\">Arnold</option>\n  </select>\n</div>");
+      expected = $("<div class=\"container\">\n  <h1 class=\"title\">Hello World</h1>\n  <p class=\"post\">Hi there it is me</p>\n  <select class=\"comments\">\n    <option class=\"comment\" selected=\"selected\">John</option>\n    <option class=\"comment\">Arnold</option>\n  </select>\n</div>");
       template.render(data);
-      return expect(template.html()).htmlToBeEqual(expected.html());
+      template.find(".comment").first().attr('selected', 'selected');
+      return expect(template).htmlToBeEqual(expected);
     });
   });
 
