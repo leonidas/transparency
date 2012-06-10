@@ -27,7 +27,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected
 
   it "should render values to option elements", ->
     template = $ """
@@ -59,7 +59,7 @@ describe "Transparency", ->
 
     template.render data, directives
     template.children().first().attr 'selected', 'selected'
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected
 
   it "should handle nested options elements", ->
     template = $ """
@@ -93,4 +93,4 @@ describe "Transparency", ->
 
     template.render data
     template.find(".comment").first().attr 'selected', 'selected'
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected

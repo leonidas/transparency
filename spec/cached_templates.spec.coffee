@@ -39,4 +39,4 @@ describe "Transparency", ->
 
     doc.find('.container').render(data)
     doc.find('.container').render(data)
-    expect(doc).htmlToBeEqual(expected)
+    expect(doc).toBeEqual(expected)

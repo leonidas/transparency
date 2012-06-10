@@ -53,5 +53,5 @@ describe "Transparency", ->
     window.Transparency.config.matcher = data_bind_matcher
 
     template.render data
-    expect(template).htmlToBeEqual expected_with_custom_matcher
+    expect(template).toBeEqual expected_with_custom_matcher
     window.Transparency.config.matcher = default_matcher

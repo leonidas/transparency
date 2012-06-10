@@ -25,7 +25,7 @@
       };
       expected = $("<div class=\"person\">\n  <span class=\"name\">Jasmine Taylor</span>\n  <span class=\"email\">jasmine.tailor@example.com</span>\n</div>");
       template.render(person, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should allow setting html content with directives", function() {
       var directives, expected, person, template;
@@ -48,7 +48,7 @@
         lastname: "David"
       }, directives);
       template.render(person, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should handle nested directives", function() {
       var directives, expected, nameDecorator, person, template;
@@ -84,7 +84,7 @@
       };
       expected = $("<div class=\"person\">\n  <span class=\"name\">Jasmine Taylor</span>\n  <span class=\"email\">jasmine.taylor@example.com</span>\n  <div class=\"friends\">\n    <div class=\"friend\">\n      <span class=\"name\">John Mayer</span>\n      <span class=\"email\">john.mayer@example.com</span>\n    </div>\n    <div class=\"friend\">\n      <span class=\"name\">Damien Rice</span>\n      <span class=\"email\">damien.rice@example.com</span>\n    </div>\n  </div>\n</div>");
       template.render(person, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should restore the original attributes", function() {
       var directives, expected, persons, template;
@@ -108,7 +108,7 @@
       expected = $("<ul id=\"persons\">\n  <li class=\"person even\">me</li>\n  <li class=\"person odd\">you</li>\n  <li class=\"person even\">others</li>\n</ul>");
       template.render(persons, directives);
       template.render(persons, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should allow directives without a return value", function() {
       var directives, expected, persons, template;
@@ -135,7 +135,7 @@
       expected = $("<ul id=\"persons\">\n  <li class=\"person\" foobar=\"foo\">0</li>\n  <li class=\"person\" foobar=\"foo\">1</li>\n  <li class=\"person\" foobar=\"foo\">2</li>\n</ul>");
       template.render(persons, directives);
       template.render(persons, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should provide current attribute value as a parameter for the directives", function() {
       var data, directives, expected, template;
@@ -153,7 +153,7 @@
       expected = $("<div id=\"template\">\n  <div class=\"name\">Hello, World!<span>Br, Transparency</span></div>\n</div>");
       template.render(data, directives);
       template.render(data, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should render directives returning empty string, zero and other falsy values", function() {
       var data, directives, expected, template;
@@ -188,7 +188,7 @@
       };
       expected = $("<div id=\"root\">\n   <span id=\"d_number\">0</span>\n   <span id=\"d_bool\">false</span>\n   <span id=\"d_dec\">0</span>\n   <span id=\"d_str\"></span>\n </div>​");
       template.render(data, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     return it("should throw an error unless directives are syntactically correct", function() {
       var data, directives, template;

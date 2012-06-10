@@ -47,7 +47,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected
 
   it "should handle nested lists with overlapping attributes", ->
     template = $ """
@@ -78,7 +78,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected
 
   it "should handle nested objects", ->
     template = $ """
@@ -112,7 +112,7 @@ describe "Transparency", ->
       """
 
     template.render data
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected
 
   it "should handle tables with dynamic headers", ->
 
@@ -258,7 +258,7 @@ describe "Transparency", ->
       """
 
     template.render data, directives
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected
 
   it "should handle nested objects", ->
     template = $ """
@@ -362,4 +362,4 @@ describe "Transparency", ->
       """
 
     template.render data, directives
-    expect(template).htmlToBeEqual expected
+    expect(template).toBeEqual expected

@@ -22,7 +22,7 @@
       ];
       expected = $("<div class=\"comments\">\n  <div class=\"comment\">\n    <span class=\"name\">John</span><span class=\"text\">That rules</span>\n  </div><div class=\"comment\">\n    <span class=\"name\">Arnold</span><span class=\"text\">Great post!</span>\n  </div>\n</div>");
       template.render(data);
-      expect(template).htmlToBeEqual(expected);
+      expect(template).toBeEqual(expected);
       expect(template.find('.comment')[0].transparency.model).toEqual(data[0]);
       return expectModelObjects(template.find('.comment'), data);
     });
@@ -32,7 +32,7 @@
       data = [];
       expected = $("<div class=\"comments\">\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should render lists with duplicate content", function() {
       var data, expected, template;
@@ -46,7 +46,7 @@
       ];
       expected = $("<div id=\"items\">\n  <div class=\"name\">Same</div>\n  <div class=\"name\">Same</div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should render plain values with 'this.value' directives", function() {
       var data, directives, expected, template;
@@ -61,7 +61,7 @@
       };
       expected = $("<div class=\"comments\">\n  <label>Comment:</label>\n  <span class=\"comment\">That rules</span>\n  <label>Comment:</label>\n  <span class=\"comment\">Great post!</span>\n  <label>Comment:</label>\n  <span class=\"comment\">5</span>\n</div>");
       template.render(data, directives);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should not fail when there's no child node in the simple list template", function() {
       var data, expected, template;
@@ -69,7 +69,7 @@
       data = ["That rules", "Great post!"];
       expected = $("<div class=\"comments\">\n</div>");
       template.find('.comments').render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     return it("should match table rows to the number of model objects", function() {
       var template;
@@ -81,7 +81,7 @@
           username: 'user2'
         }
       ]);
-      expect(template).htmlToBeEqual($('\
+      expect(template).toBeEqual($('\
       <table>\
         <tbody class="users">\
           <tr>\
@@ -97,7 +97,7 @@
           username: 'user1'
         }
       ]);
-      expect(template).htmlToBeEqual($('\
+      expect(template).toBeEqual($('\
       <table>\
         <tbody class="users">\
           <tr>\
@@ -112,7 +112,7 @@
           username: 'user3'
         }
       ]);
-      expect(template).htmlToBeEqual(jQuery('\
+      expect(template).toBeEqual(jQuery('\
       <table>\
         <tbody class="users">\
           <tr>\
@@ -130,7 +130,7 @@
           username: 'user3'
         }
       ]);
-      return expect(template).htmlToBeEqual($('\
+      return expect(template).toBeEqual($('\
       <table>\
         <tbody class="users">\
           <tr>\

@@ -15,7 +15,7 @@
       };
       expected = $('<div></div>');
       window.Transparency.render(template.find('#not_found')[0], data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should render empty container for null data", function() {
       var data, expected, template;
@@ -23,13 +23,13 @@
       data = null;
       expected = $("<div class=\"container\">\n</div>");
       template.render(data);
-      expect(template).htmlToBeEqual(expected);
+      expect(template).toBeEqual(expected);
       data = {
         hello: 'Hello'
       };
       expected = $("<div class=\"container\">\n  <div class=\"hello\">Hello</div>\n  <div class=\"goodbye\"></div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should ignore null values", function() {
       var data, expected, template;
@@ -40,7 +40,7 @@
       };
       expected = $("<div class=\"container\">\n  <div class=\"hello\">Hello</div>\n  <div class=\"goodbye\"></div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should match model keys to template by element id, class, name attribute and data-bind attribute", function() {
       var data, expected, template;
@@ -52,7 +52,7 @@
       };
       expected = $("<div class=\"container\">\n  <div id=\"my-id\">id-data</div>\n  <div class=\"my-class\">class-data</div>\n  <div data-bind=\"my-data\">data-bind</div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should handle nested templates", function() {
       var data, expected, template;
@@ -63,7 +63,7 @@
       };
       expected = $("<div class=\"container\">\n  <div class=\"greeting\">Hello<span class=\"name\">World</span>\n    <div class=\"greeting\">Hello</div>\n  </div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should work with numeric values", function() {
       var data, expected, template;
@@ -74,7 +74,7 @@
       };
       expected = $("<div class=\"container\">\n  <div class=\"hello\">Hello</div>\n  <div class=\"goodbye\">5</div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should convert date objects to strings", function() {
       var data, expected, template;
@@ -84,7 +84,7 @@
       };
       expected = $("<div class=\"container\">\n  <div class=\"best_before\">" + ((new Date(0)).toString()) + "</div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should ignore functions in models", function() {
       var data, expected, template;
@@ -98,7 +98,7 @@
       };
       expected = $("<div class=\"container\">\n  <div class=\"hello\">Hello</div>\n  <div class=\"goodbye\">5</div>\n  <div class=\"skipped\"></div>\n</div>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     it("should preserve text between template elements", function() {
       var data, expected, template;
@@ -109,7 +109,7 @@
       };
       expected = $("<li class=\"foo\">\n<span data-bind=\"begin\">asdf</span> - <span data-bind=\"end\">fdsa</span>\n</li>");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
     return it("should render empty string, zero and other falsy values", function() {
       var data, expected, template;
@@ -122,7 +122,7 @@
       };
       expected = $("<div id=\"root\">\n   <span id=\"number\">0</span>\n   <span id=\"bool\">false</span>\n   <span id=\"dec\">0</span>\n   <span id=\"str\"></span>\n </div>​");
       template.render(data);
-      return expect(template).htmlToBeEqual(expected);
+      return expect(template).toBeEqual(expected);
     });
   });
 

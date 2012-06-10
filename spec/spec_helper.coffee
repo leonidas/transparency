@@ -29,8 +29,7 @@ isEqualDom = (actual, expected) ->
 
 beforeEach ->
   this.addMatchers
-    htmlToBeEqual: (expected) ->
-    #toBeEqual: (expected) ->
+    toBeEqual: (expected) ->
 
       message  = '\n' + @actual.html() + '\n' + expected.html()
       @message = () -> message

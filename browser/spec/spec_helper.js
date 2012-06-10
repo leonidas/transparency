@@ -36,7 +36,7 @@
 
   beforeEach(function() {
     return this.addMatchers({
-      htmlToBeEqual: function(expected) {
+      toBeEqual: function(expected) {
         var message;
         message = '\n' + this.actual.html() + '\n' + expected.html();
         this.message = function() {
