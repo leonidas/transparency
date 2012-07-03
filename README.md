@@ -447,20 +447,20 @@ Result:
 
 ## Configuration
 
-Transparency can be configured to use custom matcher for binding values to DOM elements.
+Transparency can be configured to use custom matcher for binding the values to DOM elements.
 
-For example, one might want to bind only by `data-bind` attribute, but not with `class` or `id` attributes.
-Custom matcher function should take `key` and `element` as a parameter and return `true` if the
+For example, one might want to bind only with `data-bind` attribute, but not with `class` or `id` attributes.
+Custom matcher function should take `key` and `element` as parameters and return `true` if the 
 corresponding value should be bind to the given DOM element.
 
 ```javascript
-  // Set the custom matcher
-  Transparency.matcher = function(element, key) {
-    element.getAttribute('data-bind') == key
-  }
+// Set the custom matcher
+Transparency.matcher = function(element, key) {
+  return element.getAttribute('data-bind') == key;
+};
 
-  // Values are rendered by using the custom matcher
-  template.render({name: "Will Smith"});
+// Values are bind only with 'data-bind' attribute
+template.render({name: "Will Smith"});
 ```
 
 ## Debugging templates, data and Transparency
