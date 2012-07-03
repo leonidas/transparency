@@ -27,11 +27,11 @@
         return element.getAttribute('data-bind') === key;
       };
       expected_with_custom_matcher = $("<div class=\"container\">\n  <h1 data-bind=\"title\">Hello World</h1>\n  <p class=\"post\"></p>\n  <div data-bind=\"comments\">\n    <div class=\"comment\">\n      <span class=\"name\"></span>\n      <span data-bind=\"text\">That rules</span>\n    </div>\n    <div class=\"comment\">\n      <span class=\"name\"></span>\n      <span data-bind=\"text\">Great post!</span>\n    </div>\n  </div>\n</div>");
-      default_matcher = window.Transparency.config.matcher;
-      window.Transparency.config.matcher = data_bind_matcher;
+      default_matcher = window.Transparency.matcher;
+      window.Transparency.matcher = data_bind_matcher;
       template.render(data);
       expect(template).toBeEqual(expected_with_custom_matcher);
-      return window.Transparency.config.matcher = default_matcher;
+      return window.Transparency.matcher = default_matcher;
     });
   });
 

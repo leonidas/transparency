@@ -49,9 +49,9 @@ describe "Transparency", ->
       </div>
       """
 
-    default_matcher = window.Transparency.config.matcher
-    window.Transparency.config.matcher = data_bind_matcher
+    default_matcher = window.Transparency.matcher
+    window.Transparency.matcher = data_bind_matcher
 
     template.render data
     expect(template).toBeEqual expected_with_custom_matcher
-    window.Transparency.config.matcher = default_matcher
+    window.Transparency.matcher = default_matcher

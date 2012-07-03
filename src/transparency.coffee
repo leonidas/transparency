@@ -96,7 +96,7 @@
 
   renderValues = (instance, model) ->
       for key, value of model when typeof model == 'object' and isPlainValue value
-        for element in matchingElements instance, key, config
+        for element in matchingElements instance, key
 
           if element.nodeName.toLowerCase() == 'input'
           then attr element, 'value', value
@@ -109,7 +109,7 @@
       unless typeof attributes == 'object'
         throw new Error "Directive syntax is directive[element][attribute] = function(params)"
 
-      for element in matchingElements instance, key, config
+      for element in matchingElements instance, key
         for attribute, directive of attributes when typeof directive == 'function'
 
           value = directive.call model, element: element, index: index, value: attr element, attribute
@@ -168,11 +168,11 @@
     elements
 
   matchingElements = (instance, key) ->
-    elements = instance.queryCache[key] ||= (e for e in instance.elements when config.matcher e, key)
+    elements = instance.queryCache[key] ||= (e for e in instance.elements when exports.matcher e, key)
     log "Matching elements for '#{key}':", elements
     elements
 
-  elementMatcher = (element, key) ->
+  matcher = (element, key) ->
     element.id                        == key       ||
     element.className.split(' ').indexOf(key) > -1 ||
     element.name                      == key       ||
@@ -204,12 +204,9 @@
 
   isPlainValue = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
 
-  config =
-    matcher: elementMatcher
-    debug: false
-
   # Return module exports
-  render: render
-  register: register
-  config: config
+  exports =
+    render: render
+    register: register
+    matcher: matcher
 

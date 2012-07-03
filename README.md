@@ -29,15 +29,14 @@ $('#template').render(hello);
 
 ## Features
 
-* **Semantic data binding** - No `<%=foo%>` or `{{foo}}` assignments polluting the HTML
-* **Collection rendering** - No need for hand-written loops in the HTML
-* **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML. Use any HTML editor you like
-* **Plain JavaScript for logic** - All the power without learning yet another micro programming language
+* **Semantic data binding** - No need for `<%=foo%>` or `{{foo}}` assignments
+* **Collection rendering** - No need for hand-written loops
+* **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML
+* **View logic in JavaScript** - No crippled DSL, just plain JavaScript functions
 
-Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older 
-IE browsers requires jQuery. Transparency is 
-[reasonable fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance),
-but not blazing-fast-superstar.
+Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older
+IE browsers requires jQuery. Transparency is
+[reasonable fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance) and ready for production use.
 
 ## Community
 
@@ -67,7 +66,7 @@ as a plugin.
 require(['jquery', 'transparency'], function($, transparency){
   // With jQuery
   $('#template').render(data);
-  
+
   // Without jQuery
   transparency.render(document.getElementById('template'), data);
 });
@@ -77,19 +76,20 @@ require(['jquery', 'transparency'], function($, transparency){
 
 `npm install transparency`
 
-For server-side use, see 
+For server-side use, see
 [examples/hello-server](https://github.com/leonidas/transparency/tree/master/examples/hello-server).
 
 ## Use
 
-Here are short, detailed and sometimes dense examples how to use Transparency. For more elaborate examples, see 
-[User manual](https://github.com/leonidas/transparency/wiki/User-Manual) and 
+Here are short, detailed and dense examples how to use Transparency. For more elaborate examples, see
+[User manual](https://github.com/leonidas/transparency/wiki/User-Manual) and
 [FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions). Feel free to add your own examples, too!
 
 ### Binding values
 
 By default, Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
-`data-bind` attribute. Values are escaped before rendering.
+`data-bind` attribute. Default behavior can be changed by providing a custom matcher function, as explained in section
+[Configuration](https://github.com/leonidas/transparency#configuration). Values are escaped before rendering.
 
 Template:
 
@@ -325,10 +325,10 @@ Directives are plain javascript functions defined in a two-dimensional object li
 where `element` is value of `id`, `class`, `name` attribute or `data-bind` attribute of the target element. Similarly,
 `attribute` is the name of the target attribute.
 
-When a directive function is executed, `this` is bound to the current model object. In addition, the directive function 
+When a directive function is executed, `this` is bound to the current model object. In addition, the directive function
 receives current element as `params.element`, current index as `params.index` and current value as `params.value`.
 
-The return value of a directive function is assigned to the matching element attribute. The return value should be 
+The return value of a directive function is assigned to the matching element attribute. The return value should be
 string, number or date.
 
 Template:
@@ -445,6 +445,24 @@ Result:
 </div>
 ```
 
+## Configuration
+
+Transparency can be configured to use custom matcher for binding values to DOM elements.
+
+For example, one might want to bind only by `data-bind` attribute, but not with `class` or `id` attributes.
+Custom matcher function should take `key` and `element` as a parameter and return `true` if the
+corresponding value should be bind to the given DOM element.
+
+```javascript
+  // Set the custom matcher
+  Transparency.matcher = function(element, key) {
+    element.getAttribute('data-bind') == key
+  }
+
+  // Values are rendered by using the custom matcher
+  template.render({name: "Will Smith"});
+```
+
 ## Debugging templates, data and Transparency
 
 http://leonidas.github.com/transparency/ is great place to fiddle around with your data and templates.
@@ -462,7 +480,7 @@ Install node.js 0.6.x and npm. Then, in the project folder
     $ npm install           # Install the dependencies
     $ npm test              # Run the tests
     $ npm run-script build  # Generate JavaScript libs from the CoffeeScript sources
-    
+
 For further information, see [Transparency wiki](https://github.com/leonidas/transparency/wiki).
 
 There's also [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
