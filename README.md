@@ -32,7 +32,7 @@ $('#template').render(hello);
 * **Semantic data binding** - No need for `<%=foo%>` or `{{foo}}` assignments
 * **Collection rendering** - No need for hand-written loops
 * **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML
-* **View logic in JavaScript** - No crippled DSL, just plain JavaScript functions
+* **View logic in JavaScript** - No crippled micro-template language, just plain JavaScript functions
 
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older
 IE browsers requires jQuery. Transparency is
