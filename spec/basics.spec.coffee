@@ -138,7 +138,7 @@ describe "Transparency", ->
     template.render data
     expect(template).toBeEqual expected
 
-  it "should handle DOM elements", ->
+  it "should handle DOM elements as models", ->
     template = $ """
       <div id="template">
         <h1 class="title"></h1>
@@ -149,14 +149,12 @@ describe "Transparency", ->
       """
 
      # Few widget elements. In reality these would be created other by Backbone views.
-    widget1 = document.createElement "div"
-    widget2 = document.createElement "div"
-    widget1.innerHTML = "First"
-    widget2.innerHTML = "Second"
+    widget1 = $("<div>First</div>")[0]
+    widget2 = $("<div>Second</div>")[0]
 
     data = 
       title: "Some widgets"
-      widgets: [ widget1,  widget2 ]
+      widgets: [widget1,  widget2]
 
     expected = $ """
       <div id="template">
