@@ -148,7 +148,7 @@ describe "Transparency", ->
       </div>
       """
 
-     # Few widget elements. In reality these would be created other by Backbone views.
+    # Few widget elements. In reality these would be created other by Backbone views.
     widget1 = $("<div>First</div>")[0]
     widget2 = $("<div>Second</div>")[0]
 

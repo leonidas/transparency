@@ -65,7 +65,7 @@
       template.render(data);
       return expect(template).toBeEqual(expected);
     });
-    it("should work with numeric values", function() {
+    it("should handle numeric values", function() {
       var data, expected, template;
       template = $("<div class=\"container\">\n  <div class=\"hello\"></div>\n  <div class=\"goodbye\"></div>\n</div>");
       data = {
@@ -73,6 +73,19 @@
         goodbye: 5
       };
       expected = $("<div class=\"container\">\n  <div class=\"hello\">Hello</div>\n  <div class=\"goodbye\">5</div>\n</div>");
+      template.render(data);
+      return expect(template).toBeEqual(expected);
+    });
+    it("should handle DOM elements as models", function() {
+      var data, expected, template, widget1, widget2;
+      template = $("<div id=\"template\">\n  <h1 class=\"title\"></h1>\n  <div class=\"widgets\">\n    <div class=\"widget\"></div>\n  </div>\n</div>");
+      widget1 = $("<div>First</div>")[0];
+      widget2 = $("<div>Second</div>")[0];
+      data = {
+        title: "Some widgets",
+        widgets: [widget1, widget2]
+      };
+      expected = $("<div id=\"template\">\n  <h1 class=\"title\">Some widgets</h1>\n  <div class=\"widgets\">\n    <div class=\"widget\">\n      <div>First</div>\n    </div>\n    <div class=\"widget\">\n      <div>Second</div>\n    </div>  \n  </div>\n</div>");
       template.render(data);
       return expect(template).toBeEqual(expected);
     });
