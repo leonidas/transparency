@@ -95,9 +95,14 @@
       (n.parentNode.removeChild n) for n in instance.template
 
   renderValues = (instance, model) ->
+    if isDomElement(model) and element = instance.elements[0]
+      (element.removeChild child) while child = element.firstChild
+      element.appendChild model
+
+    else
       for key, value of model when typeof model == 'object' and isPlainValue value
         for element in matchingElements instance, key
-
+ 
           if element.nodeName.toLowerCase() == 'input'
           then attr element, 'value', value
           else attr element, 'text',  value
@@ -202,6 +207,8 @@
   # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
   isDate = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
 
+  isDomElement = (obj) -> obj?.nodeType == ELEMENT_NODE
+
   isPlainValue = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
 
   # Return module exports
@@ -209,4 +216,3 @@
     render: render
     register: register
     matcher: matcher
-

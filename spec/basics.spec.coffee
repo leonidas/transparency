@@ -116,7 +116,7 @@ describe "Transparency", ->
     template.render data
     expect(template).toBeEqual expected
 
-  it "should work with numeric values", ->
+  it "should handle numeric values", ->
     template = $ """
       <div class="container">
         <div class="hello"></div>
@@ -132,6 +132,43 @@ describe "Transparency", ->
       <div class="container">
         <div class="hello">Hello</div>
         <div class="goodbye">5</div>
+      </div>
+      """
+
+    template.render data
+    expect(template).toBeEqual expected
+
+  it "should handle DOM elements", ->
+    template = $ """
+      <div id="template">
+        <h1 class="title"></h1>
+        <div class="widgets">
+          <div class="widget"></div>
+        </div>
+      </div>
+      """
+
+     # Few widget elements. In reality these would be created other by Backbone views.
+    widget1 = document.createElement "div"
+    widget2 = document.createElement "div"
+    widget1.innerHTML = "First"
+    widget2.innerHTML = "Second"
+
+    data = 
+      title: "Some widgets"
+      widgets: [ widget1,  widget2 ]
+
+    expected = $ """
+      <div id="template">
+        <h1 class="title">Some widgets</h1>
+        <div class="widgets">
+          <div class="widget">
+            <div>First</div>
+          </div>
+          <div class="widget">
+            <div>Second</div>
+          </div>  
+        </div>
       </div>
       """
 
