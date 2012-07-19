@@ -1,6 +1,6 @@
 class window.Todos extends Spine.Controller
 	ENTER_KEY = 13
-	TPL = Handlebars.compile $('#todo-template').html()
+	TPL = $ '#todo-template li'
 
 	elements:
 		'.edit': 'editElem'
@@ -18,7 +18,10 @@ class window.Todos extends Spine.Controller
 		@todo.bind 'destroy', @release
 
 	render: =>
-		@replace TPL( @todo )
+		@replace TPL.clone().render @todo,
+			toggle: checked: -> if @completed then "checked"
+
+		if @todo.completed then @el.addClass "completed"
 		@
 
 	remove: ->
@@ -34,7 +37,7 @@ class window.Todos extends Spine.Controller
 	finishEdit: ->
 		@el.removeClass 'editing'
 		val = $.trim @editElem.val()
-		if val then @todo.updateAttribute( 'title', val ) else @remove()
+		if val then @todo.updateAttribute('title', val) else @remove()
 
 	finishEditOnEnter: (e) ->
 		@finishEdit() if e.which is ENTER_KEY
