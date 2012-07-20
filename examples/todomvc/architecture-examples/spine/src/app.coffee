@@ -4,7 +4,7 @@ class TodoApp extends Spine.Controller
 	elements:
 		'#new-todo':        'newTodoInput'
 		'#toggle-all':      'toggleAllElem'
-		'#main':			'main'
+		'#main':						'main'
 		'#todo-list':       'todos'
 		'#footer':          'footer'
 		'#todo-count':      'count'
@@ -49,7 +49,7 @@ class TodoApp extends Spine.Controller
 				Todo.all()
 
 	addNew: (todo) =>
-		view = new Todos todo: todo
+		view = new Todos todo: todo, el: $('#todo-template li').clone()
 		@todos.append view.render().el
 
 	addAll: =>

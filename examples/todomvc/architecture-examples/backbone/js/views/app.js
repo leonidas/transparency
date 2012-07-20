@@ -72,7 +72,7 @@ $(function( $ ) {
 		// Add a single todo item to the list by creating a view for it, and
 		// appending its element to the `<ul>`.
 		addOne: function(todo) {
-			var view = new window.app.TodoView({model: todo, el: $('#todo-template').clone()});
+			var view = new window.app.TodoView({model: todo, el: $('#todo-template li').clone()});
 			$("#todo-list").append(view.render().el);
 		},
 

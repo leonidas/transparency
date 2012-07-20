@@ -81,7 +81,8 @@
     TodoApp.prototype.addNew = function(todo) {
       var view;
       view = new Todos({
-        todo: todo
+        todo: todo,
+        el: $('#todo-template li').clone()
       });
       return this.todos.append(view.render().el);
     };

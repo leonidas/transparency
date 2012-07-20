@@ -5,20 +5,18 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   window.Todos = (function(_super) {
-    var ENTER_KEY, TPL;
+    var ENTER_KEY;
 
     __extends(Todos, _super);
 
     ENTER_KEY = 13;
-
-    TPL = $('#todo-template li');
 
     Todos.prototype.elements = {
       '.edit': 'editElem'
     };
 
     Todos.prototype.events = {
-      'click    .destroy': 'remove',
+      'click    .destroy': 'destroy',
       'click    .toggle': 'toggleStatus',
       'dblclick .view': 'edit',
       'keyup    .edit': 'finishEditOnEnter',
@@ -33,7 +31,8 @@
     }
 
     Todos.prototype.render = function() {
-      this.replace(TPL.clone().render(this.todo, {
+      console.log("render " + this.todo.title);
+      this.el.render(this.todo, {
         toggle: {
           checked: function() {
             if (this.completed) {
@@ -41,14 +40,15 @@
             }
           }
         }
-      }));
+      });
+      this.refreshElements();
       if (this.todo.completed) {
-        this.el.addClass("completed");
+        this.el.addClass('completed');
       }
       return this;
     };
 
-    Todos.prototype.remove = function() {
+    Todos.prototype.destroy = function() {
       return this.todo.destroy();
     };
 
@@ -68,7 +68,7 @@
       if (val) {
         return this.todo.updateAttribute('title', val);
       } else {
-        return this.remove();
+        return this.destroy();
       }
     };
 

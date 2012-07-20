@@ -11,7 +11,7 @@ $(function() {
 		events: {
 			"click .toggle"   : "togglecompleted",
 			"dblclick .view"  : "edit",
-			"click .destroy"  : "clear",
+			"click .destroy"  : "destroy",
 			"keypress .edit"  : "updateOnEnter",
 			"blur .edit"      : "close"
 		},
@@ -70,9 +70,9 @@ $(function() {
 			}
 		},
 
-		// Remove the item, destroy the model.
-		clear: function() {
-			this.model.clear();
+		// Destroy the model.
+		destroy: function() {
+			this.model.destroy();
 		}
 	});
 

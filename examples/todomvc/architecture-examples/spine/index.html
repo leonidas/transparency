@@ -54,18 +54,6 @@
 		</li>
 	</div>
 
-	<script type="text/x-handlebars-template">
-	{{#this}}
-	<li {{#if completed}}class="completed"{{/if}}>
-		<div class="view">
-			<input class="toggle" type="checkbox" {{#if completed}}checked{{/if}}>
-			<label>{{title}}</label>
-			<button class="destroy"></button>
-		</div>
-		<input class="edit" value="{{title}}">
-	</li>
-	{{/this}}
-	</script>
 	<script src="../../assets/base.js"></script>
 	<script src="../../assets/jquery.min.js"></script>
 	<script src="../../../../lib/transparency.js"></script>

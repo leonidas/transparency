@@ -1,12 +1,11 @@
 class window.Todos extends Spine.Controller
 	ENTER_KEY = 13
-	TPL = $ '#todo-template li'
 
 	elements:
 		'.edit': 'editElem'
 
 	events:
-		'click    .destroy': 'remove'
+		'click    .destroy': 'destroy'
 		'click    .toggle':  'toggleStatus'
 		'dblclick .view':    'edit'
 		'keyup    .edit':    'finishEditOnEnter'
@@ -18,13 +17,14 @@ class window.Todos extends Spine.Controller
 		@todo.bind 'destroy', @release
 
 	render: =>
-		@replace TPL.clone().render @todo,
+		console.log "render #{@todo.title}"
+		@el.render @todo,
 			toggle: checked: -> if @completed then "checked"
-
-		if @todo.completed then @el.addClass "completed"
+		@refreshElements()
+		@el.addClass 'completed' if @todo.completed
 		@
 
-	remove: ->
+	destroy: ->
 		@todo.destroy()
 
 	toggleStatus: ->
@@ -37,7 +37,7 @@ class window.Todos extends Spine.Controller
 	finishEdit: ->
 		@el.removeClass 'editing'
 		val = $.trim @editElem.val()
-		if val then @todo.updateAttribute('title', val) else @remove()
+		if val then @todo.updateAttribute('title', val) else @destroy()
 
 	finishEditOnEnter: (e) ->
 		@finishEdit() if e.which is ENTER_KEY
