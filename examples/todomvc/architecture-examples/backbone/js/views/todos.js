@@ -26,6 +26,7 @@ $(function() {
 
 		// Re-render the titles of the todo item.
 		render: function() {
+			console.log("render " + this.model.get('title'));
 			var $el = $(this.el);
 			$el.render(this.model.toJSON(), {
 				toggle: { checked: function() {
