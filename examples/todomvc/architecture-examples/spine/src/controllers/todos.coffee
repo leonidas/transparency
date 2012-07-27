@@ -17,7 +17,6 @@ class window.Todos extends Spine.Controller
 		@todo.bind 'destroy', @release
 
 	render: =>
-		console.log @todo
 		@el.render @todo,
 			toggle: checked: (p) ->
 				p.element.checked = @completed

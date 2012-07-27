@@ -31,7 +31,6 @@
     }
 
     Todos.prototype.render = function() {
-      console.log(this.todo);
       this.el.render(this.todo, {
         toggle: {
           checked: function(p) {
