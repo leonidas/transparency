@@ -6,29 +6,32 @@ class window.Todos extends Spine.Controller
 
 	events:
 		'click    .destroy': 'destroy'
-		'click    .toggle':  'toggleStatus'
+		'click    .toggle':  'toggle'
 		'dblclick .view':    'edit'
-		'keyup    .edit':    'finishEditOnEnter'
+		'keyup    .edit':    'blurOnEnter'
 		'blur     .edit':    'finishEdit'
 
 	constructor: ->
 		super
-		@todo.bind 'update', @render
+		@todo.bind 'change',  @render
 		@todo.bind 'destroy', @release
 
 	render: =>
-		console.log "render #{@todo.title}"
+		console.log @todo
 		@el.render @todo,
-			toggle: checked: -> if @completed then "checked"
+			toggle: checked: (p) ->
+				p.element.checked = @completed
+				return
+
+		@el.toggleClass 'completed', @todo.completed
 		@refreshElements()
-		@el.addClass 'completed' if @todo.completed
 		@
 
 	destroy: ->
 		@todo.destroy()
 
-	toggleStatus: ->
-		@todo.updateAttribute 'completed', !@todo.completed
+	toggle: ->
+		@todo.updateAttributes completed: !@todo.completed
 
 	edit: ->
 		@el.addClass 'editing'
@@ -37,7 +40,7 @@ class window.Todos extends Spine.Controller
 	finishEdit: ->
 		@el.removeClass 'editing'
 		val = $.trim @editElem.val()
-		if val then @todo.updateAttribute('title', val) else @destroy()
+		if val then @todo.updateAttributes(title: val) else @todo.destroy()
 
-	finishEditOnEnter: (e) ->
-		@finishEdit() if e.which is ENTER_KEY
+	blurOnEnter: (e) ->
+		if e.keyCode is ENTER_KEY then e.target.blur()

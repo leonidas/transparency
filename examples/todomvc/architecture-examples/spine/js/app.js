@@ -39,17 +39,13 @@
       this.addNew = __bind(this.addNew, this);
       TodoApp.__super__.constructor.apply(this, arguments);
       Todo.bind('create', this.addNew);
-      Todo.bind('refresh change', this.addAll);
+      Todo.bind('refresh', this.addAll);
       Todo.bind('refresh change', this.toggleElems);
       Todo.bind('refresh change', this.renderFooter);
       Todo.fetch();
       this.routes({
         '/:filter': function(param) {
           this.filter = param.filter;
-          /*
-          				TODO: Need to figure out why the route doesn't trigger `change` event
-          */
-
           Todo.trigger('refresh');
           return this.filters.removeClass('selected').filter("[href='#/" + this.filter + "']").addClass('selected');
         }
@@ -101,12 +97,9 @@
 
     TodoApp.prototype.toggleAll = function(e) {
       return Todo.each(function(todo) {
-        /*
-        			TODO: Model updateAttribute sometimes won't stick:
-        				https://github.com/maccman/spine/issues/219
-        */
-        todo.updateAttribute('completed', e.target.checked);
-        return todo.trigger('update', todo);
+        return todo.updateAttributes({
+          completed: e.target.checked
+        });
       });
     };
 

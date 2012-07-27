@@ -19,16 +19,14 @@ class TodoApp extends Spine.Controller
 	constructor: ->
 		super
 		Todo.bind 'create', @addNew
-		Todo.bind 'refresh change', @addAll
+		Todo.bind 'refresh', @addAll
 		Todo.bind 'refresh change', @toggleElems
 		Todo.bind 'refresh change', @renderFooter
 		Todo.fetch()
+
 		@routes
 			'/:filter': (param) ->
 				@filter = param.filter
-				###
-				TODO: Need to figure out why the route doesn't trigger `change` event
-				###
 				Todo.trigger('refresh')
 				@filters.removeClass('selected')
 					.filter("[href='#/#{ @filter }']").addClass('selected');
@@ -58,12 +56,8 @@ class TodoApp extends Spine.Controller
 
 	toggleAll: (e) ->
 		Todo.each (todo) ->
-			###
-			TODO: Model updateAttribute sometimes won't stick:
-				https://github.com/maccman/spine/issues/219
-			###
-			todo.updateAttribute 'completed', e.target.checked
-			todo.trigger 'update', todo
+			# https://github.com/maccman/spine/issues/219
+			todo.updateAttributes completed: e.target.checked
 
 	clearCompleted: ->
 		Todo.destroyCompleted()

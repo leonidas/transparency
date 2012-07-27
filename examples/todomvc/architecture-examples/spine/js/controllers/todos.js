@@ -17,34 +17,30 @@
 
     Todos.prototype.events = {
       'click    .destroy': 'destroy',
-      'click    .toggle': 'toggleStatus',
+      'click    .toggle': 'toggle',
       'dblclick .view': 'edit',
-      'keyup    .edit': 'finishEditOnEnter',
+      'keyup    .edit': 'blurOnEnter',
       'blur     .edit': 'finishEdit'
     };
 
     function Todos() {
       this.render = __bind(this.render, this);
       Todos.__super__.constructor.apply(this, arguments);
-      this.todo.bind('update', this.render);
+      this.todo.bind('change', this.render);
       this.todo.bind('destroy', this.release);
     }
 
     Todos.prototype.render = function() {
-      console.log("render " + this.todo.title);
+      console.log(this.todo);
       this.el.render(this.todo, {
         toggle: {
-          checked: function() {
-            if (this.completed) {
-              return "checked";
-            }
+          checked: function(p) {
+            p.element.checked = this.completed;
           }
         }
       });
+      this.el.toggleClass('completed', this.todo.completed);
       this.refreshElements();
-      if (this.todo.completed) {
-        this.el.addClass('completed');
-      }
       return this;
     };
 
@@ -52,8 +48,10 @@
       return this.todo.destroy();
     };
 
-    Todos.prototype.toggleStatus = function() {
-      return this.todo.updateAttribute('completed', !this.todo.completed);
+    Todos.prototype.toggle = function() {
+      return this.todo.updateAttributes({
+        completed: !this.todo.completed
+      });
     };
 
     Todos.prototype.edit = function() {
@@ -66,15 +64,17 @@
       this.el.removeClass('editing');
       val = $.trim(this.editElem.val());
       if (val) {
-        return this.todo.updateAttribute('title', val);
+        return this.todo.updateAttributes({
+          title: val
+        });
       } else {
-        return this.destroy();
+        return this.todo.destroy();
       }
     };
 
-    Todos.prototype.finishEditOnEnter = function(e) {
-      if (e.which === ENTER_KEY) {
-        return this.finishEdit();
+    Todos.prototype.blurOnEnter = function(e) {
+      if (e.keyCode === ENTER_KEY) {
+        return e.target.blur();
       }
     };
 
