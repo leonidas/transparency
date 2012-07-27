@@ -29,8 +29,8 @@ $(function() {
 			console.log("render " + this.model.get('title'));
 			var $el = $(this.el);
 			$el.render(this.model.toJSON(), {
-				toggle: { checked: function() {
-				      if (this.completed) return "checked";
+				toggle: { checked: function(p) {
+				      p.element.checked = this.completed;
 				    }
 				  }
 				});
