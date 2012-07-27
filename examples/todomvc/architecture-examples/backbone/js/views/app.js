@@ -12,13 +12,13 @@ $(function( $ ) {
 		el: $("#todoapp"),
 
 		// Our template for the line of statistics at the bottom of the app.
-		statsTemplate: _.template($('#stats-template').html()),
+		statsTemplate: $('#stats-template'),
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
-			"keypress #new-todo":  "createOnEnter",
-			"click #clear-completed": "clearCompleted",
-			"click #toggle-all": "toggleAllComplete"
+			"keypress #new-todo":  			 "createOnEnter",
+			"click 		#clear-completed": "clearCompleted",
+			"click 		#toggle-all": 		 "toggleAllComplete"
 		},
 
 		// At initialization we bind to the relevant events on the `Todos`
@@ -26,15 +26,15 @@ $(function( $ ) {
 		// loading any preexisting todos that might be saved in *localStorage*.
 		initialize: function() {
 
-			this.input = this.$("#new-todo");
+			this.input       = this.$("#new-todo");
 			this.allCheckbox = this.$("#toggle-all")[0];
 
-			window.app.Todos.on('add', this.addOne, this);
+			window.app.Todos.on('add',   this.addOne, this);
 			window.app.Todos.on('reset', this.addAll, this);
-			window.app.Todos.on('all', this.render, this);
+			window.app.Todos.on('all',   this.render, this);
 
 			this.$footer = $('#footer');
-			this.$main = $('#main');
+			this.$main   = $('#main');
 
 			window.app.Todos.fetch();
 		},
@@ -49,11 +49,11 @@ $(function( $ ) {
 				this.$main.show();
 				this.$footer.show();
 
-				this.$footer.html(this.statsTemplate({
-							completed:       completed,
-							remaining:  remaining
-				}));
-
+				this.statsTemplate.render({
+					completed:  completed,
+					remaining:  remaining,
+					items:      (remaining == 1 ? 'item' : 'items')
+				});
 
 				this.$('#filters li a')
 					.removeClass('selected')

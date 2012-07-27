@@ -19,7 +19,23 @@
 			<label for="toggle-all">Mark all as complete</label>
 			<ul id="todo-list"></ul>
 		</section>
-		<footer id="footer"></div>
+		<footer id="footer">
+			<div id="stats-template">
+				<span id="todo-count"><strong id="remaining"></strong> <span class="items"></span> left</span>
+				<ul id="filters">
+					<li>
+						<a class="selected" href="#/">All</a>
+					</li>
+					<li>
+						<a href="#/active">Active</a>
+					</li>
+					<li>
+						<a href="#/completed">Completed</a>
+					</li>
+				</ul>
+				<button id="clear-completed">Clear completed (<span class="completed"></span>)</button>
+			</div>
+		</div>
 	</section>
 	<div id="info">
 		<p>Double-click to edit a todo</p>
@@ -27,44 +43,18 @@
 		<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 	</footer>
 
-
-	<div id="todo-template">
-		<li>
-			<div class="view">
-				<input class="toggle" type="checkbox">
-				<label class="title"></label>
-				<button class="destroy"></button>
-			</div>
-			<input class="edit" name="title">
-		</li>
-	</div>
-
-	<script type="text/template" id="item-template">
-		<div class="view">
-			<input class="toggle" type="checkbox" <%= completed ? 'checked="checked"' : '' %> />
-			<label><%= title %></label>
-			<button class="destroy"></button>
+	<div id="templates">
+		<div id="todo-template">
+			<li>
+				<div class="view">
+					<input class="toggle" type="checkbox">
+					<label class="title"></label>
+					<button class="destroy"></button>
+				</div>
+				<input class="edit" name="title">
+			</li>
 		</div>
-		<input class="edit" type="text" value="<%= title %>" />
-	</script>
-
-	<script type="text/template" id="stats-template">
-		<span id="todo-count"><strong><%= remaining %></strong> <%= remaining == 1 ? 'item' : 'items' %> left</span>
-		<ul id="filters">
-			<li>
-				<a class="selected" href="#/">All</a>
-			</li>
-			<li>
-				<a href="#/active">Active</a>
-			</li>
-			<li>
-				<a href="#/completed">Completed</a>
-			</li>
-		</ul>
-		<% if (completed) { %>
-		<button id="clear-completed">Clear completed (<%= completed %>)</button>
-		<% } %>
-	</script>
+	</div>
 
   <script src="../../assets/jquery.min.js"></script>
   <script src="js/lib/underscore-min.js"></script>

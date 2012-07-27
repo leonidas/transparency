@@ -20,13 +20,12 @@ $(function() {
 		// a one-to-one correspondence between a **Todo** and a **TodoView** in this
 		// app, we set a direct reference on the model for convenience.
 		initialize: function() {
-			this.model.on('change', this.render, this);
+			this.model.on('change',  this.render, this);
 			this.model.on('destroy', this.remove, this);
 		},
 
 		// Re-render the titles of the todo item.
 		render: function() {
-			console.log("render " + this.model.get('title'));
 			var $el = $(this.el);
 			$el.render(this.model.toJSON(), {
 				toggle: { checked: function(p) {
