@@ -3,7 +3,6 @@
   <head>
     <title>Transparency perf test</title>
     <script src="lib/benchmark.js"></script>
-    <script src="lib/weld.js"></script>
     <script src="lib/handlebars-1.0.0.beta.6.js"></script>
     <script src="lib/jquery-1.7.1.min.js"></script>
     <script src="lib/coffee-script.js"></script>
@@ -12,50 +11,104 @@
   <body>
     <pre id="results"></pre>
 
-      <h4>Transparency</h4>
-      <div id="transparency">
-        <span class="title"></span>
-      </div>
-
-      <h4>Handlebars</h4>
-      <div id="handlebars">
-      </div>
+    <h4>Transparency</h4>
+    <div id="transparency">
     </div>
-<script id="handlebars-template" type="text/handlebars">
-{{#each foobar}}
-<span>{{title}}</span>
-{{/each}}
-</script>
+
+    <h4>Transparency - cached template</h4>
+    <div id="transparency-cached">
+    </div>
+
+    <h4>Handlebars</h4>
+    <div id="handlebars">
+    </div>
+
+    <div id="transparency-template">
+      <span class="title"></span>
+    </div>
+
+    <script id="handlebars-template" type="text/handlebars">
+    {{#each items}}
+    <span>{{title}}</span>
+    {{/each}}
+    </script>
+
 <script type="text/coffeescript">
 
-sharedVariables = ({title: n} for n in [1..100])
+transparencyBench = new Benchmark 'transparency',
+  setup: ->
+    results   = $('#transparency')
+    template  = $('#transparency-template')
+    index     = 0
+    templates = (template.clone()[0] for i in [1..@count])
+    data      = for i in [1..@count]
+      ({title: Math.random()} for n in [1..100])
+    return
 
-# For handlebars
-foobar = foobar: sharedVariables
+  fn: ->
+    Transparency.render templates[index], data[index++]
+    return
 
-results              = $("#results")
-transparencyTemplate = $("#transparency")[0]
+  onError: ->
+    console.log @error
+    return
 
-handlebarsOutput     = $("#handlebars")[0]
-handlebarsTemplate   = Handlebars.compile($("#handlebars-template").text())
+  teardown: ->
+    results.empty().append templates[0].innerHTML
+    return
+
+transparencyCachedBench = new Benchmark 'transparency cached',
+  setup: ->
+    results   = $('#transparency-cached')
+    template  = $('#transparency-template').clone()[0]
+    index     = 0
+    data      = for i in [1..@count]
+      ({title: Math.random()} for n in [1..100])
+    return
+
+  fn: ->
+    Transparency.render template, data[index++]
+    return
+
+  onError: ->
+    console.log @error
+    return
+
+  teardown: ->
+    results.empty().append template.innerHTML
+    return
+
+handlebarsBench = new Benchmark 'handlebars',
+  setup: ->
+    results   = $('#handlebars')
+    parser    = $('<div></div>')
+    template  = Handlebars.compile($('#handlebars-template').html())
+    index     = 0
+    data      = ({title: Math.random()} for n in [1..100])
+    return
+
+  fn: ->
+    parser.innerHTML = template items: data
+    return
+
+  onError: ->
+    console.log @error
+    return
+
+  teardown: ->
+    results.empty().append parser.innerHTML
+    return
 
 new Benchmark.Suite()
-  .add("transparency", ->
-    Transparency.render transparencyTemplate, sharedVariables)
+  .add(transparencyBench)
+  .add(transparencyCachedBench)
+  .add(handlebarsBench)
 
-  .add("handlebars", ->
-    handlebarsOutput.innerHTML = handlebarsTemplate foobar)
-
-  .on("cycle", (event, bench) ->
+  .on('cycle', (event, bench) ->
     console.log String(bench)
-    results.append  String(bench) + '\n')
+    $('#results').append(bench + '\n'))
 
-  .on("complete", ->
-    results.append "Fastest is " + @filter("fastest").pluck("name"))
-
-  .run true
-
-
+  #.run true
 </script>
 </body>
 </html>
