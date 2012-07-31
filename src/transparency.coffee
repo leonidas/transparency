@@ -100,19 +100,16 @@
     constructor: (@template) ->
       @queryCache = {}
       @elements   = []
-      elementNodes(@template, @elements)
       @childNodes = []
-      c = @template.firstChild
-      while c
-        @childNodes.push c
-        c = c.nextSibling
+      getElementsAndChildNodes @template, @elements, @childNodes
 
-  elementNodes = (template, elements) ->
+  getElementsAndChildNodes = (template, elements, childNodes) ->
     child = template.firstChild
     while child
+      childNodes?.push child
       if child.nodeType == ELEMENT_NODE
         elements.push child
-        elementNodes child, elements
+        getElementsAndChildNodes child, elements
       child = child.nextSibling
 
   renderValues = (instance, model) ->
