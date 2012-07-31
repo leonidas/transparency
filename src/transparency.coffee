@@ -45,9 +45,10 @@
 
     # DOM manipulation is a lot faster when elements are detached.
     # Save the original position, so we can put the context back to it's place.
-    sibling = context.nextSibling
-    parent  = context.parentNode
-    parent?.removeChild context
+    parent = context.parentNode
+    if parent
+      sibling = context.nextSibling
+      parent.removeChild context
 
     # Make sure we have right amount of template instances available
     prepareContext context, models
@@ -66,9 +67,10 @@
       renderChildren    instance, model, directives, config
 
     # Finally, put the context element back to its original place in DOM
-    if sibling
-    then parent?.insertBefore context, sibling
-    else parent?.appendChild context
+    if parent
+      if sibling
+      then parent.insertBefore context, sibling
+      else parent.appendChild context
 
     # Return the context to support jQuery-like chaining
     context
@@ -102,7 +104,7 @@
     else
       for key, value of model when typeof model == 'object' and isPlainValue value
         for element in matchingElements instance, key
- 
+
           if element.nodeName.toLowerCase() == 'input'
           then attr element, 'value', value
           else attr element, 'text',  value
