@@ -81,14 +81,15 @@ transparencyCachedBench = new Benchmark 'transparency cached',
 handlebarsBench = new Benchmark 'handlebars',
   setup: ->
     results   = $('#handlebars')
-    parser    = $('<div></div>')
-    template  = Handlebars.compile($('#handlebars-template').html())
+    parser    = ($('<div></div>') for i in [1..@count])
+    template  = (Handlebars.compile($('#handlebars-template').html()) for i in [1..@count])
     index     = 0
-    data      = ({title: Math.random()} for n in [1..100])
+    data      = for i in [1..@count]
+      ({title: Math.random()} for n in [1..100])
     return
 
   fn: ->
-    parser.innerHTML = template items: data
+    parser[index].innerHTML = template[index] items: data[index++]
     return
 
   onError: ->
@@ -96,7 +97,7 @@ handlebarsBench = new Benchmark 'handlebars',
     return
 
   teardown: ->
-    results.empty().append parser.innerHTML
+    results.empty().append parser[0].innerHTML
     return
 
 new Benchmark.Suite()
