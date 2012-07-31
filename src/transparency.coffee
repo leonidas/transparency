@@ -76,25 +76,44 @@
     context
 
   prepareContext = (context, models) ->
-    contextData                 = data context
-    contextData.template      ||= (context.removeChild context.firstChild while context.firstChild)
-    contextData.instanceCache ||= [] # Query-cached template instances are precious, save them for the future
-    contextData.instances     ||= [] # Currently used template instances
-    log "Original template", contextData.template
+    contextData = data context
+
+    # Initialize context
+    unless contextData.template
+      contextData.template      = cloneNode context
+      contextData.instanceCache = [] # Query-cached template instances are precious, save them for the future
+      contextData.instances     = [new Instance(context)] # Currently used template instances
+    log "Template", contextData.template
 
     # Get templates from the cache or clone new ones, if the cache is empty.
     while models.length > contextData.instances.length
-      instance              = contextData.instanceCache.pop() || {}
-      instance.queryCache ||= {}
-      instance.template   ||= (cloneNode n for n in contextData.template)
-      instance.elements   ||= elementNodes instance.template
-      (context.appendChild n) for n in instance.template
+      instance = contextData.instanceCache.pop() || new Instance(cloneNode contextData.template)
+      (context.appendChild n for n in instance.childNodes)
       contextData.instances.push instance
 
     # Remove leftover templates from DOM and save them to the cache for later use.
     while models.length < contextData.instances.length
       contextData.instanceCache.push instance = contextData.instances.pop()
-      (n.parentNode.removeChild n) for n in instance.template
+      (n.parentNode.removeChild n) for n in instance.childNodes
+
+  class Instance
+    constructor: (@template) ->
+      @queryCache = {}
+      @elements   = []
+      elementNodes(@template, @elements)
+      @childNodes = []
+      c = @template.firstChild
+      while c
+        @childNodes.push c
+        c = c.nextSibling
+
+  elementNodes = (template, elements) ->
+    child = template.firstChild
+    while child
+      if child.nodeType == ELEMENT_NODE
+        elements.push child
+        elementNodes child, elements
+      child = child.nextSibling
 
   renderValues = (instance, model) ->
     if isDomElement(model) and element = instance.elements[0]
@@ -166,13 +185,6 @@
         element.setAttribute attribute, value if value?
 
     if value? then value else elementData.originalAttributes[attribute]
-
-  elementNodes = (template) ->
-    elements = []
-    for e in template when e.nodeType == ELEMENT_NODE
-      elements.push e
-      elements.push child for child in e.getElementsByTagName '*'
-    elements
 
   matchingElements = (instance, key) ->
     elements = instance.queryCache[key] ||= (e for e in instance.elements when exports.matcher e, key)
