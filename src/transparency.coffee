@@ -56,19 +56,37 @@
     # Render each model to its template instance
     contextData = data context
     for model, index in models
-      instance = contextData.instances[index]
+      children  = []
+      instance  = contextData.instances[index]
       log "Model:", model, "Template instance for the model:", instance
 
       # Associate model with instance elements
       data(e).model = model for e in instance.elements
 
-      childKeys = []
-      renderValues      instance, model, childKeys
-      renderDirectives  instance, model, index, directives
+      # Render values
+      if isDomElement(model) and element = instance.elements[0]
+        empty(element).appendChild model
+
+      else if typeof model == 'object'
+        for own key, value of model
+
+          if isPlainValue value
+            for element in matchingElements instance, key
+
+              if element.nodeName.toLowerCase() == 'input'
+              then attr element, 'value', value
+              else attr element, 'text',  value
+
+          else if typeof value == 'object'
+            children.push key
+
+      # Render directives
+      renderDirectives instance, model, index, directives
 
       # Render children
-      for key in childKeys
-        render element, model[key], directives[key], config for element in matchingElements instance, key, config
+      for key in children
+        for element in matchingElements instance, key
+          render element, model[key], directives[key], config
 
     # Finally, put the context element back to its original place in DOM
     if parent
@@ -117,23 +135,6 @@
         getElementsAndChildNodes child, elements
 
       child = child.nextSibling
-
-  renderValues = (instance, model, childKeys) ->
-    if isDomElement(model) and element = instance.elements[0]
-      empty(element).appendChild model
-
-    else if typeof model == 'object'
-      for own key, value of model
-
-        if isPlainValue value
-          for element in matchingElements instance, key
-
-            if element.nodeName.toLowerCase() == 'input'
-            then attr element, 'value', value
-            else attr element, 'text',  value
-
-        else if typeof value == 'object'
-          childKeys.push key
 
   renderDirectives = (instance, model, index, directives) ->
     return unless directives
