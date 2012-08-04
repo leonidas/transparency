@@ -128,10 +128,10 @@ handlebarsCachedBench = new Benchmark 'handlebars cached',
     return
 
 new Benchmark.Suite()
-  .add(transparencyBench)
-  .add(handlebarsBench)
+  #.add(transparencyBench)
+  #.add(handlebarsBench)
   .add(transparencyCachedBench)
-  .add(handlebarsCachedBench)
+  #.add(handlebarsCachedBench)
 
   .on('cycle', (event, bench) ->
     console.log String(bench)

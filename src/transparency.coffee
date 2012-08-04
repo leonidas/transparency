@@ -107,9 +107,11 @@
     child = template.firstChild
     while child
       childNodes?.push child
+
       if child.nodeType == ELEMENT_NODE
         elements.push child
         getElementsAndChildNodes child, elements
+
       child = child.nextSibling
 
   renderValues = (instance, model) ->
@@ -118,7 +120,7 @@
       element.appendChild model
 
     else
-      for key, value of model when typeof model == 'object' and isPlainValue value
+      for own key, value of model when typeof model == 'object' and isPlainValue value
         for element in matchingElements instance, key
 
           if element.nodeName.toLowerCase() == 'input'
@@ -128,7 +130,7 @@
   renderDirectives = (instance, model, index, directives) ->
     model = if typeof model == 'object' then model else value: model
 
-    for key, attributes of directives
+    for own key, attributes of directives
       unless typeof attributes == 'object'
         throw new Error "Directive syntax is directive[element][attribute] = function(params)"
 
@@ -139,23 +141,35 @@
           attr element, attribute, value if value?
 
   renderChildren = (instance, model, directives, config) ->
-    for key, value of model when typeof value == 'object' and not isDate value
+    for own key, value of model when typeof value == 'object' and not isDate value
       render element, value, directives[key], config for element in matchingElements instance, key, config
 
-  setContent = (callback) ->
-    (element, content) ->
-      elementData = data element
-      return if elementData.content == content
+  setHtml = (element, html) ->
+    elementData = data element
+    return if elementData.html == html
 
-      elementData.content    = content
-      elementData.children ||= (n for n in element.childNodes when n.nodeType == ELEMENT_NODE)
+    elementData.html       = html
+    elementData.children ||= (n for n in element.childNodes when n.nodeType == ELEMENT_NODE)
 
-      (element.removeChild element.firstChild) while element.firstChild
-      callback element, content
-      (element.appendChild c) for c in elementData.children
+    element.removeChild child while child = element.firstChild
+    element.innerHTML = html
+    element.appendChild child for child in elementData.children
 
-  setHtml = setContent (element, html) -> element.innerHTML = html
-  setText = setContent (element, text) -> element.appendChild element.ownerDocument.createTextNode text
+  setText = (element, text) ->
+    elementData = data element
+    return if elementData.text == text
+
+    elementData.text = text
+    textNode         = element.firstChild
+
+    if !textNode
+      element.appendChild element.ownerDocument.createTextNode text
+
+    else if textNode.nodeType != TEXT_NODE
+      element.insertBefore element.ownerDocument.createTextNode(text), textNode
+
+    else
+      textNode.nodeValue = text
 
   getText = (element) ->
     (child.nodeValue for child in element.childNodes when child.nodeType == TEXT_NODE).join ''
@@ -168,18 +182,22 @@
     elementData.originalAttributes ||= {}
 
     switch attribute
+
       when 'text'
         elementData.originalAttributes['text'] ||= getText element
-        setText element, value if value?
+        setText(element, value) if value?
+
       when 'html'
         elementData.originalAttributes['html'] ||= element.innerHTML
-        setHtml element, value if value?
+        setHtml(element, value) if value?
+
       when 'class'
         elementData.originalAttributes['class'] ||= element.className
         element.className = value if value?
+
       else
         elementData.originalAttributes[attribute] ||= element.getAttribute attribute
-        element.setAttribute attribute, value if value?
+        element.setAttribute(attribute, value) if value?
 
     if value? then value else elementData.originalAttributes[attribute]
 
