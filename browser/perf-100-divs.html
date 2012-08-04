@@ -65,10 +65,8 @@ transparencyCachedBench = new Benchmark 'transparency cached',
     results  = $('#transparency-cached')
     template = $('#transparency-template').clone()[0]
     index    = 0
-    data     = for i in [0..@count]
+    data     = for i in [1..@count]
       ({title: Math.random()} for n in [1..100])
-
-    Transparency.render template, data[index++]
     return
 
   fn: ->
@@ -128,10 +126,10 @@ handlebarsCachedBench = new Benchmark 'handlebars cached',
     return
 
 new Benchmark.Suite()
-  #.add(transparencyBench)
-  #.add(handlebarsBench)
+  .add(transparencyBench)
+  .add(handlebarsBench)
   .add(transparencyCachedBench)
-  #.add(handlebarsCachedBench)
+  .add(handlebarsCachedBench)
 
   .on('cycle', (event, bench) ->
     console.log String(bench)

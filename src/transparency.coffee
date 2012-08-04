@@ -1,23 +1,24 @@
 # Adapted from https://github.com/umdjs/umd
 ((root, factory) ->
   # AMD
-  if define?.amd then define ['jquery'], factory
+  if define?.amd then define factory
 
   # Node.js
   else if module?.exports
-    module.exports = factory if $? then $ else fn: {}
+    module.exports = factory()
 
   # Browser global
-  else root.Transparency = factory if $? then $ else fn: {}
+  else root.Transparency = factory()
 
-) this, ($) ->
+) this, () ->
 
   register = ($) ->
     $.fn.render = (models, directives, config) ->
       render context, models, directives, config for context in this
       this
 
-  register $
+  $ = jQuery
+  register($) if $
 
   expando = 'transparency'
   data    = (element) ->
@@ -28,17 +29,13 @@
 
   nullLogger    = () ->
   consoleLogger = (messages...) -> console.log m for m in messages
-
-  log    = null
-  logger = (config) ->
-    if config?.debug and console?
-    then consoleLogger
-    else nullLogger
+  log           = nullLogger
 
   render = (context, models, directives, config) ->
-    log = logger config
+    log = if config?.debug and console? then consoleLogger else nullLogger
     log "Context:", context, "Models:", models, "Directives:", directives, "Config:", config
     return unless context
+
     models     ||= []
     directives ||= {}
     models       = [models] unless Array.isArray models
@@ -72,7 +69,6 @@
 
           if isPlainValue value
             for element in matchingElements instance, key
-
               if element.nodeName.toLowerCase() == 'input'
               then attr element, 'value', value
               else attr element, 'text',  value
@@ -157,7 +153,7 @@
     elementData.html       = html
     elementData.children ||= (n for n in element.childNodes when n.nodeType == ELEMENT_NODE)
 
-    element.removeChild child while child = element.firstChild
+    empty element
     element.innerHTML = html
     element.appendChild child for child in elementData.children
 
@@ -252,6 +248,6 @@
 
   # Return module exports
   exports =
-    render: render
+    render:   render
     register: register
-    matcher: matcher
+    matcher:  matcher

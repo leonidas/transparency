@@ -64,11 +64,13 @@ as a plugin.
 
 ```javascript
 require(['jquery', 'transparency'], function($, transparency){
-  // With jQuery
-  $('#template').render(data);
 
   // Without jQuery
   transparency.render(document.getElementById('template'), data);
+
+  // With jQuery
+  transparency.register($); // register Transparency as a jQuery plugin
+  $('#template').render(data);
 });
 ```
 
@@ -450,7 +452,7 @@ Result:
 Transparency can be configured to use custom matcher for binding the values to DOM elements.
 
 For example, one might want to bind only with `data-bind` attribute, but not with `class` or `id` attributes.
-Custom matcher function should take `key` and `element` as parameters and return `true` if the 
+Custom matcher function should take `key` and `element` as parameters and return `true` if the
 corresponding value should be bind to the given DOM element.
 
 ```javascript
