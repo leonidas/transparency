@@ -62,9 +62,13 @@
       # Associate model with instance elements
       data(e).model = model for e in instance.elements
 
-      renderValues      instance, model
+      childKeys = []
+      renderValues      instance, model, childKeys
       renderDirectives  instance, model, index, directives
-      renderChildren    instance, model, directives, config
+
+      # Render children
+      for key in childKeys
+        render element, model[key], directives[key], config for element in matchingElements instance, key, config
 
     # Finally, put the context element back to its original place in DOM
     if parent
@@ -114,20 +118,25 @@
 
       child = child.nextSibling
 
-  renderValues = (instance, model) ->
+  renderValues = (instance, model, childKeys) ->
     if isDomElement(model) and element = instance.elements[0]
-      (element.removeChild child) while child = element.firstChild
-      element.appendChild model
+      empty(element).appendChild model
 
-    else
-      for own key, value of model when typeof model == 'object' and isPlainValue value
-        for element in matchingElements instance, key
+    else if typeof model == 'object'
+      for own key, value of model
 
-          if element.nodeName.toLowerCase() == 'input'
-          then attr element, 'value', value
-          else attr element, 'text',  value
+        if isPlainValue value
+          for element in matchingElements instance, key
+
+            if element.nodeName.toLowerCase() == 'input'
+            then attr element, 'value', value
+            else attr element, 'text',  value
+
+        else if typeof value == 'object'
+          childKeys.push key
 
   renderDirectives = (instance, model, index, directives) ->
+    return unless directives
     model = if typeof model == 'object' then model else value: model
 
     for own key, attributes of directives
@@ -139,10 +148,6 @@
 
           value = directive.call model, element: element, index: index, value: attr element, attribute
           attr element, attribute, value if value?
-
-  renderChildren = (instance, model, directives, config) ->
-    for own key, value of model when typeof value == 'object' and not isDate value
-      render element, value, directives[key], config for element in matchingElements instance, key, config
 
   setHtml = (element, html) ->
     elementData = data element
@@ -211,6 +216,10 @@
     element.className.split(' ').indexOf(key) > -1 ||
     element.name                      == key       ||
     element.getAttribute('data-bind') == key
+
+  empty = (element) ->
+    element.removeChild child while child = element.firstChild
+    element
 
   ELEMENT_NODE = 1
   TEXT_NODE    = 3
