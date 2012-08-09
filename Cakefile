@@ -19,3 +19,4 @@ task 'perf', 'run perf tests', (options) ->
       console.log stdout.trim() if stdout
       console.log stderr.trim() if err
   )
+

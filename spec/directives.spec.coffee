@@ -248,3 +248,22 @@ describe "Transparency", ->
 
     expect(-> template.render data, directives)
     .toThrow new Error "Directive syntax is directive[element][attribute] = function(params)"
+
+  it "should use directive return value even if data value is null", ->
+    template = $ """
+      <div id="template">
+        <div class="name"></div>
+      </div>
+      """
+
+    expected = $ """
+      <div id="template">
+        <div class="name">Null value</div>
+      </div>
+      """
+
+    data       = name: null
+    directives = name: text: -> "Null value"
+
+    template.render data, directives
+    expect(template).toBeEqual expected
