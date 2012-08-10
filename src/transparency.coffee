@@ -144,7 +144,7 @@
         for attribute, directive of attributes when typeof directive == 'function'
 
           value = directive.call model, element: element, index: index, value: attr element, attribute
-          attr element, attribute, value if value?
+          attr element, attribute, value
 
   setHtml = (element, html) ->
     elementData = data element
@@ -187,11 +187,11 @@
 
       when 'text'
         elementData.originalAttributes['text'] ||= getText element
-        setText(element, value) if value?
+        setText element, value if value?
 
       when 'html'
         elementData.originalAttributes['html'] ||= element.innerHTML
-        setHtml(element, value) if value?
+        setHtml element, value if value?
 
       when 'class'
         elementData.originalAttributes['class'] ||= element.className
