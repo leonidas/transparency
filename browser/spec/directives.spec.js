@@ -210,7 +210,7 @@
       template = $("<div id=\"template\">\n  <div class=\"name\"></div>\n</div>");
       expected = $("<div id=\"template\">\n  <div class=\"name\">Null value</div>\n</div>");
       data = {
-        name: ""
+        name: null
       };
       directives = {
         name: {

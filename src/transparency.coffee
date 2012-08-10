@@ -67,13 +67,13 @@
       else if typeof model == 'object'
         for own key, value of model
 
-          if isPlainValue value
+          if value? and isPlainValue value
             for element in matchingElements instance, key
               if element.nodeName.toLowerCase() == 'input'
               then attr element, 'value', value
               else attr element, 'text',  value
 
-          else if typeof value == 'object'
+          else if value? and typeof value == 'object'
             children.push key
 
       # Render directives
@@ -159,7 +159,7 @@
 
   setText = (element, text) ->
     elementData = data element
-    return if elementData.text == text
+    return if !text? or elementData.text == text
 
     elementData.text = text
     textNode         = element.firstChild
@@ -187,11 +187,11 @@
 
       when 'text'
         elementData.originalAttributes['text'] ||= getText element
-        setText element, value if value?
+        setText(element, value) if value?
 
       when 'html'
         elementData.originalAttributes['html'] ||= element.innerHTML
-        setHtml element, value if value?
+        setHtml(element, value) if value?
 
       when 'class'
         elementData.originalAttributes['class'] ||= element.className
