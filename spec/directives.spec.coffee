@@ -262,7 +262,7 @@ describe "Transparency", ->
       </div>
       """
 
-    data       = name: ""
+    data       = name: null
     directives = name: text: -> "Null value"
 
     template.render data, directives
