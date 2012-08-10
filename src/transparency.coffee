@@ -65,15 +65,15 @@
         empty(element).appendChild model
 
       else if typeof model == 'object'
-        for own key, value of model
+        for own key, value of model when value?
 
-          if value? and isPlainValue value
+          if isPlainValue value
             for element in matchingElements instance, key
               if element.nodeName.toLowerCase() == 'input'
               then attr element, 'value', value
               else attr element, 'text',  value
 
-          else if value? and typeof value == 'object'
+          else if typeof value == 'object'
             children.push key
 
       # Render directives
