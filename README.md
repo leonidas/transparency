@@ -477,7 +477,7 @@ $('container').render(data, {}, {debug: true});
 
 ## Development environment
 
-Install node.js 0.6.x and npm. Then, in the project folder
+Install node.js 0.8.x and npm. Then, in the project folder
 
     $ npm install           # Install the dependencies
     $ npm test              # Run the tests
