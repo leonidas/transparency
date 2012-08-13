@@ -17,8 +17,9 @@
       render context, models, directives, config for context in this
       this
 
-  $ = jQuery
-  register($) if $
+  if jQuery?
+    $ = jQuery
+    register $
 
   expando = 'transparency'
   data    = (element) ->
