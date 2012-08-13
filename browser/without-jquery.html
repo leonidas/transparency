@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Transparency</title>
+  <h1>Simple Transpency test without jQuery</h1>
+
+  <div id="container">
+    <span id="hello"></span>
+  </div>
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="../lib/transparency.js"></script>
+  <script type="text/javascript">
+    (function() {
+      Transparency.render(document.getElementById('container'), {hello: "Hello from Transparency"});
+    })();
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>
