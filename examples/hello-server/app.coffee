@@ -6,7 +6,7 @@ transparency = require "transparency"
 # Register transparency as a plugin for the given jQuery instance
 transparency.register $
 
-app = express.createServer()
+app = express()
 
 app.configure ->
   app.use app.router
@@ -62,4 +62,4 @@ app.get "/", (req, res) ->
   res.send template[0].outerHTML
 
 app.listen 3000
-console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env
+console.log "Express server listening on port 3000 in %s mode", app.settings.env
