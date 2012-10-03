@@ -74,18 +74,7 @@ h2, h3, h4, h5, h6 {
 
 .editor,
 .results {
-  background-image: linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
-  background-image: -o-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
-  background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
-  background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
-  background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 100%, rgb(235,245,247) 80%);
-  background-image: -webkit-gradient(
-    linear,
-    left bottom,
-    left top,
-    color-stop(1, rgb(255,255,255)),
-    color-stop(0.8, rgb(235,245,247))
-  );
+  background: #ebf5f7 url('../img/container-back.png') repeat-x left top;
   padding: 4px;
   border: 1px solid #fff;
   border-radius: 10px;
@@ -119,18 +108,7 @@ h2, h3, h4, h5, h6 {
 
 .editor .tabs a.active,
 .results .tabs a.active {
-  background-image: linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
-  background-image: -o-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
-  background-image: -moz-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
-  background-image: -webkit-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
-  background-image: -ms-linear-gradient(bottom, rgb(219,228,230) 100%, rgba(235,245,247,0) 0%);
-  background-image: -webkit-gradient(
-    linear,
-    left bottom,
-    left top,
-    color-stop(1, rgb(219,228,230)),
-    color-stop(0, rgba(235,245,247,0))
-  );
+  background: #ebf5f7 url('../img/tab-back.png') repeat-x left top;
 }
 
 textarea, pre {
