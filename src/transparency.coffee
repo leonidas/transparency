@@ -17,8 +17,8 @@
       render context, models, directives, config for context in this
       this
 
-  if @jQuery?
-    $ = @jQuery
+  if @jQuery? or @Zepto?
+    $ = @jQuery or @Zepto
     register $
 
   expando = 'transparency'
