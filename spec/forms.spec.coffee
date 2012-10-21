@@ -61,6 +61,34 @@ describe "Transparency", ->
     template.children().first().attr 'selected', 'selected'
     expect(template).toBeEqual expected
 
+  it "should set a matching option in case the target element is 'select'", ->
+    template = $ """
+      <select name="state">
+        <option class="state" value="1">Alabama</option>
+        <option class="state" value="2">Alaska</option>
+        <option class="state" value="3">Arizona</option>
+      </select>
+      """
+
+    data = [
+      name: 2
+      state: 'Alaska'
+    ]
+
+    directives = state: value: ->  name
+
+    expected = $ """
+      <select name="state">
+        <option class="state" value="1">Alabama</option>
+        <option class="state" value="2" selected="selected">Alaska</option>
+        <option class="state" value="3">Arizona</option>
+      </select>
+      """
+
+    template.render data, directives
+    template.children().first().attr 'selected', 'selected'
+    expect(template).toBeEqual expected
+
   it "should handle nested options elements", ->
     template = $ """
       <div class="container">
