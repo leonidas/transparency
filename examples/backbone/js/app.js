@@ -17,7 +17,7 @@ $(function() {
     el: $('#application'),
 
     render: function() {
-      this.$('.customers').render(customers.toJSON(), {
+      this.$('.customers').render(this.customers.toJSON(), {
         delete: {
           index: function(params) { return params.index; }
         }
@@ -34,7 +34,8 @@ $(function() {
       this.customers.fetch();
     },
 
-    addCustomer: function() {
+    addCustomer: function(event) {
+      event.preventDefault();
       this.customers.create({
         suffix: this.$('.new-customer .suffixes').val(),
         name:   this.$('.new-customer .name').val(),
@@ -44,7 +45,7 @@ $(function() {
     },
 
     deleteCustomer: function(event) {
-      customers.at(event.target.getAttribute('index')).destroy();
+      this.customers.at(event.target.getAttribute('index')).destroy();
     }
   });
 
