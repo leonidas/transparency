@@ -41,13 +41,10 @@ $(function() {
         email:  this.$('.new-customer .email').val(),
         phone:  this.$('.new-customer .phone').val()
       });
-
-      return false;
     },
 
     deleteCustomer: function(event) {
       customers.at(event.target.getAttribute('index')).destroy();
-      return false;
     }
   });
 
