@@ -45,6 +45,7 @@ $(function() {
     },
 
     deleteCustomer: function(event) {
+      event.preventDefault();
       this.customers.at(event.target.getAttribute('index')).destroy();
     }
   });
