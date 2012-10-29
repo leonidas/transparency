@@ -27,7 +27,7 @@ $(function() {
     },
 
     initialize: function() {
-      window.customers = this.customers = new CustomerCollection();
+      this.customers = new CustomerCollection();
       this.customers.on('add', this.render, this);
       this.customers.on('reset', this.render, this);
       this.customers.on('destroy', this.render, this);
