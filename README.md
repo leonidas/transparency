@@ -362,7 +362,7 @@ directives = {
 
   email: {
     href: function(params) {
-      return this.email;
+      return "mailto:" + this.email;
     }
   }
 };
