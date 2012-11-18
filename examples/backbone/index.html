@@ -1,82 +1,78 @@
 <html>
-	<head>
-		<title>Backbone.js + Transparency -demo</title>
-		<script src="js/jquery-1.7.2.min.js"></script>
-		<script src="js/underscore-min.js"></script>
-		<script src="js/backbone-min.js"></script>
-		<script src="../../lib/transparency.min.js"></script>
+  <head>
+    <title>Backbone.js + Transparency demo</title>
+    <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    td,th {
+      padding: 3px;
+      border: 1px solid #888;
+    }
+    tr:nth-child(even) {
+      background-color: #ccc;
+    }
+    </style>
+  </head>
 
-		<style>
-		table {
-			width: 100%;
-			border-collapse: collapse;
-		}
-		td,th {
-			padding: 3px;
-			border: 1px solid #888;
-		}
-		tr:nth-child(even) {
-			background-color: #ccc;
-		}
-		</style>
-	</head>
-	<body>
-		<div id="application">
-		
-		</div>
-		<div id="templates" style="display: none;">
-			<div class="tmpl-customers">
-				<h1>Customers</h1>
+  <body>
+    <div id="application">
+      <h1>Customers</h1>
 
-				<table>
-					<thead>
-						<tr>
-							<th>Suffix</th>
-							<th>Name</th>
-							<th>E-Mail</th>
-							<th>Phone</th>
-						</tr>
-					</thead>
-					<tbody class="customers">
+      <table>
+        <thead>
+          <tr>
+            <th>Suffix</th>
+            <th>Name</th>
+            <th>E-Mail</th>
+            <th>Phone</th>
+          </tr>
+        </thead>
+        <tbody class="customers">
+          <tr class="customer">
+            <td class="suffix"></td>
+            <td class="name">Loading customers..</td>
+            <td class="email"></td>
+            <td class="phone"></td>
+            <td><a href="#" class="delete">Remove</a></td>
+          </tr>
+        </tbody>
+      </table>
 
-					</tbody>
-				</table>
-				<div>
-					<h4>Add new customer</h4>
-					<form class="new-customer">
-						<p>
-							<label>
-								Suffix<br>
-								<select class="suffixes">
-									<option class="suffix"></option>
-								</select>
-							</label>
-						</p>
-						<p>
-							<label>Name<br><input name="name" type="text" class="name"></label>
-						</p>
-						<p>
-							<label>Email<br><input name="email" type="email" class="email"></label>
-						</p>
-						<p>
-							<label>Phone<br><input name="phone" type="text" class="phone"></label>
-						</p>
-						<p>
-							<button type="submit">Add</button>
-						</p>
-					</form>
-				</div>
-			</div>
-			<table>
-				<tr class="tmpl-customerrow">
-					<td class="suffix"></td>
-					<td class="name">Loading customers..</td>
-					<td class="email"></td>
-					<td class="phone"></td>
-					<td><a href="#" class="delete">Remove</a></td>
-				</tr>
-			</table>
-		</div>
-		<script src="js/app.js"></script>
-	</body>
+      <div>
+        <h4>Add new customer</h4>
+        <form class="new-customer">
+          <p>
+            <label>
+              Suffix<br>
+              <select class="suffixes">
+                <option class="suffix">Ms.</option>
+                <option class="suffix">Mrs.</option>
+                <option class="suffix">Mr.</option>
+              </select>
+            </label>
+          </p>
+          <p>
+            <label>Name<br><input name="name" type="text" class="name"></label>
+          </p>
+          <p>
+            <label>Email<br><input name="email" type="email" class="email"></label>
+          </p>
+          <p>
+            <label>Phone<br><input name="phone" type="text" class="phone"></label>
+          </p>
+          <p>
+            <button type="submit">Add</button>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script src="js/underscore-min.js"></script>
+    <script src="js/backbone-min.js"></script>
+    <script src="../../lib/transparency.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>
