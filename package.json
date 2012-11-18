@@ -1,6 +1,6 @@
 {
   "name"           : "transparency",
-  "version"        : "0.7.4",
+  "version"        : "0.7.5",
   "main"           : "lib/transparency",
   "description"    : "Transparency is a minimal template engine for browsers. It maps JSON objects to DOM elements with zero configuration.",
   "homepage"       : "https://github.com/leonidas/transparency",
