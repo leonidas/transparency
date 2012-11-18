@@ -44,7 +44,17 @@
       };
       expected = $("<select id=\"states\">\n  <option class=\"state\" value=\"1\" selected=\"selected\">Alabama</option>\n  <option class=\"state\" value=\"2\">Alaska</option>\n  <option class=\"state\" value=\"3\">Arizona</option>\n</select>");
       template.render(data, directives);
-      template.children().first().attr('selected', 'selected');
+      template.children().first().prop('selected', true);
+      return expect(template).toBeEqual(expected);
+    });
+    it("should set the matching option to 'selected' in case the target element is 'select'", function() {
+      var data, expected, template;
+      template = $("<div>\n  <select class=\"state\">\n    <option value=\"1\">Alabama</option>\n    <option value=\"2\">Alaska</option>\n    <option value=\"3\">Arizona</option>\n  </select>\n</div>");
+      data = {
+        state: 2
+      };
+      expected = $("<div>\n  <select class=\"state\">\n    <option value=\"1\">Alabama</option>\n    <option value=\"2\" selected=\"selected\">Alaska</option>\n    <option value=\"3\">Arizona</option>\n  </select>\n</div>");
+      template.render(data);
       return expect(template).toBeEqual(expected);
     });
     return it("should handle nested options elements", function() {

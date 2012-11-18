@@ -70,8 +70,12 @@
 
           if isPlainValue value
             for element in matchingElements instance, key
-              if element.nodeName.toLowerCase() == 'input'
-              then attr element, 'value', value
+
+              nodeName = element.nodeName.toLowerCase()
+              if nodeName == 'input'
+                attr element, 'value', value
+              else if nodeName == 'select'
+                attr element, 'selected', value
               else attr element, 'text',  value
 
           else if typeof value == 'object'
@@ -177,6 +181,16 @@
   getText = (element) ->
     (child.nodeValue for child in element.childNodes when child.nodeType == TEXT_NODE).join ''
 
+  setSelected = (element, value) ->
+    childElements = []
+    getElementsAndChildNodes element, childElements
+    for child in childElements
+      if child.nodeName.toLowerCase() == 'option'
+        if child.value == value
+          child.selected = true
+        else
+          child.selected = false
+
   attr = (element, attribute, value) ->
     value = value.toString() if value? and typeof value != 'string'
 
@@ -197,6 +211,9 @@
       when 'class'
         elementData.originalAttributes['class'] ||= element.className
         element.className = value if value?
+
+      when 'selected'
+        setSelected(element, value) if value?
 
       else
         elementData.originalAttributes[attribute] ||= element.getAttribute attribute
