@@ -232,6 +232,9 @@
     element.name                      == key       ||
     element.getAttribute('data-bind') == key
 
+  clone = (node) ->
+    $(node).clone()[0]
+
   empty = (element) ->
     element.removeChild child while child = element.firstChild
     element
@@ -248,11 +251,11 @@
       (node) -> node.cloneNode true
     else
       (node) ->
-        clone = $(node).clone()[0]
-        if clone.nodeType == ELEMENT_NODE
-          clone.removeAttribute expando
-          (element.removeAttribute expando) for element in clone.getElementsByTagName '*'
-        clone
+        cloned = clone(node)
+        if cloned.nodeType == ELEMENT_NODE
+          cloned.removeAttribute expando
+          (element.removeAttribute expando) for element in cloned.getElementsByTagName '*'
+        cloned
 
   Array.isArray  ?= (obj) -> $.isArray obj
   Array::indexOf ?= (obj) -> $.inArray obj, this
@@ -266,6 +269,7 @@
 
   # Return module exports
   exports =
-    render:   render
-    register: register
-    matcher:  matcher
+    render:    render
+    register:  register
+    matcher:   matcher
+    clone:     clone
