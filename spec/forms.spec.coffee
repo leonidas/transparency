@@ -61,31 +61,63 @@ describe "Transparency", ->
     template.children().first().prop 'selected', true
     expect(template).toBeEqual expected
 
-  it "should set the matching option to 'selected' in case the target element is 'select'", ->
+  it "should render list of options and set the selected", ->
     template = $ """
-      <div>
-        <select class="state">
-          <option value="1">Alabama</option>
-          <option value="2">Alaska</option>
-          <option value="3">Arizona</option>
-        </select>
-      </div>
+      <select class="foo" multiple>
+          <option class="bar"></option>
+      </select>
       """
 
-    data = state: 2
+    data = [
+      id:1, name:"First"
+    ,
+      id:2, name:"Second"
+    ,
+      id:3, name:"Third"
+    ]
+
+    directives =
+        bar:
+          value:    -> @id
+          text:     -> @name
+          selected: -> true
 
     expected = $ """
-      <div>
-        <select class="state">
-          <option value="1">Alabama</option>
-          <option value="2" selected="selected">Alaska</option>
-          <option value="3">Arizona</option>
-        </select>
-      </div>
+      <select class="foo" multiple>
+          <option class="bar" value="1" selected="selected">First</option>
+          <option class="bar" value="2">Second</option>
+          <option class="bar" value="3">Third</option>
+      </select>
       """
 
-    template.render data
+    template.render data, directives
     expect(template).toBeEqual expected
+
+  it "should set the matching option to 'selected' in case the target element is 'select'", ->
+      template = $ """
+        <div>
+          <select class="state">
+            <option value="1">Alabama</option>
+            <option value="2">Alaska</option>
+            <option value="3">Arizona</option>
+          </select>
+        </div>
+        """
+
+      data = state: 2
+
+      expected = $ """
+        <div>
+          <select class="state">
+            <option value="1">Alabama</option>
+            <option value="2" selected="selected">Alaska</option>
+            <option value="3">Arizona</option>
+          </select>
+        </div>
+        """
+
+      template.render data
+      expect(template).toBeEqual expected
 
   it "should handle nested options elements", ->
     template = $ """

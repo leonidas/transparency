@@ -47,6 +47,38 @@
       template.children().first().prop('selected', true);
       return expect(template).toBeEqual(expected);
     });
+    it("should render list of options and set the selected", function() {
+      var data, directives, expected, template;
+      template = $("<select class=\"foo\" multiple>\n    <option class=\"bar\"></option>\n</select>");
+      data = [
+        {
+          id: 1,
+          name: "First"
+        }, {
+          id: 2,
+          name: "Second"
+        }, {
+          id: 3,
+          name: "Third"
+        }
+      ];
+      directives = {
+        bar: {
+          value: function() {
+            return this.id;
+          },
+          text: function() {
+            return this.name;
+          },
+          selected: function() {
+            return true;
+          }
+        }
+      };
+      expected = $("<select class=\"foo\" multiple>\n    <option class=\"bar\" value=\"1\" selected=\"selected\">First</option>\n    <option class=\"bar\" value=\"2\">Second</option>\n    <option class=\"bar\" value=\"3\">Third</option>\n</select>");
+      template.render(data, directives);
+      return expect(template).toBeEqual(expected);
+    });
     it("should set the matching option to 'selected' in case the target element is 'select'", function() {
       var data, expected, template;
       template = $("<div>\n  <select class=\"state\">\n    <option value=\"1\">Alabama</option>\n    <option value=\"2\">Alaska</option>\n    <option value=\"3\">Arizona</option>\n  </select>\n</div>");

@@ -193,7 +193,11 @@
     elementData = data element
     elementData.originalAttributes ||= {}
 
-    switch attribute
+    if element.nodeName.toLowerCase() == 'select' and attribute == 'selected'
+      value = value.toString() if value? and typeof value != 'string'
+      setSelected(element, value) if value?
+
+    else switch attribute
 
       when 'text'
         value = value.toString() if value? and typeof value != 'string'
@@ -209,13 +213,11 @@
         elementData.originalAttributes['class'] ||= element.className
         element.className = value if value?
 
-      when 'selected'
-        value = value.toString() if value? and typeof value != 'string'
-        setSelected(element, value) if value?
-
       else
         elementData.originalAttributes[attribute] ||= element.getAttribute attribute
-        element.setAttribute(attribute, value) if value?
+        if isBoolean value
+        then element[attribute] = value
+        else element.setAttribute(attribute, value) if value?
 
     if value? then value else elementData.originalAttributes[attribute]
 
@@ -259,6 +261,7 @@
   isDate       = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
   isDomElement = (obj) -> obj?.nodeType == ELEMENT_NODE
   isPlainValue = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
+  isBoolean    = (obj) -> obj is true or obj is false
 
   # Return module exports
   exports =
