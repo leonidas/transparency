@@ -17,7 +17,7 @@
                      ],
   "licenses"       : ["MIT"],
   "dependencies"   : {"jsdom"        : ">=0.2.10"},
-  "devDependencies": {"jasmine-node" : ">=1.0.x",
+  "devDependencies": {"jasmine-node" : "=1.0.26",
                       "coffee-script": ">=1.2.x",
                       "jquery"       : ">=1.6.x",
                       "uglify-js"    : ">=1.2.5"},
