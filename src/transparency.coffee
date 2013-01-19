@@ -141,10 +141,7 @@
     return unless directives
     model = if typeof model == 'object' then model else value: model
 
-    for own key, attributes of directives
-      unless typeof attributes == 'object'
-        throw new Error "Directive syntax is directive[element][attribute] = function(params)"
-
+    for own key, attributes of directives when typeof attributes == 'object'
       for element in matchingElements instance, key
         for attribute, directive of attributes when typeof directive == 'function'
 

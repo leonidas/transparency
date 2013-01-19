@@ -190,20 +190,20 @@
       template.render(data, directives);
       return expect(template).toBeEqual(expected);
     });
-    it("should throw an error unless directives are syntactically correct", function() {
-      var data, directives, template;
+    it("should skip directives which syntactically incorrect", function() {
+      var data, directives, expected, template;
       template = $("<div id=\"template\">\n  <div class=\"name\"></div>\n</div>");
+      expected = $("<div id=\"template\">\n  <div class=\"name\">World</div>\n</div>");
       data = {
         name: "World"
       };
       directives = {
-        name: function() {
-          return "" + this.name + "!";
+        invalid: function() {
+          return "Invalid!";
         }
       };
-      return expect(function() {
-        return template.render(data, directives);
-      }).toThrow(new Error("Directive syntax is directive[element][attribute] = function(params)"));
+      template.render(data, directives);
+      return expect(template).toBeEqual(expected);
     });
     return it("should use directive return value even if data value is null", function() {
       var data, directives, expected, template;

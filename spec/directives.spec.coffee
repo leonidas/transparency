@@ -236,18 +236,25 @@ describe "Transparency", ->
     template.render data, directives
     expect(template).toBeEqual expected
 
-  it "should throw an error unless directives are syntactically correct", ->
+  it "should skip directives which syntactically incorrect", ->
     template = $ """
       <div id="template">
         <div class="name"></div>
       </div>
       """
+    expected = $ """
+      <div id="template">
+        <div class="name">World</div>
+      </div>
+      """
 
-    data       = name: "World"
-    directives = name: -> "#{@name}!"
+    data = name: "World"
 
-    expect(-> template.render data, directives)
-    .toThrow new Error "Directive syntax is directive[element][attribute] = function(params)"
+    # Directives should be in format elementSelector: attributeSelector: (p) -> ...
+    directives = invalid: -> "Invalid!"
+
+    template.render data, directives
+    expect(template).toBeEqual expected
 
   it "should use directive return value even if data value is null", ->
     template = $ """
