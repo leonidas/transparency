@@ -29,7 +29,7 @@
     element[expando] ||= {}
 
   nullLogger    = () ->
-  consoleLogger = (messages...) -> console.log m for m in messages
+  consoleLogger = (messages...) -> console.log messages...
   log           = nullLogger
 
   render = (context, models, directives, config) ->
@@ -192,8 +192,6 @@
           child.selected = false
 
   attr = (element, attribute, value) ->
-    value = value.toString() if value? and typeof value != 'string'
-
     # Save the original value, so it can be restored when the instance is reused
     elementData = data element
     elementData.originalAttributes ||= {}
@@ -201,10 +199,12 @@
     switch attribute
 
       when 'text'
+        value = value.toString() if value? and typeof value != 'string'
         elementData.originalAttributes['text'] ||= getText element
         setText(element, value) if value?
 
       when 'html'
+        value = value.toString() if value? and typeof value != 'string'
         elementData.originalAttributes['html'] ||= element.innerHTML
         setHtml(element, value) if value?
 
@@ -213,6 +213,7 @@
         element.className = value if value?
 
       when 'selected'
+        value = value.toString() if value? and typeof value != 'string'
         setSelected(element, value) if value?
 
       else
@@ -258,10 +259,8 @@
   Array::indexOf ?= (obj) -> $.inArray obj, this
 
   # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
-  isDate = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
-
+  isDate       = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
   isDomElement = (obj) -> obj?.nodeType == ELEMENT_NODE
-
   isPlainValue = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
 
   # Return module exports
