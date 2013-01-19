@@ -205,7 +205,7 @@
       template.render(data, directives);
       return expect(template).toBeEqual(expected);
     });
-    return it("should use directive return value even if data value is null", function() {
+    it("should use directive return value even if data value is null", function() {
       var data, directives, expected, template;
       template = $("<div id=\"template\">\n  <div class=\"name\"></div>\n</div>");
       expected = $("<div id=\"template\">\n  <div class=\"name\">Null value</div>\n</div>");
@@ -221,6 +221,25 @@
       };
       template.render(data, directives);
       return expect(template).toBeEqual(expected);
+    });
+    return it("should allow rendering directives to the parent elements", function() {
+      var data, directives, expected, template;
+      template = $("<div class=\"container\">\n  <a class=\"link\">\n    <span class=\"name\"/>\n    <span class=\"description\"/>\n  </a>\n</div>");
+      expected = $("<div class=\"container\">\n  <a class=\"link\" href=\"http://does-it-render.com/\">\n    <span class=\"name\">MyLink</span>\n    <span class=\"description>takes me somewhere</span>\n  </a>\n</div>");
+      data = {
+        link: {
+          name: "MyLink",
+          description: "takes me somewhere"
+        }
+      };
+      directives = {
+        link: {
+          href: function() {
+            return "http://does-it-render.com/";
+          }
+        }
+      };
+      return $(".container").render(data, directives);
     });
   });
 

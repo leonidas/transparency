@@ -274,3 +274,31 @@ describe "Transparency", ->
 
     template.render data, directives
     expect(template).toBeEqual expected
+
+  it "should allow rendering directives to the parent elements", ->
+    # See https://github.com/leonidas/transparency/issues/85 for the details.
+    template = $ """
+      <div class="container">
+        <a class="link">
+          <span class="name"/>
+          <span class="description"/>
+        </a>
+      </div>
+      """
+
+    expected = $ """
+      <div class="container">
+        <a class="link" href="http://does-it-render.com/">
+          <span class="name">MyLink</span>
+          <span class="description>takes me somewhere</span>
+        </a>
+      </div>
+      """
+
+    data = link:
+      name: "MyLink"
+      description: "takes me somewhere"
+
+    directives = link: href: -> "http://does-it-render.com/"
+
+    $(".container").render data, directives
