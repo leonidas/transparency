@@ -1,5 +1,5 @@
 {
   "name": "transparency",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "main": "./lib/transparency.js"
 }

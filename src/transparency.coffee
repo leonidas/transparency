@@ -216,9 +216,10 @@
 
       else
         elementData.originalAttributes[attribute] ||= element.getAttribute attribute
-        if isBoolean value
-        then element[attribute] = value
-        else element.setAttribute(attribute, value) if value?
+        if value?
+          if attribute.match /^data-.*/
+          then element.setAttribute(attribute, value)
+          else element[attribute] = value
 
     if value? then value else elementData.originalAttributes[attribute]
 
