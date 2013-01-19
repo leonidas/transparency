@@ -85,7 +85,7 @@
         title: "Some widgets",
         widgets: [widget1, widget2]
       };
-      expected = $("<div id=\"template\">\n  <h1 class=\"title\">Some widgets</h1>\n  <div class=\"widgets\">\n    <div class=\"widget\">\n      <div>First</div>\n    </div>\n    <div class=\"widget\">\n      <div>Second</div>\n    </div>  \n  </div>\n</div>");
+      expected = $("<div id=\"template\">\n  <h1 class=\"title\">Some widgets</h1>\n  <div class=\"widgets\">\n    <div class=\"widget\">\n      <div>First</div>\n    </div>\n    <div class=\"widget\">\n      <div>Second</div>\n    </div>\n  </div>\n</div>");
       template.render(data);
       return expect(template).toBeEqual(expected);
     });
@@ -124,7 +124,7 @@
       template.render(data);
       return expect(template).toBeEqual(expected);
     });
-    return it("should render empty string, zero and other falsy values", function() {
+    it("should render empty string, zero and other falsy values", function() {
       var data, expected, template;
       template = $("<div id=\"root\">\n    <span id=\"number\">234</span>\n    <span id=\"bool\">foo</span>\n    <span id=\"dec\">1.234</span>\n    <span id=\"str\">abc</span>\n</div>​");
       data = {
@@ -135,6 +135,34 @@
       };
       expected = $("<div id=\"root\">\n   <span id=\"number\">0</span>\n   <span id=\"bool\">false</span>\n   <span id=\"dec\">0</span>\n   <span id=\"str\"></span>\n </div>​");
       template.render(data);
+      return expect(template).toBeEqual(expected);
+    });
+    return it("should not render text content to img tags and other void elements", function() {
+      var data, directives, expected, template;
+      template = $("<div id=\"gallery\">\n  <b data-bind=\"name\"></b>\n  <img data-bind=\"image\" src=\"\" alt=\"\" />\n</div>");
+      data = [
+        {
+          name: 'gal1',
+          image: 'http://example.com/image_name_1'
+        }, {
+          name: 'gal2',
+          image: 'http://example.com/image_name_2'
+        }
+      ];
+      directives = {
+        name: {
+          text: function() {
+            return this.name;
+          }
+        },
+        image: {
+          src: function() {
+            return this.image;
+          }
+        }
+      };
+      expected = $("<div id=\"gallery\">\n  <b data-bind=\"name\">gal1</b>\n  <img data-bind=\"image\" src=\"http://example.com/image_name_1\" alt=\"\" />\n  <b data-bind=\"name\">gal2</b>\n  <img data-bind=\"image\" src=\"http://example.com/image_name_2\" alt=\"\" />\n</div>");
+      template.render(data, directives);
       return expect(template).toBeEqual(expected);
     });
   });

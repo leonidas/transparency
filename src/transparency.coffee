@@ -200,9 +200,10 @@
     else switch attribute
 
       when 'text'
-        value = value.toString() if value? and typeof value != 'string'
-        elementData.originalAttributes['text'] ||= getText element
-        setText(element, value) if value?
+        unless isVoidElement element
+          value = value.toString() if value? and typeof value != 'string'
+          elementData.originalAttributes['text'] ||= getText element
+          setText(element, value) if value?
 
       when 'html'
         value = value.toString() if value? and typeof value != 'string'
@@ -236,8 +237,11 @@
     element.removeChild child while child = element.firstChild
     element
 
-  ELEMENT_NODE = 1
-  TEXT_NODE    = 3
+  ELEMENT_NODE  = 1
+  TEXT_NODE     = 3
+
+  # From http://www.w3.org/TR/html-markup/syntax.html: void elements in HTML
+  VOID_ELEMENTS = ["area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"]
 
   # IE8 <= fails to clone detached nodes properly, shim with jQuery
   # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
@@ -258,10 +262,11 @@
   Array::indexOf ?= (obj) -> $.inArray obj, this
 
   # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
-  isDate       = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
-  isDomElement = (obj) -> obj?.nodeType == ELEMENT_NODE
-  isPlainValue = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
-  isBoolean    = (obj) -> obj is true or obj is false
+  isDate        = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
+  isDomElement  = (obj) -> obj?.nodeType == ELEMENT_NODE
+  isVoidElement = (el)  -> VOID_ELEMENTS.indexOf(el.nodeName.toLowerCase()) > -1
+  isPlainValue  = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
+  isBoolean     = (obj) -> obj is true or obj is false
 
   # Return module exports
   exports =

@@ -152,7 +152,7 @@ describe "Transparency", ->
     widget1 = $("<div>First</div>")[0]
     widget2 = $("<div>Second</div>")[0]
 
-    data = 
+    data =
       title: "Some widgets"
       widgets: [widget1,  widget2]
 
@@ -165,7 +165,7 @@ describe "Transparency", ->
           </div>
           <div class="widget">
             <div>Second</div>
-          </div>  
+          </div>
         </div>
       </div>
       """
@@ -264,3 +264,37 @@ describe "Transparency", ->
 
     template.render data
     expect(template).toBeEqual expected
+
+  it "should not render text content to img tags and other void elements", ->
+      # See https://github.com/leonidas/transparency/issues/82
+
+      template = $ """
+        <div id="gallery">
+          <b data-bind="name"></b>
+          <img data-bind="image" src="" alt="" />
+        </div>
+        """
+
+      data = [
+        name: 'gal1'
+        image: 'http://example.com/image_name_1'
+      ,
+        name: 'gal2'
+        image: 'http://example.com/image_name_2'
+      ]
+
+      directives =
+        name:  text: -> @name
+        image: src:  -> @image
+
+      expected = $ """
+        <div id="gallery">
+          <b data-bind="name">gal1</b>
+          <img data-bind="image" src="http://example.com/image_name_1" alt="" />
+          <b data-bind="name">gal2</b>
+          <img data-bind="image" src="http://example.com/image_name_2" alt="" />
+        </div>
+        """
+
+      template.render data, directives
+      expect(template).toBeEqual expected
