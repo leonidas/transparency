@@ -479,9 +479,10 @@ $('container').render(data, {}, {debug: true});
 
 Install node.js 0.8.x and npm. Then, in the project folder
 
+    $ npm install grunt -g  # command-line build tool to enable TDD, auto-complation and minification
     $ npm install           # Install the dependencies
-    $ npm test              # Run the tests
-    $ npm run-script build  # Generate JavaScript libs from the CoffeeScript sources
+    $ grunt                 # Compile, run tests, minify and start watching for modifications
+
 
 For further information, see [Transparency wiki](https://github.com/leonidas/transparency/wiki).
 
