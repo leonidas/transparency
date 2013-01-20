@@ -40,6 +40,6 @@
     "grunt-jasmine-task": "~0.2.3"
   },
   "scripts": {
-    "test": "grunt jasmine"
+    "test": "grunt test"
   }
 }

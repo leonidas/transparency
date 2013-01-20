@@ -47,6 +47,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jasmine-task');
 
   // Default task.
-  grunt.registerTask('default', 'coffee jasmine min watch');
+  grunt.registerTask('default', ['coffee', 'jasmine', 'min', 'watch']);
+  grunt.registerTask('test',    ['coffee', 'jasmine']);
 
 };
