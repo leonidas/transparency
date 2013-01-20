@@ -49,7 +49,7 @@ IE browsers requires jQuery. Transparency is
 
 ## Install
 
-Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/lib/transparency.min.js)
+Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/dist/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
 
