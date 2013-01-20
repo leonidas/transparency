@@ -338,11 +338,8 @@
           default:
             (_base3 = elementData.originalAttributes)[attribute] || (_base3[attribute] = element.getAttribute(attribute));
             if (value != null) {
-              if (attribute.match(/^data-.*/)) {
-                element.setAttribute(attribute, value);
-              } else {
-                element[attribute] = value;
-              }
+              element.setAttribute(attribute, value.toString());
+              element[attribute] = value;
             }
         }
       }

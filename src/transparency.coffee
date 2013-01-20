@@ -217,9 +217,9 @@
       else
         elementData.originalAttributes[attribute] ||= element.getAttribute attribute
         if value?
-          if attribute.match /^data-.*/
-          then element.setAttribute(attribute, value)
-          else element[attribute] = value
+          # Set both attribute value and property value to ensure proper behavior.
+          element.setAttribute(attribute, value.toString())
+          element[attribute] = value
 
     if value? then value else elementData.originalAttributes[attribute]
 
