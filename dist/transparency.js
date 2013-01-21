@@ -11,7 +11,7 @@
       return root.Transparency = factory();
     }
   })(this, function() {
-    var $, ELEMENT_NODE, Instance, TEXT_NODE, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, exports, getElementsAndChildNodes, getText, html5Clone, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matcher, matchingElements, nullLogger, prepareContext, register, render, renderDirectives, setHtml, setSelected, setText, _base, _ref, _ref1;
+    var $, ELEMENT_NODE, Instance, TEXT_NODE, VOID_ELEMENTS, attr, clone, cloneNode, consoleLogger, data, empty, expando, exports, getElementsAndChildNodes, getText, html5Clone, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matcher, matchingElements, nullLogger, prepareContext, register, render, renderDirectives, setHtml, setSelected, setText, _base, _ref, _ref1;
     register = function($) {
       return $.fn.render = function(models, directives, config) {
         var context, _i, _len;
@@ -369,6 +369,9 @@
     matcher = function(element, key) {
       return element.id === key || element.className.split(' ').indexOf(key) > -1 || element.name === key || element.getAttribute('data-bind') === key;
     };
+    clone = function(node) {
+      return $(node).clone()[0];
+    };
     empty = function(element) {
       var child;
       while (child = element.firstChild) {
@@ -385,17 +388,17 @@
     cloneNode = !(typeof document !== "undefined" && document !== null) || html5Clone() ? function(node) {
       return node.cloneNode(true);
     } : function(node) {
-      var clone, element, _i, _len, _ref;
-      clone = $(node).clone()[0];
-      if (clone.nodeType === ELEMENT_NODE) {
-        clone.removeAttribute(expando);
-        _ref = clone.getElementsByTagName('*');
+      var cloned, element, _i, _len, _ref;
+      cloned = clone(node);
+      if (cloned.nodeType === ELEMENT_NODE) {
+        cloned.removeAttribute(expando);
+        _ref = cloned.getElementsByTagName('*');
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           element = _ref[_i];
           element.removeAttribute(expando);
         }
       }
-      return clone;
+      return cloned;
     };
     if ((_ref = Array.isArray) == null) {
       Array.isArray = function(obj) {
@@ -425,7 +428,8 @@
     return exports = {
       render: render,
       register: register,
-      matcher: matcher
+      matcher: matcher,
+      clone: clone
     };
   });
 
