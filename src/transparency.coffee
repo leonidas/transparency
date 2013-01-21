@@ -13,13 +13,12 @@
 ) this, () ->
 
   register = ($) ->
-    $.fn.render = (models, directives, config) ->
+    $?.fn.render = (models, directives, config) ->
       render context, models, directives, config for context in this
       this
 
-  if @jQuery? or @Zepto?
-    $ = @jQuery or @Zepto
-    register $
+  $ = @jQuery || @Zepto
+  register $
 
   expando = 'transparency'
   data    = (element) ->
@@ -39,7 +38,7 @@
 
     models     ||= []
     directives ||= {}
-    models       = [models] unless Array.isArray models
+    models       = [models] unless isArray models
 
     # DOM manipulation is a lot faster when elements are detached.
     # Save the original position, so we can put the context back to it's place.
@@ -229,13 +228,12 @@
     elements
 
   matcher = (element, key) ->
-    element.id                        == key       ||
-    element.className.split(' ').indexOf(key) > -1 ||
-    element.name                      == key       ||
+    element.id                        == key        ||
+    indexOf(element.className.split(' '), key) > -1 ||
+    element.name                      == key        ||
     element.getAttribute('data-bind') == key
 
-  clone = (node) ->
-    $(node).clone()[0]
+  clone = (node) -> $(node).clone()[0]
 
   empty = (element) ->
     element.removeChild child while child = element.firstChild
@@ -262,15 +260,19 @@
           (element.removeAttribute expando) for element in cloned.getElementsByTagName '*'
         cloned
 
-  Array.isArray  ?= (obj) -> $.isArray obj
-  Array::indexOf ?= (obj) -> $.inArray obj, this
-
-  # https://github.com/documentcloud/underscore/blob/master/underscore.js#L857
-  isDate        = (obj) -> Object.prototype.toString.call(obj) == '[object Date]'
-  isDomElement  = (obj) -> obj?.nodeType == ELEMENT_NODE
-  isVoidElement = (el)  -> VOID_ELEMENTS.indexOf(el.nodeName.toLowerCase()) > -1
+  # Mostly from https://github.com/documentcloud/underscore/blob/master/underscore.js
+  toString      = Object.prototype.toString
+  isDate        = (obj) -> toString.call(obj) == '[object Date]'
+  isDomElement  = (obj) -> obj.nodeType == ELEMENT_NODE
+  isVoidElement = (el)  -> indexOf(VOID_ELEMENTS, el.nodeName.toLowerCase()) > -1
   isPlainValue  = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
   isBoolean     = (obj) -> obj is true or obj is false
+  isArray       = Array.isArray || (obj) -> toString.call(obj) == '[object Array]'
+  indexOf       = (array, item) ->
+    return array.indexOf(item) if array.indexOf
+    for x, i in array
+      if x == item then return i
+    -1
 
   # Return module exports
   exports =

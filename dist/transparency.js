@@ -11,21 +11,19 @@
       return root.Transparency = factory();
     }
   })(this, function() {
-    var $, ELEMENT_NODE, Instance, TEXT_NODE, VOID_ELEMENTS, attr, clone, cloneNode, consoleLogger, data, empty, expando, exports, getElementsAndChildNodes, getText, html5Clone, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matcher, matchingElements, nullLogger, prepareContext, register, render, renderDirectives, setHtml, setSelected, setText, _base, _ref, _ref1;
+    var $ , ELEMENT_NODE, Instance, TEXT_NODE, VOID_ELEMENTS, attr, clone, cloneNode, consoleLogger, data, empty, expando, exports, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matcher, matchingElements, nullLogger, prepareContext, register, render, renderDirectives, setHtml, setSelected, setText, toString;
     register = function($) {
-      return $.fn.render = function(models, directives, config) {
+      return $ != null ? $.fn.render = function(models, directives, config) {
         var context, _i, _len;
         for (_i = 0, _len = this.length; _i < _len; _i++) {
           context = this[_i];
           render(context, models, directives, config);
         }
         return this;
-      };
+      } : void 0;
     };
-    if ((this.jQuery != null) || (this.Zepto != null)) {
-      $ = this.jQuery || this.Zepto;
-      register($);
-    }
+    $  = this.jQuery || this.Zepto;
+    register($);
     expando = 'transparency';
     data = function(element) {
       return element[expando] || (element[expando] = {});
@@ -46,7 +44,7 @@
       }
       models || (models = []);
       directives || (directives = {});
-      if (!Array.isArray(models)) {
+      if (!isArray(models)) {
         models = [models];
       }
       parent = context.parentNode;
@@ -367,7 +365,7 @@
       return elements;
     };
     matcher = function(element, key) {
-      return element.id === key || element.className.split(' ').indexOf(key) > -1 || element.name === key || element.getAttribute('data-bind') === key;
+      return element.id === key || indexOf(element.className.split(' '), key) > -1 || element.name === key || element.getAttribute('data-bind') === key;
     };
     clone = function(node) {
       return $(node).clone()[0];
@@ -400,30 +398,37 @@
       }
       return cloned;
     };
-    if ((_ref = Array.isArray) == null) {
-      Array.isArray = function(obj) {
-        return $.isArray(obj);
-      };
-    }
-    if ((_ref1 = (_base = Array.prototype).indexOf) == null) {
-      _base.indexOf = function(obj) {
-        return $.inArray(obj, this);
-      };
-    }
+    toString = Object.prototype.toString;
     isDate = function(obj) {
-      return Object.prototype.toString.call(obj) === '[object Date]';
+      return toString.call(obj) === '[object Date]';
     };
     isDomElement = function(obj) {
-      return (obj != null ? obj.nodeType : void 0) === ELEMENT_NODE;
+      return obj.nodeType === ELEMENT_NODE;
     };
     isVoidElement = function(el) {
-      return VOID_ELEMENTS.indexOf(el.nodeName.toLowerCase()) > -1;
+      return indexOf(VOID_ELEMENTS, el.nodeName.toLowerCase()) > -1;
     };
     isPlainValue = function(obj) {
       return isDate(obj) || typeof obj !== 'object' && typeof obj !== 'function';
     };
     isBoolean = function(obj) {
       return obj === true || obj === false;
+    };
+    isArray = Array.isArray || function(obj) {
+      return toString.call(obj) === '[object Array]';
+    };
+    indexOf = function(array, item) {
+      var i, x, _i, _len;
+      if (array.indexOf) {
+        return array.indexOf(item);
+      }
+      for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
+        x = array[i];
+        if (x === item) {
+          return i;
+        }
+      }
+      return -1;
     };
     return exports = {
       render: render,
