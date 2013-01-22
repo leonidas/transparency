@@ -11,7 +11,7 @@
       return root.Transparency = factory();
     }
   })(this, function() {
-    var $ , ELEMENT_NODE, Instance, TEXT_NODE, VOID_ELEMENTS, attr, clone, cloneNode, consoleLogger, data, empty, expando, exports, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matcher, matchingElements, nullLogger, prepareContext, register, render, renderDirectives, setHtml, setSelected, setText, toString;
+    var $, ELEMENT_NODE, Instance, TEXT_NODE, VOID_ELEMENTS, attr, clone, cloneNode, consoleLogger, data, empty, expando, exports, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matcher, matchingElements, nullLogger, prepareContext, register, render, renderDirectives, setHtml, setSelected, setText, toString;
     register = function($) {
       return $ != null ? $.fn.render = function(models, directives, config) {
         var context, _i, _len;
@@ -22,7 +22,7 @@
         return this;
       } : void 0;
     };
-    $  = this.jQuery || this.Zepto;
+    $ = this.jQuery || this.Zepto;
     register($);
     expando = 'transparency';
     data = function(element) {
