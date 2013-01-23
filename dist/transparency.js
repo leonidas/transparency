@@ -336,8 +336,16 @@
           default:
             (_base3 = elementData.originalAttributes)[attribute] || (_base3[attribute] = element.getAttribute(attribute));
             if (value != null) {
-              element.setAttribute(attribute, value.toString());
               element[attribute] = value;
+              if (isBoolean(value)) {
+                if (value) {
+                  element.setAttribute(attribute, attribute);
+                } else {
+                  element.removeAttribute(attribute);
+                }
+              } else {
+                element.setAttribute(attribute, value.toString());
+              }
             }
         }
       }
