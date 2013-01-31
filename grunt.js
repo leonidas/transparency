@@ -39,15 +39,21 @@ module.exports = function(grunt) {
 
     watch: {
       files: ['src/**/*.coffee', 'spec/**/*.coffee'],
-      tasks: ['coffee', 'jasmine', 'min']
+      tasks: ['coffee', 'jasmine', 'min', 'docco']
+    },
+
+    docco: {
+      src: ['src/**/*.coffee'],
+      dest: 'docs/'
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-jasmine-task');
+  grunt.loadNpmTasks('grunt-docco');
 
   // Default task.
-  grunt.registerTask('default', ['coffee', 'jasmine', 'min', 'watch']);
+  grunt.registerTask('default', ['coffee', 'jasmine', 'min', 'docco', 'watch']);
   grunt.registerTask('test',    ['coffee', 'jasmine']);
 
 };
