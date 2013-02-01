@@ -234,12 +234,19 @@ prepareContext = (context, models) ->
     contextData.instanceCache.push instance = contextData.instances.pop()
     (n.parentNode.removeChild n) for n in instance.childNodes
 
+  # Reset templates before reuse
+  for instance in contextData.instances
+    for element in instance.elements
+      for attribute, value of data(element).originalAttributes
+        attr element, attribute, value
+
 getElementsAndChildNodes = (template, elements, childNodes) ->
   child = template.firstChild
   while child
     childNodes?.push child
 
     if child.nodeType == ELEMENT_NODE
+      data(child).originalAttributes ||= {}
       elements.push child
       getElementsAndChildNodes child, elements
 
@@ -297,9 +304,7 @@ setSelected = (element, value) ->
         child.selected = false
 
 attr = (element, attribute, value) ->
-  # Save the original value, so it can be restored when the instance is reused
   elementData = data element
-  elementData.originalAttributes ||= {}
 
   if element.nodeName.toLowerCase() == 'select' and attribute == 'selected'
     value = value.toString() if value? and typeof value != 'string'
@@ -310,29 +315,29 @@ attr = (element, attribute, value) ->
     when 'text'
       unless isVoidElement element
         value = value.toString() if value? and typeof value != 'string'
-        elementData.originalAttributes['text'] ||= getText element
+        elementData.originalAttributes['text'] ?= getText element
         setText(element, value) if value?
 
     when 'html'
       value = value.toString() if value? and typeof value != 'string'
-      elementData.originalAttributes['html'] ||= element.innerHTML
+      elementData.originalAttributes['html'] ?= element.innerHTML
       setHtml(element, value) if value?
 
     when 'class'
-      elementData.originalAttributes['class'] ||= element.className
+      elementData.originalAttributes['class'] ?= element.className
       element.className = value if value?
 
     else
-      elementData.originalAttributes[attribute] ||= element.getAttribute attribute
       if value?
         element[attribute] = value
-
         if isBoolean value
+          elementData.originalAttributes[attribute] ?= element.getAttribute(attribute) || false
           if value
             element.setAttribute attribute, attribute
           else
             element.removeAttribute attribute
         else
+          elementData.originalAttributes[attribute] ?= element.getAttribute(attribute) || ""
           element.setAttribute attribute, value.toString()
 
 

@@ -118,7 +118,7 @@
   })();
 
   prepareContext = function(context, models) {
-    var contextData, instance, n, _i, _len, _ref, _results;
+    var attribute, contextData, element, instance, n, value, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
     contextData = data(context);
     if (!contextData.template) {
       contextData.template = cloneNode(context);
@@ -135,16 +135,34 @@
       }
       contextData.instances.push(instance);
     }
-    _results = [];
     while (models.length < contextData.instances.length) {
       contextData.instanceCache.push(instance = contextData.instances.pop());
+      _ref1 = instance.childNodes;
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        n = _ref1[_j];
+        n.parentNode.removeChild(n);
+      }
+    }
+    _ref2 = contextData.instances;
+    _results = [];
+    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+      instance = _ref2[_k];
       _results.push((function() {
-        var _j, _len1, _ref1, _results1;
-        _ref1 = instance.childNodes;
+        var _l, _len3, _ref3, _results1;
+        _ref3 = instance.elements;
         _results1 = [];
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          n = _ref1[_j];
-          _results1.push(n.parentNode.removeChild(n));
+        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+          element = _ref3[_l];
+          _results1.push((function() {
+            var _ref4, _results2;
+            _ref4 = data(element).originalAttributes;
+            _results2 = [];
+            for (attribute in _ref4) {
+              value = _ref4[attribute];
+              _results2.push(attr(element, attribute, value));
+            }
+            return _results2;
+          })());
         }
         return _results1;
       })());
@@ -153,7 +171,7 @@
   };
 
   getElementsAndChildNodes = function(template, elements, childNodes) {
-    var child, _results;
+    var child, _base, _results;
     child = template.firstChild;
     _results = [];
     while (child) {
@@ -161,6 +179,7 @@
         childNodes.push(child);
       }
       if (child.nodeType === ELEMENT_NODE) {
+        (_base = data(child)).originalAttributes || (_base.originalAttributes = {});
         elements.push(child);
         getElementsAndChildNodes(child, elements);
       }
@@ -297,9 +316,8 @@
   };
 
   attr = function(element, attribute, value) {
-    var elementData, _base, _base1, _base2, _base3;
+    var elementData, _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
     elementData = data(element);
-    elementData.originalAttributes || (elementData.originalAttributes = {});
     if (element.nodeName.toLowerCase() === 'select' && attribute === 'selected') {
       if ((value != null) && typeof value !== 'string') {
         value = value.toString();
@@ -314,7 +332,9 @@
             if ((value != null) && typeof value !== 'string') {
               value = value.toString();
             }
-            (_base = elementData.originalAttributes)['text'] || (_base['text'] = getText(element));
+            if ((_ref = (_base = elementData.originalAttributes)['text']) == null) {
+              _base['text'] = getText(element);
+            }
             if (value != null) {
               setText(element, value);
             }
@@ -324,28 +344,37 @@
           if ((value != null) && typeof value !== 'string') {
             value = value.toString();
           }
-          (_base1 = elementData.originalAttributes)['html'] || (_base1['html'] = element.innerHTML);
+          if ((_ref1 = (_base1 = elementData.originalAttributes)['html']) == null) {
+            _base1['html'] = element.innerHTML;
+          }
           if (value != null) {
             setHtml(element, value);
           }
           break;
         case 'class':
-          (_base2 = elementData.originalAttributes)['class'] || (_base2['class'] = element.className);
+          if ((_ref2 = (_base2 = elementData.originalAttributes)['class']) == null) {
+            _base2['class'] = element.className;
+          }
           if (value != null) {
             element.className = value;
           }
           break;
         default:
-          (_base3 = elementData.originalAttributes)[attribute] || (_base3[attribute] = element.getAttribute(attribute));
           if (value != null) {
             element[attribute] = value;
             if (isBoolean(value)) {
+              if ((_ref3 = (_base3 = elementData.originalAttributes)[attribute]) == null) {
+                _base3[attribute] = element.getAttribute(attribute) || false;
+              }
               if (value) {
                 element.setAttribute(attribute, attribute);
               } else {
                 element.removeAttribute(attribute);
               }
             } else {
+              if ((_ref4 = (_base4 = elementData.originalAttributes)[attribute]) == null) {
+                _base4[attribute] = element.getAttribute(attribute) || "";
+              }
               element.setAttribute(attribute, value.toString());
             }
           }
