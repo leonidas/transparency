@@ -41,7 +41,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   models = [models] unless isArray models
 
   # Rendering is a lot faster when the `context` is detached from the DOM, as
-  # noreflow calculations are triggered. However, we need to save reference
+  # reflow calculations are not triggered. However, we need to save reference
   # to `parent` and `nextSibling` in order to attach the `context` back once we're done.
   parent = context.parentNode
   if parent
@@ -181,7 +181,6 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     #       <div class="unescaped"><script>alert('Injected')</script></div>
     #       <img class="trusted" src="http://trusted.com/funny.gif" />
     #     </div>
-    #
     #
     # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
     renderDirectives instance, model, index, directives
