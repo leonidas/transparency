@@ -86,14 +86,6 @@
     return context;
   };
 
-  Transparency.matcher = function(element, key) {
-    return element.id === key || indexOf(element.className.split(' '), key) > -1 || element.name === key || element.getAttribute('data-bind') === key;
-  };
-
-  Transparency.clone = function(node) {
-    return (this.jQuery || this.Zepto).clone()[0];
-  };
-
   Transparency.jQueryPlugin = function(models, directives, options) {
     var context, _i, _len;
     for (_i = 0, _len = this.length; _i < _len; _i++) {
@@ -101,6 +93,14 @@
       Transparency.render(context, models, directives, options);
     }
     return this;
+  };
+
+  Transparency.matcher = function(element, key) {
+    return element.id === key || indexOf(element.className.split(' '), key) > -1 || element.name === key || element.getAttribute('data-bind') === key;
+  };
+
+  Transparency.clone = function(node) {
+    return (this.jQuery || this.Zepto).clone()[0];
   };
 
   Instance = (function() {

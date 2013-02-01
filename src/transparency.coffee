@@ -1,19 +1,20 @@
-# **Transparency** is a client-side template engine, which binds JSON objects to DOM elements.
+# **Transparency** is a client-side template engine which binds JSON objects to DOM elements.
 #
 #     //  Template:
 #     //
 #     //  <ul id="todos">
 #     //    <li class="todo"></li>
 #     //  </ul>
+#
 #     template = document.querySelector('#todos');
 #
-#     data = [
+#     models = [
 #       {todo: "Eat"},
 #       {todo: "Do some programming"},
 #       {todo: "Sleep"}
 #     ];
 #
-#     Transparency.render(template, data);
+#     Transparency.render(template, models);
 #
 #     //  Result:
 #     //  <ul id="todos">
@@ -30,7 +31,7 @@ Transparency = {}
 
 # `Transparency.render` maps JSON objects to DOM elements.
 Transparency.render = (context, models = [], directives = {}, options = {}) ->
-  # First, check if we are in debug mode and if so, log the args.
+  # First, check if we are in debug mode and if so, log the arguments.
   log = if options.debug and console then consoleLogger else nullLogger
   log "Transparency.render:", context, models, directives, options
   return unless context
@@ -40,8 +41,8 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   models = [models] unless isArray models
 
   # Rendering is a lot faster when the `context` is detached from the DOM, as
-  # we avoid excess reflow calculations. However, we need to save reference
-  # to `parent` and `nextSibling` so we can put it back once we're done.
+  # noreflow calculations are triggered. However, we need to save reference
+  # to `parent` and `nextSibling` in order to attach the `context` back once we're done.
   parent = context.parentNode
   if parent
     sibling = context.nextSibling
@@ -63,19 +64,18 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   #     </ul>
   prepareContext context, models
 
-  # In addition to creating and removing template instances, `prepareContext`
-  # creates a data object attached on the `context` element. Data object has a list of template
-  # `instances`, which is needed for rendering.
+  # `prepareContext` stores the state of the `context` to a data object.
+  # From the data object, the list of template `instances` is needed for rendering.
   instances = data(context).instances
 
-  # Now, as we have a list of `models` and a list of template `instances`,
+  # Now, having a list of `models` and a list of template `instances`,
   # we are ready to render each `model` to the corresponding template `instance`.
   for model, index in models
     children = []
     instance = instances[index]
 
-    # Automatic rendering covers the most common use cases, e.g.,
-    # rendering text content, form input values and other DOM elements (i.e. Backbone Views).
+    # Default rendering covers the most common use cases, e.g.,
+    # rendering text content, form values and DOM elements (Backbone Views).
     # Rendering as a text content is a safe default, as it is HTML escaped
     # by the browsers.
     if isDomElement(model) and element = instance.elements[0]
@@ -98,11 +98,8 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
             # with `select` element, the matching `option` element should set to `selected="selected"`.
             #
             #       <div id="template">
-            #
             #         <div class="todo">Do some OSS</todo>
-            #
             #          <input name="todo" value="Do some OSS" />
-            #
             #          <select name="type">
             #            <option value="1">Work</option>
             #            <option value="2" selected="selected">Hobby</option>
@@ -116,13 +113,77 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
               attr element, 'selected', value
             else attr element, 'text',  value
 
-        # Rendering nested models breadth-first is more robust,
-        # so let's just save the key of the child model and take care of it once
+        # Rendering nested models breadth-first is more robust, as there might be colliding keys,
+        # i.e., given a model
+        #
+        #     {
+        #       name: "Jack",
+        #       friends: [
+        #         {name: "Matt"},
+        #         {name: "Carol"}
+        #       ]
+        #     }
+        #
+        # and a template
+        #
+        #     <div id="person">
+        #       <div class="name"></div>
+        #       <div class="friends">
+        #         <div class="name"></div>
+        #       </div>
+        #     </div>
+        #
+        # the depth-first rendering might give us wrong results, if the children are rendered
+        # before the `name` field on the parent model (child template values are overwritten by the parent).
+        #
+        #     <div id="person">
+        #       <div class="name">Jack</div>
+        #       <div class="friends">
+        #         <div class="name">Jack</div>
+        #         <div class="name">Jack</div>
+        #       </div>
+        #     </div>
+        #
+        # Save the key of the child model and take care of it once
         # we're done with the parent model.
         else if typeof value == 'object'
           children.push key
 
-    # Render directives
+    # With `directives`, user can give explicit rules for rendering and set
+    # attributes, which would be potentially unsafe by default (e.g., unescaped HTML content or `src` attribute).
+    # Given a template
+    #
+    #     <div class="template">
+    #       <div class="escaped"></div>
+    #       <div class="unescaped"></div>
+    #       <img class="trusted" src="#" />
+    #     </div>
+    #
+    # and a model and directives
+    #
+    #     model = {
+    #       content: "<script>alert('Injected')</script>"
+    #       url: "http://trusted.com/funny.gif"
+    #     };
+    #
+    #     directives = {
+    #       escaped: { text: { function() { return this.content } } },
+    #       unescaped: { html: { function() { return this.content } } },
+    #       trusted: { url: { function() { return this.url } } }
+    #     }
+    #
+    #     $('#template').render(model, directives);
+    #
+    # should give the result
+    #
+    #     <div class="template">
+    #       <div class="escaped">&lt;script&gt;alert('Injected')&lt;/script&gt;</div>
+    #       <div class="unescaped"><script>alert('Injected')</script></div>
+    #       <img class="trusted" src="http://trusted.com/funny.gif" />
+    #     </div>
+    #
+    #
+    # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
     renderDirectives instance, model, index, directives
 
     # Now, let's think about writing event handlers.
@@ -134,46 +195,41 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     #       console.log(e.target.transparency.model);
     #     });
     #
-    # That's easy, as we associate the `model` to each `element` in our template `instance`.
-    data(e).model = model for e in instance.elements
+    # By associating the `model` to each `element` in our template `instance`, we get just that.
+    for e in instance.elements
+      data(e).model = model
 
-    # As we are done with the plain values and directives, it's time to render the nested models, e.g.,
-    #
-    #     //  Template:
-    #     //  <div id="person">
-    #     //    <div class="name">
-    #     //    <div class="address">
-    #     //      <div class=""
-    #     //  </div>
-    #
-    #     models = {
-    #       name: "Batman",
-    #       address: {
-    #         street: "Unknown"
-    #         city:   "Gotham"
-    #       }
-    #     };
-    #
-    # Here, recursion is our friend. Calling `Transparency.render`
-    # for each matching `element` and passing on the corresponding data does the trick and
-    # renders the nested models, e.g., `address` in the example above.
+    # As we are done with the plain values and directives, it's time to render the nested models.
+    # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
+    # does the trick and renders the nested models.
     for key in children
       for element in matchingElements instance, key
         Transparency.render element, model[key], directives[key], options
 
   # Finally, put `context` back to its original place in the DOM
+  # and return it in order to support chaining.
   if parent
     if sibling
     then parent.insertBefore context, sibling
     else parent.appendChild context
 
-  # and return it in order to support chaining.
   context
 
 # ### Configuration
 
-# Default element matcher. Returns `true`, in case the value associated with `key` should be rendered to this `element`.
-# Override in case custom matching is needed.
+# In order to use Transparency as a jQuery plugin, add Transparency.jQueryPlugin to jQuery.fn object.
+#
+#     $.fn.render = Transparency.jQueryPlugin;
+#
+#     // Render with jQuery
+#     $('#template').render({hello: 'World'});
+Transparency.jQueryPlugin = (models, directives, options) ->
+  for context in this
+    Transparency.render context, models, directives, options
+  this
+
+# By default, Transparency matches model properties to elements by `id`, `class`, `name` and `data-bind` attributes.
+# Override `Transparency.matcher` to change the default behavior.
 #
 #     // Match only by `data-bind` attribute
 #     Transparency.matcher = function (element, key) {
@@ -185,26 +241,18 @@ Transparency.matcher = (element, key) ->
   element.name                      == key        ||
   element.getAttribute('data-bind') == key
 
-# Shim for cloning nodes on oldIE. Override in case you need to support oldIE without jQuery.
+# IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim, in case it
+# detects oldIE. Override `Transparency.clone` with a custom deep clone function, if oldIE needs to be
+# supported without jQuery.
 #
-#     Transparency.cloneFallback = myDeepCloneFunction
+#     Transparency.clone = myDeepCloneFunction
 Transparency.clone = (node) -> (@jQuery || @Zepto).clone()[0]
 
-# Register Transparency as a jQuery plugin.
-#
-#     $.fn.render = Transparency.jQueryPlugin;
-#
-#     // Render with jQuery
-#     $('#template').render({hello: 'World'});
-Transparency.jQueryPlugin = (models, directives, options) ->
-  for context in this
-    Transparency.render context, models, directives, options
-  this
 
 
 # ## Internals
 
-# Internal functions and classes are not properly documented yet.
+# Internal functions and classes are yet to be documented.
 
 class Instance
   constructor: (@template) ->
