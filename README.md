@@ -49,7 +49,9 @@ IE browsers requires jQuery. Transparency is
 
 ## Install
 
-Get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/dist/transparency.min.js)
+`bower install transparency`
+
+Or get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/dist/transparency.min.js)
 and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
 as a plugin.
 
@@ -63,13 +65,13 @@ as a plugin.
 #### AMD
 
 ```javascript
-require(['jquery', 'transparency'], function($, transparency){
+require(['jquery', 'transparency'], function($, Transparency){
 
   // Without jQuery
-  transparency.render(document.getElementById('template'), data);
+  Transparency.render(document.getElementById('template'), data);
 
   // With jQuery
-  transparency.register($); // register Transparency as a jQuery plugin
+  jQuery.fn.render = Transparency.jQueryPlugin; // register Transparency as a jQuery plugin
   $('#template').render(data);
 });
 ```
@@ -83,9 +85,11 @@ For server-side use, see
 
 ## Use
 
-Here are short, detailed and dense examples how to use Transparency. For more elaborate examples, see
+Here are short, detailed examples how to use Transparency. For more elaborate examples, see
 [User manual](https://github.com/leonidas/transparency/wiki/User-Manual) and
-[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions). Feel free to add your own examples, too!
+[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions). Feel free to add your own examples in the wiki, too!
+
+Implementation details are explained in the [annotated source code](http://leonidas.github.com/transparency/docs/transparency.html).
 
 ### Binding values
 
@@ -480,14 +484,11 @@ $('container').render(data, {}, {debug: true});
 Install node.js 0.8.x and npm. Then, in the project folder
 
     $ npm install grunt -g  # command-line build tool to enable TDD, auto-complation and minification
-    $ npm install           # Install the dependencies
+    $ npm install           # Install the development dependencies
     $ grunt                 # Compile, run tests, minify and start watching for modifications
 
-
-For further information, see [Transparency wiki](https://github.com/leonidas/transparency/wiki).
-
-There's also [an article](https://github.com/leonidas/codeblog/blob/master/2012/2012-01-13-implementing-semantic-anti-templating-with-jquery.md)
-regarding the original design and implementation. It's a bit outdated, but might be worth reading as an introduction.
+The [annotated source code](http://leonidas.github.com/transparency/docs/transparency.html) should
+give a decent introduction.
 
 ## Contributing
 
