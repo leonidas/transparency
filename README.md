@@ -35,8 +35,7 @@ $('#template').render(hello);
 * **View logic in JavaScript** - No crippled micro-template language, just plain JavaScript functions
 
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older
-IE browsers requires jQuery. Transparency is
-[reasonable fast](https://github.com/leonidas/transparency/wiki/Defining-template-engine-performance) and ready for production use.
+IE browsers requires jQuery.
 
 ## Community
 
@@ -49,29 +48,31 @@ IE browsers requires jQuery. Transparency is
 
 ## Install
 
-`bower install transparency`
+```
+curl https://raw.github.com/leonidas/transparency/master/dist/transparency.min.js
 
-Or get the [compiled and minified version](https://raw.github.com/leonidas/transparency/master/dist/transparency.min.js)
-and include it to your application. jQuery is optional, but if you happen to use it, Transparency registers itself
-as a plugin.
+# Or with Bower
+npm install -g bower
+bower install transparency
+```
 
-#### Browser
+#### Require with script tags
 
 ```html
 <script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/transparency.min.js"></script>
 ```
 
-#### AMD
+#### or with AMD
 
 ```javascript
-require(['jquery', 'transparency'], function($, Transparency){
+require(['jquery', 'transparency'], function($, Transparency) {
 
   // Without jQuery
   Transparency.render(document.getElementById('template'), data);
 
   // With jQuery
-  jQuery.fn.render = Transparency.jQueryPlugin; // register Transparency as a jQuery plugin
+  jQuery.fn.render = Transparency.jQueryPlugin;
   $('#template').render(data);
 });
 ```
@@ -83,13 +84,15 @@ require(['jquery', 'transparency'], function($, Transparency){
 For server-side use, see
 [examples/hello-server](https://github.com/leonidas/transparency/tree/master/examples/hello-server).
 
-## Use
+## API documentation
 
-Here are short, detailed examples how to use Transparency. For more elaborate examples, see
+Here are short and detailed examples how to use Transparency. For more elaborate examples, see
 [User manual](https://github.com/leonidas/transparency/wiki/User-Manual) and
-[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions). Feel free to add your own examples in the wiki, too!
+[FAQ](https://github.com/leonidas/transparency/wiki/Frequently-Asked-Questions).
+Feel free to add your own examples in the wiki, too!
 
-Implementation details are explained in the [annotated source code](http://leonidas.github.com/transparency/docs/transparency.html).
+Implementation details are explained in the
+[annotated source code](http://leonidas.github.com/transparency/docs/transparency.html).
 
 ### Binding values
 
