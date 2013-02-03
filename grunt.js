@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 
     jasmine: {
       all: {
-        src: ['spec/SpecRunner.html'],
+        src: ['spec/*.html'],
         errorReporting: true
       }
     },
