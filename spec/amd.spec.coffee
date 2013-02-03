@@ -9,4 +9,4 @@ define ['jquery', '../dist/transparency'], ($, t) ->
 
     it "should provide a jQuery plugin", ->
       $.fn.render = t.jQueryPlugin
-      $('<div><div class="hello"></div></div>').render(hello: "World!")
+      $('<div><div class="hello"></div></div>').render hello: "World!"

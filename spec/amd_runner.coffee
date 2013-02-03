@@ -5,7 +5,7 @@ require.config
     jasmine: exports: 'jasmine'
     'jasmine-html': deps: ['jasmine']
 
-require ['jquery', 'amd-spec'], ($)->
+require ['jquery', 'amd.spec.js'], ($)->
   $ ->
     jasmine.getEnv().addReporter new jasmine.HtmlReporter()
     jasmine.getEnv().execute()

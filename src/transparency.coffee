@@ -245,9 +245,7 @@ Transparency.matcher = (element, key) ->
 # supported without jQuery.
 #
 #     Transparency.clone = myDeepCloneFunction
-Transparency.clone = (node) -> (@jQuery || @Zepto).clone()[0]
-
-
+Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
@@ -414,10 +412,11 @@ cloneNode  =
     (node) -> node.cloneNode true
   else
     (node) ->
-      cloned = cloneFallback(node)
+      cloned = Transparency.clone(node)
       if cloned.nodeType == ELEMENT_NODE
         cloned.removeAttribute expando
-        (element.removeAttribute expando) for element in cloned.getElementsByTagName '*'
+        for element in cloned.getElementsByTagName '*'
+          element.removeAttribute expando
       cloned
 
 expando = 'transparency'
@@ -445,7 +444,7 @@ indexOf       = (array, item) ->
     if x == item then return i
   -1
 
-(@jQuery || @Zepto)?.fn.render = Transparency.jQueryPlugin
+(jQuery || Zepto)?.fn.render = Transparency.jQueryPlugin
 
 if define?.amd
   define -> Transparency

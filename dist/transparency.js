@@ -100,7 +100,8 @@
   };
 
   Transparency.clone = function(node) {
-    return (this.jQuery || this.Zepto).clone()[0];
+    var _base;
+    return typeof (_base = jQuery || Zepto) === "function" ? _base(node).clone()[0] : void 0;
   };
 
   Instance = (function() {
@@ -427,7 +428,7 @@
     return node.cloneNode(true);
   } : function(node) {
     var cloned, element, _i, _len, _ref;
-    cloned = cloneFallback(node);
+    cloned = Transparency.clone(node);
     if (cloned.nodeType === ELEMENT_NODE) {
       cloned.removeAttribute(expando);
       _ref = cloned.getElementsByTagName('*');
@@ -495,7 +496,7 @@
     return -1;
   };
 
-  if ((_ref = this.jQuery || this.Zepto) != null) {
+  if ((_ref = jQuery || Zepto) != null) {
     _ref.fn.render = Transparency.jQueryPlugin;
   }
 
