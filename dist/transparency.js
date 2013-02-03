@@ -3,7 +3,7 @@
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
-  Transparency = {};
+  Transparency = this.Transparency = {};
 
   Transparency.render = function(context, models, directives, options) {
     var children, e, element, index, instance, instances, key, log, model, nodeName, parent, sibling, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2;
@@ -120,13 +120,13 @@
 
   prepareContext = function(context, models) {
     var attribute, contextData, element, instance, n, value, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+    log("PrepareContext:", context, models);
     contextData = data(context);
     if (!contextData.template) {
       contextData.template = cloneNode(context);
       contextData.instanceCache = [];
       contextData.instances = [new Instance(context)];
     }
-    log("Template", contextData.template);
     while (models.length > contextData.instances.length) {
       instance = contextData.instanceCache.pop() || new Instance(cloneNode(contextData.template));
       _ref = instance.childNodes;
@@ -504,8 +504,6 @@
     define(function() {
       return Transparency;
     });
-  } else {
-    this.Transparency = Transparency;
   }
 
 }).call(this);

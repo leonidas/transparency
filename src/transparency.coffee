@@ -27,7 +27,7 @@
 # For the full API reference, please see the README.
 
 # ## Public API
-Transparency = {}
+Transparency = @Transparency = {}
 
 # `Transparency.render` maps JSON objects to DOM elements.
 Transparency.render = (context, models = [], directives = {}, options = {}) ->
@@ -240,17 +240,18 @@ Transparency.matcher = (element, key) ->
   element.name                      == key        ||
   element.getAttribute('data-bind') == key
 
-# IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim, in case it
-# detects oldIE. Override `Transparency.clone` with a custom deep clone function, if oldIE needs to be
+# IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
+# Override `Transparency.clone` with a custom clone function, if oldIE needs to be
 # supported without jQuery.
 #
-#     Transparency.clone = myDeepCloneFunction
+#     Transparency.clone = myCloneFunction;
 Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
-# Internal functions and classes are yet to be documented.
-
+# For each model we are about to render, there needs to be a template `instance`.
+# Instance object keeps track of DOM nodes, elements and has a local query selector
+# cache.
 class Instance
   constructor: (@template) ->
     @queryCache = {}
@@ -259,6 +260,7 @@ class Instance
     getElementsAndChildNodes @template, @elements, @childNodes
 
 prepareContext = (context, models) ->
+  log "PrepareContext:", context, models
   contextData = data context
 
   # Initialize context
@@ -266,12 +268,12 @@ prepareContext = (context, models) ->
     contextData.template      = cloneNode context
     contextData.instanceCache = [] # Query-cached template instances are precious, save them for the future
     contextData.instances     = [new Instance(context)] # Currently used template instances
-  log "Template", contextData.template
 
   # Get templates from the cache or clone new ones, if the cache is empty.
   while models.length > contextData.instances.length
     instance = contextData.instanceCache.pop() || new Instance(cloneNode contextData.template)
-    (context.appendChild n for n in instance.childNodes)
+    for n in instance.childNodes
+      context.appendChild n
     contextData.instances.push instance
 
   # Remove leftover templates from DOM and save them to the cache for later use.
@@ -446,8 +448,4 @@ indexOf       = (array, item) ->
 
 (jQuery || Zepto)?.fn.render = Transparency.jQueryPlugin
 
-if define?.amd
-  define -> Transparency
-else
-  @Transparency = Transparency
-
+if define?.amd then define -> Transparency
