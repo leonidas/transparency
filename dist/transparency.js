@@ -298,6 +298,7 @@
 
   setSelected = function(element, value) {
     var child, childElements, _i, _len, _results;
+    value = value.toString();
     childElements = [];
     getElementsAndChildNodes(element, childElements);
     _results = [];
@@ -319,72 +320,49 @@
   attr = function(element, attribute, value) {
     var elementData, _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
     elementData = data(element);
+    if (value == null) {
+      return elementData.originalAttributes[attribute];
+    }
     if (element.nodeName.toLowerCase() === 'select' && attribute === 'selected') {
-      if ((value != null) && typeof value !== 'string') {
-        value = value.toString();
-      }
-      if (value != null) {
-        setSelected(element, value);
-      }
+      return setSelected(element, value);
     } else {
       switch (attribute) {
         case 'text':
           if (!isVoidElement(element)) {
-            if ((value != null) && typeof value !== 'string') {
-              value = value.toString();
-            }
             if ((_ref = (_base = elementData.originalAttributes)['text']) == null) {
               _base['text'] = getText(element);
             }
-            if (value != null) {
-              setText(element, value);
-            }
+            return setText(element, value);
           }
           break;
         case 'html':
-          if ((value != null) && typeof value !== 'string') {
-            value = value.toString();
-          }
           if ((_ref1 = (_base1 = elementData.originalAttributes)['html']) == null) {
             _base1['html'] = element.innerHTML;
           }
-          if (value != null) {
-            setHtml(element, value);
-          }
-          break;
+          return setHtml(element, value);
         case 'class':
           if ((_ref2 = (_base2 = elementData.originalAttributes)['class']) == null) {
             _base2['class'] = element.className;
           }
-          if (value != null) {
-            element.className = value;
-          }
-          break;
+          return element.className = value;
         default:
-          if (value != null) {
-            element[attribute] = value;
-            if (isBoolean(value)) {
-              if ((_ref3 = (_base3 = elementData.originalAttributes)[attribute]) == null) {
-                _base3[attribute] = element.getAttribute(attribute) || false;
-              }
-              if (value) {
-                element.setAttribute(attribute, attribute);
-              } else {
-                element.removeAttribute(attribute);
-              }
-            } else {
-              if ((_ref4 = (_base4 = elementData.originalAttributes)[attribute]) == null) {
-                _base4[attribute] = element.getAttribute(attribute) || "";
-              }
-              element.setAttribute(attribute, value.toString());
+          element[attribute] = value;
+          if (isBoolean(value)) {
+            if ((_ref3 = (_base3 = elementData.originalAttributes)[attribute]) == null) {
+              _base3[attribute] = element.getAttribute(attribute) || false;
             }
+            if (value) {
+              return element.setAttribute(attribute, attribute);
+            } else {
+              return element.removeAttribute(attribute);
+            }
+          } else {
+            if ((_ref4 = (_base4 = elementData.originalAttributes)[attribute]) == null) {
+              _base4[attribute] = element.getAttribute(attribute) || "";
+            }
+            return element.setAttribute(attribute, value.toString());
           }
       }
-    }
-    if (value != null) {
-      return value;
-    } else {
-      return elementData.originalAttributes[attribute];
     }
   };
 

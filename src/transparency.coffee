@@ -307,7 +307,11 @@ renderDirectives = (instance, model, index, directives) ->
     for element in matchingElements instance, key
       for attribute, directive of attributes when typeof directive == 'function'
 
-        value = directive.call model, element: element, index: index, value: attr element, attribute
+        value = directive.call model,
+          element: element
+          index:   index
+          value:   attr element, attribute
+
         attr element, attribute, value
 
 setHtml = (element, html) ->
@@ -341,6 +345,7 @@ getText = (element) ->
   (child.nodeValue for child in element.childNodes when child.nodeType == TEXT_NODE).join ''
 
 setSelected = (element, value) ->
+  value = value.toString()
   childElements = []
   getElementsAndChildNodes element, childElements
   for child in childElements
@@ -352,30 +357,27 @@ setSelected = (element, value) ->
 
 attr = (element, attribute, value) ->
   elementData = data element
+  return elementData.originalAttributes[attribute] unless value?
 
   if element.nodeName.toLowerCase() == 'select' and attribute == 'selected'
-    value = value.toString() if value? and typeof value != 'string'
-    setSelected(element, value) if value?
+    setSelected element, value
 
-  else switch attribute
+  else
+    switch attribute
+      when 'text'
+        unless isVoidElement element
+          elementData.originalAttributes['text'] ?= getText element
+          setText element, value
 
-    when 'text'
-      unless isVoidElement element
-        value = value.toString() if value? and typeof value != 'string'
-        elementData.originalAttributes['text'] ?= getText element
-        setText(element, value) if value?
+      when 'html'
+        elementData.originalAttributes['html'] ?= element.innerHTML
+        setHtml element, value
 
-    when 'html'
-      value = value.toString() if value? and typeof value != 'string'
-      elementData.originalAttributes['html'] ?= element.innerHTML
-      setHtml(element, value) if value?
+      when 'class'
+        elementData.originalAttributes['class'] ?= element.className
+        element.className = value
 
-    when 'class'
-      elementData.originalAttributes['class'] ?= element.className
-      element.className = value if value?
-
-    else
-      if value?
+      else
         element[attribute] = value
         if isBoolean value
           elementData.originalAttributes[attribute] ?= element.getAttribute(attribute) || false
@@ -386,9 +388,6 @@ attr = (element, attribute, value) ->
         else
           elementData.originalAttributes[attribute] ?= element.getAttribute(attribute) || ""
           element.setAttribute attribute, value.toString()
-
-
-  if value? then value else elementData.originalAttributes[attribute]
 
 matchingElements = (instance, key) ->
   elements = instance.queryCache[key] ||= (e for e in instance.elements when Transparency.matcher e, key)

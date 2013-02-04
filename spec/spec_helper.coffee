@@ -20,11 +20,16 @@ isEqualDom = (actual, expected) ->
     throw new Error "ERROR: '#{actual.text()}' is not equal to '#{expected.text()}'"
 
   for attribute in expected[0].attributes
-    unless actual.attr(attribute.name) == expected.attr(attribute.name)
+    unless trim(actual.attr attribute.name) == trim(expected.attr attribute.name)
       throw new Error "ERROR: '#{attribute.name}=\"#{actual.attr(attribute.name)}\"' is not equal to '#{attribute.name}=\"#{expected.attr(attribute.name)}\"'"
 
-  actualChildren = actual.children()
-  for child, i in expected.children()
+  actualChildren   = actual.children()
+  expectedChildren = expected.children()
+
+  if expectedChildren.length != actualChildren.length
+    throw new Error "Expected children count #{expectedChildren.length} is not equal to actual children count #{actualChildren.length}"
+
+  for child, i in expectedChildren
     isEqualDom $(actualChildren[i]), $(child)
 
 beforeEach ->

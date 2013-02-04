@@ -302,3 +302,32 @@ describe "Transparency", ->
     directives = link: href: -> "http://does-it-render.com/"
 
     $(".container").render data, directives
+
+  it "should not duplicate mutated elements", ->
+    # See https://github.com/leonidas/transparency/issues/86
+
+    template = $ """
+      <div id="test" class="test">
+        <div class="test_div" data-bind="test_div_bar"><span></span></div>
+      </div>
+      """
+
+    data =
+      bar: 100
+
+    directives =
+      test_div_bar:
+        html: (params) ->
+          elem = $(params.element)
+          $('span', elem).css('width', @bar + '%')
+          return
+
+    expected = $ """
+      <div id="test" class="test">
+        <div class="test_div" data-bind="test_div_bar"><span style="width: 100%;"></span></div>
+      </div>
+      """
+
+    template.render data, directives
+    template.render data, directives
+    expect(template).toBeEqual expected
