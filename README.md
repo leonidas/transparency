@@ -99,7 +99,7 @@ Implementation details are explained in the
 Transparency binds values in-place. That means, you don't need to write separate template sections on your page.
 Instead, compose just a normal, static html page and start binding some dynamic values on it!
 
-By default, Transparency binds JavaScript objects to DOM a element by `id`, `class`,`name` attribute and
+By default, Transparency binds JavaScript objects to a DOM element by `id`, `class`,`name` attribute and
 `data-bind` attribute. Default behavior can be changed by providing a custom matcher function, as explained in section
 [Configuration](https://github.com/leonidas/transparency#configuration). Values are escaped before rendering.
 
