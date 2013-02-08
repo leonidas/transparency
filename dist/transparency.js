@@ -35,6 +35,11 @@
       model = models[index];
       children = [];
       instance = instances[index];
+      _ref = instance.elements;
+      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+        e = _ref[_j];
+        data(e).model = model;
+      }
       if (isDomElement(model) && (element = instance.elements[0])) {
         empty(element).appendChild(model);
       } else if (typeof model === 'object') {
@@ -43,9 +48,9 @@
           value = model[key];
           if (value != null) {
             if (isPlainValue(value)) {
-              _ref = matchingElements(instance, key);
-              for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-                element = _ref[_j];
+              _ref1 = matchingElements(instance, key);
+              for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+                element = _ref1[_k];
                 nodeName = element.nodeName.toLowerCase();
                 if (nodeName === 'input') {
                   attr(element, 'value', value);
@@ -62,11 +67,6 @@
         }
       }
       renderDirectives(instance, model, index, directives);
-      _ref1 = instance.elements;
-      for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
-        e = _ref1[_k];
-        data(e).model = model;
-      }
       for (_l = 0, _len3 = children.length; _l < _len3; _l++) {
         key = children[_l];
         _ref2 = matchingElements(instance, key);

@@ -74,8 +74,20 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     children = []
     instance = instances[index]
 
-    # Default rendering covers the most common use cases, e.g.,
-    # rendering text content, form values and DOM elements (Backbone Views).
+    # First, let's think about writing event handlers.
+    # For example, it would be convenient to have an access to the associated `model`
+    # when the user clicks a todo element. No need to set `data-id` attributes or other
+    # identifiers manually \o/
+    #
+    #     $('#todos').on('click', '.todo', function(e) {
+    #       console.log(e.target.transparency.model);
+    #     });
+    #
+    for e in instance.elements
+      data(e).model = model
+
+    # Next, take care of default rendering, which covers the most common use cases like
+    # setting text content, form values and DOM elements (.e.g., Backbone Views).
     # Rendering as a text content is a safe default, as it is HTML escaped
     # by the browsers.
     if isDomElement(model) and element = instance.elements[0]
@@ -184,19 +196,6 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     #
     # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
     renderDirectives instance, model, index, directives
-
-    # Now, let's think about writing event handlers.
-    # It would be great to have an access to the associated `model` when the user clicks
-    # a todo element. That would save us from rendering `id` attributes by hand.
-    #
-    #     // Log the associated model to console.
-    #     $('#todos').on('click', '.todo', function(e) {
-    #       console.log(e.target.transparency.model);
-    #     });
-    #
-    # By associating the `model` to each `element` in our template `instance`, we get just that.
-    for e in instance.elements
-      data(e).model = model
 
     # As we are done with the plain values and directives, it's time to render the nested models.
     # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
