@@ -330,4 +330,5 @@ describe "Transparency", ->
 
     template.render data, directives
     template.render data, directives
+    jasmine.log "fsdaofijadsojfosaijfodsj"
     expect(template).toBeEqual expected
