@@ -2,7 +2,7 @@ describe "Transparency performance", ->
 
   describe "with cached templates", ->
 
-    xdescribe "with one todo item", ->
+    describe "with one todo item", ->
 
       it "should be fast enough", ->
         transparency = new Benchmark 'transparency',
@@ -74,9 +74,9 @@ describe "Transparency performance", ->
             expect(this[0]).toBeFastEnough(this[1]))
           .run()
 
-  xdescribe "on first render call", ->
+  describe "on first render call", ->
 
-    xdescribe "with one todo item", ->
+    describe "with one todo item", ->
 
       it "should be fast enough", ->
         transparency = new Benchmark 'transparency',
@@ -151,7 +151,5 @@ describe "Transparency performance", ->
           .add(handlebars)
 
           .on('complete', ->
-            console.log this[0]
-            console.log this[1])
-            #expect(this[0]).toBeFastEnough(this[1]))
+            expect(this[0]).toBeFastEnough(this[1]))
           .run()

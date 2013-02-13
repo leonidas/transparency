@@ -43,10 +43,8 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   # Rendering is a lot faster when the `context` is detached from the DOM, as
   # reflow calculations are not triggered. However, we need to save reference
   # to `parent` and `nextSibling` in order to attach the `context` back once we're done.
-  parent = context.parentNode
-  if parent
-    sibling = context.nextSibling
-    parent.removeChild context
+  context = data(context).context ||= new Context(context)
+  context.detach()
 
   # Next, we need to make sure there's a right amount of template instances available.
   # For example, if our `models` is a list of three todo items and the `context` is
@@ -62,17 +60,16 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   #       <li class="todo"></li>
   #       <li class="todo"></li>
   #     </ul>
-  prepareContext context, models
+  context.prepare models
 
   # `prepareContext` stores the state of the `context` to a data object.
   # From the data object, the list of template `instances` is needed for rendering.
-  instances = data(context).instances
 
   # Now, having a list of `models` and a list of template `instances`,
   # we are ready to render each `model` to the corresponding template `instance`.
   for model, index in models
     children = []
-    instance = instances[index]
+    instance = context.instances[index]
 
     # First, let's think about writing event handlers.
     # For example, it would be convenient to have an access to the associated `model`
@@ -206,12 +203,9 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 
   # Finally, put `context` back to its original place in the DOM
   # and return it in order to support chaining.
-  if parent
-    if sibling
-    then parent.insertBefore context, sibling
-    else parent.appendChild context
+  context.attach()
 
-  context
+  context.el
 
 # ### Configuration
 
@@ -248,43 +242,63 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
+class Context
+  constructor: (@el) ->
+    @template      = cloneNode @el
+    @instances     = [new Instance(@el, @el)]
+    @instanceCache = []
+    @parent        = @el.parentNode
+
+    if @parent
+      @nextSibling = @el.nextSibling
+
+  detach: -> @parent.removeChild @el
+
+  attach: ->
+    if @parent
+      if @nextSibling
+      then @parent.insertBefore @el, @nextSibling
+      else @parent.appendChild @el
+
+  prepare: (models) ->
+    # Get templates from the cache or clone new ones, if the cache is empty.
+    while models.length > @instances.length
+      instance = @instanceCache.pop() || new Instance(@el, cloneNode @template)
+      @instances.push instance.appendToContext()
+
+    # Remove leftover templates from DOM and save them to the cache for later use.
+    while models.length < @instances.length
+      @instanceCache.push @instances.pop().remove()
+
+    # Reset templates before reuse
+    for instance in @instances
+      instance.reset()
+
 # For each model we are about to render, there needs to be a template `instance`.
 # Instance object keeps track of DOM nodes, elements and has a local query selector
 # cache.
 class Instance
-  constructor: (@template) ->
+  constructor: (@context, @template) ->
     @queryCache = {}
     @elements   = []
     @childNodes = []
     getElementsAndChildNodes @template, @elements, @childNodes
 
-prepareContext = (context, models) ->
-  log "PrepareContext:", context, models
-  contextData = data context
+  remove: ->
+    for n in @childNodes
+      @context.removeChild n
+    this
 
-  # Initialize context
-  unless contextData.template
-    contextData.template      = cloneNode context
-    contextData.instanceCache = [] # Query-cached template instances are precious, save them for the future
-    contextData.instances     = [new Instance(context)] # Currently used template instances
+  appendToContext: ->
+    for n in @childNodes
+      @context.appendChild n
+    this
 
-  # Get templates from the cache or clone new ones, if the cache is empty.
-  while models.length > contextData.instances.length
-    instance = contextData.instanceCache.pop() || new Instance(cloneNode contextData.template)
-    for n in instance.childNodes
-      context.appendChild n
-    contextData.instances.push instance
-
-  # Remove leftover templates from DOM and save them to the cache for later use.
-  while models.length < contextData.instances.length
-    contextData.instanceCache.push instance = contextData.instances.pop()
-    (n.parentNode.removeChild n) for n in instance.childNodes
-
-  # Reset templates before reuse
-  for instance in contextData.instances
-    for element in instance.elements
+  reset: ->
+    for element in @elements
       for attribute, value of data(element).originalAttributes
         attr element, attribute, value
+
 
 getElementsAndChildNodes = (template, elements, childNodes) ->
   child = template.firstChild

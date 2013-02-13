@@ -1,12 +1,12 @@
 (function() {
-  var ELEMENT_NODE, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matchingElements, nullLogger, prepareContext, renderDirectives, setHtml, setSelected, setText, toString, _ref,
+  var Context, ELEMENT_NODE, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matchingElements, nullLogger, renderDirectives, setHtml, setSelected, setText, toString, _ref,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
   Transparency = this.Transparency = {};
 
   Transparency.render = function(context, models, directives, options) {
-    var children, e, element, index, instance, instances, key, log, model, nodeName, parent, sibling, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2;
+    var children, e, element, index, instance, key, log, model, nodeName, value, _base, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2;
     if (models == null) {
       models = [];
     }
@@ -24,17 +24,13 @@
     if (!isArray(models)) {
       models = [models];
     }
-    parent = context.parentNode;
-    if (parent) {
-      sibling = context.nextSibling;
-      parent.removeChild(context);
-    }
-    prepareContext(context, models);
-    instances = data(context).instances;
+    context = (_base = data(context)).context || (_base.context = new Context(context));
+    context.detach();
+    context.prepare(models);
     for (index = _i = 0, _len = models.length; _i < _len; index = ++_i) {
       model = models[index];
       children = [];
-      instance = instances[index];
+      instance = context.instances[index];
       _ref = instance.elements;
       for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
         e = _ref[_j];
@@ -76,14 +72,8 @@
         }
       }
     }
-    if (parent) {
-      if (sibling) {
-        parent.insertBefore(context, sibling);
-      } else {
-        parent.appendChild(context);
-      }
-    }
-    return context;
+    context.attach();
+    return context.el;
   };
 
   Transparency.jQueryPlugin = function(models, directives, options) {
@@ -104,9 +94,59 @@
     return typeof (_base = jQuery || Zepto) === "function" ? _base(node).clone()[0] : void 0;
   };
 
+  Context = (function() {
+
+    function Context(el) {
+      this.el = el;
+      this.template = cloneNode(this.el);
+      this.instances = [new Instance(this.el, this.el)];
+      this.instanceCache = [];
+      this.parent = this.el.parentNode;
+      if (this.parent) {
+        this.nextSibling = this.el.nextSibling;
+      }
+    }
+
+    Context.prototype.detach = function() {
+      return this.parent.removeChild(this.el);
+    };
+
+    Context.prototype.attach = function() {
+      if (this.parent) {
+        if (this.nextSibling) {
+          return this.parent.insertBefore(this.el, this.nextSibling);
+        } else {
+          return this.parent.appendChild(this.el);
+        }
+      }
+    };
+
+    Context.prototype.prepare = function(models) {
+      var instance, _i, _len, _ref, _results;
+      while (models.length > this.instances.length) {
+        instance = this.instanceCache.pop() || new Instance(this.el, cloneNode(this.template));
+        this.instances.push(instance.appendToContext());
+      }
+      while (models.length < this.instances.length) {
+        this.instanceCache.push(this.instances.pop().remove());
+      }
+      _ref = this.instances;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        instance = _ref[_i];
+        _results.push(instance.reset());
+      }
+      return _results;
+    };
+
+    return Context;
+
+  })();
+
   Instance = (function() {
 
-    function Instance(template) {
+    function Instance(context, template) {
+      this.context = context;
       this.template = template;
       this.queryCache = {};
       this.elements = [];
@@ -114,62 +154,49 @@
       getElementsAndChildNodes(this.template, this.elements, this.childNodes);
     }
 
+    Instance.prototype.remove = function() {
+      var n, _i, _len, _ref;
+      _ref = this.childNodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        n = _ref[_i];
+        this.context.removeChild(n);
+      }
+      return this;
+    };
+
+    Instance.prototype.appendToContext = function() {
+      var n, _i, _len, _ref;
+      _ref = this.childNodes;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        n = _ref[_i];
+        this.context.appendChild(n);
+      }
+      return this;
+    };
+
+    Instance.prototype.reset = function() {
+      var attribute, element, value, _i, _len, _ref, _results;
+      _ref = this.elements;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        element = _ref[_i];
+        _results.push((function() {
+          var _ref1, _results1;
+          _ref1 = data(element).originalAttributes;
+          _results1 = [];
+          for (attribute in _ref1) {
+            value = _ref1[attribute];
+            _results1.push(attr(element, attribute, value));
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    };
+
     return Instance;
 
   })();
-
-  prepareContext = function(context, models) {
-    var attribute, contextData, element, instance, n, value, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
-    log("PrepareContext:", context, models);
-    contextData = data(context);
-    if (!contextData.template) {
-      contextData.template = cloneNode(context);
-      contextData.instanceCache = [];
-      contextData.instances = [new Instance(context)];
-    }
-    while (models.length > contextData.instances.length) {
-      instance = contextData.instanceCache.pop() || new Instance(cloneNode(contextData.template));
-      _ref = instance.childNodes;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        n = _ref[_i];
-        context.appendChild(n);
-      }
-      contextData.instances.push(instance);
-    }
-    while (models.length < contextData.instances.length) {
-      contextData.instanceCache.push(instance = contextData.instances.pop());
-      _ref1 = instance.childNodes;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        n = _ref1[_j];
-        n.parentNode.removeChild(n);
-      }
-    }
-    _ref2 = contextData.instances;
-    _results = [];
-    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-      instance = _ref2[_k];
-      _results.push((function() {
-        var _l, _len3, _ref3, _results1;
-        _ref3 = instance.elements;
-        _results1 = [];
-        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-          element = _ref3[_l];
-          _results1.push((function() {
-            var _ref4, _results2;
-            _ref4 = data(element).originalAttributes;
-            _results2 = [];
-            for (attribute in _ref4) {
-              value = _ref4[attribute];
-              _results2.push(attr(element, attribute, value));
-            }
-            return _results2;
-          })());
-        }
-        return _results1;
-      })());
-    }
-    return _results;
-  };
 
   getElementsAndChildNodes = function(template, elements, childNodes) {
     var child, _base, _results;
