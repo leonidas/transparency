@@ -1,12 +1,12 @@
 (function() {
-  var Context, ELEMENT_NODE, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, matchingElements, nullLogger, renderDirectives, setHtml, setSelected, setText, toString, _ref,
+  var Context, ELEMENT_NODE, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, nullLogger, renderDirectives, setHtml, setSelected, setText, toString, _ref,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
   Transparency = this.Transparency = {};
 
   Transparency.render = function(context, models, directives, options) {
-    var children, e, element, index, instance, key, log, model, nodeName, value, _base, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2;
+    var children, element, index, instance, key, log, model, nodeName, value, _base, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1;
     if (models == null) {
       models = [];
     }
@@ -31,11 +31,6 @@
       model = models[index];
       children = [];
       instance = context.instances[index];
-      _ref = instance.elements;
-      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-        e = _ref[_j];
-        data(e).model = model;
-      }
       if (isDomElement(model) && (element = instance.elements[0])) {
         empty(element).appendChild(model);
       } else if (typeof model === 'object') {
@@ -44,9 +39,9 @@
           value = model[key];
           if (value != null) {
             if (isPlainValue(value)) {
-              _ref1 = matchingElements(instance, key);
-              for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
-                element = _ref1[_k];
+              _ref = instance.matchingElements(key);
+              for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+                element = _ref[_j];
                 nodeName = element.nodeName.toLowerCase();
                 if (nodeName === 'input') {
                   attr(element, 'value', value);
@@ -63,11 +58,11 @@
         }
       }
       renderDirectives(instance, model, index, directives);
-      for (_l = 0, _len3 = children.length; _l < _len3; _l++) {
-        key = children[_l];
-        _ref2 = matchingElements(instance, key);
-        for (_m = 0, _len4 = _ref2.length; _m < _len4; _m++) {
-          element = _ref2[_m];
+      for (_k = 0, _len2 = children.length; _k < _len2; _k++) {
+        key = children[_k];
+        _ref1 = instance.matchingElements(key);
+        for (_l = 0, _len3 = _ref1.length; _l < _len3; _l++) {
+          element = _ref1[_l];
           Transparency.render(element, model[key], directives[key], options);
         }
       }
@@ -102,13 +97,13 @@
       this.instances = [new Instance(this.el, this.el)];
       this.instanceCache = [];
       this.parent = this.el.parentNode;
-      if (this.parent) {
-        this.nextSibling = this.el.nextSibling;
-      }
     }
 
     Context.prototype.detach = function() {
-      return this.parent.removeChild(this.el);
+      if (this.parent) {
+        this.nextSibling = this.el.nextSibling;
+        return this.parent.removeChild(this.el);
+      }
     };
 
     Context.prototype.attach = function() {
@@ -122,7 +117,7 @@
     };
 
     Context.prototype.prepare = function(models) {
-      var instance, _i, _len, _ref, _results;
+      var i, instance, _i, _len, _ref, _results;
       while (models.length > this.instances.length) {
         instance = this.instanceCache.pop() || new Instance(this.el, cloneNode(this.template));
         this.instances.push(instance.appendToContext());
@@ -132,9 +127,9 @@
       }
       _ref = this.instances;
       _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        instance = _ref[_i];
-        _results.push(instance.reset());
+      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+        instance = _ref[i];
+        _results.push(instance.reset().assoc(models[i]));
       }
       return _results;
     };
@@ -155,43 +150,66 @@
     }
 
     Instance.prototype.remove = function() {
-      var n, _i, _len, _ref;
+      var node, _i, _len, _ref;
       _ref = this.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        n = _ref[_i];
-        this.context.removeChild(n);
+        node = _ref[_i];
+        this.context.removeChild(node);
       }
       return this;
     };
 
     Instance.prototype.appendToContext = function() {
-      var n, _i, _len, _ref;
+      var node, _i, _len, _ref;
       _ref = this.childNodes;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        n = _ref[_i];
-        this.context.appendChild(n);
+        node = _ref[_i];
+        this.context.appendChild(node);
       }
       return this;
     };
 
-    Instance.prototype.reset = function() {
-      var attribute, element, value, _i, _len, _ref, _results;
+    Instance.prototype.assoc = function(model) {
+      var el, _i, _len, _ref;
+      this.model = model;
       _ref = this.elements;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        element = _ref[_i];
-        _results.push((function() {
-          var _ref1, _results1;
-          _ref1 = data(element).originalAttributes;
-          _results1 = [];
-          for (attribute in _ref1) {
-            value = _ref1[attribute];
-            _results1.push(attr(element, attribute, value));
-          }
-          return _results1;
-        })());
+        el = _ref[_i];
+        data(el).model = this.model;
       }
-      return _results;
+      return this;
+    };
+
+    Instance.prototype.matchingElements = function(key) {
+      var e, elements, _base;
+      elements = (_base = this.queryCache)[key] || (_base[key] = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.elements;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          e = _ref[_i];
+          if (Transparency.matcher(e, key)) {
+            _results.push(e);
+          }
+        }
+        return _results;
+      }).call(this));
+      log("Matching elements for '" + key + "':", elements);
+      return elements;
+    };
+
+    Instance.prototype.reset = function() {
+      var attribute, el, value, _i, _len, _ref, _ref1;
+      _ref = this.elements;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        el = _ref[_i];
+        _ref1 = data(el).originalAttributes;
+        for (attribute in _ref1) {
+          value = _ref1[attribute];
+          attr(el, attribute, value);
+        }
+      }
+      return this;
     };
 
     return Instance;
@@ -231,7 +249,7 @@
       if (typeof attributes === 'object') {
         _results.push((function() {
           var _i, _len, _ref, _results1;
-          _ref = matchingElements(instance, key);
+          _ref = instance.matchingElements(key);
           _results1 = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             element = _ref[_i];
@@ -391,24 +409,6 @@
           }
       }
     }
-  };
-
-  matchingElements = function(instance, key) {
-    var e, elements, _base;
-    elements = (_base = instance.queryCache)[key] || (_base[key] = (function() {
-      var _i, _len, _ref, _results;
-      _ref = instance.elements;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        e = _ref[_i];
-        if (Transparency.matcher(e, key)) {
-          _results.push(e);
-        }
-      }
-      return _results;
-    })());
-    log("Matching elements for '" + key + "':", elements);
-    return elements;
   };
 
   empty = function(element) {

@@ -80,8 +80,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     #       console.log(e.target.transparency.model);
     #     });
     #
-    for e in instance.elements
-      data(e).model = model
+
 
     # Next, take care of default rendering, which covers the most common use cases like
     # setting text content, form values and DOM elements (.e.g., Backbone Views).
@@ -96,7 +95,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
         # The value can be either a nested model or a plain value, i.e., `Date`, `string`, `boolean` or `double`.
         # Start by handling the plain values and finding the matching elements.
         if isPlainValue value
-          for element in matchingElements instance, key
+          for element in instance.matchingElements key
 
             # Element type also affects on rendering. Given a model
             #
@@ -198,7 +197,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
     # does the trick and renders the nested models.
     for key in children
-      for element in matchingElements instance, key
+      for element in instance.matchingElements key
         Transparency.render element, model[key], directives[key], options
 
   # Finally, put `context` back to its original place in the DOM
@@ -249,10 +248,10 @@ class Context
     @instanceCache = []
     @parent        = @el.parentNode
 
+  detach: ->
     if @parent
       @nextSibling = @el.nextSibling
-
-  detach: -> @parent.removeChild @el
+      @parent.removeChild @el
 
   attach: ->
     if @parent
@@ -270,9 +269,9 @@ class Context
     while models.length < @instances.length
       @instanceCache.push @instances.pop().remove()
 
-    # Reset templates before reuse
-    for instance in @instances
-      instance.reset()
+    # Reset each template instance before reuse and assoc the corresponding model to it
+    for instance, i in @instances
+      instance.reset().assoc(models[i])
 
 # For each model we are about to render, there needs to be a template `instance`.
 # Instance object keeps track of DOM nodes, elements and has a local query selector
@@ -285,19 +284,30 @@ class Instance
     getElementsAndChildNodes @template, @elements, @childNodes
 
   remove: ->
-    for n in @childNodes
-      @context.removeChild n
+    for node in @childNodes
+      @context.removeChild node
     this
 
   appendToContext: ->
-    for n in @childNodes
-      @context.appendChild n
+    for node in @childNodes
+      @context.appendChild node
     this
 
+  assoc: (@model) ->
+    for el in @elements
+      data(el).model = @model
+    this
+
+  matchingElements: (key) ->
+    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e, key)
+    log "Matching elements for '#{key}':", elements
+    elements
+
   reset: ->
-    for element in @elements
-      for attribute, value of data(element).originalAttributes
-        attr element, attribute, value
+    for el in @elements
+      for attribute, value of data(el).originalAttributes
+        attr el, attribute, value
+    this
 
 
 getElementsAndChildNodes = (template, elements, childNodes) ->
@@ -317,7 +327,7 @@ renderDirectives = (instance, model, index, directives) ->
   model = if typeof model == 'object' then model else value: model
 
   for own key, attributes of directives when typeof attributes == 'object'
-    for element in matchingElements instance, key
+    for element in instance.matchingElements key
       for attribute, directive of attributes when typeof directive == 'function'
 
         value = directive.call model,
@@ -401,11 +411,6 @@ attr = (element, attribute, value) ->
         else
           elementData.originalAttributes[attribute] ?= element.getAttribute(attribute) || ""
           element.setAttribute attribute, value.toString()
-
-matchingElements = (instance, key) ->
-  elements = instance.queryCache[key] ||= (e for e in instance.elements when Transparency.matcher e, key)
-  log "Matching elements for '#{key}':", elements
-  elements
 
 empty = (element) ->
   element.removeChild child while child = element.firstChild
