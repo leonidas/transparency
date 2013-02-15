@@ -115,41 +115,41 @@ describe "Transparency performance", ->
 
     describe "with hundred todo items", ->
 
-    it "should be fast enough", ->
-        transparency = new Benchmark 'transparency',
-          setup: ->
-            template = for i in [1..@count]
-              $('<div class="template"><div class="todo"></div></div>')[0]
-            index    = 0
-            data     = for i in [1..@count]
-              for j in [1..100]
-                {todo: Math.random()}
-            return
+      it "should be fast enough", ->
+          transparency = new Benchmark 'transparency',
+            setup: ->
+              template = for i in [1..@count]
+                $('<div class="template"><div class="todo"></div></div>')[0]
+              index    = 0
+              data     = for i in [1..@count]
+                for j in [1..100]
+                  {todo: Math.random()}
+              return
 
-          fn: ->
-            Transparency.render template[index], data[index++]
-            return
+            fn: ->
+              Transparency.render template[index], data[index++]
+              return
 
-        handlebars = new Benchmark 'handlebars',
-          setup: ->
-            parser   = for i in [1..@count]
-              $('<div></div>')[0]
-            template = for i in [1..@count]
-              Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>')
-            index    = 0
-            data     = for i in [1..@count]
-              for j in [1..100]
-                {todo: Math.random()}
-            return
+          handlebars = new Benchmark 'handlebars',
+            setup: ->
+              parser   = for i in [1..@count]
+                $('<div></div>')[0]
+              template = for i in [1..@count]
+                Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>')
+              index    = 0
+              data     = for i in [1..@count]
+                for j in [1..100]
+                  {todo: Math.random()}
+              return
 
-          fn: ->
-            parser[index].innerHTML = template[index] data[index++]
-            return
+            fn: ->
+              parser[index].innerHTML = template[index] data[index++]
+              return
 
-        new Benchmark.Suite()
-          .add(transparency)
-          .add(handlebars)
+          new Benchmark.Suite()
+            .add(transparency)
+            .add(handlebars)
 
-          .on('complete', ->
-            expect(this[0]).toBeFastEnough(this[1]))
-          .run()
+            .on('complete', ->
+              expect(this[0]).toBeFastEnough(this[1]))
+            .run()
