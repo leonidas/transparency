@@ -34,45 +34,20 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   # First, check if we are in debug mode and if so, log the arguments.
   log = if options.debug and console then consoleLogger else nullLogger
   log "Transparency.render:", context, models, directives, options
-  return unless context
 
-  # `models` may be a list of objects, or a single object.
-  # It's easier to iterate if it is guaranteed to be a list :)
+  return unless context
   models = [models] unless isArray models
 
-  # Rendering is a lot faster when the `context` is detached from the DOM, as
-  # reflow calculations are not triggered. However, we need to save reference
-  # to `parent` and `nextSibling` in order to attach the `context` back once we're done.
+  # Context element, state and functionality is wrapped to `Context` object. Get it, or create a new
+  # if it doesn't exist yet.
   context = data(context).context ||= new Context(context)
-  context.detach()
-  context.render models, directives, options
 
-  # Next, we need to make sure there's a right amount of template instances available.
-  # For example, if our `models` is a list of three todo items and the `context` is
-  #
-  #     <ul "id=todos">
-  #       <li class="todo"></li>
-  #     </ul>
-  #
-  # two template `instances` needs to be appended to the `context` before rendering.
-  #
-  #     <ul "id=todos">
-  #       <li class="todo"></li>
-  #       <li class="todo"></li>
-  #       <li class="todo"></li>
-  #     </ul>
-
-  # `prepareContext` stores the state of the `context` to a data object.
-  # From the data object, the list of template `instances` is needed for rendering.
-
-  # Now, having a list of `models` and a list of template `instances`,
-  # we are ready to render each `model` to the corresponding template `instance`.
-
-
-  # Finally, put `context` back to its original place in the DOM
-  # and return it in order to support chaining.
-  context.attach()
-  context.el
+  # Rendering is a lot faster when the context element is detached from the DOM, as
+  # reflow calculations are not triggered. So, detach it before rendering.
+  context
+    .detach()
+    .render(models, directives, options)
+    .attach()
 
 # ### Configuration
 
@@ -109,6 +84,8 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
+# **Context** stores the original `template` elements and is responsible for creating,
+# adding and removing template `instances` to match the amount of `models`.
 class Context
   constructor: (@el) ->
     @template      = cloneNode @el
@@ -120,53 +97,51 @@ class Context
     if @parent
       @nextSibling = @el.nextSibling
       @parent.removeChild @el
+    this
 
   attach: ->
     if @parent
       if @nextSibling
       then @parent.insertBefore @el, @nextSibling
       else @parent.appendChild @el
+    this
 
+  # `render` takes care of matching the amount of template `instances` to the amount of `models` and
+  # telling each template `instance` to render the corresponsing `model`.
   render: (models, directives, options) ->
+
+    # Cloning DOM elements is expensive, so save references unused template `instances` reuse
+    # them later.
     while models.length < @instances.length
       @instanceCache.push @instances.pop().remove()
 
     for model, index in models
-      instance = @instances[index] || @instanceCache.pop() || new Instance(@el, cloneNode @template)
-      @instances.push instance if index >= @instances.length
+      unless instance = @instances[index]
+        instance = @instanceCache.pop() || new Instance(cloneNode @template)
+        @instances.push instance.appendTo(@el)
+
       instance
         .reset()
         .render(model, index, directives, options)
-        .appendToContext()
+    this
 
-# For each model we are about to render, there needs to be a template `instance`.
-# Instance object keeps track of DOM nodes, elements and has a local query selector
-# cache.
+# Template **Instance** is created for each model we are about to render.
+# `instance` object keeps track of template DOM nodes and elements. It also has a local query cache.
 class Instance
-  constructor: (@context, @template) ->
+  constructor: (template) ->
     @queryCache = {}
-    @childNodes = getChildNodes @template
-    @elements   = getElements   @template
+    @childNodes = getChildNodes template
+    @elements   = getElements   template
 
   remove: ->
     for node in @childNodes
-      @context.removeChild node
+      node.parentNode.removeChild node
     this
 
-  appendToContext: ->
+  appendTo: (parent) ->
     for node in @childNodes
-      @context.appendChild node
+      parent.appendChild node
     this
-
-  assoc: (@model) ->
-    for el in @elements
-      data(el).model = @model
-    this
-
-  matchingElements: (key) ->
-    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e, key)
-    log "Matching elements for '#{key}':", elements
-    elements
 
   reset: ->
     for el in @elements
@@ -177,17 +152,8 @@ class Instance
   render: (model, index, directives, options) ->
     children = []
 
-    # First, let's think about writing event handlers.
-    # For example, it would be convenient to have an access to the associated `model`
-    # when the user clicks a todo element. No need to set `data-id` attributes or other
-    # identifiers manually \o/
-    #
-    #     $('#todos').on('click', '.todo', function(e) {
-    #       console.log(e.target.transparency.model);
-    #     });
-    #
-    for el in @elements
-      data(el).model = model
+    @assoc model
+    #renderValues model
 
     # Next, take care of default rendering, which covers the most common use cases like
     # setting text content, form values and DOM elements (.e.g., Backbone Views).
@@ -264,66 +230,87 @@ class Instance
         else if typeof value == 'object'
           children.push key
 
-    # With `directives`, user can give explicit rules for rendering and set
-    # attributes, which would be potentially unsafe by default (e.g., unescaped HTML content or `src` attribute).
-    # Given a template
-    #
-    #     <div class="template">
-    #       <div class="escaped"></div>
-    #       <div class="unescaped"></div>
-    #       <img class="trusted" src="#" />
-    #     </div>
-    #
-    # and a model and directives
-    #
-    #     model = {
-    #       content: "<script>alert('Injected')</script>"
-    #       url: "http://trusted.com/funny.gif"
-    #     };
-    #
-    #     directives = {
-    #       escaped: { text: { function() { return this.content } } },
-    #       unescaped: { html: { function() { return this.content } } },
-    #       trusted: { url: { function() { return this.url } } }
-    #     }
-    #
-    #     $('#template').render(model, directives);
-    #
-    # should give the result
-    #
-    #     <div class="template">
-    #       <div class="escaped">&lt;script&gt;alert('Injected')&lt;/script&gt;</div>
-    #       <div class="unescaped"><script>alert('Injected')</script></div>
-    #       <img class="trusted" src="http://trusted.com/funny.gif" />
-    #     </div>
-    #
-    # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
-    renderDirectives this, model, index, directives
+    @renderDirectives model, index, directives
+    @renderChildren   model, children, directives, options
 
-    # As we are done with the plain values and directives, it's time to render the nested models.
-    # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
-    # does the trick and renders the nested models.
+    this
+
+  # First, let's think about writing event handlers.
+  # For example, it would be convenient to have an access to the associated `model`
+  # when the user clicks a todo element. No need to set `data-id` attributes or other
+  # identifiers manually \o/
+  #
+  #     $('#todos').on('click', '.todo', function(e) {
+  #       console.log(e.target.transparency.model);
+  #     });
+  #
+  assoc: (model) ->
+    for el in @elements
+      data(el).model = model
+
+  renderValues: ->
+
+  # With `directives`, user can give explicit rules for rendering and set
+  # attributes, which would be potentially unsafe by default (e.g., unescaped HTML content or `src` attribute).
+  # Given a template
+  #
+  #     <div class="template">
+  #       <div class="escaped"></div>
+  #       <div class="unescaped"></div>
+  #       <img class="trusted" src="#" />
+  #     </div>
+  #
+  # and a model and directives
+  #
+  #     model = {
+  #       content: "<script>alert('Injected')</script>"
+  #       url: "http://trusted.com/funny.gif"
+  #     };
+  #
+  #     directives = {
+  #       escaped: { text: { function() { return this.content } } },
+  #       unescaped: { html: { function() { return this.content } } },
+  #       trusted: { url: { function() { return this.url } } }
+  #     }
+  #
+  #     $('#template').render(model, directives);
+  #
+  # should give the result
+  #
+  #     <div class="template">
+  #       <div class="escaped">&lt;script&gt;alert('Injected')&lt;/script&gt;</div>
+  #       <div class="unescaped"><script>alert('Injected')</script></div>
+  #       <img class="trusted" src="http://trusted.com/funny.gif" />
+  #     </div>
+  #
+  # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
+  renderDirectives: (model, index, directives) ->
+    return unless directives
+    model = if typeof model == 'object' then model else value: model
+
+    for own key, attributes of directives when typeof attributes == 'object'
+      for element in @matchingElements key
+        for attribute, directive of attributes when typeof directive == 'function'
+
+          value = directive.call model,
+            element: element
+            index:   index
+            value:   attr element, attribute
+
+          attr element, attribute, value
+
+  # As we are done with the plain values and directives, it's time to render the nested models.
+  # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
+  # does the trick and renders the nested models.
+  renderChildren: (model, children, directives, options) ->
     for key in children
       for element in @matchingElements key
         Transparency.render element, model[key], directives[key], options
 
-    this
-
-
-renderDirectives = (instance, model, index, directives) ->
-  return unless directives
-  model = if typeof model == 'object' then model else value: model
-
-  for own key, attributes of directives when typeof attributes == 'object'
-    for element in instance.matchingElements key
-      for attribute, directive of attributes when typeof directive == 'function'
-
-        value = directive.call model,
-          element: element
-          index:   index
-          value:   attr element, attribute
-
-        attr element, attribute, value
+  matchingElements: (key) ->
+    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e, key)
+    log "Matching elements for '#{key}':", elements
+    elements
 
 getChildNodes = (el) ->
   childNodes = []
