@@ -1,5 +1,5 @@
 (function() {
-  var Context, ELEMENT_NODE, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, getElementsAndChildNodes, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, nullLogger, renderDirectives, setHtml, setSelected, setText, toString, _ref,
+  var Context, ELEMENT_NODE, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, getChildNodes, getElements, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, nullLogger, renderDirectives, setHtml, setSelected, setText, toString, _getElements, _ref,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
@@ -96,10 +96,10 @@
       this.template = cloneNode(this.el);
       this.instances = [new Instance(this.el, this.el)];
       this.instanceCache = [];
-      this.parent = this.el.parentNode;
     }
 
     Context.prototype.detach = function() {
+      this.parent = this.el.parentNode;
       if (this.parent) {
         this.nextSibling = this.el.nextSibling;
         return this.parent.removeChild(this.el);
@@ -144,9 +144,8 @@
       this.context = context;
       this.template = template;
       this.queryCache = {};
-      this.elements = [];
-      this.childNodes = [];
-      getElementsAndChildNodes(this.template, this.elements, this.childNodes);
+      this.childNodes = getChildNodes(this.template);
+      this.elements = getElements(this.template);
     }
 
     Instance.prototype.remove = function() {
@@ -216,18 +215,33 @@
 
   })();
 
-  getElementsAndChildNodes = function(template, elements, childNodes) {
+  getChildNodes = function(el) {
+    var child, childNodes;
+    childNodes = [];
+    child = el.firstChild;
+    while (child) {
+      childNodes.push(child);
+      child = child.nextSibling;
+    }
+    return childNodes;
+  };
+
+  getElements = function(el) {
+    var elements;
+    elements = [];
+    _getElements(el, elements);
+    return elements;
+  };
+
+  _getElements = function(template, elements) {
     var child, _base, _results;
     child = template.firstChild;
     _results = [];
     while (child) {
-      if (childNodes != null) {
-        childNodes.push(child);
-      }
       if (child.nodeType === ELEMENT_NODE) {
         (_base = data(child)).originalAttributes || (_base.originalAttributes = {});
         elements.push(child);
-        getElementsAndChildNodes(child, elements);
+        _getElements(child, elements);
       }
       _results.push(child = child.nextSibling);
     }
@@ -345,7 +359,7 @@
     var child, childElements, _i, _len, _results;
     value = value.toString();
     childElements = [];
-    getElementsAndChildNodes(element, childElements);
+    childElements = getElements(element);
     _results = [];
     for (_i = 0, _len = childElements.length; _i < _len; _i++) {
       child = childElements[_i];

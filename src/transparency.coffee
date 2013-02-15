@@ -246,9 +246,9 @@ class Context
     @template      = cloneNode @el
     @instances     = [new Instance(@el, @el)]
     @instanceCache = []
-    @parent        = @el.parentNode
 
   detach: ->
+    @parent = @el.parentNode
     if @parent
       @nextSibling = @el.nextSibling
       @parent.removeChild @el
@@ -279,9 +279,8 @@ class Context
 class Instance
   constructor: (@context, @template) ->
     @queryCache = {}
-    @elements   = []
-    @childNodes = []
-    getElementsAndChildNodes @template, @elements, @childNodes
+    @childNodes = getChildNodes @template
+    @elements   = getElements   @template
 
   remove: ->
     for node in @childNodes
@@ -309,16 +308,26 @@ class Instance
         attr el, attribute, value
     this
 
+getChildNodes = (el) ->
+  childNodes = []
+  child = el.firstChild
+  while child
+    childNodes.push child
+    child = child.nextSibling
+  childNodes
 
-getElementsAndChildNodes = (template, elements, childNodes) ->
+getElements  = (el) ->
+  elements = []
+  _getElements el, elements
+  elements
+
+_getElements = (template, elements) ->
   child = template.firstChild
   while child
-    childNodes?.push child
-
     if child.nodeType == ELEMENT_NODE
       data(child).originalAttributes ||= {}
       elements.push child
-      getElementsAndChildNodes child, elements
+      _getElements child, elements
 
     child = child.nextSibling
 
@@ -370,7 +379,7 @@ getText = (element) ->
 setSelected = (element, value) ->
   value = value.toString()
   childElements = []
-  getElementsAndChildNodes element, childElements
+  childElements = getElements element
   for child in childElements
     if child.nodeName.toLowerCase() == 'option'
       if child.value == value
