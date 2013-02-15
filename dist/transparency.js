@@ -6,7 +6,7 @@
   Transparency = this.Transparency = {};
 
   Transparency.render = function(context, models, directives, options) {
-    var children, element, index, instance, key, log, model, nodeName, value, _base, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1;
+    var log, _base;
     if (models == null) {
       models = [];
     }
@@ -26,47 +26,7 @@
     }
     context = (_base = data(context)).context || (_base.context = new Context(context));
     context.detach();
-    context.prepare(models);
-    for (index = _i = 0, _len = models.length; _i < _len; index = ++_i) {
-      model = models[index];
-      children = [];
-      instance = context.instances[index];
-      if (isDomElement(model) && (element = instance.elements[0])) {
-        empty(element).appendChild(model);
-      } else if (typeof model === 'object') {
-        for (key in model) {
-          if (!__hasProp.call(model, key)) continue;
-          value = model[key];
-          if (value != null) {
-            if (isPlainValue(value)) {
-              _ref = instance.matchingElements(key);
-              for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-                element = _ref[_j];
-                nodeName = element.nodeName.toLowerCase();
-                if (nodeName === 'input') {
-                  attr(element, 'value', value);
-                } else if (nodeName === 'select') {
-                  attr(element, 'selected', value);
-                } else {
-                  attr(element, 'text', value);
-                }
-              }
-            } else if (typeof value === 'object') {
-              children.push(key);
-            }
-          }
-        }
-      }
-      renderDirectives(instance, model, index, directives);
-      for (_k = 0, _len2 = children.length; _k < _len2; _k++) {
-        key = children[_k];
-        _ref1 = instance.matchingElements(key);
-        for (_l = 0, _len3 = _ref1.length; _l < _len3; _l++) {
-          element = _ref1[_l];
-          Transparency.render(element, model[key], directives[key], options);
-        }
-      }
-    }
+    context.render(models, directives, options);
     context.attach();
     return context.el;
   };
@@ -116,20 +76,19 @@
       }
     };
 
-    Context.prototype.prepare = function(models) {
-      var i, instance, _i, _len, _ref, _results;
-      while (models.length > this.instances.length) {
-        instance = this.instanceCache.pop() || new Instance(this.el, cloneNode(this.template));
-        this.instances.push(instance.appendToContext());
-      }
+    Context.prototype.render = function(models, directives, options) {
+      var index, instance, model, _i, _len, _results;
       while (models.length < this.instances.length) {
         this.instanceCache.push(this.instances.pop().remove());
       }
-      _ref = this.instances;
       _results = [];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        instance = _ref[i];
-        _results.push(instance.reset().assoc(models[i]));
+      for (index = _i = 0, _len = models.length; _i < _len; index = ++_i) {
+        model = models[index];
+        instance = this.instances[index] || this.instanceCache.pop() || new Instance(this.el, cloneNode(this.template));
+        if (index >= this.instances.length) {
+          this.instances.push(instance);
+        }
+        _results.push(instance.reset().render(model, index, directives, options).appendToContext());
       }
       return _results;
     };
@@ -211,42 +170,55 @@
       return this;
     };
 
+    Instance.prototype.render = function(model, index, directives, options) {
+      var children, el, element, key, nodeName, value, _i, _j, _k, _l, _len, _len1, _len2, _len3, _ref, _ref1, _ref2;
+      children = [];
+      _ref = this.elements;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        el = _ref[_i];
+        data(el).model = model;
+      }
+      if (isDomElement(model) && (element = this.elements[0])) {
+        empty(element).appendChild(model);
+      } else if (typeof model === 'object') {
+        for (key in model) {
+          if (!__hasProp.call(model, key)) continue;
+          value = model[key];
+          if (value != null) {
+            if (isPlainValue(value)) {
+              _ref1 = this.matchingElements(key);
+              for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+                element = _ref1[_j];
+                nodeName = element.nodeName.toLowerCase();
+                if (nodeName === 'input') {
+                  attr(element, 'value', value);
+                } else if (nodeName === 'select') {
+                  attr(element, 'selected', value);
+                } else {
+                  attr(element, 'text', value);
+                }
+              }
+            } else if (typeof value === 'object') {
+              children.push(key);
+            }
+          }
+        }
+      }
+      renderDirectives(this, model, index, directives);
+      for (_k = 0, _len2 = children.length; _k < _len2; _k++) {
+        key = children[_k];
+        _ref2 = this.matchingElements(key);
+        for (_l = 0, _len3 = _ref2.length; _l < _len3; _l++) {
+          element = _ref2[_l];
+          Transparency.render(element, model[key], directives[key], options);
+        }
+      }
+      return this;
+    };
+
     return Instance;
 
   })();
-
-  getChildNodes = function(el) {
-    var child, childNodes;
-    childNodes = [];
-    child = el.firstChild;
-    while (child) {
-      childNodes.push(child);
-      child = child.nextSibling;
-    }
-    return childNodes;
-  };
-
-  getElements = function(el) {
-    var elements;
-    elements = [];
-    _getElements(el, elements);
-    return elements;
-  };
-
-  _getElements = function(template, elements) {
-    var child, _base, _results;
-    child = template.firstChild;
-    _results = [];
-    while (child) {
-      if (child.nodeType === ELEMENT_NODE) {
-        (_base = data(child)).originalAttributes || (_base.originalAttributes = {});
-        elements.push(child);
-        _getElements(child, elements);
-      }
-      _results.push(child = child.nextSibling);
-    }
-    return _results;
-  };
 
   renderDirectives = function(instance, model, index, directives) {
     var attribute, attributes, directive, element, key, value, _results;
@@ -288,6 +260,39 @@
           return _results1;
         })());
       }
+    }
+    return _results;
+  };
+
+  getChildNodes = function(el) {
+    var child, childNodes;
+    childNodes = [];
+    child = el.firstChild;
+    while (child) {
+      childNodes.push(child);
+      child = child.nextSibling;
+    }
+    return childNodes;
+  };
+
+  getElements = function(el) {
+    var elements;
+    elements = [];
+    _getElements(el, elements);
+    return elements;
+  };
+
+  _getElements = function(template, elements) {
+    var child, _base, _results;
+    child = template.firstChild;
+    _results = [];
+    while (child) {
+      if (child.nodeType === ELEMENT_NODE) {
+        (_base = data(child)).originalAttributes || (_base.originalAttributes = {});
+        elements.push(child);
+        _getElements(child, elements);
+      }
+      _results.push(child = child.nextSibling);
     }
     return _results;
   };

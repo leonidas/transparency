@@ -45,6 +45,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   # to `parent` and `nextSibling` in order to attach the `context` back once we're done.
   context = data(context).context ||= new Context(context)
   context.detach()
+  context.render models, directives, options
 
   # Next, we need to make sure there's a right amount of template instances available.
   # For example, if our `models` is a list of three todo items and the `context` is
@@ -60,16 +61,121 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   #       <li class="todo"></li>
   #       <li class="todo"></li>
   #     </ul>
-  context.prepare models
 
   # `prepareContext` stores the state of the `context` to a data object.
   # From the data object, the list of template `instances` is needed for rendering.
 
   # Now, having a list of `models` and a list of template `instances`,
   # we are ready to render each `model` to the corresponding template `instance`.
-  for model, index in models
+
+
+  # Finally, put `context` back to its original place in the DOM
+  # and return it in order to support chaining.
+  context.attach()
+  context.el
+
+# ### Configuration
+
+# In order to use Transparency as a jQuery plugin, add Transparency.jQueryPlugin to jQuery.fn object.
+#
+#     $.fn.render = Transparency.jQueryPlugin;
+#
+#     // Render with jQuery
+#     $('#template').render({hello: 'World'});
+Transparency.jQueryPlugin = (models, directives, options) ->
+  for context in this
+    Transparency.render context, models, directives, options
+  this
+
+# By default, Transparency matches model properties to elements by `id`, `class`, `name` and `data-bind` attributes.
+# Override `Transparency.matcher` to change the default behavior.
+#
+#     // Match only by `data-bind` attribute
+#     Transparency.matcher = function (element, key) {
+#       element.getAttribute('data-bind') == key;
+#     };
+Transparency.matcher = (element, key) ->
+  element.id                        == key        ||
+  indexOf(element.className.split(' '), key) > -1 ||
+  element.name                      == key        ||
+  element.getAttribute('data-bind') == key
+
+# IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
+# Override `Transparency.clone` with a custom clone function, if oldIE needs to be
+# supported without jQuery.
+#
+#     Transparency.clone = myCloneFunction;
+Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
+
+# ## Internals
+
+class Context
+  constructor: (@el) ->
+    @template      = cloneNode @el
+    @instances     = [new Instance(@el, @el)]
+    @instanceCache = []
+
+  detach: ->
+    @parent = @el.parentNode
+    if @parent
+      @nextSibling = @el.nextSibling
+      @parent.removeChild @el
+
+  attach: ->
+    if @parent
+      if @nextSibling
+      then @parent.insertBefore @el, @nextSibling
+      else @parent.appendChild @el
+
+  render: (models, directives, options) ->
+    while models.length < @instances.length
+      @instanceCache.push @instances.pop().remove()
+
+    for model, index in models
+      instance = @instances[index] || @instanceCache.pop() || new Instance(@el, cloneNode @template)
+      @instances.push instance if index >= @instances.length
+      instance
+        .reset()
+        .render(model, index, directives, options)
+        .appendToContext()
+
+# For each model we are about to render, there needs to be a template `instance`.
+# Instance object keeps track of DOM nodes, elements and has a local query selector
+# cache.
+class Instance
+  constructor: (@context, @template) ->
+    @queryCache = {}
+    @childNodes = getChildNodes @template
+    @elements   = getElements   @template
+
+  remove: ->
+    for node in @childNodes
+      @context.removeChild node
+    this
+
+  appendToContext: ->
+    for node in @childNodes
+      @context.appendChild node
+    this
+
+  assoc: (@model) ->
+    for el in @elements
+      data(el).model = @model
+    this
+
+  matchingElements: (key) ->
+    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e, key)
+    log "Matching elements for '#{key}':", elements
+    elements
+
+  reset: ->
+    for el in @elements
+      for attribute, value of data(el).originalAttributes
+        attr el, attribute, value
+    this
+
+  render: (model, index, directives, options) ->
     children = []
-    instance = context.instances[index]
 
     # First, let's think about writing event handlers.
     # For example, it would be convenient to have an access to the associated `model`
@@ -80,13 +186,14 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     #       console.log(e.target.transparency.model);
     #     });
     #
-
+    for el in @elements
+      data(el).model = model
 
     # Next, take care of default rendering, which covers the most common use cases like
     # setting text content, form values and DOM elements (.e.g., Backbone Views).
     # Rendering as a text content is a safe default, as it is HTML escaped
     # by the browsers.
-    if isDomElement(model) and element = instance.elements[0]
+    if isDomElement(model) and element = @elements[0]
       empty(element).appendChild model
 
     else if typeof model == 'object'
@@ -95,7 +202,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
         # The value can be either a nested model or a plain value, i.e., `Date`, `string`, `boolean` or `double`.
         # Start by handling the plain values and finding the matching elements.
         if isPlainValue value
-          for element in instance.matchingElements key
+          for element in @matchingElements key
 
             # Element type also affects on rendering. Given a model
             #
@@ -191,122 +298,32 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     #     </div>
     #
     # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
-    renderDirectives instance, model, index, directives
+    renderDirectives this, model, index, directives
 
     # As we are done with the plain values and directives, it's time to render the nested models.
     # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
     # does the trick and renders the nested models.
     for key in children
-      for element in instance.matchingElements key
+      for element in @matchingElements key
         Transparency.render element, model[key], directives[key], options
 
-  # Finally, put `context` back to its original place in the DOM
-  # and return it in order to support chaining.
-  context.attach()
-
-  context.el
-
-# ### Configuration
-
-# In order to use Transparency as a jQuery plugin, add Transparency.jQueryPlugin to jQuery.fn object.
-#
-#     $.fn.render = Transparency.jQueryPlugin;
-#
-#     // Render with jQuery
-#     $('#template').render({hello: 'World'});
-Transparency.jQueryPlugin = (models, directives, options) ->
-  for context in this
-    Transparency.render context, models, directives, options
-  this
-
-# By default, Transparency matches model properties to elements by `id`, `class`, `name` and `data-bind` attributes.
-# Override `Transparency.matcher` to change the default behavior.
-#
-#     // Match only by `data-bind` attribute
-#     Transparency.matcher = function (element, key) {
-#       element.getAttribute('data-bind') == key;
-#     };
-Transparency.matcher = (element, key) ->
-  element.id                        == key        ||
-  indexOf(element.className.split(' '), key) > -1 ||
-  element.name                      == key        ||
-  element.getAttribute('data-bind') == key
-
-# IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
-# Override `Transparency.clone` with a custom clone function, if oldIE needs to be
-# supported without jQuery.
-#
-#     Transparency.clone = myCloneFunction;
-Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
-
-# ## Internals
-
-class Context
-  constructor: (@el) ->
-    @template      = cloneNode @el
-    @instances     = [new Instance(@el, @el)]
-    @instanceCache = []
-
-  detach: ->
-    @parent = @el.parentNode
-    if @parent
-      @nextSibling = @el.nextSibling
-      @parent.removeChild @el
-
-  attach: ->
-    if @parent
-      if @nextSibling
-      then @parent.insertBefore @el, @nextSibling
-      else @parent.appendChild @el
-
-  prepare: (models) ->
-    # Get templates from the cache or clone new ones, if the cache is empty.
-    while models.length > @instances.length
-      instance = @instanceCache.pop() || new Instance(@el, cloneNode @template)
-      @instances.push instance.appendToContext()
-
-    # Remove leftover templates from DOM and save them to the cache for later use.
-    while models.length < @instances.length
-      @instanceCache.push @instances.pop().remove()
-
-    # Reset each template instance before reuse and assoc the corresponding model to it
-    for instance, i in @instances
-      instance.reset().assoc(models[i])
-
-# For each model we are about to render, there needs to be a template `instance`.
-# Instance object keeps track of DOM nodes, elements and has a local query selector
-# cache.
-class Instance
-  constructor: (@context, @template) ->
-    @queryCache = {}
-    @childNodes = getChildNodes @template
-    @elements   = getElements   @template
-
-  remove: ->
-    for node in @childNodes
-      @context.removeChild node
     this
 
-  appendToContext: ->
-    for node in @childNodes
-      @context.appendChild node
-    this
 
-  assoc: (@model) ->
-    for el in @elements
-      data(el).model = @model
-    this
+renderDirectives = (instance, model, index, directives) ->
+  return unless directives
+  model = if typeof model == 'object' then model else value: model
 
-  matchingElements: (key) ->
-    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e, key)
-    log "Matching elements for '#{key}':", elements
-    elements
+  for own key, attributes of directives when typeof attributes == 'object'
+    for element in instance.matchingElements key
+      for attribute, directive of attributes when typeof directive == 'function'
 
-  reset: ->
-    for el in @elements
-      for attribute, value of data(el).originalAttributes
-        attr el, attribute, value
-    this
+        value = directive.call model,
+          element: element
+          index:   index
+          value:   attr element, attribute
+
+        attr element, attribute, value
 
 getChildNodes = (el) ->
   childNodes = []
@@ -330,21 +347,6 @@ _getElements = (template, elements) ->
       _getElements child, elements
 
     child = child.nextSibling
-
-renderDirectives = (instance, model, index, directives) ->
-  return unless directives
-  model = if typeof model == 'object' then model else value: model
-
-  for own key, attributes of directives when typeof attributes == 'object'
-    for element in instance.matchingElements key
-      for attribute, directive of attributes when typeof directive == 'function'
-
-        value = directive.call model,
-          element: element
-          index:   index
-          value:   attr element, attribute
-
-        attr element, attribute, value
 
 setHtml = (element, html) ->
   elementData = data element
