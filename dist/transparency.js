@@ -86,7 +86,7 @@
           instance = this.instanceCache.pop() || new Instance(cloneNode(this.template));
           this.instances.push(instance.appendTo(this.el));
         }
-        instance.reset().render(model, index, directives, options);
+        instance.render(model, index, directives, options);
       }
       return this;
     };
@@ -123,31 +123,18 @@
       return this;
     };
 
-    Instance.prototype.reset = function() {
-      var attribute, el, value, _i, _len, _ref, _ref1;
-      _ref = this.elements;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        el = _ref[_i];
-        _ref1 = data(el).originalAttributes;
-        for (attribute in _ref1) {
-          value = _ref1[attribute];
-          attr(el, attribute, value);
-        }
-      }
-      return this;
-    };
-
     Instance.prototype.render = function(model, index, directives, options) {
       var children;
       children = [];
-      return this.assoc(model).renderValues(model, children).renderDirectives(model, index, directives).renderChildren(model, children, directives, options);
+      return this.reset(model).renderValues(model, children).renderDirectives(model, index, directives).renderChildren(model, children, directives, options);
     };
 
-    Instance.prototype.assoc = function(model) {
+    Instance.prototype.reset = function(model) {
       var element, _i, _len, _ref;
       _ref = this.elements;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         element = _ref[_i];
+        element.reset();
         data(element.el).model = model;
       }
       return this;
@@ -299,6 +286,17 @@
         this.el.removeChild(child);
       }
       return this;
+    };
+
+    Element.prototype.reset = function() {
+      var attribute, value, _ref, _results;
+      _ref = this.originalAttributes;
+      _results = [];
+      for (attribute in _ref) {
+        value = _ref[attribute];
+        _results.push(this.attr(attribute, value));
+      }
+      return _results;
     };
 
     Element.prototype.setHtml = function(html) {

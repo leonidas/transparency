@@ -106,12 +106,9 @@ class Context
       else @parent.appendChild @el
     this
 
-  # `render` takes care of matching the amount of template `instances` to the amount of `models` and
-  # telling each template `instance` to render the corresponsing `model`.
   render: (models, directives, options) ->
 
-    # Cloning DOM elements is expensive, so save references unused template `instances` reuse
-    # them later.
+    # Cloning DOM elements is expensive, so save unused template `instances` and reuse them later.
     while models.length < @instances.length
       @instanceCache.push @instances.pop().remove()
 
@@ -120,13 +117,12 @@ class Context
         instance = @instanceCache.pop() || new Instance(cloneNode @template)
         @instances.push instance.appendTo(@el)
 
-      instance
-        .reset()
-        .render(model, index, directives, options)
+      instance.render(model, index, directives, options)
     this
 
 # Template **Instance** is created for each model we are about to render.
-# `instance` object keeps track of template DOM nodes and elements. It also has a local query cache.
+# `instance` object keeps track of template DOM nodes and elements.
+# It memoizes the matching elements to `queryCache` in order to speed up the rendering.
 class Instance
   constructor: (template) ->
     @queryCache = {}
@@ -143,40 +139,35 @@ class Instance
       parent.appendChild node
     this
 
-  reset: ->
-    for el in @elements
-      for attribute, value of data(el).originalAttributes
-        attr el, attribute, value
-    this
-
   render: (model, index, directives, options) ->
     children = []
 
-    @assoc(model)
+    @reset(model)
       .renderValues(model, children)
       .renderDirectives(model, index, directives)
       .renderChildren(model, children, directives, options)
 
-
-  # First, let's think about writing event handlers.
-  # For example, it would be convenient to have an access to the associated `model`
-  # when the user clicks a todo element. No need to set `data-id` attributes or other
-  # identifiers manually \o/
-  #
-  #     $('#todos').on('click', '.todo', function(e) {
-  #       console.log(e.target.transparency.model);
-  #     });
-  #
-  assoc: (model) ->
+  reset: (model) ->
     for element in @elements
+      element.reset()
+
+      # A bit of offtopic, but let's think about writing event handlers.
+      # It would be convenient to have an access to the associated `model`
+      # when the user clicks a todo element without setting `data-id` attributes or other
+      # identifiers manually. So be it.
+      #
+      #     $('#todos').on('click', '.todo', function(e) {
+      #       console.log(e.target.transparency.model);
+      #     });
+      #
       data(element.el).model = model
     this
 
+  # Rendering values takes care of the most common use cases like
+  # rendering text content, form values and DOM elements (.e.g., Backbone Views).
+  # Rendering as a text content is a safe default, as it is HTML escaped
+  # by the browsers.
   renderValues: (model, children) ->
-    # Next, take care of default rendering, which covers the most common use cases like
-    # setting text content, form values and DOM elements (.e.g., Backbone Views).
-    # Rendering as a text content is a safe default, as it is HTML escaped
-    # by the browsers.
     if isDomElement(model) and element = @elements[0]
       element.empty().el.appendChild model
 
@@ -300,9 +291,6 @@ class Instance
           element.attr attribute, value
     this
 
-  # As we are done with the plain values and directives, it's time to render the nested models.
-  # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
-  # does the trick and renders the nested models.
   renderChildren: (model, children, directives, options) ->
     for key in children
       for element in @matchingElements key
@@ -345,6 +333,10 @@ class Element
   empty: ->
     @el.removeChild child while child = @el.firstChild
     this
+
+  reset: ->
+    for attribute, value of @originalAttributes
+      @attr attribute, value
 
   setHtml: (html) ->
     @empty()
