@@ -86,13 +86,12 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # Chainable method decorator (example in node.js console).
 #
-#    > o       = {}
-#    > o.hello = "Hello"
-#    > o.foo   = chainable(function(){console.log(this.hello + " World")});
-#    > o.foo().hello
-#    Hello World
-#    "Hello"
-#    >
+#     > o = {}
+#     > o.hello = "Hello"
+#     > o.foo = chainable(function(){console.log(this.hello + " World")});
+#     > o.foo().hello
+#     Hello World
+#     "Hello"
 #
 chainable = (method) -> -> method.apply(this, arguments); this
 
