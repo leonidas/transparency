@@ -5,7 +5,7 @@ describe "Transparency performance", ->
     describe "with one todo item", ->
 
       it "should be fast enough", ->
-        transparency = new Benchmark 'transparency',
+        transparency = new Benchmark 'transparency - cached tempate, one todo',
           setup: ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
             index    = 0
@@ -16,7 +16,7 @@ describe "Transparency performance", ->
             Transparency.render template, data[index++]
             return
 
-        handlebars = new Benchmark 'handlebars',
+        handlebars = new Benchmark 'handlebars - compiled and cached template, one todo',
           setup: ->
             parser   = $('<div></div>')[0]
             template = Handlebars.compile('<div class="template"><div class="todo">{{todo}}</div></div>')
@@ -39,7 +39,7 @@ describe "Transparency performance", ->
     describe "with hundred todo items", ->
 
       it "should be fast enough", ->
-        transparency = new Benchmark 'transparency',
+        transparency = new Benchmark 'transparency - cached tempate, 100 todos',
           setup: ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
             index    = 0
@@ -52,7 +52,7 @@ describe "Transparency performance", ->
             Transparency.render template, data[index++]
             return
 
-        handlebars = new Benchmark 'handlebars',
+        handlebars = new Benchmark 'handlebars - compiled and cached template, 100 todos',
           setup: ->
             parser   = $('<div></div>')[0]
             template = Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>')
@@ -79,7 +79,7 @@ describe "Transparency performance", ->
     describe "with one todo item", ->
 
       it "should be fast enough", ->
-        transparency = new Benchmark 'transparency',
+        transparency = new Benchmark 'transparency - unused template, one todo',
           setup: ->
             template = for i in [1..@count]
               $('<div class="template"><div class="todo"></div></div>')[0]
@@ -91,7 +91,7 @@ describe "Transparency performance", ->
             Transparency.render template[index], data[index++]
             return
 
-        handlebars = new Benchmark 'handlebars',
+        handlebars = new Benchmark 'handlebars - unused and compiled template, one todo',
           setup: ->
             parser   = for i in [1..@count]
               $('<div></div>')[0]
@@ -116,7 +116,7 @@ describe "Transparency performance", ->
     describe "with hundred todo items", ->
 
       it "should be fast enough", ->
-          transparency = new Benchmark 'transparency',
+          transparency = new Benchmark 'transparency - unused template, 100 todos',
             setup: ->
               template = for i in [1..@count]
                 $('<div class="template"><div class="todo"></div></div>')[0]
@@ -130,7 +130,7 @@ describe "Transparency performance", ->
               Transparency.render template[index], data[index++]
               return
 
-          handlebars = new Benchmark 'handlebars',
+          handlebars = new Benchmark 'handlebars - unused and compiled template, 100 todos',
             setup: ->
               parser   = for i in [1..@count]
                 $('<div></div>')[0]
