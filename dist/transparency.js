@@ -1,5 +1,5 @@
 (function() {
-  var Context, ELEMENT_NODE, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, attr, cloneNode, consoleLogger, data, empty, expando, getChildNodes, getElements, getText, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, nullLogger, setHtml, setSelected, setText, toString, _getElements, _ref,
+  var Context, ELEMENT_NODE, Element, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, nullLogger, toString, _getElements, _ref,
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
@@ -51,7 +51,7 @@
     function Context(el) {
       this.el = el;
       this.template = cloneNode(this.el);
-      this.instances = [new Instance(this.el, this.el)];
+      this.instances = [new Instance(this.el)];
       this.instanceCache = [];
     }
 
@@ -138,11 +138,25 @@
     };
 
     Instance.prototype.render = function(model, index, directives, options) {
-      var children, element, key, nodeName, value, _i, _len, _ref;
+      var children;
       children = [];
-      this.assoc(model);
+      return this.assoc(model).renderValues(model, children).renderDirectives(model, index, directives).renderChildren(model, children, directives, options);
+    };
+
+    Instance.prototype.assoc = function(model) {
+      var element, _i, _len, _ref;
+      _ref = this.elements;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        element = _ref[_i];
+        data(element.el).model = model;
+      }
+      return this;
+    };
+
+    Instance.prototype.renderValues = function(model, children) {
+      var element, key, nodeName, value, _i, _len, _ref;
       if (isDomElement(model) && (element = this.elements[0])) {
-        empty(element).appendChild(model);
+        element.empty().el.appendChild(model);
       } else if (typeof model === 'object') {
         for (key in model) {
           if (!__hasProp.call(model, key)) continue;
@@ -154,11 +168,11 @@
                 element = _ref[_i];
                 nodeName = element.nodeName.toLowerCase();
                 if (nodeName === 'input') {
-                  attr(element, 'value', value);
+                  element.attr('value', value);
                 } else if (nodeName === 'select') {
-                  attr(element, 'selected', value);
+                  element.attr('selected', value);
                 } else {
-                  attr(element, 'text', value);
+                  element.attr('text', value);
                 }
               }
             } else if (typeof value === 'object') {
@@ -167,21 +181,8 @@
           }
         }
       }
-      return this.renderDirectives(model, index, directives).renderChildren(model, children, directives, options);
+      return this;
     };
-
-    Instance.prototype.assoc = function(model) {
-      var el, _i, _len, _ref, _results;
-      _ref = this.elements;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        el = _ref[_i];
-        _results.push(data(el).model = model);
-      }
-      return _results;
-    };
-
-    Instance.prototype.renderValues = function() {};
 
     Instance.prototype.renderDirectives = function(model, index, directives) {
       var attribute, attributes, directive, element, key, value, _i, _len, _ref;
@@ -204,11 +205,11 @@
                 continue;
               }
               value = directive.call(model, {
-                element: element,
+                element: element.el,
                 index: index,
-                value: attr(element, attribute)
+                value: element.originalAttributes[attribute]
               });
-              attr(element, attribute, value);
+              element.attr(attribute, value);
             }
           }
         }
@@ -223,7 +224,7 @@
         _ref = this.matchingElements(key);
         for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
           element = _ref[_j];
-          Transparency.render(element, model[key], directives[key], options);
+          Transparency.render(element.el, model[key], directives[key], options);
         }
       }
       return this;
@@ -237,7 +238,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           e = _ref[_i];
-          if (Transparency.matcher(e, key)) {
+          if (Transparency.matcher(e.el, key)) {
             _results.push(e);
           }
         }
@@ -270,13 +271,12 @@
   };
 
   _getElements = function(template, elements) {
-    var child, _base, _results;
+    var child, _results;
     child = template.firstChild;
     _results = [];
     while (child) {
       if (child.nodeType === ELEMENT_NODE) {
-        (_base = data(child)).originalAttributes || (_base.originalAttributes = {});
-        elements.push(child);
+        elements.push(new Element(child));
         _getElements(child, elements);
       }
       _results.push(child = child.nextSibling);
@@ -284,146 +284,135 @@
     return _results;
   };
 
-  setHtml = function(element, html) {
-    var child, elementData, n, _i, _len, _ref, _results;
-    elementData = data(element);
-    if (elementData.html === html) {
-      return;
+  Element = (function() {
+
+    function Element(el) {
+      this.el = el;
+      this.childNodes = getChildNodes(this.el);
+      this.nodeName = this.el.nodeName.toLowerCase();
+      this.originalAttributes = {};
     }
-    elementData.html = html;
-    elementData.children || (elementData.children = (function() {
-      var _i, _len, _ref, _results;
-      _ref = element.childNodes;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        n = _ref[_i];
-        if (n.nodeType === ELEMENT_NODE) {
-          _results.push(n);
-        }
+
+    Element.prototype.empty = function() {
+      var child;
+      while (child = this.el.firstChild) {
+        this.el.removeChild(child);
       }
-      return _results;
-    })());
-    empty(element);
-    element.innerHTML = html;
-    _ref = elementData.children;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      child = _ref[_i];
-      _results.push(element.appendChild(child));
-    }
-    return _results;
-  };
+      return this;
+    };
 
-  setText = function(element, text) {
-    var elementData, textNode;
-    elementData = data(element);
-    if (!(text != null) || elementData.text === text) {
-      return;
-    }
-    elementData.text = text;
-    textNode = element.firstChild;
-    if (!textNode) {
-      return element.appendChild(element.ownerDocument.createTextNode(text));
-    } else if (textNode.nodeType !== TEXT_NODE) {
-      return element.insertBefore(element.ownerDocument.createTextNode(text), textNode);
-    } else {
-      return textNode.nodeValue = text;
-    }
-  };
-
-  getText = function(element) {
-    var child;
-    return ((function() {
-      var _i, _len, _ref, _results;
-      _ref = element.childNodes;
+    Element.prototype.setHtml = function(html) {
+      var child, _i, _len, _ref, _results;
+      this.empty();
+      this.el.innerHTML = html;
+      _ref = this.childNodes;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
-        if (child.nodeType === TEXT_NODE) {
-          _results.push(child.nodeValue);
+        _results.push(this.el.appendChild(child));
+      }
+      return _results;
+    };
+
+    Element.prototype.setText = function(text) {
+      var textNode;
+      textNode = this.el.firstChild;
+      if (!textNode) {
+        return this.el.appendChild(this.el.ownerDocument.createTextNode(text));
+      } else if (textNode.nodeType !== TEXT_NODE) {
+        return this.el.insertBefore(this.el.ownerDocument.createTextNode(text), textNode);
+      } else {
+        return textNode.nodeValue = text;
+      }
+    };
+
+    Element.prototype.getText = function() {
+      var child;
+      return ((function() {
+        var _i, _len, _ref, _results;
+        _ref = this.childNodes;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          if (child.nodeType === TEXT_NODE) {
+            _results.push(child.nodeValue);
+          }
+        }
+        return _results;
+      }).call(this)).join('');
+    };
+
+    Element.prototype.setSelected = function(value) {
+      var child, childElements, _i, _len, _results;
+      value = value.toString();
+      childElements = getElements(this.el);
+      _results = [];
+      for (_i = 0, _len = childElements.length; _i < _len; _i++) {
+        child = childElements[_i];
+        if (child.el.nodeName.toLowerCase() === 'option') {
+          if (child.el.value === value) {
+            _results.push(child.el.selected = true);
+          } else {
+            _results.push(child.el.selected = false);
+          }
+        } else {
+          _results.push(void 0);
         }
       }
       return _results;
-    })()).join('');
-  };
+    };
 
-  setSelected = function(element, value) {
-    var child, childElements, _i, _len, _results;
-    value = value.toString();
-    childElements = [];
-    childElements = getElements(element);
-    _results = [];
-    for (_i = 0, _len = childElements.length; _i < _len; _i++) {
-      child = childElements[_i];
-      if (child.nodeName.toLowerCase() === 'option') {
-        if (child.value === value) {
-          _results.push(child.selected = true);
-        } else {
-          _results.push(child.selected = false);
-        }
+    Element.prototype.attr = function(attribute, value) {
+      var _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
+      if (value == null) {
+        return;
+      }
+      if (this.nodeName === 'select' && attribute === 'selected') {
+        return this.setSelected(value);
       } else {
-        _results.push(void 0);
-      }
-    }
-    return _results;
-  };
-
-  attr = function(element, attribute, value) {
-    var elementData, _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
-    elementData = data(element);
-    if (value == null) {
-      return elementData.originalAttributes[attribute];
-    }
-    if (element.nodeName.toLowerCase() === 'select' && attribute === 'selected') {
-      return setSelected(element, value);
-    } else {
-      switch (attribute) {
-        case 'text':
-          if (!isVoidElement(element)) {
-            if ((_ref = (_base = elementData.originalAttributes)['text']) == null) {
-              _base['text'] = getText(element);
+        switch (attribute) {
+          case 'text':
+            if (!isVoidElement(this.el)) {
+              if ((_ref = (_base = this.originalAttributes)['text']) == null) {
+                _base['text'] = this.getText();
+              }
+              return this.setText(value);
             }
-            return setText(element, value);
-          }
-          break;
-        case 'html':
-          if ((_ref1 = (_base1 = elementData.originalAttributes)['html']) == null) {
-            _base1['html'] = element.innerHTML;
-          }
-          return setHtml(element, value);
-        case 'class':
-          if ((_ref2 = (_base2 = elementData.originalAttributes)['class']) == null) {
-            _base2['class'] = element.className;
-          }
-          return element.className = value;
-        default:
-          element[attribute] = value;
-          if (isBoolean(value)) {
-            if ((_ref3 = (_base3 = elementData.originalAttributes)[attribute]) == null) {
-              _base3[attribute] = element.getAttribute(attribute) || false;
+            break;
+          case 'html':
+            if ((_ref1 = (_base1 = this.originalAttributes)['html']) == null) {
+              _base1['html'] = this.el.innerHTML;
             }
-            if (value) {
-              return element.setAttribute(attribute, attribute);
+            return this.setHtml(value);
+          case 'class':
+            if ((_ref2 = (_base2 = this.originalAttributes)['class']) == null) {
+              _base2['class'] = this.el.className;
+            }
+            return this.el.className = value;
+          default:
+            this.el[attribute] = value;
+            if (isBoolean(value)) {
+              if ((_ref3 = (_base3 = this.originalAttributes)[attribute]) == null) {
+                _base3[attribute] = this.el.getAttribute(attribute) || false;
+              }
+              if (value) {
+                return this.el.setAttribute(attribute, attribute);
+              } else {
+                return this.el.removeAttribute(attribute);
+              }
             } else {
-              return element.removeAttribute(attribute);
+              if ((_ref4 = (_base4 = this.originalAttributes)[attribute]) == null) {
+                _base4[attribute] = this.el.getAttribute(attribute) || "";
+              }
+              return this.el.setAttribute(attribute, value.toString());
             }
-          } else {
-            if ((_ref4 = (_base4 = elementData.originalAttributes)[attribute]) == null) {
-              _base4[attribute] = element.getAttribute(attribute) || "";
-            }
-            return element.setAttribute(attribute, value.toString());
-          }
+        }
       }
-    }
-  };
+    };
 
-  empty = function(element) {
-    var child;
-    while (child = element.firstChild) {
-      element.removeChild(child);
-    }
-    return element;
-  };
+    return Element;
+
+  })();
 
   ELEMENT_NODE = 1;
 

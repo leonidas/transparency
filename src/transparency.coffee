@@ -89,7 +89,7 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 class Context
   constructor: (@el) ->
     @template      = cloneNode @el
-    @instances     = [new Instance(@el, @el)]
+    @instances     = [new Instance(@el)]
     @instanceCache = []
 
   detach: ->
@@ -152,15 +152,33 @@ class Instance
   render: (model, index, directives, options) ->
     children = []
 
-    @assoc model
-    #renderValues model
+    @assoc(model)
+      .renderValues(model, children)
+      .renderDirectives(model, index, directives)
+      .renderChildren(model, children, directives, options)
 
+
+  # First, let's think about writing event handlers.
+  # For example, it would be convenient to have an access to the associated `model`
+  # when the user clicks a todo element. No need to set `data-id` attributes or other
+  # identifiers manually \o/
+  #
+  #     $('#todos').on('click', '.todo', function(e) {
+  #       console.log(e.target.transparency.model);
+  #     });
+  #
+  assoc: (model) ->
+    for element in @elements
+      data(element.el).model = model
+    this
+
+  renderValues: (model, children) ->
     # Next, take care of default rendering, which covers the most common use cases like
     # setting text content, form values and DOM elements (.e.g., Backbone Views).
     # Rendering as a text content is a safe default, as it is HTML escaped
     # by the browsers.
     if isDomElement(model) and element = @elements[0]
-      empty(element).appendChild model
+      element.empty().el.appendChild model
 
     else if typeof model == 'object'
       for own key, value of model when value?
@@ -189,10 +207,10 @@ class Instance
             #
             nodeName = element.nodeName.toLowerCase()
             if nodeName == 'input'
-              attr element, 'value', value
+              element.attr 'value', value
             else if nodeName == 'select'
-              attr element, 'selected', value
-            else attr element, 'text',  value
+              element.attr 'selected', value
+            else element.attr 'text',  value
 
         # Rendering nested models breadth-first is more robust, as there might be colliding keys,
         # i.e., given a model
@@ -230,24 +248,7 @@ class Instance
         else if typeof value == 'object'
           children.push key
 
-    @renderDirectives(model, index, directives)
-      .renderChildren(model, children, directives, options)
-
-
-  # First, let's think about writing event handlers.
-  # For example, it would be convenient to have an access to the associated `model`
-  # when the user clicks a todo element. No need to set `data-id` attributes or other
-  # identifiers manually \o/
-  #
-  #     $('#todos').on('click', '.todo', function(e) {
-  #       console.log(e.target.transparency.model);
-  #     });
-  #
-  assoc: (model) ->
-    for el in @elements
-      data(el).model = model
-
-  renderValues: ->
+    this
 
   # With `directives`, user can give explicit rules for rendering and set
   # attributes, which would be potentially unsafe by default (e.g., unescaped HTML content or `src` attribute).
@@ -292,11 +293,11 @@ class Instance
         for attribute, directive of attributes when typeof directive == 'function'
 
           value = directive.call model,
-            element: element
+            element: element.el
             index:   index
-            value:   attr element, attribute
+            value:   element.originalAttributes[attribute]
 
-          attr element, attribute, value
+          element.attr attribute, value
     this
 
   # As we are done with the plain values and directives, it's time to render the nested models.
@@ -305,11 +306,11 @@ class Instance
   renderChildren: (model, children, directives, options) ->
     for key in children
       for element in @matchingElements key
-        Transparency.render element, model[key], directives[key], options
+        Transparency.render element.el, model[key], directives[key], options
     this
 
   matchingElements: (key) ->
-    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e, key)
+    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e.el, key)
     log "Matching elements for '#{key}':", elements
     elements
 
@@ -330,93 +331,86 @@ _getElements = (template, elements) ->
   child = template.firstChild
   while child
     if child.nodeType == ELEMENT_NODE
-      data(child).originalAttributes ||= {}
-      elements.push child
+      elements.push new Element(child)
       _getElements child, elements
 
     child = child.nextSibling
 
-setHtml = (element, html) ->
-  elementData = data element
-  return if elementData.html == html
+class Element
+  constructor: (@el) ->
+    @childNodes         = getChildNodes @el
+    @nodeName           = @el.nodeName.toLowerCase()
+    @originalAttributes = {}
 
-  elementData.html       = html
-  elementData.children ||= (n for n in element.childNodes when n.nodeType == ELEMENT_NODE)
+  empty: ->
+    @el.removeChild child while child = @el.firstChild
+    this
 
-  empty element
-  element.innerHTML = html
-  element.appendChild child for child in elementData.children
+  setHtml: (html) ->
+    @empty()
+    @el.innerHTML = html
+    for child in @childNodes
+      @el.appendChild child
 
-setText = (element, text) ->
-  elementData = data element
-  return if !text? or elementData.text == text
+  setText: (text) ->
+    textNode = @el.firstChild
 
-  elementData.text = text
-  textNode         = element.firstChild
+    if !textNode
+      @el.appendChild @el.ownerDocument.createTextNode text
 
-  if !textNode
-    element.appendChild element.ownerDocument.createTextNode text
+    else if textNode.nodeType != TEXT_NODE
+      @el.insertBefore @el.ownerDocument.createTextNode(text), textNode
 
-  else if textNode.nodeType != TEXT_NODE
-    element.insertBefore element.ownerDocument.createTextNode(text), textNode
+    else
+      textNode.nodeValue = text
 
-  else
-    textNode.nodeValue = text
+  getText: ->
+    (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
 
-getText = (element) ->
-  (child.nodeValue for child in element.childNodes when child.nodeType == TEXT_NODE).join ''
-
-setSelected = (element, value) ->
-  value = value.toString()
-  childElements = []
-  childElements = getElements element
-  for child in childElements
-    if child.nodeName.toLowerCase() == 'option'
-      if child.value == value
-        child.selected = true
-      else
-        child.selected = false
-
-attr = (element, attribute, value) ->
-  elementData = data element
-  return elementData.originalAttributes[attribute] unless value?
-
-  if element.nodeName.toLowerCase() == 'select' and attribute == 'selected'
-    setSelected element, value
-
-  else
-    switch attribute
-      when 'text'
-        unless isVoidElement element
-          elementData.originalAttributes['text'] ?= getText element
-          setText element, value
-
-      when 'html'
-        elementData.originalAttributes['html'] ?= element.innerHTML
-        setHtml element, value
-
-      when 'class'
-        elementData.originalAttributes['class'] ?= element.className
-        element.className = value
-
-      else
-        element[attribute] = value
-        if isBoolean value
-          elementData.originalAttributes[attribute] ?= element.getAttribute(attribute) || false
-          if value
-            element.setAttribute attribute, attribute
-          else
-            element.removeAttribute attribute
+  setSelected: (value) ->
+    value = value.toString()
+    childElements = getElements @el
+    for child in childElements
+      if child.el.nodeName.toLowerCase() == 'option'
+        if child.el.value == value
+          child.el.selected = true
         else
-          elementData.originalAttributes[attribute] ?= element.getAttribute(attribute) || ""
-          element.setAttribute attribute, value.toString()
+          child.el.selected = false
 
-empty = (element) ->
-  element.removeChild child while child = element.firstChild
-  element
+  attr: (attribute, value) ->
+    return unless value?
+    if @nodeName == 'select' and attribute == 'selected'
+      @setSelected value
 
-ELEMENT_NODE  = 1
-TEXT_NODE     = 3
+    else
+      switch attribute
+        when 'text'
+          unless isVoidElement @el
+            @originalAttributes['text'] ?= @getText()
+            @setText value
+
+        when 'html'
+          @originalAttributes['html'] ?= @el.innerHTML
+          @setHtml value
+
+        when 'class'
+          @originalAttributes['class'] ?= @el.className
+          @el.className = value
+
+        else
+          @el[attribute] = value
+          if isBoolean value
+            @originalAttributes[attribute] ?= @el.getAttribute(attribute) || false
+            if value
+              @el.setAttribute attribute, attribute
+            else
+              @el.removeAttribute attribute
+          else
+            @originalAttributes[attribute] ?= @el.getAttribute(attribute) || ""
+            @el.setAttribute attribute, value.toString()
+
+ELEMENT_NODE = 1
+TEXT_NODE    = 3
 
 # From http://www.w3.org/TR/html-markup/syntax.html: void elements in HTML
 VOID_ELEMENTS = ["area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"]
