@@ -84,6 +84,18 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
+# Chainable method decorator (example in node.js console).
+#
+#    > o       = {}
+#    > o.hello = "Hello"
+#    > o.foo   = chainable(function(){console.log(this.hello + " World")});
+#    > o.foo().hello
+#    Hello World
+#    "Hello"
+#    >
+#
+chainable = (method) -> -> method.apply(this, arguments); this
+
 # **Context** stores the original `template` elements and is responsible for creating,
 # adding and removing template `instances` to match the amount of `models`.
 class Context
@@ -92,21 +104,19 @@ class Context
     @instances     = [new Instance(@el)]
     @instanceCache = []
 
-  detach: ->
+  detach: chainable ->
     @parent = @el.parentNode
     if @parent
       @nextSibling = @el.nextSibling
       @parent.removeChild @el
-    this
 
-  attach: ->
+  attach: chainable ->
     if @parent
       if @nextSibling
       then @parent.insertBefore @el, @nextSibling
       else @parent.appendChild @el
-    this
 
-  render: (models, directives, options) ->
+  render: chainable (models, directives, options) ->
 
     # Cloning DOM elements is expensive, so save unused template `instances` and reuse them later.
     while models.length < @instances.length
@@ -114,11 +124,10 @@ class Context
 
     for model, index in models
       unless instance = @instances[index]
-        instance = @instanceCache.pop() || new Instance(cloneNode @template)
+        instance = @instanceCache.pop() || new Instance(cloneNode(@template))
         @instances.push instance.appendTo(@el)
 
       instance.render(model, index, directives, options)
-    this
 
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
@@ -129,17 +138,15 @@ class Instance
     @childNodes = getChildNodes template
     @elements   = getElements   template
 
-  remove: ->
+  remove: chainable ->
     for node in @childNodes
       node.parentNode.removeChild node
-    this
 
-  appendTo: (parent) ->
+  appendTo: chainable (parent) ->
     for node in @childNodes
       parent.appendChild node
-    this
 
-  render: (model, index, directives, options) ->
+  render: chainable (model, index, directives, options) ->
     children = []
 
     @reset(model)
@@ -147,7 +154,7 @@ class Instance
       .renderDirectives(model, index, directives)
       .renderChildren(model, children, directives, options)
 
-  reset: (model) ->
+  reset: chainable (model) ->
     for element in @elements
       element.reset()
 
@@ -161,13 +168,12 @@ class Instance
       #     });
       #
       data(element.el).model = model
-    this
 
   # Rendering values takes care of the most common use cases like
   # rendering text content, form values and DOM elements (.e.g., Backbone Views).
   # Rendering as a text content is a safe default, as it is HTML escaped
   # by the browsers.
-  renderValues: (model, children) ->
+  renderValues: chainable (model, children) ->
     if isDomElement(model) and element = @elements[0]
       element.empty().el.appendChild model
 
@@ -239,8 +245,6 @@ class Instance
         else if typeof value == 'object'
           children.push key
 
-    this
-
   # With `directives`, user can give explicit rules for rendering and set
   # attributes, which would be potentially unsafe by default (e.g., unescaped HTML content or `src` attribute).
   # Given a template
@@ -275,7 +279,7 @@ class Instance
   #     </div>
   #
   # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
-  renderDirectives: (model, index, directives) ->
+  renderDirectives: chainable (model, index, directives) ->
     return this unless directives
     model = if typeof model == 'object' then model else value: model
 
@@ -289,13 +293,11 @@ class Instance
             value:   element.originalAttributes[attribute]
 
           element.attr attribute, value
-    this
 
-  renderChildren: (model, children, directives, options) ->
+  renderChildren: chainable (model, children, directives, options) ->
     for key in children
       for element in @matchingElements key
         Transparency.render element.el, model[key], directives[key], options
-    this
 
   matchingElements: (key) ->
     elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e.el, key)
