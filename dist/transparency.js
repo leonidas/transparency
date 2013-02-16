@@ -167,9 +167,7 @@
           }
         }
       }
-      this.renderDirectives(model, index, directives);
-      this.renderChildren(model, children, directives, options);
-      return this;
+      return this.renderDirectives(model, index, directives).renderChildren(model, children, directives, options);
     };
 
     Instance.prototype.assoc = function(model) {
@@ -186,66 +184,49 @@
     Instance.prototype.renderValues = function() {};
 
     Instance.prototype.renderDirectives = function(model, index, directives) {
-      var attribute, attributes, directive, element, key, value, _results;
+      var attribute, attributes, directive, element, key, value, _i, _len, _ref;
       if (!directives) {
-        return;
+        return this;
       }
       model = typeof model === 'object' ? model : {
         value: model
       };
-      _results = [];
       for (key in directives) {
         if (!__hasProp.call(directives, key)) continue;
         attributes = directives[key];
         if (typeof attributes === 'object') {
-          _results.push((function() {
-            var _i, _len, _ref, _results1;
-            _ref = this.matchingElements(key);
-            _results1 = [];
-            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-              element = _ref[_i];
-              _results1.push((function() {
-                var _results2;
-                _results2 = [];
-                for (attribute in attributes) {
-                  directive = attributes[attribute];
-                  if (!(typeof directive === 'function')) {
-                    continue;
-                  }
-                  value = directive.call(model, {
-                    element: element,
-                    index: index,
-                    value: attr(element, attribute)
-                  });
-                  _results2.push(attr(element, attribute, value));
-                }
-                return _results2;
-              })());
+          _ref = this.matchingElements(key);
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            element = _ref[_i];
+            for (attribute in attributes) {
+              directive = attributes[attribute];
+              if (!(typeof directive === 'function')) {
+                continue;
+              }
+              value = directive.call(model, {
+                element: element,
+                index: index,
+                value: attr(element, attribute)
+              });
+              attr(element, attribute, value);
             }
-            return _results1;
-          }).call(this));
+          }
         }
       }
-      return _results;
+      return this;
     };
 
     Instance.prototype.renderChildren = function(model, children, directives, options) {
-      var element, key, _i, _len, _results;
-      _results = [];
+      var element, key, _i, _j, _len, _len1, _ref;
       for (_i = 0, _len = children.length; _i < _len; _i++) {
         key = children[_i];
-        _results.push((function() {
-          var _j, _len1, _ref, _results1;
-          _ref = this.matchingElements(key);
-          _results1 = [];
-          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-            element = _ref[_j];
-            _results1.push(Transparency.render(element, model[key], directives[key], options));
-          }
-          return _results1;
-        }).call(this));
+        _ref = this.matchingElements(key);
+        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+          element = _ref[_j];
+          Transparency.render(element, model[key], directives[key], options);
+        }
       }
-      return _results;
+      return this;
     };
 
     Instance.prototype.matchingElements = function(key) {

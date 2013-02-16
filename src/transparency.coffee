@@ -230,10 +230,9 @@ class Instance
         else if typeof value == 'object'
           children.push key
 
-    @renderDirectives model, index, directives
-    @renderChildren   model, children, directives, options
+    @renderDirectives(model, index, directives)
+      .renderChildren(model, children, directives, options)
 
-    this
 
   # First, let's think about writing event handlers.
   # For example, it would be convenient to have an access to the associated `model`
@@ -285,7 +284,7 @@ class Instance
   #
   # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
   renderDirectives: (model, index, directives) ->
-    return unless directives
+    return this unless directives
     model = if typeof model == 'object' then model else value: model
 
     for own key, attributes of directives when typeof attributes == 'object'
@@ -298,6 +297,7 @@ class Instance
             value:   attr element, attribute
 
           attr element, attribute, value
+    this
 
   # As we are done with the plain values and directives, it's time to render the nested models.
   # Here, recursion is our friend. Calling `Transparency.render` for each child model and matching `element`
@@ -306,6 +306,7 @@ class Instance
     for key in children
       for element in @matchingElements key
         Transparency.render element, model[key], directives[key], options
+    this
 
   matchingElements: (key) ->
     elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e, key)
