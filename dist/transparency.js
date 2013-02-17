@@ -1,8 +1,8 @@
 (function() {
-  var Context, ELEMENT_NODE, Element, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
+  var Context, ELEMENT_NODE, Element, ElementFactory, Input, Instance, Select, TEXT_NODE, Transparency, VoidElement, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
-    __slice = [].slice;
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Transparency = this.Transparency = {};
 
@@ -26,7 +26,7 @@
       models = [models];
     }
     context = (_base = data(context)).context || (_base.context = new Context(context));
-    return context.detach().render(models, directives, options).attach();
+    return context.detach().render(models, directives, options).attach().el;
   };
 
   Transparency.jQueryPlugin = function(models, directives, options) {
@@ -82,7 +82,7 @@
     });
 
     Context.prototype.render = chainable(function(models, directives, options) {
-      var index, instance, model, _i, _len, _results;
+      var children, index, instance, model, _i, _len, _results;
       while (models.length < this.instances.length) {
         this.instanceCache.push(this.instances.pop().remove());
       }
@@ -93,7 +93,8 @@
           instance = this.instanceCache.pop() || new Instance(cloneNode(this.template));
           this.instances.push(instance.appendTo(this.el));
         }
-        _results.push(instance.render(model, index, directives, options));
+        children = [];
+        _results.push(instance.prepare(model, children).renderValues(model, children).renderDirectives(model, index, directives).renderChildren(model, children, directives, options));
       }
       return _results;
     });
@@ -132,13 +133,7 @@
       return _results;
     });
 
-    Instance.prototype.render = chainable(function(model, index, directives, options) {
-      var children;
-      children = [];
-      return this.reset(model).renderValues(model, children).renderDirectives(model, index, directives).renderChildren(model, children, directives, options);
-    });
-
-    Instance.prototype.reset = chainable(function(model) {
+    Instance.prototype.prepare = chainable(function(model) {
       var element, _i, _len, _ref, _results;
       _ref = this.elements;
       _results = [];
@@ -167,13 +162,7 @@
                 _results1 = [];
                 for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                   element = _ref[_i];
-                  if (element.nodeName === 'input') {
-                    _results1.push(element.attr('value', value));
-                  } else if (element.nodeName === 'select') {
-                    _results1.push(element.attr('selected', value));
-                  } else {
-                    _results1.push(element.attr('text', value));
-                  }
+                  _results1.push(element.render(value));
                 }
                 return _results1;
               }).call(this));
@@ -190,12 +179,6 @@
 
     Instance.prototype.renderDirectives = chainable(function(model, index, directives) {
       var attribute, attributes, directive, element, key, value, _results;
-      if (!directives) {
-        return this;
-      }
-      model = typeof model === 'object' ? model : {
-        value: model
-      };
       _results = [];
       for (key in directives) {
         if (!__hasProp.call(directives, key)) continue;
@@ -211,6 +194,7 @@
                 var _results2;
                 _results2 = [];
                 for (attribute in attributes) {
+                  if (!__hasProp.call(attributes, attribute)) continue;
                   directive = attributes[attribute];
                   if (!(typeof directive === 'function')) {
                     continue;
@@ -277,47 +261,13 @@
 
   })();
 
-  getChildNodes = function(el) {
-    var child, childNodes;
-    childNodes = [];
-    child = el.firstChild;
-    while (child) {
-      childNodes.push(child);
-      child = child.nextSibling;
-    }
-    return childNodes;
-  };
-
-  getElements = function(el) {
-    var elements;
-    elements = [];
-    _getElements(el, elements);
-    return elements;
-  };
-
-  _getElements = function(template, elements) {
-    var child, _results;
-    child = template.firstChild;
-    _results = [];
-    while (child) {
-      if (child.nodeType === ELEMENT_NODE) {
-        elements.push(new Element(child));
-        _getElements(child, elements);
-      }
-      _results.push(child = child.nextSibling);
-    }
-    return _results;
-  };
-
   Element = (function() {
 
     function Element(el) {
-      var _ref;
       this.el = el;
       this.childNodes = getChildNodes(this.el);
       this.nodeName = this.el.nodeName.toLowerCase();
       this.classNames = this.el.className.split(' ');
-      this.isVoidElement = (_ref = this.nodeName, __indexOf.call(VOID_ELEMENTS, _ref) >= 0);
       this.originalAttributes = {};
     }
 
@@ -338,6 +288,10 @@
         _results.push(this.attr(attribute, value));
       }
       return _results;
+    };
+
+    Element.prototype.render = function(value) {
+      return this.attr('text', value);
     };
 
     Element.prototype.setHtml = function(html) {
@@ -381,7 +335,68 @@
       }).call(this)).join('');
     };
 
-    Element.prototype.setSelected = function(value) {
+    Element.prototype.attr = function(attribute, value) {
+      var _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
+      switch (attribute) {
+        case 'text':
+          if ((_ref = (_base = this.originalAttributes)['text']) == null) {
+            _base['text'] = this.getText();
+          }
+          return this.setText(value);
+        case 'html':
+          if ((_ref1 = (_base1 = this.originalAttributes)['html']) == null) {
+            _base1['html'] = this.el.innerHTML;
+          }
+          return this.setHtml(value);
+        case 'class':
+          if ((_ref2 = (_base2 = this.originalAttributes)['class']) == null) {
+            _base2['class'] = this.el.className;
+          }
+          return this.el.className = value;
+        default:
+          this.el[attribute] = value;
+          if (isBoolean(value)) {
+            if ((_ref3 = (_base3 = this.originalAttributes)[attribute]) == null) {
+              _base3[attribute] = this.el.getAttribute(attribute) || false;
+            }
+            if (value) {
+              return this.el.setAttribute(attribute, attribute);
+            } else {
+              return this.el.removeAttribute(attribute);
+            }
+          } else {
+            if ((_ref4 = (_base4 = this.originalAttributes)[attribute]) == null) {
+              _base4[attribute] = this.el.getAttribute(attribute) || "";
+            }
+            return this.el.setAttribute(attribute, value.toString());
+          }
+      }
+    };
+
+    return Element;
+
+  })();
+
+  ElementFactory = {
+    elements: {},
+    createElement: function(el) {
+      var Klass;
+      Klass = ElementFactory.elements[el.nodeName.toLowerCase()] || Element;
+      return new Klass(el);
+    }
+  };
+
+  Select = (function(_super) {
+
+    __extends(Select, _super);
+
+    function Select() {
+      return Select.__super__.constructor.apply(this, arguments);
+    }
+
+    ElementFactory.elements.select = Select;
+
+    Select.prototype.render = function(value) {
       var child, _i, _len, _ref, _results;
       value = value.toString();
       _ref = getElements(this.el);
@@ -395,60 +410,85 @@
       return _results;
     };
 
-    Element.prototype.attr = function(attribute, value) {
-      var _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
-      if (this.nodeName === 'select' && attribute === 'selected') {
-        return this.setSelected(value);
-      } else {
-        switch (attribute) {
-          case 'text':
-            if (!this.isVoidElement) {
-              if ((_ref = (_base = this.originalAttributes)['text']) == null) {
-                _base['text'] = this.getText();
-              }
-              return this.setText(value);
-            }
-            break;
-          case 'html':
-            if ((_ref1 = (_base1 = this.originalAttributes)['html']) == null) {
-              _base1['html'] = this.el.innerHTML;
-            }
-            return this.setHtml(value);
-          case 'class':
-            if ((_ref2 = (_base2 = this.originalAttributes)['class']) == null) {
-              _base2['class'] = this.el.className;
-            }
-            return this.el.className = value;
-          default:
-            this.el[attribute] = value;
-            if (isBoolean(value)) {
-              if ((_ref3 = (_base3 = this.originalAttributes)[attribute]) == null) {
-                _base3[attribute] = this.el.getAttribute(attribute) || false;
-              }
-              if (value) {
-                return this.el.setAttribute(attribute, attribute);
-              } else {
-                return this.el.removeAttribute(attribute);
-              }
-            } else {
-              if ((_ref4 = (_base4 = this.originalAttributes)[attribute]) == null) {
-                _base4[attribute] = this.el.getAttribute(attribute) || "";
-              }
-              return this.el.setAttribute(attribute, value.toString());
-            }
-        }
-      }
+    return Select;
+
+  })(Element);
+
+  VoidElement = (function(_super) {
+    var VOID_ELEMENTS, nodeName, _i, _len;
+
+    __extends(VoidElement, _super);
+
+    function VoidElement() {
+      return VoidElement.__super__.constructor.apply(this, arguments);
+    }
+
+    VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
+    for (_i = 0, _len = VOID_ELEMENTS.length; _i < _len; _i++) {
+      nodeName = VOID_ELEMENTS[_i];
+      ElementFactory.elements[nodeName] = VoidElement;
+    }
+
+    VoidElement.prototype.setText = function() {};
+
+    return VoidElement;
+
+  })(Element);
+
+  Input = (function(_super) {
+
+    __extends(Input, _super);
+
+    function Input() {
+      return Input.__super__.constructor.apply(this, arguments);
+    }
+
+    ElementFactory.elements.input = Input;
+
+    Input.prototype.render = function(value) {
+      return this.attr('value', value);
     };
 
-    return Element;
+    return Input;
 
-  })();
+  })(VoidElement);
+
+  getChildNodes = function(el) {
+    var child, childNodes;
+    childNodes = [];
+    child = el.firstChild;
+    while (child) {
+      childNodes.push(child);
+      child = child.nextSibling;
+    }
+    return childNodes;
+  };
+
+  getElements = function(el) {
+    var elements;
+    elements = [];
+    _getElements(el, elements);
+    return elements;
+  };
+
+  _getElements = function(template, elements) {
+    var child, _results;
+    child = template.firstChild;
+    _results = [];
+    while (child) {
+      if (child.nodeType === ELEMENT_NODE) {
+        elements.push(new ElementFactory.createElement(child));
+        _getElements(child, elements);
+      }
+      _results.push(child = child.nextSibling);
+    }
+    return _results;
+  };
 
   ELEMENT_NODE = 1;
 
   TEXT_NODE = 3;
-
-  VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
   html5Clone = function() {
     return document.createElement('nav').cloneNode(true).outerHTML !== '<:nav></:nav>';
@@ -479,9 +519,7 @@
   nullLogger = function() {};
 
   consoleLogger = function() {
-    var messages;
-    messages = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    return console.log.apply(console, messages);
+    return console.log(arguments);
   };
 
   log = nullLogger;

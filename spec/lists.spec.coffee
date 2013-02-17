@@ -78,7 +78,7 @@ describe "Transparency", ->
     template.render data
     expect(template).toBeEqual expected
 
-  it "should render plain values with 'this.value' directives", ->
+  it "should render plain values with 'this' directives", ->
     template = $ """
       <div class="comments">
         <label>Comment:</label>
@@ -87,7 +87,7 @@ describe "Transparency", ->
       """
 
     data       = ["That rules", "Great post!", 5]
-    directives = comment: text: -> @value
+    directives = comment: text: -> this
 
     expected = $ """
       <div class="comments">

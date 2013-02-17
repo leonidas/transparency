@@ -48,6 +48,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
     .detach()
     .render(models, directives, options)
     .attach()
+    .el
 
 # ### Configuration
 
@@ -57,6 +58,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 #
 #     // Render with jQuery
 #     $('#template').render({hello: 'World'});
+#
 Transparency.jQueryPlugin = (models, directives, options) ->
   for context in this
     Transparency.render context, models, directives, options
@@ -67,8 +69,9 @@ Transparency.jQueryPlugin = (models, directives, options) ->
 #
 #     // Match only by `data-bind` attribute
 #     Transparency.matcher = function (element, key) {
-#       element.getAttribute('data-bind') == key;
+#       element.el.getAttribute('data-bind') == key;
 #     };
+#
 Transparency.matcher = (element, key) ->
   element.el.id                        == key ||
   key in element.classNames                   ||
@@ -80,6 +83,7 @@ Transparency.matcher = (element, key) ->
 # supported without jQuery.
 #
 #     Transparency.clone = myCloneFunction;
+#
 Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
@@ -127,7 +131,12 @@ class Context
         instance = @instanceCache.pop() || new Instance(cloneNode(@template))
         @instances.push instance.appendTo(@el)
 
-      instance.render(model, index, directives, options)
+      children = []
+      instance
+        .prepare(model, children)
+        .renderValues(model, children)
+        .renderDirectives(model, index, directives)
+        .renderChildren(model, children, directives, options)
 
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
@@ -146,15 +155,7 @@ class Instance
     for node in @childNodes
       parent.appendChild node
 
-  render: chainable (model, index, directives, options) ->
-    children = []
-
-    @reset(model)
-      .renderValues(model, children)
-      .renderDirectives(model, index, directives)
-      .renderChildren(model, children, directives, options)
-
-  reset: chainable (model) ->
+  prepare: chainable (model) ->
     for element in @elements
       element.reset()
 
@@ -201,11 +202,7 @@ class Instance
             #          </select>
             #       </div>
             #
-            if element.nodeName == 'input'
-              element.attr 'value', value
-            else if element.nodeName == 'select'
-              element.attr 'selected', value
-            else element.attr 'text',  value
+            element.render value
 
         # Rendering nested models breadth-first is more robust, as there might be colliding keys,
         # i.e., given a model
@@ -278,12 +275,9 @@ class Instance
   #
   # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
   renderDirectives: chainable (model, index, directives) ->
-    return this unless directives
-    model = if typeof model == 'object' then model else value: model
-
     for own key, attributes of directives when typeof attributes == 'object'
       for element in @matchingElements key
-        for attribute, directive of attributes when typeof directive == 'function'
+        for own attribute, directive of attributes when typeof directive == 'function'
 
           value = directive.call model,
             element: element.el
@@ -302,34 +296,11 @@ class Instance
     log "Matching elements for '#{key}':", elements
     elements
 
-getChildNodes = (el) ->
-  childNodes = []
-  child = el.firstChild
-  while child
-    childNodes.push child
-    child = child.nextSibling
-  childNodes
-
-getElements  = (el) ->
-  elements = []
-  _getElements el, elements
-  elements
-
-_getElements = (template, elements) ->
-  child = template.firstChild
-  while child
-    if child.nodeType == ELEMENT_NODE
-      elements.push new Element(child)
-      _getElements child, elements
-
-    child = child.nextSibling
-
 class Element
   constructor: (@el) ->
     @childNodes         = getChildNodes @el
     @nodeName           = @el.nodeName.toLowerCase()
     @classNames         = @el.className.split ' '
-    @isVoidElement      = @nodeName in VOID_ELEMENTS
     @originalAttributes = {}
 
   empty: ->
@@ -339,6 +310,8 @@ class Element
   reset: ->
     for attribute, value of @originalAttributes
       @attr attribute, value
+
+  render: (value) -> @attr 'text', value
 
   setHtml: (html) ->
     @empty()
@@ -361,48 +334,86 @@ class Element
   getText: ->
     (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
 
-  setSelected: (value) ->
+  attr: (attribute, value) ->
+    switch attribute
+      when 'text'
+        @originalAttributes['text'] ?= @getText()
+        @setText value
+
+      when 'html'
+        @originalAttributes['html'] ?= @el.innerHTML
+        @setHtml value
+
+      when 'class'
+        @originalAttributes['class'] ?= @el.className
+        @el.className = value
+
+      else
+        @el[attribute] = value
+        if isBoolean value
+          @originalAttributes[attribute] ?= @el.getAttribute(attribute) || false
+          if value
+            @el.setAttribute attribute, attribute
+          else
+            @el.removeAttribute attribute
+        else
+          @originalAttributes[attribute] ?= @el.getAttribute(attribute) || ""
+          @el.setAttribute attribute, value.toString()
+
+ElementFactory =
+  elements: {}
+  createElement: (el) ->
+    Klass = ElementFactory.elements[el.nodeName.toLowerCase()] || Element
+    new Klass(el)
+
+class Select extends Element
+  ElementFactory.elements.select = this
+
+  render: (value) ->
     value = value.toString()
     for child in getElements @el when child.nodeName == 'option'
       child.el.selected = child.el.value == value
 
-  attr: (attribute, value) ->
-    if @nodeName == 'select' and attribute == 'selected'
-      @setSelected value
+class VoidElement extends Element
 
-    else
-      switch attribute
-        when 'text'
-          unless @isVoidElement
-            @originalAttributes['text'] ?= @getText()
-            @setText value
+  # From http://www.w3.org/TR/html-markup/syntax.html: void elements in HTML
+  VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img',
+    'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']
 
-        when 'html'
-          @originalAttributes['html'] ?= @el.innerHTML
-          @setHtml value
+  for nodeName in VOID_ELEMENTS
+    ElementFactory.elements[nodeName] = this
 
-        when 'class'
-          @originalAttributes['class'] ?= @el.className
-          @el.className = value
+  setText: ->
 
-        else
-          @el[attribute] = value
-          if isBoolean value
-            @originalAttributes[attribute] ?= @el.getAttribute(attribute) || false
-            if value
-              @el.setAttribute attribute, attribute
-            else
-              @el.removeAttribute attribute
-          else
-            @originalAttributes[attribute] ?= @el.getAttribute(attribute) || ""
-            @el.setAttribute attribute, value.toString()
+class Input extends VoidElement
+  ElementFactory.elements.input = this
+
+  render: (value) -> @attr 'value', value
+
+getChildNodes = (el) ->
+  childNodes = []
+  child = el.firstChild
+  while child
+    childNodes.push child
+    child = child.nextSibling
+  childNodes
+
+getElements  = (el) ->
+  elements = []
+  _getElements el, elements
+  elements
+
+_getElements = (template, elements) ->
+  child = template.firstChild
+  while child
+    if child.nodeType == ELEMENT_NODE
+      elements.push new ElementFactory.createElement(child)
+      _getElements child, elements
+
+    child = child.nextSibling
 
 ELEMENT_NODE = 1
 TEXT_NODE    = 3
-
-# From http://www.w3.org/TR/html-markup/syntax.html: void elements in HTML
-VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input',
-  'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']
 
 # IE8 <= fails to clone detached nodes properly, shim with jQuery
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
@@ -435,7 +446,7 @@ expando = 'transparency'
 data    = (element) -> element[expando] ||= {}
 
 nullLogger    = () ->
-consoleLogger = (messages...) -> console.log messages...
+consoleLogger = -> console.log arguments
 log           = nullLogger
 
 # Mostly from https://github.com/documentcloud/underscore/blob/master/underscore.js

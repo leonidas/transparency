@@ -182,7 +182,7 @@ Result:
 With plain values, Transparency can't guess how you would like to bind the data to DOM, so a bit of
 help is needed. Directives are just for that.
 
-Access to the plain values within the directives is provided through `this.value`. There's a whole
+Access to the plain values within the directives is provided through `this`. There's a whole
 lot more to say about the directives, but that's all we need for now. For the details, see
 section [Directives](https://github.com/leonidas/transparency#directives).
 
@@ -207,7 +207,7 @@ comments = ["That rules", "Great post!"];
 directives = {
   comment: {
     text: function() {
-      return this.value;
+      return this;
     }
   }
 };
