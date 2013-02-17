@@ -383,7 +383,7 @@
 
     Element.prototype.setSelected = function(value) {
       var child, childElements, _i, _len, _results;
-      value = String(value);
+      value = value.toString();
       childElements = getElements(this.el);
       _results = [];
       for (_i = 0, _len = childElements.length; _i < _len; _i++) {
@@ -454,10 +454,10 @@
 
   TEXT_NODE = 3;
 
-  VOID_ELEMENTS = ["area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"];
+  VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
   html5Clone = function() {
-    return document.createElement("nav").cloneNode(true).outerHTML !== "<:nav></:nav>";
+    return document.createElement('nav').cloneNode(true).outerHTML !== '<:nav></:nav>';
   };
 
   cloneNode = !(typeof document !== "undefined" && document !== null) || html5Clone() ? function(node) {

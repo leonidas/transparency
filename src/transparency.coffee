@@ -84,8 +84,9 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
-# Chainable method decorator (example in node.js console).
+# 'Chainable' method decorator.
 #
+#     // in console
 #     > o = {}
 #     > o.hello = "Hello"
 #     > o.foo = chainable(function(){console.log(this.hello + " World")});
@@ -361,7 +362,7 @@ class Element
     (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
 
   setSelected: (value) ->
-    value = String(value)
+    value = value.toString()
     childElements = getElements @el
     for child in childElements
       if child.nodeName == 'option'
@@ -405,12 +406,13 @@ ELEMENT_NODE = 1
 TEXT_NODE    = 3
 
 # From http://www.w3.org/TR/html-markup/syntax.html: void elements in HTML
-VOID_ELEMENTS = ["area", "base", "br", "col", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"]
+VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input',
+  'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']
 
 # IE8 <= fails to clone detached nodes properly, shim with jQuery
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
 # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
-html5Clone = () -> document.createElement("nav").cloneNode(true).outerHTML != "<:nav></:nav>"
+html5Clone = () -> document.createElement('nav').cloneNode(true).outerHTML != '<:nav></:nav>'
 cloneNode  =
   if not document? or html5Clone()
     (node) -> node.cloneNode true
@@ -423,12 +425,19 @@ cloneNode  =
           element.removeAttribute expando
       cloned
 
+# Minimal implementation of jQuery.data
+#
+#     // in console
+#     > template = document.getElementById('template')
+#     > data(template).hello = 'Hello World!'
+#     > console.log(data(template).hello)
+#     Hello World!
+#
+# Expanding DOM element with a JS object is generally unsafe.
+# However, as references to expanded DOM elements are never lost, no memory leaks are introduced
+# http://perfectionkills.com/whats-wrong-with-extending-the-dom/
 expando = 'transparency'
-data    = (element) ->
-  # Expanding DOM element with a JS object is generally unsafe.
-  # However, as references to expanded DOM elements are never lost, no memory leaks are introduced
-  # http://perfectionkills.com/whats-wrong-with-extending-the-dom/
-  element[expando] ||= {}
+data    = (element) -> element[expando] ||= {}
 
 nullLogger    = () ->
 consoleLogger = (messages...) -> console.log messages...
