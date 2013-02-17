@@ -61,14 +61,13 @@ supported without jQuery.</p>
 <pre><code>Transparency.clone = myCloneFunction;
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Transparency.clone = </span><span class="nf">(node) -&gt;</span> <span class="p">(</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="nx">Zepto</span><span class="p">)</span><span class="o">?</span><span class="p">(</span><span class="nx">node</span><span class="p">).</span><span class="nx">clone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h2>Internals</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Chainable method decorator (example in node.js console).</p>
 
-<blockquote>
-  <p>o       = {}
-  o.hello = "Hello"
-  o.foo   = chainable(function(){console.log(this.hello + " World")});
-  o.foo().hello
-     Hello World
-     "Hello"</p>
-</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">chainable = </span><span class="nf">(method) -&gt;</span> <span class="nf">-&gt;</span> <span class="nx">method</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p><strong>Context</strong> stores the original <code>template</code> elements and is responsible for creating,
+<pre><code>&gt; o = {}
+&gt; o.hello = "Hello"
+&gt; o.foo = chainable(function(){console.log(this.hello + " World")});
+&gt; o.foo().hello
+Hello World
+"Hello"
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">chainable = </span><span class="nf">(method) -&gt;</span> <span class="nf">-&gt;</span> <span class="nx">method</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p><strong>Context</strong> stores the original <code>template</code> elements and is responsible for creating,
 adding and removing template <code>instances</code> to match the amount of <code>models</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Context</span>
   <span class="nv">constructor: </span><span class="nf">(@el) -&gt;</span>
     <span class="vi">@template      = </span><span class="nx">cloneNode</span> <span class="nx">@el</span>
