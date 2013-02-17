@@ -466,9 +466,12 @@ Custom matcher function should take `key` and `element` as parameters and return
 corresponding value should be bind to the given DOM element.
 
 ```javascript
-// Set the custom matcher
+// The custom matcher gets Transparency `Element` wrapper with following properties
+// element.el:         Raw DOM element
+// element.name:       Lower-cased name of the DOM element, e.g., 'input'
+// element.classNames: List of class names of the DOM element, e.g., ['person', 'selected']
 Transparency.matcher = function(element, key) {
-  return element.getAttribute('data-bind') == key;
+  return element.el.getAttribute('data-bind') == key;
 };
 
 // Values are bind only with 'data-bind' attribute

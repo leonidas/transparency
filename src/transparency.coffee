@@ -70,10 +70,10 @@ Transparency.jQueryPlugin = (models, directives, options) ->
 #       element.getAttribute('data-bind') == key;
 #     };
 Transparency.matcher = (element, key) ->
-  element.id                        == key        ||
-  indexOf(element.className.split(' '), key) > -1 ||
-  element.name                      == key        ||
-  element.getAttribute('data-bind') == key
+  element.el.id                        == key ||
+  key in element.classNames                   ||
+  element.el.name                      == key ||
+  element.el.getAttribute('data-bind') == key
 
 # IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
 # Override `Transparency.clone` with a custom clone function, if oldIE needs to be
@@ -178,7 +178,6 @@ class Instance
 
     else if typeof model == 'object'
       for own key, value of model when value?
-
         # The value can be either a nested model or a plain value, i.e., `Date`, `string`, `boolean` or `double`.
         # Start by handling the plain values and finding the matching elements.
         if isPlainValue value
@@ -201,10 +200,9 @@ class Instance
             #          </select>
             #       </div>
             #
-            nodeName = element.nodeName.toLowerCase()
-            if nodeName == 'input'
+            if element.nodeName == 'input'
               element.attr 'value', value
-            else if nodeName == 'select'
+            else if element.nodeName == 'select'
               element.attr 'selected', value
             else element.attr 'text',  value
 
@@ -291,7 +289,7 @@ class Instance
             index:   index
             value:   element.originalAttributes[attribute]
 
-          element.attr attribute, value
+          element.attr(attribute, value) if value?
 
   renderChildren: chainable (model, children, directives, options) ->
     for key in children
@@ -299,7 +297,7 @@ class Instance
         Transparency.render element.el, model[key], directives[key], options
 
   matchingElements: (key) ->
-    elements = @queryCache[key] ||= (e for e in @elements when Transparency.matcher e.el, key)
+    elements = @queryCache[key] ||= (el for el in @elements when Transparency.matcher el, key)
     log "Matching elements for '#{key}':", elements
     elements
 
@@ -329,6 +327,8 @@ class Element
   constructor: (@el) ->
     @childNodes         = getChildNodes @el
     @nodeName           = @el.nodeName.toLowerCase()
+    @classNames         = @el.className.split ' '
+    @isVoidElement      = @nodeName in VOID_ELEMENTS
     @originalAttributes = {}
 
   empty: ->
@@ -361,24 +361,23 @@ class Element
     (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
 
   setSelected: (value) ->
-    value = value.toString()
+    value = String(value)
     childElements = getElements @el
     for child in childElements
-      if child.el.nodeName.toLowerCase() == 'option'
+      if child.nodeName == 'option'
         if child.el.value == value
           child.el.selected = true
         else
           child.el.selected = false
 
   attr: (attribute, value) ->
-    return unless value?
     if @nodeName == 'select' and attribute == 'selected'
       @setSelected value
 
     else
       switch attribute
         when 'text'
-          unless isVoidElement @el
+          unless @isVoidElement
             @originalAttributes['text'] ?= @getText()
             @setText value
 
@@ -439,15 +438,9 @@ log           = nullLogger
 toString      = Object.prototype.toString
 isDate        = (obj) -> toString.call(obj) == '[object Date]'
 isDomElement  = (obj) -> obj.nodeType == ELEMENT_NODE
-isVoidElement = (el)  -> indexOf(VOID_ELEMENTS, el.nodeName.toLowerCase()) > -1
-isPlainValue  = (obj) -> isDate(obj) or typeof obj != 'object' and typeof obj != 'function'
+isPlainValue  = (obj) -> type = typeof obj; (type != 'object' and type != 'function') or isDate obj
 isBoolean     = (obj) -> obj is true or obj is false
 isArray       = Array.isArray || (obj) -> toString.call(obj) == '[object Array]'
-indexOf       = (array, item) ->
-  return array.indexOf(item) if array.indexOf
-  for x, i in array
-    if x == item then return i
-  -1
 
 (jQuery || Zepto)?.fn.render = Transparency.jQueryPlugin
 

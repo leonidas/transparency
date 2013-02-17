@@ -30,7 +30,7 @@ describe "Transparency", ->
       ]
 
     data_bind_matcher = (element, key) ->
-      element.getAttribute('data-bind') == key
+      element.el.getAttribute('data-bind') == key
 
     expected_with_custom_matcher = $ """
       <div class="container">

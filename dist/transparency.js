@@ -1,5 +1,6 @@
 (function() {
-  var Context, ELEMENT_NODE, Element, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, indexOf, isArray, isBoolean, isDate, isDomElement, isPlainValue, isVoidElement, log, nullLogger, toString, _getElements, _ref,
+  var Context, ELEMENT_NODE, Element, Instance, TEXT_NODE, Transparency, VOID_ELEMENTS, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __slice = [].slice;
 
@@ -38,7 +39,7 @@
   };
 
   Transparency.matcher = function(element, key) {
-    return element.id === key || indexOf(element.className.split(' '), key) > -1 || element.name === key || element.getAttribute('data-bind') === key;
+    return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
   };
 
   Transparency.clone = function(node) {
@@ -150,7 +151,7 @@
     });
 
     Instance.prototype.renderValues = chainable(function(model, children) {
-      var element, key, nodeName, value, _results;
+      var element, key, value, _results;
       if (isDomElement(model) && (element = this.elements[0])) {
         return element.empty().el.appendChild(model);
       } else if (typeof model === 'object') {
@@ -166,10 +167,9 @@
                 _results1 = [];
                 for (_i = 0, _len = _ref.length; _i < _len; _i++) {
                   element = _ref[_i];
-                  nodeName = element.nodeName.toLowerCase();
-                  if (nodeName === 'input') {
+                  if (element.nodeName === 'input') {
                     _results1.push(element.attr('value', value));
-                  } else if (nodeName === 'select') {
+                  } else if (element.nodeName === 'select') {
                     _results1.push(element.attr('selected', value));
                   } else {
                     _results1.push(element.attr('text', value));
@@ -220,7 +220,11 @@
                     index: index,
                     value: element.originalAttributes[attribute]
                   });
-                  _results2.push(element.attr(attribute, value));
+                  if (value != null) {
+                    _results2.push(element.attr(attribute, value));
+                  } else {
+                    _results2.push(void 0);
+                  }
                 }
                 return _results2;
               })());
@@ -252,15 +256,15 @@
     });
 
     Instance.prototype.matchingElements = function(key) {
-      var e, elements, _base;
+      var el, elements, _base;
       elements = (_base = this.queryCache)[key] || (_base[key] = (function() {
         var _i, _len, _ref, _results;
         _ref = this.elements;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          e = _ref[_i];
-          if (Transparency.matcher(e.el, key)) {
-            _results.push(e);
+          el = _ref[_i];
+          if (Transparency.matcher(el, key)) {
+            _results.push(el);
           }
         }
         return _results;
@@ -308,9 +312,12 @@
   Element = (function() {
 
     function Element(el) {
+      var _ref;
       this.el = el;
       this.childNodes = getChildNodes(this.el);
       this.nodeName = this.el.nodeName.toLowerCase();
+      this.classNames = this.el.className.split(' ');
+      this.isVoidElement = (_ref = this.nodeName, __indexOf.call(VOID_ELEMENTS, _ref) >= 0);
       this.originalAttributes = {};
     }
 
@@ -376,12 +383,12 @@
 
     Element.prototype.setSelected = function(value) {
       var child, childElements, _i, _len, _results;
-      value = value.toString();
+      value = String(value);
       childElements = getElements(this.el);
       _results = [];
       for (_i = 0, _len = childElements.length; _i < _len; _i++) {
         child = childElements[_i];
-        if (child.el.nodeName.toLowerCase() === 'option') {
+        if (child.nodeName === 'option') {
           if (child.el.value === value) {
             _results.push(child.el.selected = true);
           } else {
@@ -396,15 +403,12 @@
 
     Element.prototype.attr = function(attribute, value) {
       var _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
-      if (value == null) {
-        return;
-      }
       if (this.nodeName === 'select' && attribute === 'selected') {
         return this.setSelected(value);
       } else {
         switch (attribute) {
           case 'text':
-            if (!isVoidElement(this.el)) {
+            if (!this.isVoidElement) {
               if ((_ref = (_base = this.originalAttributes)['text']) == null) {
                 _base['text'] = this.getText();
               }
@@ -498,12 +502,10 @@
     return obj.nodeType === ELEMENT_NODE;
   };
 
-  isVoidElement = function(el) {
-    return indexOf(VOID_ELEMENTS, el.nodeName.toLowerCase()) > -1;
-  };
-
   isPlainValue = function(obj) {
-    return isDate(obj) || typeof obj !== 'object' && typeof obj !== 'function';
+    var type;
+    type = typeof obj;
+    return (type !== 'object' && type !== 'function') || isDate(obj);
   };
 
   isBoolean = function(obj) {
@@ -512,20 +514,6 @@
 
   isArray = Array.isArray || function(obj) {
     return toString.call(obj) === '[object Array]';
-  };
-
-  indexOf = function(array, item) {
-    var i, x, _i, _len;
-    if (array.indexOf) {
-      return array.indexOf(item);
-    }
-    for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
-      x = array[i];
-      if (x === item) {
-        return i;
-      }
-    }
-    return -1;
   };
 
   if ((_ref = jQuery || Zepto) != null) {

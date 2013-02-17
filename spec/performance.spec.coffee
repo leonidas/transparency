@@ -10,6 +10,7 @@ describe "Transparency performance", ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
             index    = 0
             data     = ({todo: Math.random()} for i in [1..@count])
+            Transparency.render template, {todo: Math.random()}
             return
 
           fn: ->
@@ -46,6 +47,7 @@ describe "Transparency performance", ->
             data     = for i in [1..@count]
               for j in [1..100]
                 {todo: Math.random()}
+            Transparency.render template, ({todo: Math.random()} for j in [1..100])
             return
 
           fn: ->
