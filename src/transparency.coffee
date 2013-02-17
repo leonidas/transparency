@@ -363,13 +363,8 @@ class Element
 
   setSelected: (value) ->
     value = value.toString()
-    childElements = getElements @el
-    for child in childElements
-      if child.nodeName == 'option'
-        if child.el.value == value
-          child.el.selected = true
-        else
-          child.el.selected = false
+    for child in getElements @el when child.nodeName == 'option'
+      child.el.selected = child.el.value == value
 
   attr: (attribute, value) ->
     if @nodeName == 'select' and attribute == 'selected'

@@ -382,20 +382,14 @@
     };
 
     Element.prototype.setSelected = function(value) {
-      var child, childElements, _i, _len, _results;
+      var child, _i, _len, _ref, _results;
       value = value.toString();
-      childElements = getElements(this.el);
+      _ref = getElements(this.el);
       _results = [];
-      for (_i = 0, _len = childElements.length; _i < _len; _i++) {
-        child = childElements[_i];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
         if (child.nodeName === 'option') {
-          if (child.el.value === value) {
-            _results.push(child.el.selected = true);
-          } else {
-            _results.push(child.el.selected = false);
-          }
-        } else {
-          _results.push(void 0);
+          _results.push(child.el.selected = child.el.value === value);
         }
       }
       return _results;
