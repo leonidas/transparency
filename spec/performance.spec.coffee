@@ -4,7 +4,7 @@ describe "Transparency performance", ->
 
     describe "with one todo item", ->
 
-      it "should be fast enough", ->
+      it "should be on the same ballpark with Handlebars", ->
         transparency = new Benchmark 'transparency - cached tempate, one todo',
           setup: ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
@@ -34,12 +34,12 @@ describe "Transparency performance", ->
           .add(handlebars)
 
           .on('complete', ->
-            expect(this[0]).toBeFastEnough(this[1]))
+            expect(this[0]).toBeOnTheSameBallpark(this[1], 5))
           .run()
 
     describe "with hundred todo items", ->
 
-      it "should be fast enough", ->
+      it "should be on the same ballpark with Handlebars", ->
         transparency = new Benchmark 'transparency - cached tempate, 100 todos',
           setup: ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
@@ -73,14 +73,14 @@ describe "Transparency performance", ->
           .add(handlebars)
 
           .on('complete', ->
-            expect(this[0]).toBeFastEnough(this[1]))
+            expect(this[0]).toBeOnTheSameBallpark(this[1], 5))
           .run()
 
   describe "on first render call", ->
 
     describe "with one todo item", ->
 
-      it "should be fast enough", ->
+      it "should be on the same ballpark with Handlebars", ->
         transparency = new Benchmark 'transparency - unused template, one todo',
           setup: ->
             template = for i in [1..@count]
@@ -112,12 +112,12 @@ describe "Transparency performance", ->
           .add(handlebars)
 
           .on('complete', ->
-            expect(this[0]).toBeFastEnough(this[1]))
+            expect(this[0]).toBeOnTheSameBallpark(this[1], 5))
           .run()
 
     describe "with hundred todo items", ->
 
-      it "should be fast enough", ->
+      it "should be on the same ballpark with Handlebars", ->
           transparency = new Benchmark 'transparency - unused template, 100 todos',
             setup: ->
               template = for i in [1..@count]
@@ -153,5 +153,5 @@ describe "Transparency performance", ->
             .add(handlebars)
 
             .on('complete', ->
-              expect(this[0]).toBeFastEnough(this[1]))
+              expect(this[0]).toBeOnTheSameBallpark(this[1], 5))
             .run()

@@ -47,13 +47,13 @@ beforeEach ->
 
       true
 
-    toBeFastEnough: (expected) ->
+    toBeOnTheSameBallpark: (expected, ballpark) ->
       actual = @actual
       @message = ->
         "Expected #{actual.name} (#{actual.stats.mean} +/- #{actual.stats.moe} to be less than " +
-        "#{expected.name} (#{expected.stats.mean} +/- #{expected.stats.moe}"
+        "#{ballpark} x #{expected.name} (#{expected.stats.mean} +/- #{expected.stats.moe}"
 
       console.log actual.toString()
       console.log expected.toString()
-      (actual.stats.mean + actual.stats.moe) < 2 * (expected.stats.mean + actual.stats.moe)
+      actual.stats.mean + actual.stats.moe < ballpark * expected.stats.mean + actual.stats.moe
 
