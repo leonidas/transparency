@@ -44,11 +44,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 
   # Rendering is a lot faster when the context element is detached from the DOM, as
   # reflow calculations are not triggered. So, detach it before rendering.
-  context
-    .detach()
-    .render(models, directives, options)
-    .attach()
-    .el
+  context.render(models, directives, options).el
 
 # ### Configuration
 
@@ -88,7 +84,15 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
-# 'Chainable' method decorator.
+before = (decorator) -> (method) -> ->
+  decorator.apply this, arguments
+  method.apply this, arguments
+
+after = (decorator) -> (method) -> ->
+  method.apply this, arguments
+  decorator.apply this, arguments
+
+# Decorate method to support chaining.
 #
 #     // in console
 #     > o = {}
@@ -98,7 +102,7 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 #     Hello World
 #     "Hello"
 #
-chainable = (method) -> -> method.apply(this, arguments); this
+chainable = after -> this
 
 # **Context** stores the original `template` elements and is responsible for creating,
 # adding and removing template `instances` to match the amount of `models`.
@@ -108,35 +112,39 @@ class Context
     @instances     = [new Instance(@el)]
     @instanceCache = []
 
-  detach: chainable ->
+  detach = chainable ->
     @parent = @el.parentNode
     if @parent
       @nextSibling = @el.nextSibling
       @parent.removeChild @el
 
-  attach: chainable ->
+  attach = chainable ->
     if @parent
       if @nextSibling
       then @parent.insertBefore @el, @nextSibling
       else @parent.appendChild @el
 
-  render: chainable (models, directives, options) ->
+  render: \
+    before(detach) \
+    after(attach) \
+    chainable \
+    (models, directives, options) ->
 
-    # Cloning DOM elements is expensive, so save unused template `instances` and reuse them later.
-    while models.length < @instances.length
-      @instanceCache.push @instances.pop().remove()
+      # Cloning DOM elements is expensive, so save unused template `instances` and reuse them later.
+      while models.length < @instances.length
+        @instanceCache.push @instances.pop().remove()
 
-    for model, index in models
-      unless instance = @instances[index]
-        instance = @instanceCache.pop() || new Instance(cloneNode(@template))
-        @instances.push instance.appendTo(@el)
+      for model, index in models
+        unless instance = @instances[index]
+          instance = @instanceCache.pop() || new Instance(cloneNode(@template))
+          @instances.push instance.appendTo(@el)
 
-      children = []
-      instance
-        .prepare(model, children)
-        .renderValues(model, children)
-        .renderDirectives(model, index, directives)
-        .renderChildren(model, children, directives, options)
+        children = []
+        instance
+          .prepare(model, children)
+          .renderValues(model, children)
+          .renderDirectives(model, index, directives)
+          .renderChildren(model, children, directives, options)
 
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
@@ -451,11 +459,11 @@ log           = nullLogger
 
 # Mostly from https://github.com/documentcloud/underscore/blob/master/underscore.js
 toString      = Object.prototype.toString
+isArray       = Array.isArray || (obj) -> toString.call(obj) == '[object Array]'
 isDate        = (obj) -> toString.call(obj) == '[object Date]'
 isDomElement  = (obj) -> obj.nodeType == ELEMENT_NODE
 isPlainValue  = (obj) -> type = typeof obj; (type != 'object' and type != 'function') or isDate obj
 isBoolean     = (obj) -> obj is true or obj is false
-isArray       = Array.isArray || (obj) -> toString.call(obj) == '[object Array]'
 
 (jQuery || Zepto)?.fn.render = Transparency.jQueryPlugin
 

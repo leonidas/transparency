@@ -1,5 +1,5 @@
 (function() {
-  var Context, ELEMENT_NODE, Element, ElementFactory, Input, Instance, Select, TEXT_NODE, Transparency, VoidElement, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
+  var Context, ELEMENT_NODE, Element, ElementFactory, Input, Instance, Select, TEXT_NODE, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -26,7 +26,7 @@
       models = [models];
     }
     context = (_base = data(context)).context || (_base.context = new Context(context));
-    return context.detach().render(models, directives, options).attach().el;
+    return context.render(models, directives, options).el;
   };
 
   Transparency.jQueryPlugin = function(models, directives, options) {
@@ -47,14 +47,30 @@
     return typeof (_base = jQuery || Zepto) === "function" ? _base(node).clone()[0] : void 0;
   };
 
-  chainable = function(method) {
-    return function() {
-      method.apply(this, arguments);
-      return this;
+  before = function(decorator) {
+    return function(method) {
+      return function() {
+        decorator.apply(this, arguments);
+        return method.apply(this, arguments);
+      };
     };
   };
 
+  after = function(decorator) {
+    return function(method) {
+      return function() {
+        method.apply(this, arguments);
+        return decorator.apply(this, arguments);
+      };
+    };
+  };
+
+  chainable = after(function() {
+    return this;
+  });
+
   Context = (function() {
+    var attach, detach;
 
     function Context(el) {
       this.el = el;
@@ -63,7 +79,7 @@
       this.instanceCache = [];
     }
 
-    Context.prototype.detach = chainable(function() {
+    detach = chainable(function() {
       this.parent = this.el.parentNode;
       if (this.parent) {
         this.nextSibling = this.el.nextSibling;
@@ -71,7 +87,7 @@
       }
     });
 
-    Context.prototype.attach = chainable(function() {
+    attach = chainable(function() {
       if (this.parent) {
         if (this.nextSibling) {
           return this.parent.insertBefore(this.el, this.nextSibling);
@@ -81,7 +97,7 @@
       }
     });
 
-    Context.prototype.render = chainable(function(models, directives, options) {
+    Context.prototype.render = before(detach)(after(attach)(chainable(function(models, directives, options) {
       var children, index, instance, model, _i, _len, _results;
       while (models.length < this.instances.length) {
         this.instanceCache.push(this.instances.pop().remove());
@@ -97,7 +113,7 @@
         _results.push(instance.prepare(model, children).renderValues(model, children).renderDirectives(model, index, directives).renderChildren(model, children, directives, options));
       }
       return _results;
-    });
+    })));
 
     return Context;
 
@@ -526,6 +542,10 @@
 
   toString = Object.prototype.toString;
 
+  isArray = Array.isArray || function(obj) {
+    return toString.call(obj) === '[object Array]';
+  };
+
   isDate = function(obj) {
     return toString.call(obj) === '[object Date]';
   };
@@ -542,10 +562,6 @@
 
   isBoolean = function(obj) {
     return obj === true || obj === false;
-  };
-
-  isArray = Array.isArray || function(obj) {
-    return toString.call(obj) === '[object Array]';
   };
 
   if ((_ref = jQuery || Zepto) != null) {
