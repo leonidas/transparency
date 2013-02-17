@@ -51,10 +51,10 @@ Transparency.matcher = function (element, key) {
   element.getAttribute('data-bind') == key;
 };
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Transparency.matcher = </span><span class="nf">(element, key) -&gt;</span>
-  <span class="nx">element</span><span class="p">.</span><span class="nx">id</span>                        <span class="o">==</span> <span class="nx">key</span>        <span class="o">||</span>
-  <span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">className</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">),</span> <span class="nx">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span>
-  <span class="nx">element</span><span class="p">.</span><span class="nx">name</span>                      <span class="o">==</span> <span class="nx">key</span>        <span class="o">||</span>
-  <span class="nx">element</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s">&#39;data-bind&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="nx">key</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
+  <span class="nx">element</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">id</span>                        <span class="o">==</span> <span class="nx">key</span> <span class="o">||</span>
+  <span class="nx">key</span> <span class="k">in</span> <span class="nx">element</span><span class="p">.</span><span class="nx">classNames</span>                   <span class="o">||</span>
+  <span class="nx">element</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">name</span>                      <span class="o">==</span> <span class="nx">key</span> <span class="o">||</span>
+  <span class="nx">element</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s">&#39;data-bind&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="nx">key</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
 Override <code>Transparency.clone</code> with a custom clone function, if oldIE needs to be
 supported without jQuery.</p>
 
@@ -155,10 +155,9 @@ with <code>select</code> element, the matching <code>option</code> element shoul
        &lt;option value="2" selected="selected"&gt;Hobby&lt;/option&gt;
      &lt;/select&gt;
   &lt;/div&gt;
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nv">nodeName = </span><span class="nx">element</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span>
-            <span class="k">if</span> <span class="nx">nodeName</span> <span class="o">==</span> <span class="s">&#39;input&#39;</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">nodeName</span> <span class="o">==</span> <span class="s">&#39;input&#39;</span>
               <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;value&#39;</span><span class="p">,</span> <span class="nx">value</span>
-            <span class="k">else</span> <span class="k">if</span> <span class="nx">nodeName</span> <span class="o">==</span> <span class="s">&#39;select&#39;</span>
+            <span class="k">else</span> <span class="k">if</span> <span class="nx">element</span><span class="p">.</span><span class="nx">nodeName</span> <span class="o">==</span> <span class="s">&#39;select&#39;</span>
               <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;selected&#39;</span><span class="p">,</span> <span class="nx">value</span>
             <span class="k">else</span> <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="s">&#39;text&#39;</span><span class="p">,</span>  <span class="nx">value</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Rendering nested models breadth-first is more robust, as there might be colliding keys,
 i.e., given a model</p>
@@ -245,7 +244,7 @@ $('#template').render(model, directives);
             <span class="nv">index: </span>  <span class="nx">index</span>
             <span class="nv">value: </span>  <span class="nx">element</span><span class="p">.</span><span class="nx">originalAttributes</span><span class="p">[</span><span class="nx">attribute</span><span class="p">]</span>
 
-          <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span> <span class="nx">attribute</span><span class="p">,</span> <span class="nx">value</span>
+          <span class="nx">element</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="nx">attribute</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="k">if</span> <span class="nx">value</span><span class="o">?</span>
 
   <span class="nv">renderChildren: </span><span class="nx">chainable</span> <span class="nf">(model, children, directives, options) -&gt;</span>
     <span class="k">for</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">children</span>
@@ -253,7 +252,7 @@ $('#template').render(model, directives);
         <span class="nx">Transparency</span><span class="p">.</span><span class="nx">render</span> <span class="nx">element</span><span class="p">.</span><span class="nx">el</span><span class="p">,</span> <span class="nx">model</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">directives</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">options</span>
 
   <span class="nv">matchingElements: </span><span class="nf">(key) -&gt;</span>
-    <span class="nv">elements = </span><span class="nx">@queryCache</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">||=</span> <span class="p">(</span><span class="nx">e</span> <span class="k">for</span> <span class="nx">e</span> <span class="k">in</span> <span class="nx">@elements</span> <span class="k">when</span> <span class="nx">Transparency</span><span class="p">.</span><span class="nx">matcher</span> <span class="nx">e</span><span class="p">.</span><span class="nx">el</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span>
+    <span class="nv">elements = </span><span class="nx">@queryCache</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">||=</span> <span class="p">(</span><span class="nx">el</span> <span class="k">for</span> <span class="nx">el</span> <span class="k">in</span> <span class="nx">@elements</span> <span class="k">when</span> <span class="nx">Transparency</span><span class="p">.</span><span class="nx">matcher</span> <span class="nx">el</span><span class="p">,</span> <span class="nx">key</span><span class="p">)</span>
     <span class="nx">log</span> <span class="s">&quot;Matching elements for &#39;</span><span class="si">#{</span><span class="nx">key</span><span class="si">}</span><span class="s">&#39;:&quot;</span><span class="p">,</span> <span class="nx">elements</span>
     <span class="nx">elements</span>
 
@@ -283,6 +282,8 @@ $('#template').render(model, directives);
   <span class="nv">constructor: </span><span class="nf">(@el) -&gt;</span>
     <span class="vi">@childNodes         = </span><span class="nx">getChildNodes</span> <span class="nx">@el</span>
     <span class="vi">@nodeName           = </span><span class="nx">@el</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span>
+    <span class="vi">@classNames         = </span><span class="nx">@el</span><span class="p">.</span><span class="nx">className</span><span class="p">.</span><span class="nx">split</span> <span class="s">&#39; &#39;</span>
+    <span class="vi">@isVoidElement      = </span><span class="nx">@nodeName</span> <span class="k">in</span> <span class="nx">VOID_ELEMENTS</span>
     <span class="vi">@originalAttributes = </span><span class="p">{}</span>
 
   <span class="nv">empty: </span><span class="nf">-&gt;</span>
@@ -315,24 +316,23 @@ $('#template').render(model, directives);
     <span class="p">(</span><span class="nx">child</span><span class="p">.</span><span class="nx">nodeValue</span> <span class="k">for</span> <span class="nx">child</span> <span class="k">in</span> <span class="nx">@childNodes</span> <span class="k">when</span> <span class="nx">child</span><span class="p">.</span><span class="nx">nodeType</span> <span class="o">==</span> <span class="nx">TEXT_NODE</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;&#39;</span>
 
   <span class="nv">setSelected: </span><span class="nf">(value) -&gt;</span>
-    <span class="nv">value = </span><span class="nx">value</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+    <span class="nv">value = </span><span class="nb">String</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
     <span class="nv">childElements = </span><span class="nx">getElements</span> <span class="nx">@el</span>
     <span class="k">for</span> <span class="nx">child</span> <span class="k">in</span> <span class="nx">childElements</span>
-      <span class="k">if</span> <span class="nx">child</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;option&#39;</span>
+      <span class="k">if</span> <span class="nx">child</span><span class="p">.</span><span class="nx">nodeName</span> <span class="o">==</span> <span class="s">&#39;option&#39;</span>
         <span class="k">if</span> <span class="nx">child</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="nx">value</span>
           <span class="nv">child.el.selected = </span><span class="kc">true</span>
         <span class="k">else</span>
           <span class="nv">child.el.selected = </span><span class="kc">false</span>
 
   <span class="nv">attr: </span><span class="nf">(attribute, value) -&gt;</span>
-    <span class="k">return</span> <span class="k">unless</span> <span class="nx">value</span><span class="o">?</span>
     <span class="k">if</span> <span class="nx">@nodeName</span> <span class="o">==</span> <span class="s">&#39;select&#39;</span> <span class="o">and</span> <span class="nx">attribute</span> <span class="o">==</span> <span class="s">&#39;selected&#39;</span>
       <span class="nx">@setSelected</span> <span class="nx">value</span>
 
     <span class="k">else</span>
       <span class="k">switch</span> <span class="nx">attribute</span>
         <span class="k">when</span> <span class="s">&#39;text&#39;</span>
-          <span class="k">unless</span> <span class="nx">isVoidElement</span> <span class="nx">@el</span>
+          <span class="k">unless</span> <span class="nx">@isVoidElement</span>
             <span class="nx">@originalAttributes</span><span class="p">[</span><span class="s">&#39;text&#39;</span><span class="p">]</span> <span class="o">?=</span> <span class="nx">@getText</span><span class="p">()</span>
             <span class="nx">@setText</span> <span class="nx">value</span>
 
@@ -382,15 +382,9 @@ http://perfectionkills.com/whats-wrong-with-extending-the-dom/</p>             <
 <span class="nv">log           = </span><span class="nx">nullLogger</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Mostly from https://github.com/documentcloud/underscore/blob/master/underscore.js</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">toString      = </span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span>
 <span class="nv">isDate        = </span><span class="nf">(obj) -&gt;</span> <span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;[object Date]&#39;</span>
 <span class="nv">isDomElement  = </span><span class="nf">(obj) -&gt;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">nodeType</span> <span class="o">==</span> <span class="nx">ELEMENT_NODE</span>
-<span class="nv">isVoidElement = </span><span class="nf">(el)  -&gt;</span> <span class="nx">indexOf</span><span class="p">(</span><span class="nx">VOID_ELEMENTS</span><span class="p">,</span> <span class="nx">el</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">())</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span>
-<span class="nv">isPlainValue  = </span><span class="nf">(obj) -&gt;</span> <span class="nx">isDate</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">or</span> <span class="k">typeof</span> <span class="nx">obj</span> <span class="o">!=</span> <span class="s">&#39;object&#39;</span> <span class="o">and</span> <span class="k">typeof</span> <span class="nx">obj</span> <span class="o">!=</span> <span class="s">&#39;function&#39;</span>
+<span class="nv">isPlainValue  = </span><span class="nf">(obj) -&gt;</span> <span class="nv">type = </span><span class="k">typeof</span> <span class="nx">obj</span><span class="p">;</span> <span class="p">(</span><span class="nx">type</span> <span class="o">!=</span> <span class="s">&#39;object&#39;</span> <span class="o">and</span> <span class="nx">type</span> <span class="o">!=</span> <span class="s">&#39;function&#39;</span><span class="p">)</span> <span class="o">or</span> <span class="nx">isDate</span> <span class="nx">obj</span>
 <span class="nv">isBoolean     = </span><span class="nf">(obj) -&gt;</span> <span class="nx">obj</span> <span class="o">is</span> <span class="kc">true</span> <span class="o">or</span> <span class="nx">obj</span> <span class="o">is</span> <span class="kc">false</span>
 <span class="nv">isArray       = </span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span> <span class="o">||</span> <span class="nf">(obj) -&gt;</span> <span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s">&#39;[object Array]&#39;</span>
-<span class="nv">indexOf       = </span><span class="nf">(array, item) -&gt;</span>
-  <span class="k">return</span> <span class="nx">array</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="k">if</span> <span class="nx">array</span><span class="p">.</span><span class="nx">indexOf</span>
-  <span class="k">for</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">array</span>
-    <span class="k">if</span> <span class="nx">x</span> <span class="o">==</span> <span class="nx">item</span> <span class="k">then</span> <span class="k">return</span> <span class="nx">i</span>
-  <span class="o">-</span><span class="mi">1</span>
 
 <span class="p">(</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="nx">Zepto</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="nv">fn.render = </span><span class="nx">Transparency</span><span class="p">.</span><span class="nx">jQueryPlugin</span>
 
