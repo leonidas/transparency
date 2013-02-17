@@ -24,6 +24,10 @@ module.exports = function(grunt) {
     },
 
     jasmine: {
+      functional: {
+        src: ['spec/SpecRunner.html', 'spec/AmdSpecRunner.html'],
+        errorReporting: true
+      },
       all: {
         src: ['spec/*.html'],
         errorReporting: true
@@ -39,7 +43,7 @@ module.exports = function(grunt) {
 
     watch: {
       files: ['src/**/*.coffee', 'spec/**/*.coffee'],
-      tasks: ['coffee', 'jasmine', 'min', 'docco']
+      tasks: ['coffee', 'jasmine:functional', 'min', 'docco']
     },
 
     docco: {
@@ -53,7 +57,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-docco');
 
   // Default task.
-  grunt.registerTask('default', ['coffee', 'jasmine', 'min', 'docco', 'watch']);
-  grunt.registerTask('test',    ['coffee', 'jasmine']);
+  grunt.registerTask('default', ['coffee', 'jasmine:functional', 'min', 'docco', 'watch']);
+  grunt.registerTask('test',    ['coffee', 'jasmine:all']);
 
 };
