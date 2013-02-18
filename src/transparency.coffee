@@ -289,14 +289,7 @@ class Instance
   renderDirectives: chainable (model, index, directives) ->
     for own key, attributes of directives when typeof attributes == 'object'
       for element in @matchingElements key
-        for own attribute, directive of attributes when typeof directive == 'function'
-
-          value = directive.call model,
-            element: element.el
-            index:   index
-            value:   element.originalAttributes[attribute]
-
-          element.dispatch(attribute, value) if value?
+        element.renderDirectives model, index, attributes
 
   renderChildren: chainable (model, children, directives, options) ->
     for key in children
@@ -309,31 +302,26 @@ class Instance
     elements
 
 class Element
+  dispatch = (attribute, value) ->
+    if @[attribute] then @[attribute](value) else @attr attribute, value
+
   constructor: (@el) ->
     @childNodes         = getChildNodes @el
     @nodeName           = @el.nodeName.toLowerCase()
     @classNames         = @el.className.split ' '
     @originalAttributes = {}
 
-  empty: ->
+  empty: chainable ->
     @el.removeChild child while child = @el.firstChild
-    this
 
   reset: ->
     for attribute, value of @originalAttributes
-      @dispatch attribute, value
+      dispatch.call this, attribute, value
 
-  render: (value) -> @setText value
+  render: (value) -> @text value
 
-  setHtml: (html) ->
-    @originalAttributes['html'] ?= @el.innerHTML
-    @empty()
-    @el.innerHTML = html
-    for child in @childNodes
-      @el.appendChild child
-
-  setText: (text) ->
-    @originalAttributes['text'] ?= @getText()
+  text: (text) ->
+    @originalAttributes['text'] ?= (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
     textNode = @el.firstChild
 
     if !textNode
@@ -345,21 +333,15 @@ class Element
     else
       textNode.nodeValue = text
 
-  setClassName: (className) ->
+  html: (html) ->
+    @originalAttributes['html'] ?= @el.innerHTML
+    @el.innerHTML = html
+    for child in @childNodes
+      @el.appendChild child
+
+  class: (className) ->
     @originalAttributes['class'] ?= @el.className
     @el.className = className
-
-  getText: ->
-    (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
-
-  dispatch: (attribute, value) ->
-    dispatchTable =
-      text:  @setText
-      html:  @setHtml
-      class: @setClassName
-
-    method = dispatchTable[attribute] || (value) -> @attr attribute, value
-    method.call this, value
 
   attr: (attribute, value) ->
     @el[attribute] = value
@@ -372,6 +354,15 @@ class Element
     else
       @originalAttributes[attribute] ?= @el.getAttribute(attribute) || ""
       @el.setAttribute attribute, value.toString()
+
+  renderDirectives: (model, index, attributes) ->
+    for own attribute, directive of attributes when typeof directive == 'function'
+      value = directive.call model,
+        element: @el
+        index:   index
+        value:   @originalAttributes[attribute]
+
+      dispatch.call(this, attribute, value) if value?
 
 ElementFactory =
   elements: {}
@@ -396,10 +387,11 @@ class VoidElement extends Element
   for nodeName in VOID_ELEMENTS
     ElementFactory.elements[nodeName] = this
 
-  setText: ->
+  text: ->
 
 class Input extends VoidElement
   ElementFactory.elements.input = this
+
   render: (value) -> @attr 'value', value
 
 getChildNodes = (el) ->
