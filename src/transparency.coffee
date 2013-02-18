@@ -48,6 +48,26 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 
 # ### Configuration
 
+before = (decorator) -> (method) -> ->
+  decorator.apply this, arguments
+  method.apply this, arguments
+
+after = (decorator) -> (method) -> ->
+  method.apply this, arguments
+  decorator.apply this, arguments
+
+# Decorate method to support chaining.
+#
+#     // in console
+#     > o = {}
+#     > o.hello = "Hello"
+#     > o.foo = chainable(function(){console.log(this.hello + " World")});
+#     > o.foo().hello
+#     Hello World
+#     "Hello"
+#
+chainable = after -> this
+
 # In order to use Transparency as a jQuery plugin, add Transparency.jQueryPlugin to jQuery.fn object.
 #
 #     $.fn.render = Transparency.jQueryPlugin;
@@ -55,10 +75,9 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 #     // Render with jQuery
 #     $('#template').render({hello: 'World'});
 #
-Transparency.jQueryPlugin = (models, directives, options) ->
+Transparency.jQueryPlugin = chainable (models, directives, options) ->
   for context in this
     Transparency.render context, models, directives, options
-  this
 
 # By default, Transparency matches model properties to elements by `id`, `class`, `name` and `data-bind` attributes.
 # Override `Transparency.matcher` to change the default behavior.
@@ -84,33 +103,9 @@ Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
 
 # ## Internals
 
-before = (decorator) -> (method) -> ->
-  decorator.apply this, arguments
-  method.apply this, arguments
-
-after = (decorator) -> (method) -> ->
-  method.apply this, arguments
-  decorator.apply this, arguments
-
-# Decorate method to support chaining.
-#
-#     // in console
-#     > o = {}
-#     > o.hello = "Hello"
-#     > o.foo = chainable(function(){console.log(this.hello + " World")});
-#     > o.foo().hello
-#     Hello World
-#     "Hello"
-#
-chainable = after -> this
-
 # **Context** stores the original `template` elements and is responsible for creating,
 # adding and removing template `instances` to match the amount of `models`.
 class Context
-  constructor: (@el) ->
-    @template      = cloneNode @el
-    @instances     = [new Instance(@el)]
-    @instanceCache = []
 
   detach = chainable ->
     @parent = @el.parentNode
@@ -123,6 +118,11 @@ class Context
       if @nextSibling
       then @parent.insertBefore @el, @nextSibling
       else @parent.appendChild @el
+
+  constructor: (@el) ->
+    @template      = cloneNode @el
+    @instances     = [new Instance(@el)]
+    @instanceCache = []
 
   render: \
     before(detach) \
@@ -150,6 +150,10 @@ class Context
 # `instance` object keeps track of template DOM nodes and elements.
 # It memoizes the matching elements to `queryCache` in order to speed up the rendering.
 class Instance
+
+  DirectiveDispatcher =
+    dispatch: ->
+
   constructor: (template) ->
     @queryCache = {}
     @childNodes = getChildNodes template
@@ -292,7 +296,7 @@ class Instance
             index:   index
             value:   element.originalAttributes[attribute]
 
-          element.attr(attribute, value) if value?
+          element.dispatch(attribute, value) if value?
 
   renderChildren: chainable (model, children, directives, options) ->
     for key in children
@@ -317,17 +321,19 @@ class Element
 
   reset: ->
     for attribute, value of @originalAttributes
-      @attr attribute, value
+      @dispatch attribute, value
 
-  render: (value) -> @attr 'text', value
+  render: (value) -> @setText value
 
   setHtml: (html) ->
+    @originalAttributes['html'] ?= @el.innerHTML
     @empty()
     @el.innerHTML = html
     for child in @childNodes
       @el.appendChild child
 
   setText: (text) ->
+    @originalAttributes['text'] ?= @getText()
     textNode = @el.firstChild
 
     if !textNode
@@ -339,34 +345,33 @@ class Element
     else
       textNode.nodeValue = text
 
+  setClassName: (className) ->
+    @originalAttributes['class'] ?= @el.className
+    @el.className = className
+
   getText: ->
     (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
 
+  dispatch: (attribute, value) ->
+    dispatchTable =
+      text:  @setText
+      html:  @setHtml
+      class: @setClassName
+
+    method = dispatchTable[attribute] || (value) -> @attr attribute, value
+    method.call this, value
+
   attr: (attribute, value) ->
-    switch attribute
-      when 'text'
-        @originalAttributes['text'] ?= @getText()
-        @setText value
-
-      when 'html'
-        @originalAttributes['html'] ?= @el.innerHTML
-        @setHtml value
-
-      when 'class'
-        @originalAttributes['class'] ?= @el.className
-        @el.className = value
-
+    @el[attribute] = value
+    if isBoolean value
+      @originalAttributes[attribute] ?= @el.getAttribute(attribute) || false
+      if value
+        @el.setAttribute attribute, attribute
       else
-        @el[attribute] = value
-        if isBoolean value
-          @originalAttributes[attribute] ?= @el.getAttribute(attribute) || false
-          if value
-            @el.setAttribute attribute, attribute
-          else
-            @el.removeAttribute attribute
-        else
-          @originalAttributes[attribute] ?= @el.getAttribute(attribute) || ""
-          @el.setAttribute attribute, value.toString()
+        @el.removeAttribute attribute
+    else
+      @originalAttributes[attribute] ?= @el.getAttribute(attribute) || ""
+      @el.setAttribute attribute, value.toString()
 
 ElementFactory =
   elements: {}
@@ -395,7 +400,6 @@ class VoidElement extends Element
 
 class Input extends VoidElement
   ElementFactory.elements.input = this
-
   render: (value) -> @attr 'value', value
 
 getChildNodes = (el) ->

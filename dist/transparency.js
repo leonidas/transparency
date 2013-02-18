@@ -29,24 +29,6 @@
     return context.render(models, directives, options).el;
   };
 
-  Transparency.jQueryPlugin = function(models, directives, options) {
-    var context, _i, _len;
-    for (_i = 0, _len = this.length; _i < _len; _i++) {
-      context = this[_i];
-      Transparency.render(context, models, directives, options);
-    }
-    return this;
-  };
-
-  Transparency.matcher = function(element, key) {
-    return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
-  };
-
-  Transparency.clone = function(node) {
-    var _base;
-    return typeof (_base = jQuery || Zepto) === "function" ? _base(node).clone()[0] : void 0;
-  };
-
   before = function(decorator) {
     return function(method) {
       return function() {
@@ -69,15 +51,27 @@
     return this;
   });
 
+  Transparency.jQueryPlugin = chainable(function(models, directives, options) {
+    var context, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = this.length; _i < _len; _i++) {
+      context = this[_i];
+      _results.push(Transparency.render(context, models, directives, options));
+    }
+    return _results;
+  });
+
+  Transparency.matcher = function(element, key) {
+    return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
+  };
+
+  Transparency.clone = function(node) {
+    var _base;
+    return typeof (_base = jQuery || Zepto) === "function" ? _base(node).clone()[0] : void 0;
+  };
+
   Context = (function() {
     var attach, detach;
-
-    function Context(el) {
-      this.el = el;
-      this.template = cloneNode(this.el);
-      this.instances = [new Instance(this.el)];
-      this.instanceCache = [];
-    }
 
     detach = chainable(function() {
       this.parent = this.el.parentNode;
@@ -96,6 +90,13 @@
         }
       }
     });
+
+    function Context(el) {
+      this.el = el;
+      this.template = cloneNode(this.el);
+      this.instances = [new Instance(this.el)];
+      this.instanceCache = [];
+    }
 
     Context.prototype.render = before(detach)(after(attach)(chainable(function(models, directives, options) {
       var children, index, instance, model, _i, _len, _results;
@@ -120,6 +121,11 @@
   })();
 
   Instance = (function() {
+    var DirectiveDispatcher;
+
+    DirectiveDispatcher = {
+      dispatch: function() {}
+    };
 
     function Instance(template) {
       this.queryCache = {};
@@ -221,7 +227,7 @@
                     value: element.originalAttributes[attribute]
                   });
                   if (value != null) {
-                    _results2.push(element.attr(attribute, value));
+                    _results2.push(element.dispatch(attribute, value));
                   } else {
                     _results2.push(void 0);
                   }
@@ -301,30 +307,36 @@
       _results = [];
       for (attribute in _ref) {
         value = _ref[attribute];
-        _results.push(this.attr(attribute, value));
+        _results.push(this.dispatch(attribute, value));
       }
       return _results;
     };
 
     Element.prototype.render = function(value) {
-      return this.attr('text', value);
+      return this.setText(value);
     };
 
     Element.prototype.setHtml = function(html) {
-      var child, _i, _len, _ref, _results;
+      var child, _base, _i, _len, _ref, _ref1, _results;
+      if ((_ref = (_base = this.originalAttributes)['html']) == null) {
+        _base['html'] = this.el.innerHTML;
+      }
       this.empty();
       this.el.innerHTML = html;
-      _ref = this.childNodes;
+      _ref1 = this.childNodes;
       _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        child = _ref[_i];
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        child = _ref1[_i];
         _results.push(this.el.appendChild(child));
       }
       return _results;
     };
 
     Element.prototype.setText = function(text) {
-      var textNode;
+      var textNode, _base, _ref;
+      if ((_ref = (_base = this.originalAttributes)['text']) == null) {
+        _base['text'] = this.getText();
+      }
       textNode = this.el.firstChild;
       if (!textNode) {
         return this.el.appendChild(this.el.ownerDocument.createTextNode(text));
@@ -333,6 +345,14 @@
       } else {
         return textNode.nodeValue = text;
       }
+    };
+
+    Element.prototype.setClassName = function(className) {
+      var _base, _ref;
+      if ((_ref = (_base = this.originalAttributes)['class']) == null) {
+        _base['class'] = this.el.className;
+      }
+      return this.el.className = className;
     };
 
     Element.prototype.getText = function() {
@@ -351,41 +371,36 @@
       }).call(this)).join('');
     };
 
+    Element.prototype.dispatch = function(attribute, value) {
+      var dispatchTable, method;
+      dispatchTable = {
+        text: this.setText,
+        html: this.setHtml,
+        "class": this.setClassName
+      };
+      method = dispatchTable[attribute] || function(value) {
+        return this.attr(attribute, value);
+      };
+      return method.call(this, value);
+    };
+
     Element.prototype.attr = function(attribute, value) {
-      var _base, _base1, _base2, _base3, _base4, _ref, _ref1, _ref2, _ref3, _ref4;
-      switch (attribute) {
-        case 'text':
-          if ((_ref = (_base = this.originalAttributes)['text']) == null) {
-            _base['text'] = this.getText();
-          }
-          return this.setText(value);
-        case 'html':
-          if ((_ref1 = (_base1 = this.originalAttributes)['html']) == null) {
-            _base1['html'] = this.el.innerHTML;
-          }
-          return this.setHtml(value);
-        case 'class':
-          if ((_ref2 = (_base2 = this.originalAttributes)['class']) == null) {
-            _base2['class'] = this.el.className;
-          }
-          return this.el.className = value;
-        default:
-          this.el[attribute] = value;
-          if (isBoolean(value)) {
-            if ((_ref3 = (_base3 = this.originalAttributes)[attribute]) == null) {
-              _base3[attribute] = this.el.getAttribute(attribute) || false;
-            }
-            if (value) {
-              return this.el.setAttribute(attribute, attribute);
-            } else {
-              return this.el.removeAttribute(attribute);
-            }
-          } else {
-            if ((_ref4 = (_base4 = this.originalAttributes)[attribute]) == null) {
-              _base4[attribute] = this.el.getAttribute(attribute) || "";
-            }
-            return this.el.setAttribute(attribute, value.toString());
-          }
+      var _base, _base1, _ref, _ref1;
+      this.el[attribute] = value;
+      if (isBoolean(value)) {
+        if ((_ref = (_base = this.originalAttributes)[attribute]) == null) {
+          _base[attribute] = this.el.getAttribute(attribute) || false;
+        }
+        if (value) {
+          return this.el.setAttribute(attribute, attribute);
+        } else {
+          return this.el.removeAttribute(attribute);
+        }
+      } else {
+        if ((_ref1 = (_base1 = this.originalAttributes)[attribute]) == null) {
+          _base1[attribute] = this.el.getAttribute(attribute) || "";
+        }
+        return this.el.setAttribute(attribute, value.toString());
       }
     };
 
