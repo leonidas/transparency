@@ -150,10 +150,6 @@ class Context
 # `instance` object keeps track of template DOM nodes and elements.
 # It memoizes the matching elements to `queryCache` in order to speed up the rendering.
 class Instance
-
-  DirectiveDispatcher =
-    dispatch: ->
-
   constructor: (template) ->
     @queryCache = {}
     @childNodes = getChildNodes template
@@ -301,28 +297,83 @@ class Instance
     log "Matching elements for '#{key}':", elements
     elements
 
-class Element
-  dispatch = (attribute, value) ->
-    if @[attribute] then @[attribute](value) else @attr attribute, value
+###############################################################################
+#
+# Atributes
+#
+###############################################################################
 
-  saveTemplateValue = (attribute, getter) -> ->
-    @originalAttributes[attribute] ?= getter.call this
+class AttributeFactory
+  @Attributes = {}
 
-  saveTemplateText = saveTemplateValue 'text', ->
-    (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
+  createAttribute: (element, name, value) ->
+    Klass = AttributeFactory.Attributes[name] or
+      if isBoolean value then BooleanAttribute else Attribute
+    new Klass(element, name)
 
-  initTextNode = (text) ->
+class Attribute
+  constructor: (@el, @name) ->
+    @templateValue = @el.getAttribute(@name) || ''
+
+  set: (value) ->
+    @el[@name] = value
+    @el.setAttribute @name, value.toString()
+
+class BooleanAttribute extends Attribute
+  constructor: (@el, @name) ->
+    @templateValue = @el.getAttribute(@name) || false
+
+  set: (value) ->
+    @el[@name] = value
+    if value
+    then @el.setAttribute @name, value
+    else @el.removeAttribute @name
+
+class Text
+  AttributeFactory.Attributes.text = this
+
+  constructor: (@el, @name) ->
+    @templateValue =
+      (child.nodeValue for child in getChildNodes @el when child.nodeType == TEXT_NODE).join ''
+
     unless @textNode = @el.firstChild
-      @el.appendChild @textNode = @el.ownerDocument.createTextNode text
+      @el.appendChild @textNode = @el.ownerDocument.createTextNode ''
 
     else unless @textNode.nodeType is TEXT_NODE
-      @textNode = @el.insertBefore @el.ownerDocument.createTextNode(text), @textNode
+      @textNode = @el.insertBefore @el.ownerDocument.createTextNode(''), @textNode
+
+  set: (text) -> @textNode.nodeValue = text
+
+class Html extends Attribute
+  AttributeFactory.Attributes.html = this
 
   appendChildNodes = ->
     for child in @childNodes
       @el.appendChild child
 
+  constructor: (el) ->
+    super el, 'innerHTML'
+    @childNodes = getChildNodes @el
+
+  set: after(appendChildNodes) (html) -> @el.innerHTML = html
+
+class Class extends Attribute
+  AttributeFactory.Attributes.class = this
+
+  constructor: (el) -> super el, 'class'
+
+
+###############################################################################
+#
+# Elements
+#
+###############################################################################
+
+class Element
+
   constructor: (@el) ->
+    @attributeFactory   = new AttributeFactory
+    @attributes         = {}
     @childNodes         = getChildNodes @el
     @nodeName           = @el.nodeName.toLowerCase()
     @classNames         = @el.className.split ' '
@@ -332,45 +383,23 @@ class Element
     @el.removeChild child while child = @el.firstChild
 
   reset: ->
-    for attribute, value of @originalAttributes
-      dispatch.call this, attribute, value
+    for name, attribute of @attributes
+      attribute.set attribute.templateValue
 
-  render: (value) -> @text value
+  render: (value) -> @attr 'text', value
 
-  text: \
-    before(saveTemplateText) \
-    before(initTextNode) \
-    (text) -> @textNode.nodeValue = text
-
-  html: \
-    before(saveTemplateValue 'html', -> @el.innerHTML) \
-    after(appendChildNodes) \
-    (html) -> @el.innerHTML = html
-
-  class: \
-    before(saveTemplateValue 'class', -> @el.className) \
-    (className) -> @el.className = className
-
-  attr: (attribute, value) ->
-    @el[attribute] = value
-    if isBoolean value
-      @originalAttributes[attribute] ?= @el.getAttribute(attribute) || false
-      if value
-        @el.setAttribute attribute, attribute
-      else
-        @el.removeAttribute attribute
-    else
-      @originalAttributes[attribute] ?= @el.getAttribute(attribute) || ""
-      @el.setAttribute attribute, value.toString()
+  attr: (name, value) ->
+    attribute = @attributes[name] ||= @attributeFactory.createAttribute @el, name, value
+    attribute.set value
 
   renderDirectives: (model, index, attributes) ->
-    for own attribute, directive of attributes when typeof directive == 'function'
+    for own name, directive of attributes when typeof directive == 'function'
       value = directive.call model,
         element: @el
         index:   index
-        value:   @originalAttributes[attribute]
+        value:   @attributes[name]?.templateValue || ''
 
-      dispatch.call(this, attribute, value) if value?
+      @attr(name, value) if value?
 
 ElementFactory =
   elements: {}
@@ -395,7 +424,7 @@ class VoidElement extends Element
   for nodeName in VOID_ELEMENTS
     ElementFactory.elements[nodeName] = this
 
-  text: ->
+  attr: (name, value) -> super name, value unless name in ['text', 'html']
 
 class Input extends VoidElement
   ElementFactory.elements.input = this

@@ -1,5 +1,5 @@
 (function() {
-  var Context, ELEMENT_NODE, Element, ElementFactory, Input, Instance, Select, TEXT_NODE, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
+  var Attribute, AttributeFactory, BooleanAttribute, Class, Context, ELEMENT_NODE, Element, ElementFactory, Html, Input, Instance, Select, TEXT_NODE, Text, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -121,11 +121,6 @@
   })();
 
   Instance = (function() {
-    var DirectiveDispatcher;
-
-    DirectiveDispatcher = {
-      dispatch: function() {}
-    };
 
     function Instance(template) {
       this.queryCache = {};
@@ -262,29 +257,73 @@
 
   })();
 
-  Element = (function() {
-    var appendChildNodes, dispatch, initTextNode, saveTemplateText, saveTemplateValue;
+  AttributeFactory = (function() {
 
-    dispatch = function(attribute, value) {
-      if (this[attribute]) {
-        return this[attribute](value);
+    function AttributeFactory() {}
+
+    AttributeFactory.Attributes = {};
+
+    AttributeFactory.prototype.createAttribute = function(element, name, value) {
+      var Klass;
+      Klass = AttributeFactory.Attributes[name] || (isBoolean(value) ? BooleanAttribute : Attribute);
+      return new Klass(element, name);
+    };
+
+    return AttributeFactory;
+
+  })();
+
+  Attribute = (function() {
+
+    function Attribute(el, name) {
+      this.el = el;
+      this.name = name;
+      this.templateValue = this.el.getAttribute(this.name) || '';
+    }
+
+    Attribute.prototype.set = function(value) {
+      this.el[this.name] = value;
+      return this.el.setAttribute(this.name, value.toString());
+    };
+
+    return Attribute;
+
+  })();
+
+  BooleanAttribute = (function(_super) {
+
+    __extends(BooleanAttribute, _super);
+
+    function BooleanAttribute(el, name) {
+      this.el = el;
+      this.name = name;
+      this.templateValue = this.el.getAttribute(this.name) || false;
+    }
+
+    BooleanAttribute.prototype.set = function(value) {
+      this.el[this.name] = value;
+      if (value) {
+        return this.el.setAttribute(this.name, value);
       } else {
-        return this.attr(attribute, value);
+        return this.el.removeAttribute(this.name);
       }
     };
 
-    saveTemplateValue = function(attribute, getter) {
-      return function() {
-        var _base, _ref;
-        return (_ref = (_base = this.originalAttributes)[attribute]) != null ? _ref : _base[attribute] = getter.call(this);
-      };
-    };
+    return BooleanAttribute;
 
-    saveTemplateText = saveTemplateValue('text', function() {
+  })(Attribute);
+
+  Text = (function() {
+
+    AttributeFactory.Attributes.text = Text;
+
+    function Text(el, name) {
       var child;
-      return ((function() {
+      this.el = el;
+      this.name = name;
+      this.templateValue = ((function() {
         var _i, _len, _ref, _results;
-        _ref = this.childNodes;
+        _ref = getChildNodes(this.el);
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           child = _ref[_i];
@@ -294,15 +333,27 @@
         }
         return _results;
       }).call(this)).join('');
-    });
-
-    initTextNode = function(text) {
       if (!(this.textNode = this.el.firstChild)) {
-        return this.el.appendChild(this.textNode = this.el.ownerDocument.createTextNode(text));
+        this.el.appendChild(this.textNode = this.el.ownerDocument.createTextNode(''));
       } else if (this.textNode.nodeType !== TEXT_NODE) {
-        return this.textNode = this.el.insertBefore(this.el.ownerDocument.createTextNode(text), this.textNode);
+        this.textNode = this.el.insertBefore(this.el.ownerDocument.createTextNode(''), this.textNode);
       }
+    }
+
+    Text.prototype.set = function(text) {
+      return this.textNode.nodeValue = text;
     };
+
+    return Text;
+
+  })();
+
+  Html = (function(_super) {
+    var appendChildNodes;
+
+    __extends(Html, _super);
+
+    AttributeFactory.Attributes.html = Html;
 
     appendChildNodes = function() {
       var child, _i, _len, _ref, _results;
@@ -315,8 +366,39 @@
       return _results;
     };
 
+    function Html(el) {
+      Html.__super__.constructor.call(this, el, 'innerHTML');
+      this.childNodes = getChildNodes(this.el);
+    }
+
+    Html.prototype.set = after(appendChildNodes)(function(html) {
+      return this.el.innerHTML = html;
+    });
+
+    return Html;
+
+  })(Attribute);
+
+  Class = (function(_super) {
+
+    __extends(Class, _super);
+
+    AttributeFactory.Attributes["class"] = Class;
+
+    function Class(el) {
+      Class.__super__.constructor.call(this, el, 'class');
+    }
+
+    return Class;
+
+  })(Attribute);
+
+  Element = (function() {
+
     function Element(el) {
       this.el = el;
+      this.attributeFactory = new AttributeFactory;
+      this.attributes = {};
       this.childNodes = getChildNodes(this.el);
       this.nodeName = this.el.nodeName.toLowerCase();
       this.classNames = this.el.className.split(' ');
@@ -333,72 +415,42 @@
     });
 
     Element.prototype.reset = function() {
-      var attribute, value, _ref, _results;
-      _ref = this.originalAttributes;
+      var attribute, name, _ref, _results;
+      _ref = this.attributes;
       _results = [];
-      for (attribute in _ref) {
-        value = _ref[attribute];
-        _results.push(dispatch.call(this, attribute, value));
+      for (name in _ref) {
+        attribute = _ref[name];
+        _results.push(attribute.set(attribute.templateValue));
       }
       return _results;
     };
 
     Element.prototype.render = function(value) {
-      return this.text(value);
+      return this.attr('text', value);
     };
 
-    Element.prototype.text = before(saveTemplateText)(before(initTextNode)(function(text) {
-      return this.textNode.nodeValue = text;
-    }));
-
-    Element.prototype.html = before(saveTemplateValue('html', function() {
-      return this.el.innerHTML;
-    }))(after(appendChildNodes)(function(html) {
-      return this.el.innerHTML = html;
-    }));
-
-    Element.prototype["class"] = before(saveTemplateValue('class', function() {
-      return this.el.className;
-    }))(function(className) {
-      return this.el.className = className;
-    });
-
-    Element.prototype.attr = function(attribute, value) {
-      var _base, _base1, _ref, _ref1;
-      this.el[attribute] = value;
-      if (isBoolean(value)) {
-        if ((_ref = (_base = this.originalAttributes)[attribute]) == null) {
-          _base[attribute] = this.el.getAttribute(attribute) || false;
-        }
-        if (value) {
-          return this.el.setAttribute(attribute, attribute);
-        } else {
-          return this.el.removeAttribute(attribute);
-        }
-      } else {
-        if ((_ref1 = (_base1 = this.originalAttributes)[attribute]) == null) {
-          _base1[attribute] = this.el.getAttribute(attribute) || "";
-        }
-        return this.el.setAttribute(attribute, value.toString());
-      }
+    Element.prototype.attr = function(name, value) {
+      var attribute, _base;
+      attribute = (_base = this.attributes)[name] || (_base[name] = this.attributeFactory.createAttribute(this.el, name, value));
+      return attribute.set(value);
     };
 
     Element.prototype.renderDirectives = function(model, index, attributes) {
-      var attribute, directive, value, _results;
+      var directive, name, value, _ref, _results;
       _results = [];
-      for (attribute in attributes) {
-        if (!__hasProp.call(attributes, attribute)) continue;
-        directive = attributes[attribute];
+      for (name in attributes) {
+        if (!__hasProp.call(attributes, name)) continue;
+        directive = attributes[name];
         if (!(typeof directive === 'function')) {
           continue;
         }
         value = directive.call(model, {
           element: this.el,
           index: index,
-          value: this.originalAttributes[attribute]
+          value: ((_ref = this.attributes[name]) != null ? _ref.templateValue : void 0) || ''
         });
         if (value != null) {
-          _results.push(dispatch.call(this, attribute, value));
+          _results.push(this.attr(name, value));
         } else {
           _results.push(void 0);
         }
@@ -463,7 +515,11 @@
       ElementFactory.elements[nodeName] = VoidElement;
     }
 
-    VoidElement.prototype.text = function() {};
+    VoidElement.prototype.attr = function(name, value) {
+      if (name !== 'text' && name !== 'html') {
+        return VoidElement.__super__.attr.call(this, name, value);
+      }
+    };
 
     return VoidElement;
 
