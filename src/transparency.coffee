@@ -329,7 +329,7 @@ class BooleanAttribute extends Attribute
     then @el.setAttribute @name, value
     else @el.removeAttribute @name
 
-class Text
+class Text extends Attribute
   AttributeFactory.Attributes.text = this
 
   constructor: (@el, @name) ->
@@ -347,15 +347,14 @@ class Text
 class Html extends Attribute
   AttributeFactory.Attributes.html = this
 
-  appendChildNodes = ->
-    for child in @childNodes
-      @el.appendChild child
-
   constructor: (el) ->
     super el, 'innerHTML'
     @childNodes = getChildNodes @el
 
-  set: after(appendChildNodes) (html) -> @el.innerHTML = html
+  set: (html) ->
+    @el.innerHTML = html
+    for child in @childNodes
+      @el.appendChild child
 
 class Class extends Attribute
   AttributeFactory.Attributes.class = this
