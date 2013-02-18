@@ -305,6 +305,23 @@ class Element
   dispatch = (attribute, value) ->
     if @[attribute] then @[attribute](value) else @attr attribute, value
 
+  saveTemplateValue = (attribute, getter) -> ->
+    @originalAttributes[attribute] ?= getter.call this
+
+  saveTemplateText = saveTemplateValue 'text', ->
+    (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
+
+  initTextNode = (text) ->
+    unless @textNode = @el.firstChild
+      @el.appendChild @textNode = @el.ownerDocument.createTextNode text
+
+    else unless @textNode.nodeType is TEXT_NODE
+      @textNode = @el.insertBefore @el.ownerDocument.createTextNode(text), @textNode
+
+  appendChildNodes = ->
+    for child in @childNodes
+      @el.appendChild child
+
   constructor: (@el) ->
     @childNodes         = getChildNodes @el
     @nodeName           = @el.nodeName.toLowerCase()
@@ -320,28 +337,19 @@ class Element
 
   render: (value) -> @text value
 
-  text: (text) ->
-    @originalAttributes['text'] ?= (child.nodeValue for child in @childNodes when child.nodeType == TEXT_NODE).join ''
-    textNode = @el.firstChild
+  text: \
+    before(saveTemplateText) \
+    before(initTextNode) \
+    (text) -> @textNode.nodeValue = text
 
-    if !textNode
-      @el.appendChild @el.ownerDocument.createTextNode text
+  html: \
+    before(saveTemplateValue 'html', -> @el.innerHTML) \
+    after(appendChildNodes) \
+    (html) -> @el.innerHTML = html
 
-    else if textNode.nodeType != TEXT_NODE
-      @el.insertBefore @el.ownerDocument.createTextNode(text), textNode
-
-    else
-      textNode.nodeValue = text
-
-  html: (html) ->
-    @originalAttributes['html'] ?= @el.innerHTML
-    @el.innerHTML = html
-    for child in @childNodes
-      @el.appendChild child
-
-  class: (className) ->
-    @originalAttributes['class'] ?= @el.className
-    @el.className = className
+  class: \
+    before(saveTemplateValue 'class', -> @el.className) \
+    (className) -> @el.className = className
 
   attr: (attribute, value) ->
     @el[attribute] = value

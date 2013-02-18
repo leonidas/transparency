@@ -263,7 +263,7 @@
   })();
 
   Element = (function() {
-    var dispatch;
+    var appendChildNodes, dispatch, initTextNode, saveTemplateText, saveTemplateValue;
 
     dispatch = function(attribute, value) {
       if (this[attribute]) {
@@ -271,6 +271,48 @@
       } else {
         return this.attr(attribute, value);
       }
+    };
+
+    saveTemplateValue = function(attribute, getter) {
+      return function() {
+        var _base, _ref;
+        return (_ref = (_base = this.originalAttributes)[attribute]) != null ? _ref : _base[attribute] = getter.call(this);
+      };
+    };
+
+    saveTemplateText = saveTemplateValue('text', function() {
+      var child;
+      return ((function() {
+        var _i, _len, _ref, _results;
+        _ref = this.childNodes;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          if (child.nodeType === TEXT_NODE) {
+            _results.push(child.nodeValue);
+          }
+        }
+        return _results;
+      }).call(this)).join('');
+    });
+
+    initTextNode = function(text) {
+      if (!(this.textNode = this.el.firstChild)) {
+        return this.el.appendChild(this.textNode = this.el.ownerDocument.createTextNode(text));
+      } else if (this.textNode.nodeType !== TEXT_NODE) {
+        return this.textNode = this.el.insertBefore(this.el.ownerDocument.createTextNode(text), this.textNode);
+      }
+    };
+
+    appendChildNodes = function() {
+      var child, _i, _len, _ref, _results;
+      _ref = this.childNodes;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        _results.push(this.el.appendChild(child));
+      }
+      return _results;
     };
 
     function Element(el) {
@@ -305,54 +347,21 @@
       return this.text(value);
     };
 
-    Element.prototype.text = function(text) {
-      var child, textNode, _base, _ref;
-      if ((_ref = (_base = this.originalAttributes)['text']) == null) {
-        _base['text'] = ((function() {
-          var _i, _len, _ref1, _results;
-          _ref1 = this.childNodes;
-          _results = [];
-          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-            child = _ref1[_i];
-            if (child.nodeType === TEXT_NODE) {
-              _results.push(child.nodeValue);
-            }
-          }
-          return _results;
-        }).call(this)).join('');
-      }
-      textNode = this.el.firstChild;
-      if (!textNode) {
-        return this.el.appendChild(this.el.ownerDocument.createTextNode(text));
-      } else if (textNode.nodeType !== TEXT_NODE) {
-        return this.el.insertBefore(this.el.ownerDocument.createTextNode(text), textNode);
-      } else {
-        return textNode.nodeValue = text;
-      }
-    };
+    Element.prototype.text = before(saveTemplateText)(before(initTextNode)(function(text) {
+      return this.textNode.nodeValue = text;
+    }));
 
-    Element.prototype.html = function(html) {
-      var child, _base, _i, _len, _ref, _ref1, _results;
-      if ((_ref = (_base = this.originalAttributes)['html']) == null) {
-        _base['html'] = this.el.innerHTML;
-      }
-      this.el.innerHTML = html;
-      _ref1 = this.childNodes;
-      _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        child = _ref1[_i];
-        _results.push(this.el.appendChild(child));
-      }
-      return _results;
-    };
+    Element.prototype.html = before(saveTemplateValue('html', function() {
+      return this.el.innerHTML;
+    }))(after(appendChildNodes)(function(html) {
+      return this.el.innerHTML = html;
+    }));
 
-    Element.prototype["class"] = function(className) {
-      var _base, _ref;
-      if ((_ref = (_base = this.originalAttributes)['class']) == null) {
-        _base['class'] = this.el.className;
-      }
+    Element.prototype["class"] = before(saveTemplateValue('class', function() {
+      return this.el.className;
+    }))(function(className) {
       return this.el.className = className;
-    };
+    });
 
     Element.prototype.attr = function(attribute, value) {
       var _base, _base1, _ref, _ref1;
