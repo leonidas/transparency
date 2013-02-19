@@ -2,10 +2,26 @@
 module.exports = (grunt) ->
 
   grunt.initConfig
+    pkg: grunt.file.readJSON 'package.json'
+    banner: """
+      ###!
+      * <%= pkg.title || pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>
+      * <%= pkg.homepage %>
+      * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>; Licensed <%= pkg.licenses.join(", ") %>
+      ###\n\n
+      """
+
+    concat:
+      options:
+        banner: '<%= banner %>'
+      coffee:
+        src: ['src/transparency.coffee']
+        dest: '.tmp/transparency.coffee'
+
     coffee:
       compile:
         files: [
-          src: 'src/transparency.coffee'
+          src: '.tmp/transparency.coffee'
           dest: 'dist/transparency.js'
         ,
           expand: true
@@ -42,8 +58,11 @@ module.exports = (grunt) ->
           template: require('grunt-template-jasmine-requirejs')
 
     uglify:
+      options:
+        preserveComments: 'some'
       files:
-        'dist/transparency.min.js': 'dist/transparency.js'
+        src: 'dist/transparency.js'
+        dest: 'dist/transparency.min.js'
 
     watch:
       files: ['src/**/*.coffee', 'spec/**/*.coffee']
@@ -61,9 +80,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-docco'
 
-  grunt.registerTask 'default', ['coffee',
-    'jasmine:functional', 'jasmine:amd',
-    'jasmine:functional:build', 'jasmine:amd:build', 'jasmine:performance:build',
-  'uglify', 'docco']
+  grunt.registerTask 'build',       ['concat', 'coffee', 'uglify', 'docco']
+  grunt.registerTask 'tdd',         ['build', 'jasmine:functional', 'jasmine:amd']
+  grunt.registerTask 'test',        ['coffee', 'jasmine']
+  grunt.registerTask 'build-tests', ['jasmine:functional:build', 'jasmine:amd:build', 'jasmine:performance:build']
+  grunt.registerTask 'default',     ['build', 'tdd', 'build-tests']
 
-  grunt.registerTask 'test', ['coffee', 'jasmine']
+
