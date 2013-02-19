@@ -29,7 +29,7 @@ module.exports = (grunt) ->
         options:
           outfile: 'PerformanceSpecRunner.html'
           vendor: ['spec/lib/jquery-1.7.1.min.js', 'spec/lib/benchmark.js', 'spec/lib/handlebars.js']
-          specs:  ['spec/PerformanceSpecRunnerSpec.js']
+          specs:  ['spec/performanceSpec.js']
           helpers: 'spec/specHelper.js'
 
       amd:
