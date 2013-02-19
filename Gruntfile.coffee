@@ -15,7 +15,8 @@ module.exports = (grunt) ->
       options:
         banner: '<%= banner %>'
       coffee:
-        src: ['src/transparency.coffee']
+        src: ['src/helpers.coffee', 'src/transparency.coffee', 'src/context.coffee',
+              'src/instance.coffee', 'src/attributeFactory.coffee', 'src/elementFactory.coffee']
         dest: '.tmp/transparency.coffee'
 
     coffee:
