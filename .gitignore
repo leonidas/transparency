@@ -4,4 +4,4 @@ node_modules
 spec/*.js
 .DS_Store
 docs
-
+.grunt
