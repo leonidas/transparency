@@ -1,7 +1,6 @@
 class Element
 
   constructor: (@el) ->
-    @attributeFactory   = new AttributeFactory
     @attributes         = {}
     @childNodes         = getChildNodes @el
     @nodeName           = @el.nodeName.toLowerCase()
@@ -18,7 +17,7 @@ class Element
   render: (value) -> @attr 'text', value
 
   attr: (name, value) ->
-    attribute = @attributes[name] ||= @attributeFactory.createAttribute @el, name, value
+    attribute = @attributes[name] ||= AttributeFactory.createAttribute @el, name, value
     attribute.set value
 
   renderDirectives: (model, index, attributes) ->

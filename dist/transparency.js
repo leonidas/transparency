@@ -1,6 +1,6 @@
 
 /*!
-* transparency - v0.9.1 - 2013-02-19
+* transparency - v0.9.1 - 2013-02-20
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
@@ -369,22 +369,6 @@
 
   })();
 
-  AttributeFactory = (function() {
-
-    function AttributeFactory() {}
-
-    AttributeFactory.Attributes = {};
-
-    AttributeFactory.prototype.createAttribute = function(element, name, value) {
-      var Klass;
-      Klass = AttributeFactory.Attributes[name] || (isBoolean(value) ? BooleanAttribute : Attribute);
-      return new Klass(element, name);
-    };
-
-    return AttributeFactory;
-
-  })();
-
   Attribute = (function() {
 
     function Attribute(el, name) {
@@ -429,8 +413,6 @@
 
     __extends(Text, _super);
 
-    AttributeFactory.Attributes.text = Text;
-
     function Text(el, name) {
       var child;
       this.el = el;
@@ -466,8 +448,6 @@
 
     __extends(Html, _super);
 
-    AttributeFactory.Attributes.html = Html;
-
     function Html(el) {
       Html.__super__.constructor.call(this, el, 'innerHTML');
       this.childNodes = getChildNodes(this.el);
@@ -493,8 +473,6 @@
 
     __extends(Class, _super);
 
-    AttributeFactory.Attributes["class"] = Class;
-
     function Class(el) {
       Class.__super__.constructor.call(this, el, 'class');
     }
@@ -503,11 +481,23 @@
 
   })(Attribute);
 
+  AttributeFactory = {
+    Attributes: {
+      text: Text,
+      "class": Class,
+      html: Html
+    },
+    createAttribute: function(element, name, value) {
+      var Klass;
+      Klass = AttributeFactory.Attributes[name] || (isBoolean(value) ? BooleanAttribute : Attribute);
+      return new Klass(element, name);
+    }
+  };
+
   Element = (function() {
 
     function Element(el) {
       this.el = el;
-      this.attributeFactory = new AttributeFactory;
       this.attributes = {};
       this.childNodes = getChildNodes(this.el);
       this.nodeName = this.el.nodeName.toLowerCase();
@@ -541,7 +531,7 @@
 
     Element.prototype.attr = function(name, value) {
       var attribute, _base;
-      attribute = (_base = this.attributes)[name] || (_base[name] = this.attributeFactory.createAttribute(this.el, name, value));
+      attribute = (_base = this.attributes)[name] || (_base[name] = AttributeFactory.createAttribute(this.el, name, value));
       return attribute.set(value);
     };
 
