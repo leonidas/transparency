@@ -1,5 +1,12 @@
-class Element
+ElementFactory =
+  Elements: {}
 
+  createElement: (el) ->
+    Klass = ElementFactory.Elements[el.nodeName.toLowerCase()] || Element
+    new Klass(el)
+
+
+class Element
   constructor: (@el) ->
     @attributes         = {}
     @childNodes         = getChildNodes @el
@@ -29,19 +36,6 @@ class Element
 
       @attr(name, value) if value?
 
-ElementFactory =
-  elements: {}
-  createElement: (el) ->
-    Klass = ElementFactory.elements[el.nodeName.toLowerCase()] || Element
-    new Klass(el)
-
-class Select extends Element
-  ElementFactory.elements.select = this
-
-  render: (value) ->
-    value = value.toString()
-    for child in getElements @el when child.nodeName == 'option'
-      child.el.selected = child.el.value == value
 
 class VoidElement extends Element
 
@@ -50,11 +44,22 @@ class VoidElement extends Element
     'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr']
 
   for nodeName in VOID_ELEMENTS
-    ElementFactory.elements[nodeName] = this
+    ElementFactory.Elements[nodeName] = this
 
   attr: (name, value) -> super name, value unless name in ['text', 'html']
 
+
 class Input extends VoidElement
-  ElementFactory.elements.input = this
+  ElementFactory.Elements['input'] = this
 
   render: (value) -> @attr 'value', value
+
+
+class Select extends Element
+  ElementFactory.Elements['select'] = this
+
+  render: (value) ->
+    value = value.toString()
+    for child in getElements @el when child.nodeName == 'option'
+      child.el.selected = child.el.value == value
+

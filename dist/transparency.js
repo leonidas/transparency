@@ -369,6 +369,15 @@
 
   })();
 
+  AttributeFactory = {
+    Attributes: {},
+    createAttribute: function(element, name, value) {
+      var Attr;
+      Attr = AttributeFactory.Attributes[name] || (isBoolean(value) ? BooleanAttribute : Attribute);
+      return new Attr(element, name);
+    }
+  };
+
   Attribute = (function() {
 
     function Attribute(el, name) {
@@ -413,6 +422,8 @@
 
     __extends(Text, _super);
 
+    AttributeFactory.Attributes['text'] = Text;
+
     function Text(el, name) {
       var child;
       this.el = el;
@@ -448,6 +459,8 @@
 
     __extends(Html, _super);
 
+    AttributeFactory.Attributes['html'] = Html;
+
     function Html(el) {
       Html.__super__.constructor.call(this, el, 'innerHTML');
       this.childNodes = getChildNodes(this.el);
@@ -473,6 +486,8 @@
 
     __extends(Class, _super);
 
+    AttributeFactory.Attributes['class'] = Class;
+
     function Class(el) {
       Class.__super__.constructor.call(this, el, 'class');
     }
@@ -481,16 +496,12 @@
 
   })(Attribute);
 
-  AttributeFactory = {
-    Attributes: {
-      text: Text,
-      "class": Class,
-      html: Html
-    },
-    createAttribute: function(element, name, value) {
+  ElementFactory = {
+    Elements: {},
+    createElement: function(el) {
       var Klass;
-      Klass = AttributeFactory.Attributes[name] || (isBoolean(value) ? BooleanAttribute : Attribute);
-      return new Klass(element, name);
+      Klass = ElementFactory.Elements[el.nodeName.toLowerCase()] || Element;
+      return new Klass(el);
     }
   };
 
@@ -562,43 +573,6 @@
 
   })();
 
-  ElementFactory = {
-    elements: {},
-    createElement: function(el) {
-      var Klass;
-      Klass = ElementFactory.elements[el.nodeName.toLowerCase()] || Element;
-      return new Klass(el);
-    }
-  };
-
-  Select = (function(_super) {
-
-    __extends(Select, _super);
-
-    function Select() {
-      return Select.__super__.constructor.apply(this, arguments);
-    }
-
-    ElementFactory.elements.select = Select;
-
-    Select.prototype.render = function(value) {
-      var child, _i, _len, _ref1, _results;
-      value = value.toString();
-      _ref1 = getElements(this.el);
-      _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        child = _ref1[_i];
-        if (child.nodeName === 'option') {
-          _results.push(child.el.selected = child.el.value === value);
-        }
-      }
-      return _results;
-    };
-
-    return Select;
-
-  })(Element);
-
   VoidElement = (function(_super) {
     var VOID_ELEMENTS, nodeName, _i, _len;
 
@@ -612,7 +586,7 @@
 
     for (_i = 0, _len = VOID_ELEMENTS.length; _i < _len; _i++) {
       nodeName = VOID_ELEMENTS[_i];
-      ElementFactory.elements[nodeName] = VoidElement;
+      ElementFactory.Elements[nodeName] = VoidElement;
     }
 
     VoidElement.prototype.attr = function(name, value) {
@@ -633,7 +607,7 @@
       return Input.__super__.constructor.apply(this, arguments);
     }
 
-    ElementFactory.elements.input = Input;
+    ElementFactory.Elements['input'] = Input;
 
     Input.prototype.render = function(value) {
       return this.attr('value', value);
@@ -642,5 +616,33 @@
     return Input;
 
   })(VoidElement);
+
+  Select = (function(_super) {
+
+    __extends(Select, _super);
+
+    function Select() {
+      return Select.__super__.constructor.apply(this, arguments);
+    }
+
+    ElementFactory.Elements['select'] = Select;
+
+    Select.prototype.render = function(value) {
+      var child, _i, _len, _ref1, _results;
+      value = value.toString();
+      _ref1 = getElements(this.el);
+      _results = [];
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        child = _ref1[_i];
+        if (child.nodeName === 'option') {
+          _results.push(child.el.selected = child.el.value === value);
+        }
+      }
+      return _results;
+    };
+
+    return Select;
+
+  })(Element);
 
 }).call(this);
