@@ -47,7 +47,7 @@ module.exports = (grunt) ->
 
     watch:
       files: ['src/**/*.coffee', 'spec/**/*.coffee']
-      tasks: ['coffee', 'jasmine:functional', 'jasmine:amd', 'uglify', 'docco']
+      tasks: ['default']
 
     docco:
       docs:
@@ -61,5 +61,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-docco'
 
-  grunt.registerTask 'default', ['coffee', 'jasmine:functional', 'jasmine:amd', 'uglify', 'docco', 'watch']
-  grunt.registerTask 'test',    ['coffee', 'jasmine']
+  grunt.registerTask 'default', ['coffee',
+    'jasmine:functional', 'jasmine:amd',
+    'jasmine:functional:build', 'jasmine:amd:build', 'jasmine:performance:build',
+  'uglify', 'docco']
+
+  grunt.registerTask 'test', ['coffee', 'jasmine']

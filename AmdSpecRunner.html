@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jasmine Spec Runner</title>
+
+  
+  
+  <script src="./.grunt/grunt-contrib-jasmine/jasmine.js"></script>
+  
+  <script src="./.grunt/grunt-contrib-jasmine/jasmine-html.js"></script>
+  
+  <script src="./spec/lib/jquery-1.7.1.min.js"></script>
+  
+  <script src="./spec/specHelper.js"></script>
+  
+  
+
+  <script src=".grunt/grunt-contrib-jasmine/require.js"></script>
+  <script>
+    
+  </script>
+  
+  <link rel="stylesheet" type="text/css" href=".grunt/grunt-contrib-jasmine/jasmine.css">
+  
+  <script>
+    require([
+      
+      
+      
+        './dist/transparency' 
+        
+    ],
+    function(){
+      require(['./spec/amdSpec.js','./.grunt/grunt-contrib-jasmine/reporter.js'], function(){
+        require(['./.grunt/grunt-contrib-jasmine/jasmine-helper.js'], function(){
+          // good to go! Our tests should already be running.
+        })
+      })
+    }
+    )
+  </script>
+</head>
+<body>
+</body>
+</html>
