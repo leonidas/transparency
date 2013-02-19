@@ -1,4 +1,4 @@
-define ['jquery', '../dist/transparency'], ($, t) ->
+define ['dist/transparency'], (t) ->
   describe "Transparency with AMD loader", ->
 
     it "should bind Transparency to a named variable", ->
