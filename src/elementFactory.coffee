@@ -37,6 +37,15 @@ class Element
       @attr(name, value) if value?
 
 
+class Select extends Element
+  ElementFactory.Elements['select'] = this
+
+  render: (value) ->
+    value = value.toString()
+    for child in getElements @el when child.nodeName == 'option'
+      child.el.selected = child.el.value == value
+
+
 class VoidElement extends Element
 
   # From http://www.w3.org/TR/html-markup/syntax.html: void elements in HTML
@@ -53,13 +62,3 @@ class Input extends VoidElement
   ElementFactory.Elements['input'] = this
 
   render: (value) -> @attr 'value', value
-
-
-class Select extends Element
-  ElementFactory.Elements['select'] = this
-
-  render: (value) ->
-    value = value.toString()
-    for child in getElements @el when child.nodeName == 'option'
-      child.el.selected = child.el.value == value
-
