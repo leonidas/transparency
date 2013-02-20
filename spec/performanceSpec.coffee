@@ -1,6 +1,6 @@
 describe "Transparency performance", ->
 
-  describe "with cached templates", ->
+  xdescribe "with cached templates", ->
 
     describe "with one todo item", ->
 
@@ -78,7 +78,7 @@ describe "Transparency performance", ->
 
   describe "on first render call", ->
 
-    describe "with one todo item", ->
+    xdescribe "with one todo item", ->
 
       it "should be on the same ballpark with Handlebars", ->
         transparency = new Benchmark 'transparency - unused template, one todo',

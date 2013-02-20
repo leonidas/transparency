@@ -7,7 +7,7 @@
 
 
 (function() {
-  var Attribute, AttributeFactory, BooleanAttribute, Class, Context, ELEMENT_NODE, Element, ElementFactory, Html, Input, Instance, Select, TEXT_NODE, Text, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
+  var Attribute, AttributeFactory, BooleanAttribute, Checkbox, Class, Context, ELEMENT_NODE, Element, ElementFactory, Html, Input, Instance, Radio, Select, TEXT_NODE, Text, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -408,7 +408,7 @@
     BooleanAttribute.prototype.set = function(value) {
       this.el[this.name] = value;
       if (value) {
-        return this.el.setAttribute(this.name, value);
+        return this.el.setAttribute(this.name, this.name);
       } else {
         return this.el.removeAttribute(this.name);
       }
@@ -497,11 +497,17 @@
   })(Attribute);
 
   ElementFactory = {
-    Elements: {},
+    Elements: {
+      input: {}
+    },
     createElement: function(el) {
-      var Klass;
-      Klass = ElementFactory.Elements[el.nodeName.toLowerCase()] || Element;
-      return new Klass(el);
+      var El, name;
+      if ('input' === (name = el.nodeName.toLowerCase())) {
+        El = ElementFactory.Elements[name][el.type.toLowerCase()] || Input;
+      } else {
+        El = ElementFactory.Elements[name] ||  Element;
+      }
+      return new El(el);
     }
   };
 
@@ -573,6 +579,34 @@
 
   })();
 
+  Select = (function(_super) {
+
+    __extends(Select, _super);
+
+    function Select() {
+      return Select.__super__.constructor.apply(this, arguments);
+    }
+
+    ElementFactory.Elements['select'] = Select;
+
+    Select.prototype.render = function(value) {
+      var child, _i, _len, _ref1, _results;
+      value = value.toString();
+      _ref1 = getElements(this.el);
+      _results = [];
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        child = _ref1[_i];
+        if (child.nodeName === 'option') {
+          _results.push(child.el.selected = child.el.value === value);
+        }
+      }
+      return _results;
+    };
+
+    return Select;
+
+  })(Element);
+
   VoidElement = (function(_super) {
     var VOID_ELEMENTS, nodeName, _i, _len;
 
@@ -607,8 +641,6 @@
       return Input.__super__.constructor.apply(this, arguments);
     }
 
-    ElementFactory.Elements['input'] = Input;
-
     Input.prototype.render = function(value) {
       return this.attr('value', value);
     };
@@ -617,32 +649,36 @@
 
   })(VoidElement);
 
-  Select = (function(_super) {
+  Checkbox = (function(_super) {
 
-    __extends(Select, _super);
+    __extends(Checkbox, _super);
 
-    function Select() {
-      return Select.__super__.constructor.apply(this, arguments);
+    function Checkbox() {
+      return Checkbox.__super__.constructor.apply(this, arguments);
     }
 
-    ElementFactory.Elements['select'] = Select;
+    ElementFactory.Elements['input']['checkbox'] = Checkbox;
 
-    Select.prototype.render = function(value) {
-      var child, _i, _len, _ref1, _results;
-      value = value.toString();
-      _ref1 = getElements(this.el);
-      _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        child = _ref1[_i];
-        if (child.nodeName === 'option') {
-          _results.push(child.el.selected = child.el.value === value);
-        }
-      }
-      return _results;
+    Checkbox.prototype.render = function(value) {
+      return this.attr('checked', Boolean(value));
     };
 
-    return Select;
+    return Checkbox;
 
-  })(Element);
+  })(Input);
+
+  Radio = (function(_super) {
+
+    __extends(Radio, _super);
+
+    function Radio() {
+      return Radio.__super__.constructor.apply(this, arguments);
+    }
+
+    ElementFactory.Elements['input']['radio'] = Radio;
+
+    return Radio;
+
+  })(Checkbox);
 
 }).call(this);

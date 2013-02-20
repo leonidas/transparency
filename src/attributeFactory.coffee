@@ -23,7 +23,7 @@ class BooleanAttribute extends Attribute
   set: (value) ->
     @el[@name] = value
     if value
-    then @el.setAttribute @name, value
+    then @el.setAttribute @name, @name
     else @el.removeAttribute @name
 
 

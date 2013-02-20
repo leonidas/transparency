@@ -1,9 +1,13 @@
 ElementFactory =
-  Elements: {}
+  Elements: input: {}
 
   createElement: (el) ->
-    Klass = ElementFactory.Elements[el.nodeName.toLowerCase()] || Element
-    new Klass(el)
+    if 'input' == name = el.nodeName.toLowerCase()
+      El = ElementFactory.Elements[name][el.type.toLowerCase()] || Input
+    else
+      El = ElementFactory.Elements[name] || Element
+
+    new El(el)
 
 
 class Element
@@ -59,6 +63,14 @@ class VoidElement extends Element
 
 
 class Input extends VoidElement
-  ElementFactory.Elements['input'] = this
-
   render: (value) -> @attr 'value', value
+
+
+class Checkbox extends Input
+  ElementFactory.Elements['input']['checkbox'] = this
+
+  render: (value) -> @attr 'checked', Boolean(value)
+
+
+class Radio extends Checkbox
+  ElementFactory.Elements['input']['radio'] = this

@@ -152,3 +152,34 @@ describe "Transparency", ->
     template.render data
     template.find(".comment").first().attr 'selected', 'selected'
     expect(template).toBeEqual expected
+
+  it "should render checkbox and radiobutton checked attributes", ->
+    template = $ """
+      <div class="template">
+        <input type="checkbox" name="foo" value="Foo" />
+        <input type="checkbox" name="foz" value="Foz" />
+        <input type="radio" name="bar" value="Bar" />
+        <input type="radio" name="baz" value="Baz" />
+      </div>
+      """
+
+    data =
+      foo: true
+      foz: false
+      bar: false
+      baz: true
+
+    expected = $ """
+      <div class="template">
+        <input type="checkbox" name="foo" value="Foo" checked="checked" />
+        <input type="checkbox" name="foz" value="Foz" />
+        <input type="radio" name="bar" value="Bar" />
+        <input type="radio" name="baz" value="Baz" checked="checked" />
+      </div>
+      """
+
+    $('.template').render data
+
+    template.render data
+    expect(template).toBeEqual expected
+
