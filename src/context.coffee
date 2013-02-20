@@ -40,4 +40,3 @@ class Context
           .renderValues(model, children)
           .renderDirectives(model, index, directives)
           .renderChildren(model, children, directives, options)
-
