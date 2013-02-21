@@ -132,7 +132,7 @@ describe "Transparency", ->
       """
 
     template.find(".users").render [{username:'user1'}, {username:'user2'}]
-    expect(template).toBeEqual $('
+    expect(template).toBeEqual $ """
       <table>
         <tbody class="users">
           <tr>
@@ -142,20 +142,22 @@ describe "Transparency", ->
             <td class="username">user2</td>
           </tr>
         </tbody>
-      </table>')
+      </table>
+      """
 
     template.find(".users").render [username:'user1']
-    expect(template).toBeEqual $('
+    expect(template).toBeEqual $ """
       <table>
         <tbody class="users">
           <tr>
             <td class="username">user1</td>
           </tr>
         </tbody>
-      </table>')
+      </table>
+      """
 
     template.find(".users").render [{username:'user1'}, {username:'user3'}]
-    expect(template).toBeEqual(jQuery('
+    expect(template).toBeEqual $ """
       <table>
         <tbody class="users">
           <tr>
@@ -165,10 +167,11 @@ describe "Transparency", ->
             <td class="username">user3</td>
           </tr>
         </tbody>
-      </table>'))
+      </table>
+      """
 
     template.find(".users").render [{username:'user4'}, {username:'user3'}]
-    expect(template).toBeEqual $('
+    expect(template).toBeEqual $ """
       <table>
         <tbody class="users">
           <tr>
@@ -178,7 +181,8 @@ describe "Transparency", ->
             <td class="username">user3</td>
           </tr>
         </tbody>
-      </table>')
+      </table>
+      """
 
 expectModelObjects = (elements, data) ->
   for object, i in data
