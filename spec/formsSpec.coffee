@@ -51,7 +51,7 @@ describe "Transparency", ->
 
     expected = $ """
       <select id="states">
-        <option class="state" value="1" selected="selected">Alabama</option>
+        <option class="state" value="1">Alabama</option>
         <option class="state" value="2">Alaska</option>
         <option class="state" value="3">Arizona</option>
       </select>
@@ -84,7 +84,7 @@ describe "Transparency", ->
 
     expected = $ """
       <select class="foo" multiple>
-          <option class="bar" value="1" selected="selected">First</option>
+          <option class="bar" value="1">First</option>
           <option class="bar" value="2">Second</option>
           <option class="bar" value="3">Third</option>
       </select>
@@ -143,14 +143,13 @@ describe "Transparency", ->
         <h1 class="title">Hello World</h1>
         <p class="post">Hi there it is me</p>
         <select class="comments">
-          <option class="comment" selected="selected">John</option>
+          <option class="comment">John</option>
           <option class="comment">Arnold</option>
         </select>
       </div>
       """
 
     template.render data
-    template.find(".comment").first().attr 'selected', 'selected'
     expect(template).toBeEqual expected
 
   it "should render checkbox and radiobutton checked attributes", ->
@@ -166,19 +165,17 @@ describe "Transparency", ->
     data =
       foo: true
       foz: false
-      bar: false
-      baz: true
+      bar: true
+      baz: false
 
     expected = $ """
       <div class="template">
         <input type="checkbox" name="foo" value="Foo" checked="checked" />
         <input type="checkbox" name="foz" value="Foz" />
-        <input type="radio" name="bar" value="Bar" />
-        <input type="radio" name="baz" value="Baz" checked="checked" />
+        <input type="radio" name="bar" value="Bar" checked="checked" />
+        <input type="radio" name="baz" value="Baz" />
       </div>
       """
-
-    $('.template').render data
 
     template.render data
     expect(template).toBeEqual expected
