@@ -1,6 +1,6 @@
 
 /*!
-* transparency - v0.9.1 - 2013-02-20
+* transparency - v0.9.1 - 2013-02-21
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
@@ -583,21 +583,22 @@
 
     __extends(Select, _super);
 
-    function Select() {
-      return Select.__super__.constructor.apply(this, arguments);
-    }
-
     ElementFactory.Elements['select'] = Select;
 
+    function Select(el) {
+      Select.__super__.constructor.call(this, el);
+      this.elements = getElements(el);
+    }
+
     Select.prototype.render = function(value) {
-      var child, _i, _len, _ref1, _results;
+      var option, _i, _len, _ref1, _results;
       value = value.toString();
-      _ref1 = getElements(this.el);
+      _ref1 = this.elements;
       _results = [];
       for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        child = _ref1[_i];
-        if (child.nodeName === 'option') {
-          _results.push(child.el.selected = child.el.value === value);
+        option = _ref1[_i];
+        if (option.nodeName === 'option') {
+          _results.push(option.attr('selected', option.el.value === value));
         }
       }
       return _results;

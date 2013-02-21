@@ -44,10 +44,14 @@ class Element
 class Select extends Element
   ElementFactory.Elements['select'] = this
 
+  constructor: (el) ->
+    super el
+    @elements = getElements el
+
   render: (value) ->
     value = value.toString()
-    for child in getElements @el when child.nodeName == 'option'
-      child.el.selected = child.el.value == value
+    for option in @elements when option.nodeName == 'option'
+      option.attr 'selected', option.el.value == value
 
 
 class VoidElement extends Element
