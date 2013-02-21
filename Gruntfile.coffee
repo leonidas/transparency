@@ -37,7 +37,7 @@ module.exports = (grunt) ->
         src: 'dist/transparency.js'
         options:
           outfile: 'FunctionalSpecRunner.html'
-          vendor: ['spec/lib/jquery-1.7.1.min.js']
+          vendor: ['spec/lib/jquery-1.9.1.min.js']
           specs:  ['spec/*Spec.js', '!spec/performance*', '!spec/amd*']
           helpers: 'spec/specHelper.js'
 
@@ -45,7 +45,7 @@ module.exports = (grunt) ->
         src: 'dist/transparency.js'
         options:
           outfile: 'PerformanceSpecRunner.html'
-          vendor: ['spec/lib/jquery-1.7.1.min.js', 'spec/lib/benchmark.js', 'spec/lib/handlebars.js']
+          vendor: ['spec/lib/jquery-1.9.1.min.js', 'spec/lib/benchmark.js', 'spec/lib/handlebars.js']
           specs:  ['spec/performanceSpec.js']
           helpers: 'spec/specHelper.js'
 
@@ -53,7 +53,7 @@ module.exports = (grunt) ->
         src: 'dist/transparency.js'
         options:
           outfile: 'AmdSpecRunner.html'
-          vendor: ['spec/lib/jquery-1.7.1.min.js']
+          vendor: ['spec/lib/jquery-1.9.1.min.js']
           specs: ['spec/amdSpec.js']
           helpers: 'spec/specHelper.js'
           template: require('grunt-template-jasmine-requirejs')
