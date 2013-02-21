@@ -67,19 +67,22 @@ describe "Transparency", ->
       <div class="container">
         <div id="my-id"></div>
         <div class="my-class"></div>
+        <input name="my-name" />
         <div data-bind="my-data"></div>
       </div>
       """
 
     data =
-      'my-id':   'id-data'
+      'my-id':    'id-data'
       'my-class': 'class-data'
+      'my-name':  'name-data'
       'my-data' : 'data-bind'
 
     expected = $ """
       <div class="container">
         <div id="my-id">id-data</div>
         <div class="my-class">class-data</div>
+        <input name="my-name" value="name-data" />
         <div data-bind="my-data">data-bind</div>
       </div>
       """
