@@ -20,8 +20,14 @@ isEqualDom = (actual, expected) ->
     throw new Error "ERROR: '#{actual.text()}' is not equal to '#{expected.text()}'"
 
   for attribute in expected[0].attributes
-    unless trim(actual.attr attribute.name) == trim(expected.attr attribute.name)
-      throw new Error "ERROR: '#{attribute.name}=\"#{actual.attr(attribute.name)}\"' is not equal to '#{attribute.name}=\"#{expected.attr(attribute.name)}\"'"
+    actualAttr   = actual[0].getAttribute attribute.name
+    throw new Error "ERROR: Missing exptexted attribute '#{attribute.name}'" unless actualAttr?
+
+    actualAttr   = trim actualAttr
+    expectedAttr = trim expected[0].getAttribute attribute.name
+
+    unless actualAttr == expectedAttr
+      throw new Error "ERROR: '#{attribute.name}=\"#{actualAttr}\"' is not equal to '#{expectedAttr}\"'"
 
   actualChildren   = actual.children()
   expectedChildren = expected.children()
