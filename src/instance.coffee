@@ -136,6 +136,8 @@ class Instance
   # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
   renderDirectives: chainable (model, index, directives) ->
     for own key, attributes of directives when typeof attributes == 'object'
+      model = {value: model} unless typeof model == 'object'
+
       for element in @matchingElements key
         element.renderDirectives model, index, attributes
 

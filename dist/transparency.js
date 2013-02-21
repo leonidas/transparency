@@ -312,18 +312,24 @@
       for (key in directives) {
         if (!__hasProp.call(directives, key)) continue;
         attributes = directives[key];
-        if (typeof attributes === 'object') {
-          _results.push((function() {
-            var _i, _len, _ref1, _results1;
-            _ref1 = this.matchingElements(key);
-            _results1 = [];
-            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-              element = _ref1[_i];
-              _results1.push(element.renderDirectives(model, index, attributes));
-            }
-            return _results1;
-          }).call(this));
+        if (!(typeof attributes === 'object')) {
+          continue;
         }
+        if (typeof model !== 'object') {
+          model = {
+            value: model
+          };
+        }
+        _results.push((function() {
+          var _i, _len, _ref1, _results1;
+          _ref1 = this.matchingElements(key);
+          _results1 = [];
+          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+            element = _ref1[_i];
+            _results1.push(element.renderDirectives(model, index, attributes));
+          }
+          return _results1;
+        }).call(this));
       }
       return _results;
     });

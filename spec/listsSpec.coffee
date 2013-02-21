@@ -87,7 +87,7 @@ describe "Transparency", ->
       """
 
     data       = ["That rules", "Great post!", 5]
-    directives = comment: text: -> this
+    directives = comment: text: -> this.value
 
     expected = $ """
       <div class="comments">
