@@ -1,0 +1,40 @@
+<!DOCTYPE html>  <html> <head>   <title>context.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="attributeFactory.html">                 attributeFactory.coffee               </a>                                           <a class="source" href="context.html">                 context.coffee               </a>                                           <a class="source" href="elementFactory.html">                 elementFactory.coffee               </a>                                           <a class="source" href="helpers.html">                 helpers.coffee               </a>                                           <a class="source" href="instance.html">                 instance.coffee               </a>                                           <a class="source" href="transparency.html">                 transparency.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               context.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><strong>Context</strong> stores the original <code>template</code> elements and is responsible for creating,
+adding and removing template <code>instances</code> to match the amount of <code>models</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Context</span>
+
+  <span class="nv">detach = </span><span class="nx">chainable</span> <span class="nf">-&gt;</span>
+    <span class="vi">@parent = </span><span class="nx">@el</span><span class="p">.</span><span class="nx">parentNode</span>
+    <span class="k">if</span> <span class="nx">@parent</span>
+      <span class="vi">@nextSibling = </span><span class="nx">@el</span><span class="p">.</span><span class="nx">nextSibling</span>
+      <span class="nx">@parent</span><span class="p">.</span><span class="nx">removeChild</span> <span class="nx">@el</span>
+
+  <span class="nv">attach = </span><span class="nx">chainable</span> <span class="nf">-&gt;</span>
+    <span class="k">if</span> <span class="nx">@parent</span>
+      <span class="k">if</span> <span class="nx">@nextSibling</span>
+      <span class="k">then</span> <span class="nx">@parent</span><span class="p">.</span><span class="nx">insertBefore</span> <span class="nx">@el</span><span class="p">,</span> <span class="nx">@nextSibling</span>
+      <span class="k">else</span> <span class="nx">@parent</span><span class="p">.</span><span class="nx">appendChild</span> <span class="nx">@el</span>
+
+  <span class="nv">constructor: </span><span class="nf">(@el) -&gt;</span>
+    <span class="vi">@template      = </span><span class="nx">cloneNode</span> <span class="nx">@el</span>
+    <span class="vi">@instances     = </span><span class="p">[</span><span class="k">new</span> <span class="nx">Instance</span><span class="p">(</span><span class="nx">@el</span><span class="p">)]</span>
+    <span class="vi">@instanceCache = </span><span class="p">[]</span>
+
+  <span class="nv">render: </span><span class="o">\</span>
+    <span class="nx">before</span><span class="p">(</span><span class="nx">detach</span><span class="p">)</span> <span class="o">\</span>
+    <span class="nx">after</span><span class="p">(</span><span class="nx">attach</span><span class="p">)</span> <span class="o">\</span>
+    <span class="nx">chainable</span> <span class="o">\</span>
+    <span class="nf">(models, directives, options) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Cloning DOM elements is expensive, so save unused template <code>instances</code> and reuse them later.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">while</span> <span class="nx">models</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">@instances</span><span class="p">.</span><span class="nx">length</span>
+        <span class="nx">@instanceCache</span><span class="p">.</span><span class="nx">push</span> <span class="nx">@instances</span><span class="p">.</span><span class="nx">pop</span><span class="p">().</span><span class="nx">remove</span><span class="p">()</span>
+
+      <span class="k">for</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">index</span> <span class="k">in</span> <span class="nx">models</span>
+        <span class="k">unless</span> <span class="nv">instance = </span><span class="nx">@instances</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
+          <span class="nv">instance = </span><span class="nx">@instanceCache</span><span class="p">.</span><span class="nx">pop</span><span class="p">()</span> <span class="o">||</span> <span class="k">new</span> <span class="nx">Instance</span><span class="p">(</span><span class="nx">cloneNode</span><span class="p">(</span><span class="nx">@template</span><span class="p">))</span>
+          <span class="nx">@instances</span><span class="p">.</span><span class="nx">push</span> <span class="nx">instance</span><span class="p">.</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">@el</span><span class="p">)</span>
+
+        <span class="nv">children = </span><span class="p">[]</span>
+        <span class="nx">instance</span>
+          <span class="p">.</span><span class="nx">prepare</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">children</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">renderValues</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">children</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">renderDirectives</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">directives</span><span class="p">)</span>
+          <span class="p">.</span><span class="nx">renderChildren</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">children</span><span class="p">,</span> <span class="nx">directives</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
