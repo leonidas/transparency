@@ -9,6 +9,7 @@
 
     <span class="k">new</span> <span class="nx">El</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span>
 
+
 <span class="k">class</span> <span class="nx">Element</span>
   <span class="nv">constructor: </span><span class="nf">(@el) -&gt;</span>
     <span class="vi">@attributes         = </span><span class="p">{}</span>
@@ -33,10 +34,9 @@
   <span class="nv">renderDirectives: </span><span class="nf">(model, index, attributes) -&gt;</span>
     <span class="k">for</span> <span class="k">own</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">directive</span> <span class="k">of</span> <span class="nx">attributes</span> <span class="k">when</span> <span class="k">typeof</span> <span class="nx">directive</span> <span class="o">==</span> <span class="s">&#39;function&#39;</span>
       <span class="nv">value = </span><span class="nx">directive</span><span class="p">.</span><span class="nx">call</span> <span class="nx">model</span><span class="p">,</span>
-        <span class="nv">model: </span>  <span class="nx">model</span>
+        <span class="nv">element: </span><span class="nx">@el</span>
         <span class="nv">index: </span>  <span class="nx">index</span>
         <span class="nv">value: </span>  <span class="nx">@attributes</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">templateValue</span> <span class="o">||</span> <span class="s">&#39;&#39;</span>
-        <span class="nv">element: </span><span class="nx">@el</span>
 
       <span class="nx">@attr</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="k">if</span> <span class="nx">value</span><span class="o">?</span>
 

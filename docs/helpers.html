@@ -15,6 +15,9 @@ Hello World
 "Hello"
 </code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">chainable = </span><span class="nx">after</span> <span class="nf">-&gt;</span> <span class="k">this</span>
 
+<span class="nv">onlyWith$ = </span><span class="nf">(fn) -&gt;</span> <span class="k">if</span> <span class="nx">jQuery</span><span class="o">?</span> <span class="o">||</span> <span class="nx">Zepto</span><span class="o">?</span>
+ <span class="nx">do</span> <span class="nf">($ = jQuery || Zepto) -&gt;</span> <span class="nx">fn</span> <span class="nx">arguments</span>
+
 <span class="nv">getChildNodes = </span><span class="nf">(el) -&gt;</span>
   <span class="nv">childNodes = </span><span class="p">[]</span>
   <span class="nv">child = </span><span class="nx">el</span><span class="p">.</span><span class="nx">firstChild</span>

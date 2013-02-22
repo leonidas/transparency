@@ -55,9 +55,9 @@ Override <code>Transparency.clone</code> with a custom clone function, if oldIE 
 supported without jQuery.</p>
 
 <pre><code>Transparency.clone = myCloneFunction;
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Transparency.clone = </span><span class="nf">(node) -&gt;</span> <span class="p">(</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="nx">Zepto</span><span class="p">)</span><span class="o">?</span><span class="p">(</span><span class="nx">node</span><span class="p">).</span><span class="nx">clone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">Transparency.clone = </span><span class="nx">onlyWith$</span> <span class="nf">-&gt;</span> <span class="nf">(node) -&gt;</span> <span class="nx">$</span><span class="p">(</span><span class="nx">node</span><span class="p">).</span><span class="nx">clone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="p">(</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="nx">Zepto</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="nv">fn.render = </span><span class="nx">Transparency</span><span class="p">.</span><span class="nx">jQueryPlugin</span>
+<span class="nx">onlyWith$</span> <span class="nf">-&gt;</span> <span class="nv">$.fn.render = </span><span class="nx">Transparency</span><span class="p">.</span><span class="nx">jQueryPlugin</span>
 
 <span class="k">if</span> <span class="nx">define</span><span class="o">?</span><span class="p">.</span><span class="nx">amd</span> <span class="k">then</span> <span class="nx">define</span> <span class="nf">-&gt;</span> <span class="nx">Transparency</span>
 
