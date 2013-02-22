@@ -1,11 +1,11 @@
 describe "Transparency performance", ->
 
-  xdescribe "with cached templates", ->
+  describe "with cached templates", ->
 
     describe "with one todo item", ->
 
       it "should be on the same ballpark with Handlebars", ->
-        transparency = new Benchmark 'transparency - cached tempate, one todo',
+        transparency = new Benchmark 'transparency - cached template, one todo',
           setup: ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
             index    = 0
@@ -40,7 +40,7 @@ describe "Transparency performance", ->
     describe "with hundred todo items", ->
 
       it "should be on the same ballpark with Handlebars", ->
-        transparency = new Benchmark 'transparency - cached tempate, 100 todos',
+        transparency = new Benchmark 'transparency - cached template, 100 todos',
           setup: ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
             index    = 0
@@ -78,7 +78,7 @@ describe "Transparency performance", ->
 
   describe "on first render call", ->
 
-    xdescribe "with one todo item", ->
+    describe "with one todo item", ->
 
       it "should be on the same ballpark with Handlebars", ->
         transparency = new Benchmark 'transparency - unused template, one todo',
