@@ -1,19 +1,16 @@
-if typeof module != 'undefined' && module.exports
-  require './spec_helper'
-  require '../src/transparency'
-
 describe "Transparency", ->
 
   it "cache templates", ->
-    doc = jQuery(
-     '<div>
+    doc = $ """
+      <div>
         <div class="container">
           <div>
             <span class="hello"></span>
             <span class="world"></span>
           </div>
         </div>
-      </div>')
+      </div>
+      """
 
     data = [
       hello: "Hello"
@@ -23,8 +20,8 @@ describe "Transparency", ->
       world: "Canada!"
     ]
 
-    expected = jQuery(
-     '<div>
+    expected = $ """
+      <div>
         <div class="container">
           <div>
             <span class="hello">Hello</span>
@@ -35,7 +32,8 @@ describe "Transparency", ->
             <span class="world">Canada!</span>
           </div>
         </div>
-      </div>')
+      </div>
+      """
 
     doc.find('.container').render(data)
     doc.find('.container').render(data)
