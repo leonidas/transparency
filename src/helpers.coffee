@@ -18,6 +18,9 @@ after = (decorator) -> (method) -> ->
 #
 chainable = after -> this
 
+onlyWith$ = (fn) -> if jQuery? || Zepto?
+ do ($ = jQuery || Zepto) -> fn arguments
+
 getChildNodes = (el) ->
   childNodes = []
   child = el.firstChild

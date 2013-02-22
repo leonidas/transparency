@@ -1,13 +1,13 @@
 
 /*!
-* transparency - v0.9.1 - 2013-02-21
+* transparency - v0.9.2 - 2013-02-22
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
 
 
 (function() {
-  var Attribute, AttributeFactory, BooleanAttribute, Checkbox, Class, Context, ELEMENT_NODE, Element, ElementFactory, Html, Input, Instance, Radio, Select, TEXT_NODE, Text, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, toString, _getElements, _ref,
+  var Attribute, AttributeFactory, BooleanAttribute, Checkbox, Class, Context, ELEMENT_NODE, Element, ElementFactory, Html, Input, Instance, Radio, Select, TEXT_NODE, Text, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, onlyWith$, toString, _getElements,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -33,6 +33,14 @@
   chainable = after(function() {
     return this;
   });
+
+  onlyWith$ = function(fn) {
+    if ((typeof jQuery !== "undefined" && jQuery !== null) || (typeof Zepto !== "undefined" && Zepto !== null)) {
+      return (function($ ) {
+        return fn(arguments);
+      })(jQuery ||  Zepto);
+    }
+  };
 
   getChildNodes = function(el) {
     var child, childNodes;
@@ -167,14 +175,15 @@
     return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
   };
 
-  Transparency.clone = function(node) {
-    var _base;
-    return typeof (_base = jQuery || Zepto) === "function" ? _base(node).clone()[0] : void 0;
-  };
+  Transparency.clone = onlyWith$(function() {
+    return function(node) {
+      return $(node).clone()[0];
+    };
+  });
 
-  if ((_ref = jQuery || Zepto) != null) {
-    _ref.fn.render = Transparency.jQueryPlugin;
-  }
+  onlyWith$(function() {
+    return $.fn.render = Transparency.jQueryPlugin;
+  });
 
   if (typeof define !== "undefined" && define !== null ? define.amd : void 0) {
     define(function() {
@@ -241,33 +250,33 @@
     }
 
     Instance.prototype.remove = chainable(function() {
-      var node, _i, _len, _ref1, _results;
-      _ref1 = this.childNodes;
+      var node, _i, _len, _ref, _results;
+      _ref = this.childNodes;
       _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        node = _ref1[_i];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
         _results.push(node.parentNode.removeChild(node));
       }
       return _results;
     });
 
     Instance.prototype.appendTo = chainable(function(parent) {
-      var node, _i, _len, _ref1, _results;
-      _ref1 = this.childNodes;
+      var node, _i, _len, _ref, _results;
+      _ref = this.childNodes;
       _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        node = _ref1[_i];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
         _results.push(parent.appendChild(node));
       }
       return _results;
     });
 
     Instance.prototype.prepare = chainable(function(model) {
-      var element, _i, _len, _ref1, _results;
-      _ref1 = this.elements;
+      var element, _i, _len, _ref, _results;
+      _ref = this.elements;
       _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        element = _ref1[_i];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        element = _ref[_i];
         element.reset();
         _results.push(data(element.el).model = model);
       }
@@ -286,11 +295,11 @@
           if (value != null) {
             if (isPlainValue(value)) {
               _results.push((function() {
-                var _i, _len, _ref1, _results1;
-                _ref1 = this.matchingElements(key);
+                var _i, _len, _ref, _results1;
+                _ref = this.matchingElements(key);
                 _results1 = [];
-                for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-                  element = _ref1[_i];
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  element = _ref[_i];
                   _results1.push(element.render(value));
                 }
                 return _results1;
@@ -321,11 +330,11 @@
           };
         }
         _results.push((function() {
-          var _i, _len, _ref1, _results1;
-          _ref1 = this.matchingElements(key);
+          var _i, _len, _ref, _results1;
+          _ref = this.matchingElements(key);
           _results1 = [];
-          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-            element = _ref1[_i];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            element = _ref[_i];
             _results1.push(element.renderDirectives(model, index, attributes));
           }
           return _results1;
@@ -340,11 +349,11 @@
       for (_i = 0, _len = children.length; _i < _len; _i++) {
         key = children[_i];
         _results.push((function() {
-          var _j, _len1, _ref1, _results1;
-          _ref1 = this.matchingElements(key);
+          var _j, _len1, _ref, _results1;
+          _ref = this.matchingElements(key);
           _results1 = [];
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            element = _ref1[_j];
+          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+            element = _ref[_j];
             _results1.push(Transparency.render(element.el, model[key], directives[key], options));
           }
           return _results1;
@@ -356,11 +365,11 @@
     Instance.prototype.matchingElements = function(key) {
       var el, elements, _base;
       elements = (_base = this.queryCache)[key] || (_base[key] = (function() {
-        var _i, _len, _ref1, _results;
-        _ref1 = this.elements;
+        var _i, _len, _ref, _results;
+        _ref = this.elements;
         _results = [];
-        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          el = _ref1[_i];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          el = _ref[_i];
           if (Transparency.matcher(el, key)) {
             _results.push(el);
           }
@@ -435,11 +444,11 @@
       this.el = el;
       this.name = name;
       this.templateValue = ((function() {
-        var _i, _len, _ref1, _results;
-        _ref1 = getChildNodes(this.el);
+        var _i, _len, _ref, _results;
+        _ref = getChildNodes(this.el);
         _results = [];
-        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          child = _ref1[_i];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
           if (child.nodeType === TEXT_NODE) {
             _results.push(child.nodeValue);
           }
@@ -473,12 +482,12 @@
     }
 
     Html.prototype.set = function(html) {
-      var child, _i, _len, _ref1, _results;
+      var child, _i, _len, _ref, _results;
       this.el.innerHTML = html;
-      _ref1 = this.childNodes;
+      _ref = this.childNodes;
       _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        child = _ref1[_i];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
         _results.push(this.el.appendChild(child));
       }
       return _results;
@@ -538,11 +547,11 @@
     });
 
     Element.prototype.reset = function() {
-      var attribute, name, _ref1, _results;
-      _ref1 = this.attributes;
+      var attribute, name, _ref, _results;
+      _ref = this.attributes;
       _results = [];
-      for (name in _ref1) {
-        attribute = _ref1[name];
+      for (name in _ref) {
+        attribute = _ref[name];
         _results.push(attribute.set(attribute.templateValue));
       }
       return _results;
@@ -559,7 +568,7 @@
     };
 
     Element.prototype.renderDirectives = function(model, index, attributes) {
-      var directive, name, value, _ref1, _results;
+      var directive, name, value, _ref, _results;
       _results = [];
       for (name in attributes) {
         if (!__hasProp.call(attributes, name)) continue;
@@ -570,7 +579,7 @@
         value = directive.call(model, {
           element: this.el,
           index: index,
-          value: ((_ref1 = this.attributes[name]) != null ? _ref1.templateValue : void 0) || ''
+          value: ((_ref = this.attributes[name]) != null ? _ref.templateValue : void 0) || ''
         });
         if (value != null) {
           _results.push(this.attr(name, value));
@@ -597,12 +606,12 @@
     }
 
     Select.prototype.render = function(value) {
-      var option, _i, _len, _ref1, _results;
+      var option, _i, _len, _ref, _results;
       value = value.toString();
-      _ref1 = this.elements;
+      _ref = this.elements;
       _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        option = _ref1[_i];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        option = _ref[_i];
         if (option.nodeName === 'option') {
           _results.push(option.attr('selected', option.el.value === value));
         }

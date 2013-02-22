@@ -79,8 +79,8 @@ Transparency.matcher = (element, key) ->
 #
 #     Transparency.clone = myCloneFunction;
 #
-Transparency.clone = (node) -> (jQuery || Zepto)?(node).clone()[0]
+Transparency.clone = onlyWith$ -> (node) -> $(node).clone()[0]
 
-(jQuery || Zepto)?.fn.render = Transparency.jQueryPlugin
+onlyWith$ -> $.fn.render = Transparency.jQueryPlugin
 
 if define?.amd then define -> Transparency

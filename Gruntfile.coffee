@@ -49,6 +49,14 @@ module.exports = (grunt) ->
           specs:  ['spec/performanceSpec.js']
           helpers: 'spec/specHelper.js'
 
+      nojQuery:
+        src: 'dist/transparency.js'
+        options:
+          outfile: 'NoJQuerySpecRunner.html'
+          specs: ['spec/nojQuerySpec.js']
+          helpers: 'spec/specHelper.js'
+          template: require('grunt-template-jasmine-requirejs')
+
       amd:
         src: 'dist/transparency.js'
         options:
@@ -82,7 +90,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-docco'
 
   grunt.registerTask 'build',       ['concat', 'coffee', 'uglify', 'docco']
-  grunt.registerTask 'tdd',         ['build', 'jasmine:functional', 'jasmine:amd']
+  grunt.registerTask 'tdd',         ['build', 'jasmine:functional', 'jasmine:amd', 'jasmine:nojQuery']
   grunt.registerTask 'test',        ['coffee', 'jasmine']
   grunt.registerTask 'build-tests', ['jasmine:functional:build', 'jasmine:amd:build', 'jasmine:performance:build']
   grunt.registerTask 'default',     ['build', 'tdd', 'build-tests']
