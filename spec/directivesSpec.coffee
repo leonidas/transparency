@@ -137,6 +137,7 @@ describe "Transparency", ->
       """
 
     template.render persons, directives
+    expect(template).toBeEqual expected
 
     # Render twice to make sure the class names are not duplicated
     template.render persons, directives
@@ -330,5 +331,4 @@ describe "Transparency", ->
 
     template.render data, directives
     template.render data, directives
-    jasmine.log "fsdaofijadsojfosaijfodsj"
     expect(template).toBeEqual expected

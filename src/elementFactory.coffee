@@ -29,14 +29,15 @@ class Element
 
   attr: (name, value) ->
     attribute = @attributes[name] ||= AttributeFactory.createAttribute @el, name, value
-    attribute.set value
+    attribute.set value if value?
+    attribute
 
   renderDirectives: (model, index, attributes) ->
     for own name, directive of attributes when typeof directive == 'function'
       value = directive.call model,
         element: @el
         index:   index
-        value:   @attributes[name]?.templateValue || ''
+        value:   @attr(name).templateValue
 
       @attr(name, value) if value?
 

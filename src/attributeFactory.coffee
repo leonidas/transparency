@@ -1,9 +1,8 @@
 AttributeFactory =
   Attributes: {}
 
-  createAttribute: (element, name, value) ->
-    Attr = AttributeFactory.Attributes[name] or
-      if isBoolean value then BooleanAttribute else Attribute
+  createAttribute: (element, name) ->
+    Attr = AttributeFactory.Attributes[name] or Attribute
     new Attr(element, name)
 
 
@@ -17,6 +16,14 @@ class Attribute
 
 
 class BooleanAttribute extends Attribute
+  BOOLEAN_ATTRIBUTES = ['hidden', 'async', 'defer', 'autofocus', 'formnovalidate', 'disabled',
+    'autofocus', 'formnovalidate', 'multiple', 'readonly', 'required', 'checked', 'scoped',
+    'reversed', 'selected', 'loop', 'muted', 'autoplay', 'controls', 'seamless', 'default',
+    'ismap', 'novalidate', 'open', 'typemustmatch', 'truespeed']
+
+  for name in BOOLEAN_ATTRIBUTES
+    AttributeFactory.Attributes[name] = this
+
   constructor: (@el, @name) ->
     @templateValue = @el.getAttribute(@name) || false
 

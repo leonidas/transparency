@@ -1,6 +1,6 @@
 
 /*!
-* transparency - v0.9.2 - 2013-02-22
+* transparency - v0.9.3 - 2013-02-22
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
@@ -386,9 +386,9 @@
 
   AttributeFactory = {
     Attributes: {},
-    createAttribute: function(element, name, value) {
+    createAttribute: function(element, name) {
       var Attr;
-      Attr = AttributeFactory.Attributes[name] || (isBoolean(value) ? BooleanAttribute : Attribute);
+      Attr = AttributeFactory.Attributes[name] || Attribute;
       return new Attr(element, name);
     }
   };
@@ -411,8 +411,16 @@
   })();
 
   BooleanAttribute = (function(_super) {
+    var BOOLEAN_ATTRIBUTES, name, _i, _len;
 
     __extends(BooleanAttribute, _super);
+
+    BOOLEAN_ATTRIBUTES = ['hidden', 'async', 'defer', 'autofocus', 'formnovalidate', 'disabled', 'autofocus', 'formnovalidate', 'multiple', 'readonly', 'required', 'checked', 'scoped', 'reversed', 'selected', 'loop', 'muted', 'autoplay', 'controls', 'seamless', 'default', 'ismap', 'novalidate', 'open', 'typemustmatch', 'truespeed'];
+
+    for (_i = 0, _len = BOOLEAN_ATTRIBUTES.length; _i < _len; _i++) {
+      name = BOOLEAN_ATTRIBUTES[_i];
+      AttributeFactory.Attributes[name] = BooleanAttribute;
+    }
 
     function BooleanAttribute(el, name) {
       this.el = el;
@@ -564,11 +572,14 @@
     Element.prototype.attr = function(name, value) {
       var attribute, _base;
       attribute = (_base = this.attributes)[name] || (_base[name] = AttributeFactory.createAttribute(this.el, name, value));
-      return attribute.set(value);
+      if (value != null) {
+        attribute.set(value);
+      }
+      return attribute;
     };
 
     Element.prototype.renderDirectives = function(model, index, attributes) {
-      var directive, name, value, _ref, _results;
+      var directive, name, value, _results;
       _results = [];
       for (name in attributes) {
         if (!__hasProp.call(attributes, name)) continue;
@@ -579,7 +590,7 @@
         value = directive.call(model, {
           element: this.el,
           index: index,
-          value: ((_ref = this.attributes[name]) != null ? _ref.templateValue : void 0) || ''
+          value: this.attr(name).templateValue
         });
         if (value != null) {
           _results.push(this.attr(name, value));
