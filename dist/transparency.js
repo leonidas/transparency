@@ -1,6 +1,6 @@
 
 /*!
-* transparency - v0.9.3 - 2013-02-22
+* transparency - v0.9.4 - 2013-02-28
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
@@ -224,13 +224,14 @@
       while (models.length < this.instances.length) {
         this.instanceCache.push(this.instances.pop().remove());
       }
+      while (models.length > this.instances.length) {
+        instance = this.instanceCache.pop() || new Instance(cloneNode(this.template));
+        this.instances.push(instance.appendTo(this.el));
+      }
       _results = [];
       for (index = _i = 0, _len = models.length; _i < _len; index = ++_i) {
         model = models[index];
-        if (!(instance = this.instances[index])) {
-          instance = this.instanceCache.pop() || new Instance(cloneNode(this.template));
-          this.instances.push(instance.appendTo(this.el));
-        }
+        instance = this.instances[index];
         children = [];
         _results.push(instance.prepare(model, children).renderValues(model, children).renderDirectives(model, index, directives).renderChildren(model, children, directives, options));
       }

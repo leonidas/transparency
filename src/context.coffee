@@ -29,10 +29,14 @@ class Context
       while models.length < @instances.length
         @instanceCache.push @instances.pop().remove()
 
+      # DOM elements needs to be created before rendering
+      # https://github.com/leonidas/transparency/issues/94
+      while models.length > @instances.length
+        instance = @instanceCache.pop() || new Instance(cloneNode(@template))
+        @instances.push instance.appendTo(@el)
+
       for model, index in models
-        unless instance = @instances[index]
-          instance = @instanceCache.pop() || new Instance(cloneNode(@template))
-          @instances.push instance.appendTo(@el)
+        instance = @instances[index]
 
         children = []
         instance
