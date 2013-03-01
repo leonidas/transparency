@@ -54,11 +54,11 @@ class Html extends Attribute
 
   constructor: (el) ->
     super el, 'innerHTML'
-    @childNodes = getChildNodes @el
+    @children = Array::slice.call @el.children
 
   set: (html) ->
     @el.innerHTML = html
-    for child in @childNodes
+    for child in @children
       @el.appendChild child
 
 

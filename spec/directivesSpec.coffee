@@ -332,3 +332,78 @@ describe "Transparency", ->
     template.render data, directives
     template.render data, directives
     expect(template).toBeEqual expected
+
+  it "should not duplicate text content when setting html", ->
+    # See https://github.com/leonidas/transparency/issues/86
+
+    template = $ """
+      <div class="template">
+        <div class="foo">
+          <span class="bar">
+          </span>
+        </div>
+      </div>
+      """
+
+    data =
+      foo: '<i>asdf</i>'
+      bar: '<b>hjkl</b>'
+
+    directives =
+      foo: html: -> @foo
+      bar: html: -> @bar
+
+    expected = $ """
+      <div class="template">
+        <div class="foo">
+          <i>asdf</i>
+          <span class="bar">
+            <b>hjkl</b>
+          </span>
+        </div>
+      </div>
+      """
+
+    template.render data, directives
+    template.render data, directives
+    expect(template).toBeEqual expected
+
+  it "should not duplicate text content when setting html", ->
+    # See http://jsfiddle.net/taxbd/3/
+
+    template = $ """
+      <div class="accordion-heading">
+          <div class="accordion-toggle">
+              <div class="accordion-selected">
+                  <div class="selected"></div>
+              </div>
+          </div>
+      </div>
+      """
+
+    data =
+      'accordion-selected':
+          amount: 2
+          selected: "Awesome"
+
+    directives =
+      'accordion-selected':
+          'selected':
+              html: (params) ->
+                if(@amount)
+                then '<span>' + @selected + '</span><span class="label label-success">' + @amount + '</span>'
+                else @selected
+
+    expected = $ """
+      <div class="accordion-heading">
+          <div class="accordion-toggle">
+              <div class="accordion-selected">
+                  <div class="selected"><span>Awesome</span><span class="label label-success">2</span></div>
+              </div>
+          </div>
+      </div>
+      """
+
+    template.render data, directives
+    template.render data, directives
+    expect(template).toBeEqual expected

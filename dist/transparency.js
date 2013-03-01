@@ -1,6 +1,6 @@
 
 /*!
-* transparency - v0.9.5 - 2013-02-28
+* transparency - v0.9.5 - 2013-03-01
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
@@ -487,13 +487,13 @@
 
     function Html(el) {
       Html.__super__.constructor.call(this, el, 'innerHTML');
-      this.childNodes = getChildNodes(this.el);
+      this.children = Array.prototype.slice.call(this.el.children);
     }
 
     Html.prototype.set = function(html) {
       var child, _i, _len, _ref, _results;
       this.el.innerHTML = html;
-      _ref = this.childNodes;
+      _ref = this.children;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         child = _ref[_i];
