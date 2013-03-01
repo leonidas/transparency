@@ -1,6 +1,6 @@
 
 /*!
-* transparency - v0.9.5 - 2013-03-01
+* transparency - v0.9.6 - 2013-03-01
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
