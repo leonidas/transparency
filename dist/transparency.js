@@ -1,13 +1,13 @@
 
 /*!
-* transparency - v0.9.6 - 2013-03-01
+* transparency - v0.9.6 - 2013-03-04
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
 
 
 (function() {
-  var Attribute, AttributeFactory, BooleanAttribute, Checkbox, Class, Context, ELEMENT_NODE, Element, ElementFactory, Html, Input, Instance, Radio, Select, TEXT_NODE, Text, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, onlyWith$, toString, _getElements,
+  var Attribute, AttributeFactory, BooleanAttribute, Checkbox, Class, Context, ELEMENT_NODE, Element, ElementFactory, Html, Input, Instance, Radio, Select, TEXT_NODE, Text, TextArea, Transparency, VoidElement, after, before, chainable, cloneNode, consoleLogger, data, expando, getChildNodes, getElements, html5Clone, isArray, isBoolean, isDate, isDomElement, isPlainValue, log, nullLogger, onlyWith$, toString, _getElements,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -676,6 +676,20 @@
     return Input;
 
   })(VoidElement);
+
+  TextArea = (function(_super) {
+
+    __extends(TextArea, _super);
+
+    function TextArea() {
+      return TextArea.__super__.constructor.apply(this, arguments);
+    }
+
+    ElementFactory.Elements['textarea'] = TextArea;
+
+    return TextArea;
+
+  })(Input);
 
   Checkbox = (function(_super) {
 

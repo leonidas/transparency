@@ -22,7 +22,7 @@ describe "Transparency", ->
       <div>
         <input name="name" value="John"/>
         <input name="job" value="Milkman"/>
-        <textarea name="resume">Jack of all trades</textarea>
+        <textarea name="resume" value="Jack of all trades"></textarea>
       </div>
       """
 

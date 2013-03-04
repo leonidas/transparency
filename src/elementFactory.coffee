@@ -71,6 +71,10 @@ class Input extends VoidElement
   render: (value) -> @attr 'value', value
 
 
+class TextArea extends Input
+  ElementFactory.Elements['textarea'] = this
+
+
 class Checkbox extends Input
   ElementFactory.Elements['input']['checkbox'] = this
 
