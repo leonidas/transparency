@@ -1,6 +1,6 @@
 
 /*!
-* transparency - v0.9.7 - 2013-03-04
+* transparency - v0.9.7 - 2013-03-16
 * https://github.com/leonidas/transparency
 * Copyright (c) 2013 Jarno Keskikangas <jarno.keskikangas@leonidasoy.fi>; Licensed MIT
 */
@@ -36,9 +36,9 @@
 
   onlyWith$ = function(fn) {
     if ((typeof jQuery !== "undefined" && jQuery !== null) || (typeof Zepto !== "undefined" && Zepto !== null)) {
-      return (function($ ) {
+      return (function($) {
         return fn(arguments);
-      })(jQuery ||  Zepto);
+      })(jQuery || Zepto);
     }
   };
 
@@ -529,7 +529,7 @@
       if ('input' === (name = el.nodeName.toLowerCase())) {
         El = ElementFactory.Elements[name][el.type.toLowerCase()] || Input;
       } else {
-        El = ElementFactory.Elements[name] ||  Element;
+        El = ElementFactory.Elements[name] || Element;
       }
       return new El(el);
     }

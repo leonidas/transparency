@@ -41,7 +41,12 @@
     "grunt-contrib-watch": "~0.2.0",
     "grunt-contrib-uglify": "~0.1.1",
     "grunt-contrib-concat": "~0.1.2",
-    "grunt-template-jasmine-requirejs": "~0.1.0"
+    "grunt-template-jasmine-requirejs": "~0.1.0",
+    "james-coffee": "~0.1.1",
+    "james": "~0.1.5",
+    "james-uglify": "~0.1.0",
+    "browserify": "~2.6.1",
+    "q": "~0.9.2"
   },
   "scripts": {
     "test": "grunt test"

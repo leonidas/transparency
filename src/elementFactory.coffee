@@ -5,7 +5,7 @@ ElementFactory =
     if 'input' == name = el.nodeName.toLowerCase()
       El = ElementFactory.Elements[name][el.type.toLowerCase()] || Input
     else
-      El = ElementFactory.Elements[name] || Element
+      El = ElementFactory.Elements[name] || Element
 
     new El(el)
 

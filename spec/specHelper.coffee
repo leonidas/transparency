@@ -1,17 +1,3 @@
-if module?.exports
-  global.document = require('jsdom/lib/jsdom').jsdom """
-    <!DOCTYPE html>
-    <html>
-      <head>
-      </head>
-      <body>
-      </body>
-    </html>
-    """
-
-  global.window = document.createWindow()
-  global.jQuery = global.$ = require('jquery').create window
-
 trim = (text) ->
   text.replace(/\s/g, '').toLowerCase()
 
