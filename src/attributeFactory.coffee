@@ -1,4 +1,6 @@
-AttributeFactory =
+helpers = require './helpers'
+
+module.exports = AttributeFactory =
   Attributes: {}
 
   createAttribute: (element, name) ->
@@ -39,11 +41,11 @@ class Text extends Attribute
 
   constructor: (@el, @name) ->
     @templateValue =
-      (child.nodeValue for child in getChildNodes @el when child.nodeType == TEXT_NODE).join ''
+      (child.nodeValue for child in helpers.getChildNodes @el when child.nodeType == helpers.TEXT_NODE).join ''
 
     unless @textNode = @el.firstChild
       @el.appendChild @textNode = @el.ownerDocument.createTextNode ''
-    else unless @textNode.nodeType is TEXT_NODE
+    else unless @textNode.nodeType is helpers.TEXT_NODE
       @textNode = @el.insertBefore @el.ownerDocument.createTextNode(''), @textNode
 
   set: (text) -> @textNode.nodeValue = text

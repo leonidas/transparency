@@ -1,4 +1,7 @@
-ElementFactory =
+AttributeFactory = require './attributeFactory'
+helpers          = require './helpers'
+
+module.exports = ElementFactory =
   Elements: input: {}
 
   createElement: (el) ->
@@ -13,13 +16,14 @@ ElementFactory =
 class Element
   constructor: (@el) ->
     @attributes         = {}
-    @childNodes         = getChildNodes @el
+    @childNodes         = helpers.getChildNodes @el
     @nodeName           = @el.nodeName.toLowerCase()
     @classNames         = @el.className.split ' '
     @originalAttributes = {}
 
-  empty: chainable ->
+  empty: ->
     @el.removeChild child while child = @el.firstChild
+    this
 
   reset: ->
     for name, attribute of @attributes
@@ -47,7 +51,7 @@ class Select extends Element
 
   constructor: (el) ->
     super el
-    @elements = getElements el
+    @elements = helpers.getElements el
 
   render: (value) ->
     value = value.toString()

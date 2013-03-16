@@ -1,21 +1,23 @@
+helpers = require './helpers'
+
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
 # It memoizes the matching elements to `queryCache` in order to speed up the rendering.
-class Instance
+module.exports = class Instance
   constructor: (template) ->
     @queryCache = {}
-    @childNodes = getChildNodes template
-    @elements   = getElements   template
+    @childNodes = helpers.getChildNodes template
+    @elements   = helpers.getElements   template
 
-  remove: chainable ->
+  remove: helpers.chainable ->
     for node in @childNodes
       node.parentNode.removeChild node
 
-  appendTo: chainable (parent) ->
+  appendTo: helpers.chainable (parent) ->
     for node in @childNodes
       parent.appendChild node
 
-  prepare: chainable (model) ->
+  prepare: helpers.chainable (model) ->
     for element in @elements
       element.reset()
 
@@ -28,21 +30,21 @@ class Instance
       #       console.log(e.target.transparency.model);
       #     });
       #
-      data(element.el).model = model
+      helpers.data(element.el).model = model
 
   # Rendering values takes care of the most common use cases like
   # rendering text content, form values and DOM elements (.e.g., Backbone Views).
   # Rendering as a text content is a safe default, as it is HTML escaped
   # by the browsers.
-  renderValues: chainable (model, children) ->
-    if isDomElement(model) and element = @elements[0]
+  renderValues: helpers.chainable (model, children) ->
+    if helpers.isDomElement(model) and element = @elements[0]
       element.empty().el.appendChild model
 
     else if typeof model == 'object'
       for own key, value of model when value?
         # The value can be either a nested model or a plain value, i.e., `Date`, `string`, `boolean` or `double`.
         # Start by handling the plain values and finding the matching elements.
-        if isPlainValue value
+        if helpers.isPlainValue value
           for element in @matchingElements key
 
             # Element type also affects on rendering. Given a model
@@ -134,20 +136,20 @@ class Instance
   #     </div>
   #
   # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
-  renderDirectives: chainable (model, index, directives) ->
+  renderDirectives: helpers.chainable (model, index, directives) ->
     for own key, attributes of directives when typeof attributes == 'object'
       model = {value: model} unless typeof model == 'object'
 
       for element in @matchingElements key
         element.renderDirectives model, index, attributes
 
-  renderChildren: chainable (model, children, directives, options) ->
+  renderChildren: helpers.chainable (model, children, directives, options) ->
     for key in children
       for element in @matchingElements key
         Transparency.render element.el, model[key], directives[key], options
 
   matchingElements: (key) ->
     elements = @queryCache[key] ||= (el for el in @elements when Transparency.matcher el, key)
-    log "Matching elements for '#{key}':", elements
+    helpers.log "Matching elements for '#{key}':", elements
     elements
 

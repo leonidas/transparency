@@ -1,3 +1,6 @@
+helpers = require './helpers'
+Context = require './context'
+
 # **Transparency** is a client-side template engine which binds JSON objects to DOM elements.
 #
 #     //  Template:
@@ -27,20 +30,20 @@
 # For the full API reference, please see the README.
 
 # ## Public API
-Transparency = @Transparency = {}
+Transparency = window.Transparency = {}
 
 # `Transparency.render` maps JSON objects to DOM elements.
 Transparency.render = (context, models = [], directives = {}, options = {}) ->
   # First, check if we are in debug mode and if so, log the arguments.
-  log = if options.debug and console then consoleLogger else nullLogger
+  log = if options.debug and console then helpers.consoleLogger else helpers.nullLogger
   log "Transparency.render:", context, models, directives, options
 
   return unless context
-  models = [models] unless isArray models
+  models = [models] unless helpers.isArray models
 
   # Context element, state and functionality is wrapped to `Context` object. Get it, or create a new
   # if it doesn't exist yet.
-  context = data(context).context ||= new Context(context)
+  context = helpers.data(context).context ||= new Context(context)
 
   # Rendering is a lot faster when the context element is detached from the DOM, as
   # reflow calculations are not triggered. So, detach it before rendering.
@@ -55,7 +58,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 #     // Render with jQuery
 #     $('#template').render({hello: 'World'});
 #
-Transparency.jQueryPlugin = chainable (models, directives, options) ->
+Transparency.jQueryPlugin = helpers.chainable (models, directives, options) ->
   for context in this
     Transparency.render context, models, directives, options
 
@@ -79,8 +82,8 @@ Transparency.matcher = (element, key) ->
 #
 #     Transparency.clone = myCloneFunction;
 #
-Transparency.clone = onlyWith$ -> (node) -> $(node).clone()[0]
+Transparency.clone = helpers.onlyWith$ -> (node) -> $(node).clone()[0]
 
-onlyWith$ -> $.fn.render = Transparency.jQueryPlugin
+helpers.onlyWith$ -> $.fn.render = Transparency.jQueryPlugin
 
 if define?.amd then define -> Transparency

@@ -1,28 +1,31 @@
+helpers = require './helpers'
+Instance = require './instance'
+
 # **Context** stores the original `template` elements and is responsible for creating,
 # adding and removing template `instances` to match the amount of `models`.
-class Context
+module.exports = class Context
 
-  detach = chainable ->
+  detach = helpers.chainable ->
     @parent = @el.parentNode
     if @parent
       @nextSibling = @el.nextSibling
       @parent.removeChild @el
 
-  attach = chainable ->
+  attach = helpers.chainable ->
     if @parent
       if @nextSibling
       then @parent.insertBefore @el, @nextSibling
       else @parent.appendChild @el
 
   constructor: (@el) ->
-    @template      = cloneNode @el
+    @template      = helpers.cloneNode @el
     @instances     = [new Instance(@el)]
     @instanceCache = []
 
   render: \
-    before(detach) \
-    after(attach) \
-    chainable \
+    helpers.before(detach) \
+    helpers.after(attach) \
+    helpers.chainable \
     (models, directives, options) ->
 
       # Cloning DOM elements is expensive, so save unused template `instances` and reuse them later.
@@ -32,7 +35,7 @@ class Context
       # DOM elements needs to be created before rendering
       # https://github.com/leonidas/transparency/issues/94
       while models.length > @instances.length
-        instance = @instanceCache.pop() || new Instance(cloneNode(@template))
+        instance = @instanceCache.pop() || new Instance(helpers.cloneNode(@template))
         @instances.push instance.appendTo(@el)
 
       for model, index in models

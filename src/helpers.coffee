@@ -1,8 +1,10 @@
-before = (decorator) -> (method) -> ->
+ElementFactory = require './ElementFactory'
+
+exports.before = (decorator) -> (method) -> ->
   decorator.apply this, arguments
   method.apply this, arguments
 
-after = (decorator) -> (method) -> ->
+exports.after = (decorator) -> (method) -> ->
   method.apply this, arguments
   decorator.apply this, arguments
 
@@ -16,12 +18,12 @@ after = (decorator) -> (method) -> ->
 #     Hello World
 #     "Hello"
 #
-chainable = after -> this
+exports.chainable = exports.after -> this
 
-onlyWith$ = (fn) -> if jQuery? || Zepto?
+exports.onlyWith$ = (fn) -> if jQuery? || Zepto?
  do ($ = jQuery || Zepto) -> fn arguments
 
-getChildNodes = (el) ->
+exports.getChildNodes = (el) ->
   childNodes = []
   child = el.firstChild
   while child
@@ -29,7 +31,7 @@ getChildNodes = (el) ->
     child = child.nextSibling
   childNodes
 
-getElements  = (el) ->
+exports.getElements = (el) ->
   elements = []
   _getElements el, elements
   elements
@@ -37,26 +39,26 @@ getElements  = (el) ->
 _getElements = (template, elements) ->
   child = template.firstChild
   while child
-    if child.nodeType == ELEMENT_NODE
+    if child.nodeType == exports.ELEMENT_NODE
       elements.push new ElementFactory.createElement(child)
       _getElements child, elements
 
     child = child.nextSibling
 
-ELEMENT_NODE = 1
-TEXT_NODE    = 3
+exports.ELEMENT_NODE = 1
+exports.TEXT_NODE    = 3
 
 # IE8 <= fails to clone detached nodes properly, shim with jQuery
 # jQuery.clone: https://github.com/jquery/jquery/blob/master/src/manipulation.js#L594
 # jQuery.support.html5Clone: https://github.com/jquery/jquery/blob/master/src/support.js#L83
 html5Clone = () -> document.createElement('nav').cloneNode(true).outerHTML != '<:nav></:nav>'
-cloneNode  =
+exports.cloneNode  =
   if not document? or html5Clone()
     (node) -> node.cloneNode true
   else
     (node) ->
       cloned = Transparency.clone(node)
-      if cloned.nodeType == ELEMENT_NODE
+      if cloned.nodeType == exports.ELEMENT_NODE
         cloned.removeAttribute expando
         for element in cloned.getElementsByTagName '*'
           element.removeAttribute expando
@@ -74,16 +76,16 @@ cloneNode  =
 # However, as references to expanded DOM elements are never lost, no memory leaks are introduced
 # http://perfectionkills.com/whats-wrong-with-extending-the-dom/
 expando = 'transparency'
-data    = (element) -> element[expando] ||= {}
+exports.data    = (element) -> element[expando] ||= {}
 
-nullLogger    = () ->
-consoleLogger = -> console.log arguments
-log           = nullLogger
+exports.nullLogger    = () ->
+exports.consoleLogger = -> console.log arguments
+exports.log           = exports.nullLogger
 
 # Mostly from https://github.com/documentcloud/underscore/blob/master/underscore.js
-toString      = Object.prototype.toString
-isArray       = Array.isArray || (obj) -> toString.call(obj) == '[object Array]'
-isDate        = (obj) -> toString.call(obj) == '[object Date]'
-isDomElement  = (obj) -> obj.nodeType == ELEMENT_NODE
-isPlainValue  = (obj) -> type = typeof obj; (type != 'object' and type != 'function') or isDate obj
-isBoolean     = (obj) -> obj is true or obj is false
+exports.toString      = Object.prototype.toString
+exports.isArray       = Array.isArray || (obj) -> toString.call(obj) == '[object Array]'
+exports.isDate        = (obj) -> toString.call(obj) == '[object Date]'
+exports.isDomElement  = (obj) -> obj.nodeType == exports.ELEMENT_NODE
+exports.isPlainValue  = (obj) -> type = typeof obj; (type != 'object' and type != 'function') or exports.isDate obj
+exports.isBoolean     = (obj) -> obj is true or obj is false
