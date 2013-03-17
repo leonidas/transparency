@@ -1,7 +1,7 @@
 node_modules
 *.sublime-project
 *.sublime-workspace
-spec/*.js
+src/*.js
 .DS_Store
 docs
 .grunt
