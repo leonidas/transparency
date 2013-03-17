@@ -9,7 +9,8 @@
         job: 'Milkman',
         resume: "Jack of all trades"
       };
-      expected = $("<div>\n  <input name=\"name\" value=\"John\"/>\n  <input name=\"job\" value=\"Milkman\"/>\n  <textarea name=\"resume\" value=\"Jack of all trades\">Jack of all trades</textarea>\n</div>");
+      expected = $("<div>\n  <input name=\"name\" value=\"John\"/>\n  <input name=\"job\" value=\"Milkman\"/>\n  <textarea name=\"resume\" value=\"Jack of all trades\"></textarea>\n</div>");
+      expected.find('textarea').val('Jack of all trades');
       template.render(data);
       return expect(template).toBeEqual(expected);
     });

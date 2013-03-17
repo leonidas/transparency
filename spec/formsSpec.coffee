@@ -18,10 +18,12 @@ describe "Transparency", ->
       <div>
         <input name="name" value="John"/>
         <input name="job" value="Milkman"/>
-        <textarea name="resume" value="Jack of all trades">Jack of all trades</textarea>
+        <textarea name="resume" value="Jack of all trades"></textarea>
       </div>
       """
 
+    # Needed for IE
+    expected.find('textarea').val 'Jack of all trades'
     template.render data
     expect(template).toBeEqual expected
 
