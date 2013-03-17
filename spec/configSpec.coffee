@@ -1,7 +1,3 @@
-if module?.exports
-  require './spec_helper'
-  window.Transparency = require '../src/transparency'
-
 describe "Transparency", ->
 
   it "should use a custom matcher if available", ->

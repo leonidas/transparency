@@ -1,7 +1,3 @@
-if module?.exports
-  require './spec_helper'
-  Transparency = require '../src/transparency'
-
 describe "Transparency", ->
 
   it "should handle nested lists", ->
