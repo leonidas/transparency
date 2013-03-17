@@ -173,11 +173,11 @@
   exports.toString = Object.prototype.toString;
 
   exports.isArray = Array.isArray || function(obj) {
-    return toString.call(obj) === '[object Array]';
+    return exports.toString.call(obj) === '[object Array]';
   };
 
   exports.isDate = function(obj) {
-    return toString.call(obj) === '[object Date]';
+    return exports.toString.call(obj) === '[object Date]';
   };
 
   exports.isDomElement = function(obj) {
@@ -718,7 +718,7 @@
     }
 
     Text.prototype.set = function(text) {
-      return this.textNode.nodeValue = text.toString();
+      return this.textNode.nodeValue = text;
     };
 
     return Text;

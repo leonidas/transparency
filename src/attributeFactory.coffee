@@ -48,7 +48,7 @@ class Text extends Attribute
     else unless @textNode.nodeType is helpers.TEXT_NODE
       @textNode = @el.insertBefore @el.ownerDocument.createTextNode(''), @textNode
 
-  set: (text) -> @textNode.nodeValue = text.toString()
+  set: (text) -> @textNode.nodeValue = text
 
 
 class Html extends Attribute

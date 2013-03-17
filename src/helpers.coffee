@@ -84,8 +84,8 @@ exports.log           = exports.nullLogger
 
 # Mostly from https://github.com/documentcloud/underscore/blob/master/underscore.js
 exports.toString      = Object.prototype.toString
-exports.isArray       = Array.isArray || (obj) -> toString.call(obj) == '[object Array]'
-exports.isDate        = (obj) -> toString.call(obj) == '[object Date]'
+exports.isArray       = Array.isArray || (obj) -> exports.toString.call(obj) == '[object Array]'
+exports.isDate        = (obj) -> exports.toString.call(obj) == '[object Date]'
 exports.isDomElement  = (obj) -> obj.nodeType == exports.ELEMENT_NODE
 exports.isPlainValue  = (obj) -> type = typeof obj; (type != 'object' and type != 'function') or exports.isDate obj
 exports.isBoolean     = (obj) -> obj is true or obj is false
