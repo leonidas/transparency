@@ -63,10 +63,14 @@
       "spec/basicsSpec.js",
       "spec/runner.js"
     ],
-    "browsers": {
-      "ie": [8, 9, 10],
-      "ff": [17, 18, 19],
-      "chrome": [23, 24, 25]
-    }
+    "browsers": [
+      "ie/6..latest",
+      "chrome/20..latest",
+      "firefox/10..latest",
+      "safari/latest",
+      "opera/11.0..latest",
+      "iphone/6",
+      "ipad/6"
+    ]
   }
 }
