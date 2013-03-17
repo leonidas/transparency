@@ -316,7 +316,7 @@ describe "Transparency", ->
       test_div_bar:
         html: (params) ->
           elem = $(params.element)
-          $('span', elem).css('width', @bar + '%')
+          $('span', elem).attr 'style', "width: #{@bar}%;"
           return
 
     expected = $ """

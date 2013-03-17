@@ -15,7 +15,7 @@
       attribute = _ref[_i];
       actualAttr = actual[0].getAttribute(attribute.name);
       if (actualAttr == null) {
-        throw new Error("ERROR: Missing exptexted attribute '" + attribute.name + "'");
+        throw new Error("ERROR: Missing expected attribute '" + attribute.name + "'");
       }
       actualAttr = trim(actualAttr);
       expectedAttr = trim(expected[0].getAttribute(attribute.name));

@@ -7,7 +7,7 @@ isEqualDom = (actual, expected) ->
 
   for attribute in expected[0].attributes
     actualAttr   = actual[0].getAttribute attribute.name
-    throw new Error "ERROR: Missing exptexted attribute '#{attribute.name}'" unless actualAttr?
+    throw new Error "ERROR: Missing expected attribute '#{attribute.name}'" unless actualAttr?
 
     actualAttr   = trim actualAttr
     expectedAttr = trim expected[0].getAttribute attribute.name

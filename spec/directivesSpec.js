@@ -246,7 +246,7 @@
           html: function(params) {
             var elem;
             elem = $(params.element);
-            $('span', elem).css('width', this.bar + '%');
+            $('span', elem).attr('style', "width: " + this.bar + "%;");
           }
         }
       };
