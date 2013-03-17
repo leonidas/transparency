@@ -34,8 +34,9 @@ $('#template').render(hello);
 * **Valid HTML templates** - Write templates as a part of the HTML, in plain HTML
 * **View logic in JavaScript** - No crippled micro-template language, just plain JavaScript functions
 
-Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for older
-IE browsers requires jQuery.
+Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for IE8 requires jQuery.
+
+[![browser support](https://ci.testling.com/leonidas/transparency.png)](https://ci.testling.com/leonidas/transparency)
 
 ## Community
 

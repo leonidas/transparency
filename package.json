@@ -64,10 +64,10 @@
       "spec/runner.js"
     ],
     "browsers": [
-      "ie/6..latest",
+      "ie/8..latest",
       "chrome/20..latest",
       "firefox/10..latest",
-      "safari/latest",
+      "safari/5.1..latest",
       "opera/11.0..latest",
       "iphone/6",
       "ipad/6"
