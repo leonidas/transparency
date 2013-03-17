@@ -2,42 +2,24 @@ james      = require 'james'
 coffee     = require 'james-coffee'
 uglify     = require 'james-uglify'
 browserify = require 'browserify'
-coffeeify  = require 'coffeeify'
-path       = require 'path'
 
 james.task 'build', ->
 
-  #Compile sources
-  dist = james.write 'dist/transparency.js'
-  min  = james.write 'dist/transparency.min.js'
-
-  # [
-  #   'src/helpers.coffee',  'src/transparency.coffee',     'src/context.coffee',
-  #   'src/instance.coffee', 'src/attributeFactory.coffee', 'src/elementFactory.coffee'
-  # ]
-  # .forEach (filename) ->
-  #   js = james.read(filename).transform coffee filename: filename
-
-  #   js.write dist
-  #   js.transform(uglify).write min
-
-  src = james.list('src/**/*.coffee').map (filename) ->
+  js = james.list('src/**/*.coffee', 'spec/**/*.coffee').map (filename) ->
     james.read(filename)
       .transform(coffee filename: filename, bare: true)
-      .write filename.replace(/src/, 'dist').replace(/\.coffee$/, '.js')
+      .write filename.replace /\.coffee$/, '.js'
 
-  james.wait(src).then ->
-    bundle = james.read(browserify('./dist/transparency.js').bundle())
-    bundle.write dist
-    bundle.transform(uglify).write min
+  james.wait(js).then ->
+    dist = james.read browserify('./src/transparency.js').bundle()
 
+    dist.write                   'dist/transparency.js'
+    dist.transform(uglify).write 'dist/transparency.min.js'
 
-#   # Compile tests
-#   tests = james.list('spec/**/*.coffee').map (filename) ->
+    tests = ['./spec/basicsSpec.js', './spec/cachedTemplatesSpec.js', './spec/configSpec.js', './spec/directivesSpec.js',
+      './spec/formsSpec.js', './spec/listsSpec.js', './spec/modelReferencesSpec.js', './spec/nestedModelsSpec.js']
 
-#     james.read(filename)
-#       .transform(coffee filename: filename)
-#       .write filename.replace /\.coffee$/, '.js'
+    james.read(browserify(tests).bundle()).write 'spec/functionalSpecs.js'
 
 james.task 'watch', ->
 
