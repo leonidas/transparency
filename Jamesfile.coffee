@@ -5,8 +5,6 @@ browserify = require 'browserify'
 
 james.task 'build', ->
 
-  console.log james.list 'spec/!(amd*|performance*|browserGlobal*|nojQuery*)Spec.js'
-
   js = james.list('src/**/*.coffee', 'spec/**/*.coffee').map (filename) ->
     james.read(filename)
       .transform(coffee filename: filename)
