@@ -718,7 +718,7 @@
     }
 
     Text.prototype.set = function(text) {
-      return this.textNode.nodeValue = text;
+      return this.textNode.nodeValue = text.toString();
     };
 
     return Text;
