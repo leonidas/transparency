@@ -51,5 +51,20 @@
   },
   "scripts": {
     "test": "grunt test"
+  },
+  "testling" : {
+    "scripts": [
+      "spec/lib/jasmine-1.3.1/jasmine.js",
+      "spec/lib/jasmine.tap_reporter.js",
+      "dist/transparency.js",
+      "spec/specHelper.js",
+      "spec/basicsSpec.js",
+      "spec/runner.js"
+    ],
+    "browsers": {
+      "ie": [8, 9, 10],
+      "ff": [17, 18, 19],
+      "chrome": [23, 24, 25]
+    }
   }
 }
