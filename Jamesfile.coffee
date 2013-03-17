@@ -5,6 +5,8 @@ browserify = require 'browserify'
 
 james.task 'build', ->
 
+  console.log james.list 'spec/!(amd*|performance*|browserGlobal*|nojQuery*)Spec.js'
+
   js = james.list('src/**/*.coffee', 'spec/**/*.coffee').map (filename) ->
     james.read(filename)
       .transform(coffee filename: filename)
@@ -15,11 +17,6 @@ james.task 'build', ->
 
     dist.write                   'dist/transparency.js'
     dist.transform(uglify).write 'dist/transparency.min.js'
-
-    tests = ['./spec/basicsSpec.js', './spec/cachedTemplatesSpec.js', './spec/configSpec.js', './spec/directivesSpec.js',
-      './spec/formsSpec.js', './spec/listsSpec.js', './spec/modelReferencesSpec.js', './spec/nestedModelsSpec.js']
-
-    james.read(browserify(tests).bundle()).write 'spec/functionalSpecs.js'
 
 james.task 'watch', ->
 
