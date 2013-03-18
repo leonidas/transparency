@@ -27,8 +27,6 @@ $('#template').render(hello);
 
 [![Build Status](https://secure.travis-ci.org/leonidas/transparency.png?branch=master)](http://travis-ci.org/leonidas/transparency)
 
-[![browser support](https://ci.testling.com/leonidas/transparency.png)](https://ci.testling.com/leonidas/transparency)
-
 ## Features
 
 * **Semantic data binding** - No need for `<%=foo%>` or `{{foo}}` assignments
@@ -37,6 +35,8 @@ $('#template').render(hello);
 * **View logic in JavaScript** - No crippled micro-template language, just plain JavaScript functions
 
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for IE8 requires jQuery.
+
+[![browser support](https://ci.testling.com/leonidas/transparency.png)](https://ci.testling.com/leonidas/transparency)
 
 ## Community
 
