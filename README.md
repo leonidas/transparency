@@ -38,9 +38,6 @@ Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mo
 
 [![browser support](https://ci.testling.com/leonidas/transparency.png)](https://ci.testling.com/leonidas/transparency)
 
-There might be some random failures above due to testling-ci infrastructure.
-There are no outstanding compatibility issues.
-
 ## Community
 
 * IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
