@@ -710,6 +710,16 @@
         }
         return _results;
       }).call(this)).join('');
+      this.children = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.el.children;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          _results.push(child);
+        }
+        return _results;
+      }).call(this);
       if (!(this.textNode = this.el.firstChild)) {
         this.el.appendChild(this.textNode = this.el.ownerDocument.createTextNode(''));
       } else if (this.textNode.nodeType !== helpers.TEXT_NODE) {
@@ -718,7 +728,19 @@
     }
 
     Text.prototype.set = function(text) {
-      return this.textNode.nodeValue = text;
+      var child, _i, _len, _ref, _results;
+      while (child = this.el.firstChild) {
+        this.el.removeChild(child);
+      }
+      this.textNode.nodeValue = text;
+      this.el.appendChild(this.textNode);
+      _ref = this.children;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        child = _ref[_i];
+        _results.push(this.el.appendChild(child));
+      }
+      return _results;
     };
 
     return Text;

@@ -43,12 +43,23 @@ class Text extends Attribute
     @templateValue =
       (child.nodeValue for child in helpers.getChildNodes @el when child.nodeType == helpers.TEXT_NODE).join ''
 
+    @children = (child for child in @el.children)
+
     unless @textNode = @el.firstChild
       @el.appendChild @textNode = @el.ownerDocument.createTextNode ''
     else unless @textNode.nodeType is helpers.TEXT_NODE
       @textNode = @el.insertBefore @el.ownerDocument.createTextNode(''), @textNode
 
-  set: (text) -> @textNode.nodeValue = text
+  set: (text) ->
+    # content editable creates a new text node
+    # which needs to be removed, otherwise the content is duplicated to both text nodes.
+    # http://jsfiddle.net/xAMQa/1/
+    @el.removeChild child while child = @el.firstChild
+
+    @textNode.nodeValue = text
+    @el.appendChild @textNode
+
+    @el.appendChild child for child in @children
 
 
 class Html extends Attribute
