@@ -65,10 +65,10 @@
     ],
     "browsers": [
       "ie/8..latest",
-      "chrome/20..latest",
-      "firefox/10..latest",
+      "chrome/23..latest",
+      "firefox/17..latest",
       "safari/5.1..latest",
-      "opera/11.0..latest",
+      "opera/11.5..latest",
       "iphone/6",
       "ipad/6"
     ]
