@@ -732,13 +732,27 @@
     AttributeFactory.Attributes['html'] = Html;
 
     function Html(el) {
-      Html.__super__.constructor.call(this, el, 'innerHTML');
-      this.children = Array.prototype.slice.call(this.el.children);
+      var child;
+      this.el = el;
+      this.templateValue = '';
+      this.children = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.el.children;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          _results.push(child);
+        }
+        return _results;
+      }).call(this);
     }
 
     Html.prototype.set = function(html) {
       var child, _i, _len, _ref, _results;
-      this.el.innerHTML = html;
+      while (child = this.el.firstChild) {
+        this.el.removeChild(child);
+      }
+      this.el.innerHTML = html + this.templateValue;
       _ref = this.children;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

@@ -54,12 +54,14 @@ class Text extends Attribute
 class Html extends Attribute
   AttributeFactory.Attributes['html'] = this
 
-  constructor: (el) ->
-    super el, 'innerHTML'
-    @children = Array::slice.call @el.children
+  constructor: (@el) ->
+    @templateValue = ''
+    @children = (child for child in @el.children)
 
   set: (html) ->
-    @el.innerHTML = html
+    @el.removeChild child while child = @el.firstChild
+
+    @el.innerHTML = html + @templateValue
     for child in @children
       @el.appendChild child
 
