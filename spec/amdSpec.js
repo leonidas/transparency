@@ -8,11 +8,19 @@
       it("should define window.Transparency", function() {
         return expect(window.Transparency).toBeDefined();
       });
-      return it("should provide a jQuery plugin", function() {
+      it("should provide a jQuery plugin", function() {
         $.fn.render = t.jQueryPlugin;
         return $('<div><div class="hello"></div></div>').render({
           hello: "World!"
         });
+      });
+      return it("should work even if the $ is not in the global namespace", function() {
+        $.noConflict();
+        jQuery.fn.render = t.jQueryPlugin;
+        jQuery('<p><span class="hello"></span></p>').render({
+          hello: "World!"
+        });
+        return window.$ = jQuery;
       });
     });
   });

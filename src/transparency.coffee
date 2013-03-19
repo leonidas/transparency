@@ -32,6 +32,8 @@ Context = require './context'
 # ## Public API
 Transparency = window.Transparency = {}
 
+if define?.amd then define -> Transparency
+
 # `Transparency.render` maps JSON objects to DOM elements.
 Transparency.render = (context, models = [], directives = {}, options = {}) ->
   # First, check if we are in debug mode and if so, log the arguments.
@@ -76,14 +78,14 @@ Transparency.matcher = (element, key) ->
   element.el.name                      == key ||
   element.el.getAttribute('data-bind') == key
 
-# IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
-# Override `Transparency.clone` with a custom clone function, if oldIE needs to be
-# supported without jQuery.
-#
-#     Transparency.clone = myCloneFunction;
-#
-Transparency.clone = helpers.onlyWith$ -> (node) -> $(node).clone()[0]
+do ($ = jQuery || Zepto) ->
+  $?.fn.render = Transparency.jQueryPlugin
 
-helpers.onlyWith$ -> $.fn.render = Transparency.jQueryPlugin
-
-if define?.amd then define -> Transparency
+  # IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
+  # Override `Transparency.clone` with a custom clone function, if oldIE needs to be
+  # supported without jQuery.
+  #
+  #     Transparency.clone = myCloneFunction;
+  #
+  Transparency.clone = (node) ->
+    $(node).clone()[0]

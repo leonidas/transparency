@@ -9,6 +9,12 @@
 
   Transparency = window.Transparency = {};
 
+  if (typeof define !== "undefined" && define !== null ? define.amd : void 0) {
+    define(function() {
+      return Transparency;
+    });
+  }
+
   Transparency.render = function(context, models, directives, options) {
     var log, _base;
     if (models == null) {
@@ -46,21 +52,14 @@
     return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
   };
 
-  Transparency.clone = helpers.onlyWith$(function() {
-    return function(node) {
+  (function($) {
+    if ($ != null) {
+      $.fn.render = Transparency.jQueryPlugin;
+    }
+    return Transparency.clone = function(node) {
       return $(node).clone()[0];
     };
-  });
-
-  helpers.onlyWith$(function() {
-    return $.fn.render = Transparency.jQueryPlugin;
-  });
-
-  if (typeof define !== "undefined" && define !== null ? define.amd : void 0) {
-    define(function() {
-      return Transparency;
-    });
-  }
+  })(jQuery ||  Zepto);
 
 }).call(this);
 

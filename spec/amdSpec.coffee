@@ -10,3 +10,9 @@ define ['dist/transparency'], (t) ->
     it "should provide a jQuery plugin", ->
       $.fn.render = t.jQueryPlugin
       $('<div><div class="hello"></div></div>').render hello: "World!"
+
+    it "should work even if the $ is not in the global namespace", ->
+      $.noConflict();
+      jQuery.fn.render = t.jQueryPlugin
+      jQuery('<p><span class="hello"></span></p>').render hello: "World!"
+      window.$ = jQuery
