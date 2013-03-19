@@ -2,6 +2,7 @@ james      = require 'james'
 coffee     = require 'james-coffee'
 uglify     = require 'james-uglify'
 browserify = require 'browserify'
+Q          = require 'q'
 
 james.task 'build', ->
 
@@ -16,8 +17,15 @@ james.task 'build', ->
     dist.write                   'dist/transparency.js'
     dist.transform(uglify).write 'dist/transparency.min.js'
 
+# james.task 'watch', ->
+
+#   james.watch 'src/**/*.coffee', -> james.run 'build'
+
 james.task 'watch', ->
 
-  james.watch 'src/**/*.coffee', -> james.run 'build'
+  james.watch '*', (e, f) ->
+    console.log e, f
+    Q.delay(400).done -> throw new Error('foobar')
+
 
 james.task 'default', ['build']
