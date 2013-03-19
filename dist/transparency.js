@@ -1,6 +1,6 @@
 ;(function(e,t,n,r){function i(r){if(!n[r]){if(!t[r]){if(e)return e(r);throw new Error("Cannot find module '"+r+"'")}var s=n[r]={exports:{}};t[r][0](function(e){var n=t[r][1][e];return i(n?n:e)},s,s.exports)}return n[r].exports}for(var s=0;s<r.length;s++)i(r[s]);return i})(typeof require!=="undefined"&&require,{1:[function(require,module,exports){
 (function() {
-  var Context, Transparency, helpers,
+  var $, Context, Transparency, helpers,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   helpers = require('./helpers');
@@ -52,14 +52,15 @@
     return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
   };
 
-  (function($) {
-    if ($ != null) {
-      $.fn.render = Transparency.jQueryPlugin;
-    }
-    return Transparency.clone = function(node) {
-      return $(node).clone()[0];
-    };
-  })(jQuery ||  Zepto);
+  $ = jQuery || Zepto;
+
+  if ($ != null) {
+    $.fn.render = Transparency.jQueryPlugin;
+  }
+
+  Transparency.clone = function(node) {
+    return $(node).clone()[0];
+  };
 
 }).call(this);
 

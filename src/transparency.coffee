@@ -78,14 +78,14 @@ Transparency.matcher = (element, key) ->
   element.el.name                      == key ||
   element.el.getAttribute('data-bind') == key
 
-do ($ = jQuery || Zepto) ->
-  $?.fn.render = Transparency.jQueryPlugin
+$ = jQuery || Zepto
+$?.fn.render = Transparency.jQueryPlugin
 
-  # IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
-  # Override `Transparency.clone` with a custom clone function, if oldIE needs to be
-  # supported without jQuery.
-  #
-  #     Transparency.clone = myCloneFunction;
-  #
-  Transparency.clone = (node) ->
-    $(node).clone()[0]
+# IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
+# Override `Transparency.clone` with a custom clone function, if oldIE needs to be
+# supported without jQuery.
+#
+#     Transparency.clone = myCloneFunction;
+#
+Transparency.clone = (node) ->
+  $(node).clone()[0]
