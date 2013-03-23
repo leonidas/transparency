@@ -1,19 +1,12 @@
 ;(function(e,t,n,r){function i(r){if(!n[r]){if(!t[r]){if(e)return e(r);throw new Error("Cannot find module '"+r+"'")}var s=n[r]={exports:{}};t[r][0](function(e){var n=t[r][1][e];return i(n?n:e)},s,s.exports)}return n[r].exports}for(var s=0;s<r.length;s++)i(r[s]);return i})(typeof require!=="undefined"&&require,{1:[function(require,module,exports){
 (function() {
-  var $, Context, Transparency, helpers,
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var $, Context, Transparency, helpers;
 
-  helpers = require('./helpers');
+  helpers = require('./helpers.coffee');
 
-  Context = require('./context');
+  Context = require('./context.coffee');
 
-  Transparency = window.Transparency = {};
-
-  if (typeof define !== "undefined" && define !== null ? define.amd : void 0) {
-    define(function() {
-      return Transparency;
-    });
-  }
+  Transparency = {};
 
   Transparency.render = function(context, models, directives, options) {
     var log, _base;
@@ -38,6 +31,12 @@
     return context.render(models, directives, options).el;
   };
 
+  Transparency.matcher = helpers.matcher;
+
+  Transparency.clone = function(node) {
+    return $(node).clone()[0];
+  };
+
   Transparency.jQueryPlugin = helpers.chainable(function(models, directives, options) {
     var context, _i, _len, _results;
     _results = [];
@@ -48,27 +47,40 @@
     return _results;
   });
 
-  Transparency.matcher = function(element, key) {
-    return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
-  };
-
-  $ = jQuery || Zepto;
-
-  if ($ != null) {
-    $.fn.render = Transparency.jQueryPlugin;
+  if ((typeof jQuery !== "undefined" && jQuery !== null) || (typeof Zepto !== "undefined" && Zepto !== null)) {
+    $ = jQuery || Zepto;
+    if ($ != null) {
+      $.fn.render = Transparency.jQueryPlugin;
+    }
   }
 
-  Transparency.clone = function(node) {
-    return $(node).clone()[0];
-  };
+  if (typeof module !== "undefined" && module !== null ? module.exports : void 0) {
+    module.exports = Transparency;
+  }
+
+  if (typeof window !== "undefined" && window !== null) {
+    window.Transparency = Transparency;
+  }
+
+  if (typeof define !== "undefined" && define !== null ? define.amd : void 0) {
+    define(function() {
+      return Transparency;
+    });
+  }
 
 }).call(this);
 
-},{"./helpers":2,"./context":3}],2:[function(require,module,exports){
-(function() {
-  var ElementFactory, expando, html5Clone, _getElements;
 
-  ElementFactory = require('./ElementFactory');
+},{"./helpers.coffee":2,"./context.coffee":3}],2:[function(require,module,exports){
+(function() {
+  var ElementFactory, expando, html5Clone, _getElements,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  ElementFactory = require('./ElementFactory.coffee');
+
+  exports.matcher = function(element, key) {
+    return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
+  };
 
   exports.before = function(decorator) {
     return function(method) {
@@ -140,7 +152,7 @@
     return document.createElement('nav').cloneNode(true).outerHTML !== '<:nav></:nav>';
   };
 
-  exports.cloneNode = !(typeof document !== "undefined" && document !== null) || html5Clone() ? function(node) {
+  exports.cloneNode = (typeof document === "undefined" || document === null) || html5Clone() ? function(node) {
     return node.cloneNode(true);
   } : function(node) {
     var cloned, element, _i, _len, _ref;
@@ -196,13 +208,14 @@
 
 }).call(this);
 
-},{"./ElementFactory":4}],3:[function(require,module,exports){
+
+},{"./ElementFactory.coffee":4}],3:[function(require,module,exports){
 (function() {
   var Context, Instance, helpers;
 
-  helpers = require('./helpers');
+  helpers = require('./helpers.coffee');
 
-  Instance = require('./instance');
+  Instance = require('./instance.coffee');
 
   module.exports = Context = (function() {
     var attach, detach;
@@ -257,15 +270,16 @@
 
 }).call(this);
 
-},{"./helpers":2,"./instance":5}],4:[function(require,module,exports){
+
+},{"./helpers.coffee":2,"./instance.coffee":5}],4:[function(require,module,exports){
 (function() {
   var AttributeFactory, Checkbox, Element, ElementFactory, Input, Radio, Select, TextArea, VoidElement, helpers,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  AttributeFactory = require('./attributeFactory');
+  AttributeFactory = require('./attributeFactory.coffee');
 
-  helpers = require('./helpers');
+  helpers = require('./helpers.coffee');
 
   module.exports = ElementFactory = {
     Elements: {
@@ -471,12 +485,13 @@
 
 }).call(this);
 
-},{"./attributeFactory":6,"./helpers":2}],5:[function(require,module,exports){
+
+},{"./attributeFactory.coffee":6,"./helpers.coffee":2}],5:[function(require,module,exports){
 (function() {
   var Instance, helpers,
     __hasProp = {}.hasOwnProperty;
 
-  helpers = require('./helpers');
+  helpers = require('./helpers.coffee');
 
   module.exports = Instance = (function() {
 
@@ -607,7 +622,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           el = _ref[_i];
-          if (Transparency.matcher(el, key)) {
+          if (helpers.matcher(el, key)) {
             _results.push(el);
           }
         }
@@ -623,13 +638,14 @@
 
 }).call(this);
 
-},{"./helpers":2}],6:[function(require,module,exports){
+
+},{"./helpers.coffee":2}],6:[function(require,module,exports){
 (function() {
   var Attribute, AttributeFactory, BooleanAttribute, Class, Html, Text, helpers,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  helpers = require('./helpers');
+  helpers = require('./helpers.coffee');
 
   module.exports = AttributeFactory = {
     Attributes: {},
@@ -804,5 +820,6 @@
 
 }).call(this);
 
-},{"./helpers":2}]},{},[1])
+
+},{"./helpers.coffee":2}]},{},[1])
 ;

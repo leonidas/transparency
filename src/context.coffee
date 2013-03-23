@@ -1,5 +1,5 @@
-helpers = require './helpers'
-Instance = require './instance'
+helpers  = require './helpers.coffee'
+Instance = require './instance.coffee'
 
 # **Context** stores the original `template` elements and is responsible for creating,
 # adding and removing template `instances` to match the amount of `models`.

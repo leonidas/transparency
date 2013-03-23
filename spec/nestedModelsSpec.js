@@ -1,8 +1,8 @@
 (function() {
-
   describe("Transparency", function() {
     it("should handle nested lists", function() {
       var data, expected, template;
+
       template = $("<div class=\"container\">\n   <h1 class=\"title\"></h1>\n   <p class=\"post\"></p>\n   <div class=\"comments\">\n     <div class=\"comment\">\n       <span class=\"name\"></span>\n       <span class=\"text\"></span>\n     </div>\n   </div>\n </div>");
       data = {
         title: 'Hello World',
@@ -23,6 +23,7 @@
     });
     it("should handle nested lists with overlapping attributes", function() {
       var data, expected, template;
+
       template = $("<div class=\"container\">\n  <p class=\"tweet\"></p>\n  <div class=\"responses\">\n    <p class=\"tweet\"></p>\n  </div>\n</div>");
       data = {
         responses: [
@@ -40,6 +41,7 @@
     });
     it("should handle nested objects", function() {
       var data, expected, template;
+
       template = $("<div class=\"container\">\n  <div class=\"firstname\"></div>\n  <div class=\"lastname\"></div>\n  <div class=\"address\">\n    <div class=\"street\"></div>\n    <div class=\"zip\"><span class=\"city\"></span></div>\n  </div>\n</div>");
       data = {
         firstname: 'John',
@@ -56,6 +58,7 @@
     });
     it("should handle tables with dynamic headers", function() {
       var data, directives, expected, template;
+
       template = $("<table class=\"test_reports\">\n  <thead>\n    <tr class=\"profiles\">\n      <th>\n        <a class=\"name\" href=\"http://www.example.com\">profile</a>\n      </th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr class=\"profiles\">\n      <td class=\"testsets\">\n        <div class=\"testset\">\n          <a class=\"name\" href=\"http://www.example.com\">testset</a>\n          <ul class=\"products\">\n            <li>\n              <a class=\"name\" href=\"http://www.example.com\">product</a>\n            </li>\n          </ul>\n        </div>\n      </td>\n    </tr>\n  </tbody>\n</table>");
       data = {
         release: "1.2",
@@ -138,6 +141,7 @@
     });
     return it("should handle nested objects", function() {
       var data, directives, expected, template;
+
       template = $("<div id=\"archive\">\n  <a href=\"http://www.example.com\" class=\"yeartitle\"><span class=\"year\"></span></a>\n  <div class=\"payslips\">\n    <a href=\"http://www.example.com\" class=\"payslip\">\n      <span data-id=\"#\" class=\"id\"></span>\n      <span class=\"date PayDate\"></span>\n      <span class=\"payment\">\n      <span class=\"NetPayment\"></span>\n      <span>EUR</span></span>\n      <span class=\"payer Payer\"></span>\n    </a>\n  </div>\n</div>");
       directives = {
         payslips: {

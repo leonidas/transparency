@@ -1,4 +1,4 @@
-helpers = require './helpers'
+helpers      = require './helpers.coffee'
 
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
@@ -149,7 +149,7 @@ module.exports = class Instance
         Transparency.render element.el, model[key], directives[key], options
 
   matchingElements: (key) ->
-    elements = @queryCache[key] ||= (el for el in @elements when Transparency.matcher el, key)
+    elements = @queryCache[key] ||= (el for el in @elements when helpers.matcher el, key)
     helpers.log "Matching elements for '#{key}':", elements
     elements
 

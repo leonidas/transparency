@@ -1,4 +1,4 @@
-helpers = require './helpers'
+helpers = require './helpers.coffee'
 
 module.exports = AttributeFactory =
   Attributes: {}

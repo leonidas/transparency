@@ -1,17 +1,19 @@
 (function() {
-
   describe("Transparency performance", function() {
     describe("with cached templates", function() {
       describe("with one todo item", function() {
         return it("should be on the same ballpark with Handlebars", function() {
           var handlebars, transparency;
+
           transparency = new Benchmark('transparency - cached template, one todo', {
             setup: function() {
               var data, i, index, template;
+
               template = $('<div class="template"><div class="todo"></div></div>')[0];
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push({
@@ -31,11 +33,13 @@
           handlebars = new Benchmark('handlebars - compiled and cached template, one todo', {
             setup: function() {
               var data, i, index, parser, template;
+
               parser = $('<div></div>')[0];
               template = Handlebars.compile('<div class="template"><div class="todo">{{todo}}</div></div>');
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push({
@@ -57,17 +61,21 @@
       return describe("with hundred todo items", function() {
         return it("should be on the same ballpark with Handlebars", function() {
           var handlebars, transparency;
+
           transparency = new Benchmark('transparency - cached template, 100 todos', {
             setup: function() {
               var data, i, index, j, template;
+
               template = $('<div class="template"><div class="todo"></div></div>')[0];
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push((function() {
                     var _j, _results1;
+
                     _results1 = [];
                     for (j = _j = 1; _j <= 100; j = ++_j) {
                       _results1.push({
@@ -81,6 +89,7 @@
               }).call(this);
               Transparency.render(template, (function() {
                 var _i, _results;
+
                 _results = [];
                 for (j = _i = 1; _i <= 100; j = ++_i) {
                   _results.push({
@@ -97,15 +106,18 @@
           handlebars = new Benchmark('handlebars - compiled and cached template, 100 todos', {
             setup: function() {
               var data, i, index, j, parser, template;
+
               parser = $('<div></div>')[0];
               template = Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>');
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push((function() {
                     var _j, _results1;
+
                     _results1 = [];
                     for (j = _j = 1; _j <= 100; j = ++_j) {
                       _results1.push({
@@ -132,11 +144,14 @@
       describe("with one todo item", function() {
         return it("should be on the same ballpark with Handlebars", function() {
           var handlebars, transparency;
+
           transparency = new Benchmark('transparency - unused template, one todo', {
             setup: function() {
               var data, i, index, template;
+
               template = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push($('<div class="template"><div class="todo"></div></div>')[0]);
@@ -146,6 +161,7 @@
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push({
@@ -162,8 +178,10 @@
           handlebars = new Benchmark('handlebars - unused and compiled template, one todo', {
             setup: function() {
               var data, i, index, parser, template;
+
               parser = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push($('<div></div>')[0]);
@@ -172,6 +190,7 @@
               }).call(this);
               template = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push(Handlebars.compile('<div class="template"><div class="todo">{{todo}}</div></div>'));
@@ -181,6 +200,7 @@
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push({
@@ -202,11 +222,14 @@
       return describe("with hundred todo items", function() {
         return it("should be on the same ballpark with Handlebars", function() {
           var handlebars, transparency;
+
           transparency = new Benchmark('transparency - unused template, 100 todos', {
             setup: function() {
               var data, i, index, j, template;
+
               template = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push($('<div class="template"><div class="todo"></div></div>')[0]);
@@ -216,10 +239,12 @@
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push((function() {
                     var _j, _results1;
+
                     _results1 = [];
                     for (j = _j = 1; _j <= 100; j = ++_j) {
                       _results1.push({
@@ -239,8 +264,10 @@
           handlebars = new Benchmark('handlebars - unused and compiled template, 100 todos', {
             setup: function() {
               var data, i, index, j, parser, template;
+
               parser = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push($('<div></div>')[0]);
@@ -249,6 +276,7 @@
               }).call(this);
               template = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push(Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>'));
@@ -258,10 +286,12 @@
               index = 0;
               data = (function() {
                 var _i, _ref, _results;
+
                 _results = [];
                 for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
                   _results.push((function() {
                     var _j, _results1;
+
                     _results1 = [];
                     for (j = _j = 1; _j <= 100; j = ++_j) {
                       _results1.push({

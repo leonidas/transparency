@@ -1,5 +1,5 @@
-AttributeFactory = require './attributeFactory'
-helpers          = require './helpers'
+AttributeFactory = require './attributeFactory.coffee'
+helpers          = require './helpers.coffee'
 
 module.exports = ElementFactory =
   Elements: input: {}

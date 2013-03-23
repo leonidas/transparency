@@ -7,6 +7,7 @@
 
   isEqualDom = function(actual, expected) {
     var actualAttr, actualChildren, attribute, child, expectedAttr, expectedChildren, i, _i, _j, _len, _len1, _ref, _results;
+
     if (trim(actual.text()) !== trim(expected.text())) {
       throw new Error("ERROR: '" + (actual.text()) + "' is not equal to '" + (expected.text()) + "'");
     }
@@ -39,14 +40,16 @@
   beforeEach(function() {
     return this.addMatchers({
       toBeEqual: function(expected) {
-        var message;
+        var error, message;
+
         message = '\n' + this.actual.html() + '\n' + expected.html();
         this.message = function() {
           return message;
         };
         try {
           isEqualDom(this.actual, expected);
-        } catch (error) {
+        } catch (_error) {
+          error = _error;
           message += '\n' + error.message;
           return false;
         }
@@ -54,6 +57,7 @@
       },
       toBeOnTheSameBallpark: function(expected, ballpark) {
         var actual;
+
         actual = this.actual;
         this.message = function() {
           return ("Expected " + actual.name + " (" + actual.stats.mean + " +/- " + actual.stats.moe + " to be less than ") + ("" + ballpark + " x " + expected.name + " (" + expected.stats.mean + " +/- " + expected.stats.moe);

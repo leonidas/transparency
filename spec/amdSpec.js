@@ -1,5 +1,4 @@
 (function() {
-
   define(['dist/transparency'], function(t) {
     return describe("Transparency with AMD loader", function() {
       it("should bind Transparency to a named variable", function() {
