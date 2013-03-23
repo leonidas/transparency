@@ -76,7 +76,7 @@
   var ElementFactory, expando, html5Clone, _getElements,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  ElementFactory = require('./ElementFactory.coffee');
+  ElementFactory = require('./elementFactory.coffee');
 
   exports.matcher = function(element, key) {
     return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
@@ -209,7 +209,7 @@
 }).call(this);
 
 
-},{"./ElementFactory.coffee":4}],3:[function(require,module,exports){
+},{"./elementFactory.coffee":4}],3:[function(require,module,exports){
 (function() {
   var Context, Instance, helpers;
 

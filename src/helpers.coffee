@@ -1,4 +1,4 @@
-ElementFactory = require './ElementFactory.coffee'
+ElementFactory = require './elementFactory.coffee'
 
 exports.matcher = (element, key) ->
   element.el.id                        == key ||
