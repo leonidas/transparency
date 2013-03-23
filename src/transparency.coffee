@@ -59,7 +59,11 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 #       element.el.getAttribute('data-bind') == key;
 #     };
 #
-Transparency.matcher = helpers.matcher
+Transparency.matcher = (element, key) ->
+  element.el.id                        == key ||
+  key in element.classNames                   ||
+  element.el.name                      == key ||
+  element.el.getAttribute('data-bind') == key
 
 # IE6-8 fails to clone nodes properly. By default, Transparency uses jQuery.clone() as a shim.
 # Override `Transparency.clone` with a custom clone function, if oldIE needs to be

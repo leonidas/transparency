@@ -1,6 +1,7 @@
 ;(function(e,t,n,r){function i(r){if(!n[r]){if(!t[r]){if(e)return e(r);throw new Error("Cannot find module '"+r+"'")}var s=n[r]={exports:{}};t[r][0](function(e){var n=t[r][1][e];return i(n?n:e)},s,s.exports)}return n[r].exports}for(var s=0;s<r.length;s++)i(r[s]);return i})(typeof require!=="undefined"&&require,{1:[function(require,module,exports){
 (function() {
-  var $, Context, Transparency, helpers;
+  var $, Context, Transparency, helpers,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   helpers = require('./helpers.coffee');
 
@@ -31,7 +32,9 @@
     return context.render(models, directives, options).el;
   };
 
-  Transparency.matcher = helpers.matcher;
+  Transparency.matcher = function(element, key) {
+    return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
+  };
 
   Transparency.clone = function(node) {
     return $(node).clone()[0];
@@ -73,14 +76,9 @@
 
 },{"./helpers.coffee":2,"./context.coffee":3}],2:[function(require,module,exports){
 (function() {
-  var ElementFactory, expando, html5Clone, _getElements,
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var ElementFactory, expando, html5Clone, _getElements;
 
   ElementFactory = require('./elementFactory.coffee');
-
-  exports.matcher = function(element, key) {
-    return element.el.id === key || __indexOf.call(element.classNames, key) >= 0 || element.el.name === key || element.el.getAttribute('data-bind') === key;
-  };
 
   exports.before = function(decorator) {
     return function(method) {
@@ -488,8 +486,10 @@
 
 },{"./attributeFactory.coffee":6,"./helpers.coffee":2}],5:[function(require,module,exports){
 (function() {
-  var Instance, helpers,
+  var Instance, Transparecy, helpers,
     __hasProp = {}.hasOwnProperty;
+
+  Transparecy = require('./transparency.coffee');
 
   helpers = require('./helpers.coffee');
 
@@ -622,7 +622,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           el = _ref[_i];
-          if (helpers.matcher(el, key)) {
+          if (Transparency.matcher(el, key)) {
             _results.push(el);
           }
         }
@@ -639,7 +639,7 @@
 }).call(this);
 
 
-},{"./helpers.coffee":2}],6:[function(require,module,exports){
+},{"./transparency.coffee":1,"./helpers.coffee":2}],6:[function(require,module,exports){
 (function() {
   var Attribute, AttributeFactory, BooleanAttribute, Class, Html, Text, helpers,
     __hasProp = {}.hasOwnProperty,

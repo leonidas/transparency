@@ -18,7 +18,7 @@ module.exports = (grunt) ->
         options:
           outfile: 'FunctionalSpecRunner.html'
           vendor: ['spec/lib/jquery-1.9.1.min.js']
-          specs:  ['spec/basicsSpec.js']
+          specs:  ['spec/!(amd*|performance*|browserGlobal*|nojQuery*|server*)Spec.js']
           helpers: ['spec/specHelper.js', 'spec/lib/jasmine.tap_reporter.js']
 
       performance:

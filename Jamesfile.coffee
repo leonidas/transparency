@@ -15,7 +15,7 @@ james.task 'build', ->
 
   james.list('spec/**/*.coffee').map (filename) ->
     james.read(filename)
-      .transform(coffee filename: filename, bare: true)
+      .transform(coffee filename: filename)
       .write filename.replace /\.coffee$/, '.js'
 
 james.task 'watch', ->

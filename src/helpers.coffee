@@ -1,11 +1,5 @@
 ElementFactory = require './elementFactory.coffee'
 
-exports.matcher = (element, key) ->
-  element.el.id                        == key ||
-  key in element.classNames                   ||
-  element.el.name                      == key ||
-  element.el.getAttribute('data-bind') == key
-
 exports.before = (decorator) -> (method) -> ->
   decorator.apply this, arguments
   method.apply this, arguments
