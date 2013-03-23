@@ -43,7 +43,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
 
   # Context element, state and functionality is wrapped to `Context` object. Get it, or create a new
   # if it doesn't exist yet.
-  context = helpers.data(context).context ||= new Context(context)
+  context = helpers.data(context).context ||= new Context(context, Transparency)
 
   # Rendering is a lot faster when the context element is detached from the DOM, as
   # reflow calculations are not triggered. So, detach it before rendering.

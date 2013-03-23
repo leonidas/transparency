@@ -17,9 +17,9 @@ module.exports = class Context
       then @parent.insertBefore @el, @nextSibling
       else @parent.appendChild @el
 
-  constructor: (@el) ->
+  constructor: (@el, @Transparency) ->
     @template      = helpers.cloneNode @el
-    @instances     = [new Instance(@el)]
+    @instances     = [new Instance(@el, @Transparency)]
     @instanceCache = []
 
   render: \
@@ -35,7 +35,7 @@ module.exports = class Context
       # DOM elements needs to be created before rendering
       # https://github.com/leonidas/transparency/issues/94
       while models.length > @instances.length
-        instance = @instanceCache.pop() || new Instance(helpers.cloneNode(@template))
+        instance = @instanceCache.pop() || new Instance(helpers.cloneNode(@template), @Transparency)
         @instances.push instance.appendTo(@el)
 
       for model, index in models

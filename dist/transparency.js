@@ -28,7 +28,7 @@
     if (!helpers.isArray(models)) {
       models = [models];
     }
-    context = (_base = helpers.data(context)).context || (_base.context = new Context(context));
+    context = (_base = helpers.data(context)).context || (_base.context = new Context(context, Transparency));
     return context.render(models, directives, options).el;
   };
 
@@ -236,10 +236,11 @@
       }
     });
 
-    function Context(el) {
+    function Context(el, Transparency) {
       this.el = el;
+      this.Transparency = Transparency;
       this.template = helpers.cloneNode(this.el);
-      this.instances = [new Instance(this.el)];
+      this.instances = [new Instance(this.el, this.Transparency)];
       this.instanceCache = [];
     }
 
@@ -249,7 +250,7 @@
         this.instanceCache.push(this.instances.pop().remove());
       }
       while (models.length > this.instances.length) {
-        instance = this.instanceCache.pop() || new Instance(helpers.cloneNode(this.template));
+        instance = this.instanceCache.pop() || new Instance(helpers.cloneNode(this.template), this.Transparency);
         this.instances.push(instance.appendTo(this.el));
       }
       _results = [];
@@ -486,16 +487,15 @@
 
 },{"./attributeFactory.coffee":6,"./helpers.coffee":2}],5:[function(require,module,exports){
 (function() {
-  var Instance, Transparecy, helpers,
+  var Instance, helpers,
     __hasProp = {}.hasOwnProperty;
-
-  Transparecy = require('./transparency.coffee');
 
   helpers = require('./helpers.coffee');
 
   module.exports = Instance = (function() {
 
-    function Instance(template) {
+    function Instance(template, Transparency) {
+      this.Transparency = Transparency;
       this.queryCache = {};
       this.childNodes = helpers.getChildNodes(template);
       this.elements = helpers.getElements(template);
@@ -606,7 +606,7 @@
           _results1 = [];
           for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
             element = _ref[_j];
-            _results1.push(Transparency.render(element.el, model[key], directives[key], options));
+            _results1.push(this.Transparency.render(element.el, model[key], directives[key], options));
           }
           return _results1;
         }).call(this));
@@ -622,7 +622,7 @@
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           el = _ref[_i];
-          if (Transparency.matcher(el, key)) {
+          if (this.Transparency.matcher(el, key)) {
             _results.push(el);
           }
         }
@@ -639,7 +639,7 @@
 }).call(this);
 
 
-},{"./transparency.coffee":1,"./helpers.coffee":2}],6:[function(require,module,exports){
+},{"./helpers.coffee":2}],6:[function(require,module,exports){
 (function() {
   var Attribute, AttributeFactory, BooleanAttribute, Class, Html, Text, helpers,
     __hasProp = {}.hasOwnProperty,

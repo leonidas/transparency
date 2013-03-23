@@ -1,11 +1,11 @@
-Transparecy = require './transparency.coffee'
 helpers = require './helpers.coffee'
 
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
 # It memoizes the matching elements to `queryCache` in order to speed up the rendering.
 module.exports = class Instance
-  constructor: (template) ->
+
+  constructor: (template, @Transparency) ->
     @queryCache = {}
     @childNodes = helpers.getChildNodes template
     @elements   = helpers.getElements   template
@@ -147,10 +147,10 @@ module.exports = class Instance
   renderChildren: helpers.chainable (model, children, directives, options) ->
     for key in children
       for element in @matchingElements key
-        Transparency.render element.el, model[key], directives[key], options
+        @Transparency.render element.el, model[key], directives[key], options
 
   matchingElements: (key) ->
-    elements = @queryCache[key] ||= (el for el in @elements when Transparency.matcher el, key)
+    elements = @queryCache[key] ||= (el for el in @elements when @Transparency.matcher el, key)
     helpers.log "Matching elements for '#{key}':", elements
     elements
 
