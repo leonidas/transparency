@@ -59,7 +59,7 @@
       "spec/lib/jasmine.tap_reporter.js",
       "dist/transparency.js",
       "spec/specHelper.js",
-      "spec/!(amd*|performance*|browserGlobal*|nojQuery*)Spec.js",
+      "spec/!(amd*|performance*|browserGlobal*|nojQuery*|server*)Spec.js",
       "spec/runner.js"
     ],
     "browsers": [
