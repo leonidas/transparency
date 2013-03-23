@@ -2,9 +2,9 @@ var express      = require("express"),
     jsdom        = require("jsdom").jsdom,
     $            = require("jquery"),
     Transparency = require("../../index"),
+    helloTmpl    = $('<ul id="items"><li class="title"></li></ul>')[0],
+    count        = 0,
     app;
-
-$.fn.render = Transparency.jQueryPlugin;
 
 app = express();
 
@@ -18,17 +18,14 @@ app.configure("development", function() {
 });
 
 app.get("/", function(req, res) {
-  var data, result, template;
-
-  data = [
-    { title: "Hello"  },
-    { title: "Howdy"  },
-    { title: "Cheers" },
-    { title: "Byebye" }
+  var data = [
+    { title: "Hello "  + count++},
+    { title: "Howdy "  + count++},
+    { title: "Cheers " + count++},
+    { title: "Byebye " + count++}
   ];
-  template = $("<ul id=\"items\">\n  <li class=\"title\"></li>\n</ul>");
-  result   = template.render(data);
-  return res.send(template[0].outerHTML);
+
+  return res.send(Transparency.render(helloTmpl, data).outerHTML);
 });
 
 app.listen(3000);
