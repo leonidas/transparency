@@ -1,5 +1,5 @@
 {
   "name": "transparency",
-  "version": "0.9.12",
+  "version": "0.9.13",
   "main": "./dist/transparency.js"
 }
