@@ -1,2 +1,1 @@
-require('coffee-script');
-module.exports = require('./src/transparency.coffee');
+module.exports = require('./lib/transparency');

@@ -6,12 +6,15 @@ coffeeify  = require 'coffeeify'
 
 james.task 'build', ->
 
-  dist = james.read browserify('./src/transparency.coffee')
-    .transform(coffeeify)
-    .bundle()
+  js = james.list('src/**/*.coffee').map (filename) ->
+    james.read(filename)
+      .transform(coffee bare: true)
+      .write filename.replace(/src/, 'lib').replace(/\.coffee/, '.js')
 
-  dist.write                   'dist/transparency.js'
-  dist.transform(uglify).write 'dist/transparency.min.js'
+  james.wait(js).then ->
+    dist = james.read browserify('./lib/transparency.js').bundle()
+    dist.write                   'dist/transparency.js'
+    dist.transform(uglify).write 'dist/transparency.min.js'
 
   james.list('spec/**/*.coffee').map (filename) ->
     james.read(filename)

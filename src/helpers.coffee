@@ -1,4 +1,4 @@
-ElementFactory = require './elementFactory.coffee'
+ElementFactory = require './elementFactory'
 
 exports.before = (decorator) -> (method) -> ->
   decorator.apply this, arguments

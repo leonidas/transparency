@@ -1,5 +1,5 @@
-{before, after, chainable, cloneNode} = require './helpers.coffee'
-Instance = require './instance.coffee'
+{before, after, chainable, cloneNode} = require './helpers'
+Instance = require './instance'
 
 # **Context** stores the original `template` elements and is responsible for creating,
 # adding and removing template `instances` to match the amount of `models`.

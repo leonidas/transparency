@@ -1,6 +1,6 @@
 _       = require '../lib/lodash.js'
-helpers = require './helpers.coffee'
-Context = require './context.coffee'
+helpers = require './helpers'
+Context = require './context'
 
 # **Transparency** is a client-side template engine which binds JSON objects to DOM elements.
 #

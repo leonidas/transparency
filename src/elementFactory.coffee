@@ -1,6 +1,6 @@
 _                = require '../lib/lodash.js'
-helpers          = require './helpers.coffee'
-AttributeFactory = require './attributeFactory.coffee'
+helpers          = require './helpers'
+AttributeFactory = require './attributeFactory'
 
 
 module.exports = ElementFactory =

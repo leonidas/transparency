@@ -1,5 +1,5 @@
-_       = require '../lib/lodash.js'
-helpers = require './helpers.coffee'
+_       = require '../lib/lodash'
+helpers = require './helpers'
 
 module.exports = AttributeFactory =
   Attributes: {}

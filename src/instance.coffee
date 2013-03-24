@@ -1,5 +1,5 @@
 _       = require '../lib/lodash.js'
-{chainable} = helpers = require './helpers.coffee'
+{chainable} = helpers = require './helpers'
 
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
