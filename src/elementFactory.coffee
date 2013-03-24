@@ -1,5 +1,7 @@
-AttributeFactory = require './attributeFactory.coffee'
+_                = require '../lib/lodash.js'
 helpers          = require './helpers.coffee'
+AttributeFactory = require './attributeFactory.coffee'
+
 
 module.exports = ElementFactory =
   Elements: input: {}
@@ -16,7 +18,7 @@ module.exports = ElementFactory =
 class Element
   constructor: (@el) ->
     @attributes         = {}
-    @childNodes         = helpers.getChildNodes @el
+    @childNodes         = _.toArray @el.childNodes
     @nodeName           = @el.nodeName.toLowerCase()
     @classNames         = @el.className.split ' '
     @originalAttributes = {}

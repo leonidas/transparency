@@ -1,3 +1,4 @@
+_       = require '../lib/lodash.js'
 helpers = require './helpers.coffee'
 Context = require './context.coffee'
 
@@ -39,7 +40,7 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   log "Transparency.render:", context, models, directives, options
 
   return unless context
-  models = [models] unless helpers.isArray models
+  models = [models] unless _.isArray models
 
   # Context element, state and functionality is wrapped to `Context` object. Get it, or create a new
   # if it doesn't exist yet.

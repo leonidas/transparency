@@ -23,14 +23,6 @@ exports.chainable = exports.after -> this
 exports.onlyWith$ = (fn) -> if jQuery? || Zepto?
  do ($ = jQuery || Zepto) -> fn arguments
 
-exports.getChildNodes = (el) ->
-  childNodes = []
-  child = el.firstChild
-  while child
-    childNodes.push child
-    child = child.nextSibling
-  childNodes
-
 exports.getElements = (el) ->
   elements = []
   _getElements el, elements
@@ -81,11 +73,3 @@ exports.data    = (element) -> element[expando] ||= {}
 exports.nullLogger    = () ->
 exports.consoleLogger = -> console.log arguments
 exports.log           = exports.nullLogger
-
-# Mostly from https://github.com/documentcloud/underscore/blob/master/underscore.js
-exports.toString      = Object.prototype.toString
-exports.isArray       = Array.isArray || (obj) -> exports.toString.call(obj) == '[object Array]'
-exports.isDate        = (obj) -> exports.toString.call(obj) == '[object Date]'
-exports.isDomElement  = (obj) -> obj.nodeType == exports.ELEMENT_NODE
-exports.isPlainValue  = (obj) -> type = typeof obj; (type != 'object' and type != 'function') or exports.isDate obj
-exports.isBoolean     = (obj) -> obj is true or obj is false

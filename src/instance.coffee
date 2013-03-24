@@ -1,4 +1,5 @@
-helpers = require './helpers.coffee'
+_       = require '../lib/lodash.js'
+{chainable} = helpers = require './helpers.coffee'
 
 # Template **Instance** is created for each model we are about to render.
 # `instance` object keeps track of template DOM nodes and elements.
@@ -7,18 +8,18 @@ module.exports = class Instance
 
   constructor: (template, @Transparency) ->
     @queryCache = {}
-    @childNodes = helpers.getChildNodes template
+    @childNodes = _.toArray template.childNodes
     @elements   = helpers.getElements   template
 
-  remove: helpers.chainable ->
+  remove: chainable ->
     for node in @childNodes
       node.parentNode.removeChild node
 
-  appendTo: helpers.chainable (parent) ->
+  appendTo: chainable (parent) ->
     for node in @childNodes
       parent.appendChild node
 
-  prepare: helpers.chainable (model) ->
+  prepare: chainable (model) ->
     for element in @elements
       element.reset()
 
@@ -37,15 +38,14 @@ module.exports = class Instance
   # rendering text content, form values and DOM elements (.e.g., Backbone Views).
   # Rendering as a text content is a safe default, as it is HTML escaped
   # by the browsers.
-  renderValues: helpers.chainable (model, children) ->
-    if helpers.isDomElement(model) and element = @elements[0]
+  renderValues: chainable (model, children) ->
+    if _.isElement(model) and element = @elements[0]
       element.empty().el.appendChild model
 
     else if typeof model == 'object'
       for own key, value of model when value?
-        # The value can be either a nested model or a plain value, i.e., `Date`, `string`, `boolean` or `double`.
-        # Start by handling the plain values and finding the matching elements.
-        if helpers.isPlainValue value
+
+        if _.isString(value) or _.isNumber(value) or _.isBoolean(value) or _.isDate(value)
           for element in @matchingElements key
 
             # Element type also affects on rendering. Given a model
@@ -137,14 +137,14 @@ module.exports = class Instance
   #     </div>
   #
   # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
-  renderDirectives: helpers.chainable (model, index, directives) ->
+  renderDirectives: chainable (model, index, directives) ->
     for own key, attributes of directives when typeof attributes == 'object'
       model = {value: model} unless typeof model == 'object'
 
       for element in @matchingElements key
         element.renderDirectives model, index, attributes
 
-  renderChildren: helpers.chainable (model, children, directives, options) ->
+  renderChildren: chainable (model, children, directives, options) ->
     for key in children
       for element in @matchingElements key
         @Transparency.render element.el, model[key], directives[key], options

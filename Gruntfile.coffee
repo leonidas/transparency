@@ -46,19 +46,11 @@ module.exports = (grunt) ->
           helpers: 'spec/specHelper.js'
           template: require('grunt-template-jasmine-requirejs')
 
-    watch:
-      files: ['src/**/*.coffee', 'spec/**/*.coffee']
-      tasks: ['default']
-
-
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
 
-  grunt.registerTask 'build',       ['coffee']
-  grunt.registerTask 'tdd',         ['build', 'jasmine:functional', 'jasmine:amd', 'jasmine:nojQuery']
-  grunt.registerTask 'test',        ['coffee', 'jasmine']
+  grunt.registerTask 'tdd',         ['jasmine:functional', 'jasmine:amd', 'jasmine:nojQuery']
+  grunt.registerTask 'test',        ['jasmine']
   grunt.registerTask 'build-tests', ['jasmine:functional:build', 'jasmine:amd:build', 'jasmine:performance:build']
-  grunt.registerTask 'default',     ['build', 'tdd', 'build-tests']
+  grunt.registerTask 'default',     ['tdd', 'build-tests']
 
 

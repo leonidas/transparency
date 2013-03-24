@@ -1,3 +1,4 @@
+_       = require '../lib/lodash.js'
 helpers = require './helpers.coffee'
 
 module.exports = AttributeFactory =
@@ -41,9 +42,9 @@ class Text extends Attribute
 
   constructor: (@el, @name) ->
     @templateValue =
-      (child.nodeValue for child in helpers.getChildNodes @el when child.nodeType == helpers.TEXT_NODE).join ''
+      (child.nodeValue for child in @el.childNodes when child.nodeType == helpers.TEXT_NODE).join ''
 
-    @children = (child for child in @el.children)
+    @children = _.toArray @el.children
 
     unless @textNode = @el.firstChild
       @el.appendChild @textNode = @el.ownerDocument.createTextNode ''
@@ -59,7 +60,8 @@ class Text extends Attribute
     @textNode.nodeValue = text
     @el.appendChild @textNode
 
-    @el.appendChild child for child in @children
+    for child in @children
+      @el.appendChild child
 
 
 class Html extends Attribute
@@ -67,7 +69,7 @@ class Html extends Attribute
 
   constructor: (@el) ->
     @templateValue = ''
-    @children = (child for child in @el.children)
+    @children = _.toArray @el.children
 
   set: (html) ->
     @el.removeChild child while child = @el.firstChild
