@@ -42,6 +42,12 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   return unless context
   models = [models] unless _.isArray models
 
+  # If context was passed in as an HTML string, then convert it to a div element with innHTML as passed in HTML string.
+  if typeof context == 'string'
+      _html_string = context
+      context = document.createElement('div')
+      context.innerHTML = _html_string
+
   # Context element, state and functionality is wrapped to `Context` object. Get it, or create a new
   # if it doesn't exist yet.
   context = helpers.data(context).context ||= new Context(context, Transparency)
