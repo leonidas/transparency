@@ -26,6 +26,7 @@
   "licenses": [
     "MIT"
   ],
+  "main": "dist/transparency.js",
   "dependencies": {
     "jsdom": "~0.5.0",
     "coffee-script": "~1.6.2"
