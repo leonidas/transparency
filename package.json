@@ -50,7 +50,7 @@
     "prepublish": "bower install && gulp release"
   },
   "testling": {
-    "html": "spec/testlingSpecRunner.html",
+    "html": "testlingSpecRunner.html",
     "browsers": [
       "ie/8..latest",
       "chrome/23..latest",
