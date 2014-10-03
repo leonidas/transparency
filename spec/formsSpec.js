@@ -2,7 +2,6 @@
   describe("Transparency", function() {
     it("should render values to form inputs and textarea elements", function() {
       var data, expected, template;
-
       template = $("<div>\n  <input name=\"name\"/>\n  <input name=\"job\"/>\n  <textarea name=\"resume\"></textarea>\n</div>");
       data = {
         name: 'John',
@@ -16,7 +15,6 @@
     });
     it("should render values to option elements", function() {
       var data, directives, expected, template;
-
       template = $("<select id=\"states\">\n  <option class=\"state\"></option>\n</select>");
       data = [
         {
@@ -44,7 +42,6 @@
     });
     it("should render list of options and set the selected", function() {
       var data, directives, expected, template;
-
       template = $("<select class=\"foo\" multiple>\n    <option class=\"bar\"></option>\n</select>");
       data = [
         {
@@ -77,7 +74,6 @@
     });
     it("should set the matching option to 'selected' in case the target element is 'select'", function() {
       var data, expected, template;
-
       template = $("<div>\n  <select class=\"state\">\n    <option value=\"1\">Alabama</option>\n    <option value=\"2\">Alaska</option>\n    <option value=\"3\">Arizona</option>\n  </select>\n</div>");
       data = {
         state: 2
@@ -88,7 +84,6 @@
     });
     it("should handle nested options elements", function() {
       var data, expected, template;
-
       template = $("<div class=\"container\">\n  <h1 class=\"title\"></h1>\n  <p class=\"post\"></p>\n  <select class=\"comments\">\n    <option class=\"comment\">test</option>\n  </select>\n</div>");
       data = {
         title: 'Hello World',
@@ -107,7 +102,6 @@
     });
     return it("should render checkbox and radiobutton checked attributes", function() {
       var data, expected, template;
-
       template = $("<div class=\"template\">\n  <input type=\"checkbox\" name=\"foo\" value=\"Foo\" />\n  <input type=\"checkbox\" name=\"foz\" value=\"Foz\" />\n  <input type=\"radio\" name=\"bar\" value=\"Bar\" />\n  <input type=\"radio\" name=\"baz\" value=\"Baz\" />\n</div>");
       data = {
         foo: true,

@@ -2,7 +2,6 @@
   describe("Transparency", function() {
     return it("should use a custom matcher if available", function() {
       var data, data_bind_matcher, default_matcher, expected_with_custom_matcher, template;
-
       template = $("<div class=\"container\">\n   <h1 data-bind=\"title\"></h1>\n   <p class=\"post\"></p>\n   <div data-bind=\"comments\">\n     <div class=\"comment\">\n       <span class=\"name\"></span>\n       <span data-bind=\"text\"></span>\n     </div>\n   </div>\n </div>");
       data = {
         title: 'Hello World',

@@ -2,7 +2,6 @@
   describe("Transparency", function() {
     it("should execute directive function and assign return value to the matching element attribute", function() {
       var directives, expected, person, template;
-
       template = $("<div class=\"person\">\n  <span class=\"name\"></span><span class=\"email\"></span>\n</div>");
       person = {
         firstname: 'Jasmine',
@@ -22,7 +21,6 @@
     });
     it("should allow setting html content with directives", function() {
       var directives, expected, person, template;
-
       template = $("<div class=\"person\">\n  <div class=\"name\"><div>FOOBAR</div></div><span class=\"email\"></span>\n</div>");
       person = {
         firstname: '<b>Jasmine</b>',
@@ -46,7 +44,6 @@
     });
     it("should handle nested directives", function() {
       var directives, expected, nameDecorator, person, template;
-
       template = $("<div class=\"person\">\n  <span class=\"name\"></span>\n  <span class=\"email\"></span>\n  <div class=\"friends\">\n    <div class=\"friend\">\n      <span class=\"name\"></span>\n      <span class=\"email\"></span>\n    </div>\n  </div>\n</div>");
       person = {
         firstname: 'Jasmine',
@@ -83,7 +80,6 @@
     });
     it("should restore the original attributes", function() {
       var directives, expected, persons, template;
-
       template = $("<ul id=\"persons\">\n  <li class=\"person\"></li>\n</ul>");
       persons = [
         {
@@ -109,7 +105,6 @@
     });
     it("should allow directives without a return value", function() {
       var directives, expected, persons, template;
-
       template = $("<ul id=\"persons\">\n  <li class=\"person\"></li>\n</ul>");
       persons = [
         {
@@ -124,7 +119,6 @@
         person: {
           html: function(params) {
             var elem;
-
             elem = $(params.element);
             elem.attr("foobar", "foo");
             elem.text("" + params.index);
@@ -138,7 +132,6 @@
     });
     it("should provide current attribute value as a parameter for the directives", function() {
       var data, directives, expected, template;
-
       template = $("<div id=\"template\">\n  <div class=\"name\">Hello, <span>Br, Transparency</span></div>\n</div>");
       data = {
         me: "World"
@@ -157,7 +150,6 @@
     });
     it("should render directives returning empty string, zero and other falsy values", function() {
       var data, directives, expected, template;
-
       template = $("<div id=\"root\">\n    <span id=\"d_number\">234</span>\n    <span id=\"d_bool\">foo</span>\n    <span id=\"d_dec\">1.234</span>\n    <span id=\"d_str\">abc</span>\n</div>​");
       data = {
         number: 0,
@@ -193,7 +185,6 @@
     });
     it("should skip directives which syntactically incorrect", function() {
       var data, directives, expected, template;
-
       template = $("<div id=\"template\">\n  <div class=\"name\"></div>\n</div>");
       expected = $("<div id=\"template\">\n  <div class=\"name\">World</div>\n</div>");
       data = {
@@ -209,7 +200,6 @@
     });
     it("should use directive return value even if data value is null", function() {
       var data, directives, expected, template;
-
       template = $("<div id=\"template\">\n  <div class=\"name\"></div>\n</div>");
       expected = $("<div id=\"template\">\n  <div class=\"name\">Null value</div>\n</div>");
       data = {
@@ -227,7 +217,6 @@
     });
     it("should allow rendering directives to the parent elements", function() {
       var data, directives, expected, template;
-
       template = $("<div class=\"container\">\n  <a class=\"link\">\n    <span class=\"name\"/>\n    <span class=\"description\"/>\n  </a>\n</div>");
       expected = $("<div class=\"container\">\n  <a class=\"link\" href=\"http://does-it-render.com/\">\n    <span class=\"name\">MyLink</span>\n    <span class=\"description>takes me somewhere</span>\n  </a>\n</div>");
       data = {
@@ -247,7 +236,6 @@
     });
     it("should not duplicate mutated elements", function() {
       var data, directives, expected, template;
-
       template = $("<div id=\"test\" class=\"test\">\n  <div class=\"test_div\" data-bind=\"test_div_bar\"><span></span></div>\n</div>");
       data = {
         bar: 100
@@ -256,7 +244,6 @@
         test_div_bar: {
           html: function(params) {
             var elem;
-
             elem = $(params.element);
             $('span', elem).attr('style', "width: " + this.bar + "%;");
           }
@@ -269,7 +256,6 @@
     });
     it("should not duplicate text content when setting html", function() {
       var data, directives, expected, template;
-
       template = $("<div class=\"template\">\n  <div class=\"foo\">\n    <span class=\"bar\">\n    </span>\n  </div>\n</div>");
       data = {
         foo: '<i>asdf</i>',
@@ -294,7 +280,6 @@
     });
     return it("should not duplicate text content when setting html", function() {
       var data, directives, expected, template;
-
       template = $("<div class=\"accordion-heading\">\n    <div class=\"accordion-toggle\">\n        <div class=\"accordion-selected\">\n            <div class=\"selected\"></div>\n        </div>\n    </div>\n</div>");
       data = {
         'accordion-selected': {

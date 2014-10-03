@@ -2,7 +2,6 @@
   describe("Transparency", function() {
     return it("cache templates", function() {
       var data, doc, expected;
-
       doc = $("<div>\n  <div class=\"container\">\n    <div>\n      <span class=\"hello\"></span>\n      <span class=\"world\"></span>\n    </div>\n  </div>\n</div>");
       data = [
         {
