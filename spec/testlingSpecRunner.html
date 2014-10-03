@@ -9,13 +9,21 @@
   <div id="mocha"></div>
   <script src="node_modules/expect.js/index.js"></script>
   <script src="node_modules/mocha/mocha.js"></script>
+  <script src="spec/assert.js"></script>
   <script>mocha.setup('bdd')</script>
   <script src="spec/lib/jquery-1.9.1.min.js"></script>
   <script src="dist/transparency.js"></script>
 
   <script src="spec/basicsSpec.js"></script>
+  <script src="spec/cachedTemplatesSpec.js"></script>
+  <script src="spec/configSpec.js"></script>
+  <script src="spec/directivesSpec.js"></script>
+  <script src="spec/formsSpec.js"></script>
+  <script src="spec/listsSpec.js"></script>
+  <script src="spec/modelReferencesSpec.js"></script>
+  <script src="spec/nestedModelsSpec.js"></script>
+
   <script>
-    console.log(mocha.reporter)
     mocha.reporter('tap');
     mocha.checkLeaks();
     mocha.globals(['jQuery']);

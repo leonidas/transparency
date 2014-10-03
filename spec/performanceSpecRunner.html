@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+</head>
+
+<body>
+  <div id="mocha"></div>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="assert.js"></script>
+  <script>mocha.setup('bdd')</script>
+  <script src="lib/benchmark.js"></script>
+  <script src="lib/handlebars.js"></script>
+
+  <script src="lib/jquery-1.9.1.min.js"></script>
+  <script src="../dist/transparency.js"></script>
+
+  <script src="performanceSpec.js"></script>
+
+  <script>
+    mocha.checkLeaks();
+    mocha.globals(['jQuery']);
+    if (window.mochaPhantomJS) {
+      mochaPhantomJS.run();
+    } else {
+      mocha.run();
+    }
+  </script>
+
+</head>
+<body>
+</body>
+</html>

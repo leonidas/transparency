@@ -1,0 +1,14 @@
+{
+  "name": "transparency",
+  "version": "0.9.14",
+  "main": "./dist/transparency.js",
+  "ignore": [],
+  "dependencies": {},
+  "devDependencies": {
+    "requirejs": "~2.1.15",
+    "jquery": "~2.1.1",
+    "handlebars": "~2.0.0",
+    "benchmark": "~1.0.0",
+    "mocha": "~1.21.4"
+  }
+}

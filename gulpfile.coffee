@@ -1,8 +1,8 @@
 gulp           = require 'gulp'
 coffee         = require 'gulp-coffee'
 uglify         = require 'gulp-uglify'
-streamify      = require 'gulp-streamify'
 mochaPhantomJS = require 'gulp-mocha-phantomjs'
+mocha          = require 'gulp-mocha'
 source         = require 'vinyl-source-stream'
 browserify     = require 'browserify'
 
@@ -24,20 +24,40 @@ gulp.task 'bundle', ->
   browserify entries: './lib/transparency.js'
     .bundle
     .pipe source './dist/transparency.js'
-    .pipe streamify uglify()
+    .pipe uglify()
     .pipe gulp.dest './dist/transparency.min.js'
+
 
 gulp.task 'test:functional', ->
   gulp
-    .src  './spec/mocha.html'
+    .src  './spec/functionalSpecRunner.html'
     .pipe mochaPhantomJS()
+
+
+gulp.task 'test:amd', ->
+  gulp
+    .src  './spec/amdSpecRunner.html'
+    .pipe mochaPhantomJS()
+
+
+gulp.task 'test:nodejs', ->
+  gulp
+    .src  './spec/serverSpec.js'
+    .pipe mocha()
+
+
+gulp.task 'test:performance', ->
+  gulp
+    .src  './spec/performanceSpecRunner.html'
+    .pipe mochaPhantomJS()
+
+
+gulp.task 'watch', ->
+  gulp.watch './**/*.coffee', ['build', 'test']
 
 
 gulp.task 'bundle',  ['compile']
 gulp.task 'build',   ['compile:tests', 'bundle']
-gulp.task 'test',    ['test:functional']
-gulp.task 'default', ['build', 'test']
-
-
-gulp.task 'watch', ->
-  gulp.watch './**/*.coffee', ['build']
+gulp.task 'test',    ['test:functional', 'test:amd', 'test:nodejs']
+gulp.task 'release', ['build', 'test', 'test:performance']
+gulp.task 'default', ['build', 'test', 'watch']

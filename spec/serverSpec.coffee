@@ -1,26 +1,32 @@
-require './specHelper'
+{jsdom}  = require "jsdom"
+{expect} = require "./assert"
 
-{jsdom}      = require "jsdom"
-global.$     = require "jquery"
 Transparency = require "../index"
-$.fn.render  = Transparency.jQueryPlugin
 
 describe "Transparency", ->
 
-  it "should work on node.js", ->
-    template = $ """
-      <div class="container">
-        <div class="hello"></div>
-      </div>
-      """
+  it "should work on node.js", (done) ->
 
-    data = hello: 'Hello'
+    jsdom.env "", [], (errors, {document}) ->
 
-    expected = $ """
-      <div class="container">
-        <div class="hello">Hello</div>
-      </div>
-      """
+      template = document.createElement 'div'
+      template.innerHTML =
+        """
+        <div class="container">
+          <div class="hello"></div>
+        </div>
+        """
 
-    template.render data
-    expect(template).toBeEqual expected
+      data = hello: 'Hello'
+
+      expected = document.createElement 'div'
+      expected.innerHTML =
+        """
+        <div class="container">
+          <div class="hello">Hello</div>
+        </div>
+        """
+
+      Transparency.render template, data
+      expect(template.innerHTML).toEqual expected.innerHTML
+      done()

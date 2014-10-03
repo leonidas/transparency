@@ -1,10 +1,11 @@
 describe "Transparency performance", ->
+  @timeout 30000
 
   describe "with cached templates", ->
 
     describe "with one todo item", ->
 
-      it "should be on the same ballpark with Handlebars", ->
+      it "should be on the same ballpark with Handlebars", (done) ->
         transparency = new Benchmark 'transparency - cached template, one todo',
           setup: ->
             template = $('<div class="template"><div class="todo"></div></div>')[0]
@@ -34,7 +35,7 @@ describe "Transparency performance", ->
           .add(handlebars)
 
           .on('complete', ->
-            expect(this[0]).toBeOnTheSameBallpark(this[1], 5))
+            expect(this[0]).toBeOnTheSameBallpark(this[1], 5); done())
           .run()
 
     describe "with hundred todo items", ->
@@ -153,5 +154,5 @@ describe "Transparency performance", ->
             .add(handlebars)
 
             .on('complete', ->
-              expect(this[0]).toBeOnTheSameBallpark(this[1], 5))
+              expect(this[0]).toBeOnTheSameBallpark(this[1], 7))
             .run()
