@@ -1,8 +1,12 @@
 {
   "name": "transparency",
-  "version": "0.9.14",
+  "version": "0.10.0",
   "main": "./dist/transparency.js",
-  "ignore": [],
+  "ignore": [
+    "**/*",
+    "!dist/transparency.js",
+    "!dist/transparency.min.js"
+  ],
   "dependencies": {},
   "devDependencies": {
     "requirejs": "~2.1.15",
