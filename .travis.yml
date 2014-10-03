@@ -5,10 +5,10 @@ branches:
     - master
 
 node_js:
-  - "0.8"
+  - "0.10"
 
 before_script:
-  - npm install -g grunt-cli
+  - npm install
 
 notifications:
   email:
