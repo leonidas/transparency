@@ -45,7 +45,8 @@
   },
   "scripts": {
     "test": "gulp test",
-    "build": "gulp build"
+    "build": "gulp build",
+    "prepublish": "bower install && gulp release"
   },
   "testling": {
     "html": "spec/testlingSpecRunner.html",
