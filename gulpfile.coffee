@@ -22,11 +22,17 @@ gulp.task 'compile:tests', ->
 
 
 gulp.task 'bundle', ['compile'], ->
-  browserify entries: './lib/transparency.js'
+  bundle = browserify entries: './lib/transparency.js'
     .bundle()
-    .pipe source 'dist/transparency.js'
+
+  bundle
+    .pipe source 'transparency.js'
+    .pipe gulp.dest './dist/'
+
+  bundle
+    .pipe source 'transparency.min.js'
     .pipe streamify uglify()
-    .pipe gulp.dest 'dist/transparency.min.js'
+    .pipe gulp.dest './dist/'
 
 
 gulp.task 'test:functional', ['compile:tests'], ->
