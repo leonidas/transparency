@@ -36,8 +36,6 @@ $('#template').render(hello);
 
 Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mobile browsers. Support for IE8 requires jQuery.
 
-[![browser support](https://ci.testling.com/leonidas/transparency.png)](https://ci.testling.com/leonidas/transparency)
-
 ## Community
 
 * IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
