@@ -41,6 +41,12 @@ Transparency is compatible with IE9+, Chrome, Firefox, iOS, Android and other mo
 * IRC: [freenode/#transparency.js](http://webchat.freenode.net/)
 * Google Groups: transparencyjs@googlegroups.com
 
+**We are looking for new maintainers**. Anyone with an accepted pull request will get commit rights. Current maintainers are
+
+* [pyykkis](https://github.com/pyykkis)
+* [rikukissa](https://github.com/rikukissa)
+
+
 ## Fiddle
 
 [Try Transparency](http://leonidas.github.com/transparency/) with interactive examples.
