@@ -26,7 +26,6 @@
   "licenses": [
     "MIT"
   ],
-  "main": "dist/transparency.js",
   "dependencies": {
     "jsdom": "^1.0.0"
   },
