@@ -11,14 +11,14 @@
               template = $('<div class="template"><div class="todo"></div></div>')[0];
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push({
                     todo: Math.random()
                   });
                 }
-                return _results;
+                return results;
               }).call(this);
               Transparency.render(template, {
                 todo: Math.random()
@@ -35,14 +35,14 @@
               template = Handlebars.compile('<div class="template"><div class="todo">{{todo}}</div></div>');
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push({
                     todo: Math.random()
                   });
                 }
-                return _results;
+                return results;
               }).call(this);
             },
             fn: function() {
@@ -64,31 +64,31 @@
               template = $('<div class="template"><div class="todo"></div></div>')[0];
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push((function() {
-                    var _j, _results1;
-                    _results1 = [];
-                    for (j = _j = 1; _j <= 100; j = ++_j) {
-                      _results1.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push((function() {
+                    var l, results1;
+                    results1 = [];
+                    for (j = l = 1; l <= 100; j = ++l) {
+                      results1.push({
                         todo: Math.random()
                       });
                     }
-                    return _results1;
+                    return results1;
                   })());
                 }
-                return _results;
+                return results;
               }).call(this);
               Transparency.render(template, (function() {
-                var _i, _results;
-                _results = [];
-                for (j = _i = 1; _i <= 100; j = ++_i) {
-                  _results.push({
+                var k, results;
+                results = [];
+                for (j = k = 1; k <= 100; j = ++k) {
+                  results.push({
                     todo: Math.random()
                   });
                 }
-                return _results;
+                return results;
               })());
             },
             fn: function() {
@@ -102,21 +102,21 @@
               template = Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>');
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push((function() {
-                    var _j, _results1;
-                    _results1 = [];
-                    for (j = _j = 1; _j <= 100; j = ++_j) {
-                      _results1.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push((function() {
+                    var l, results1;
+                    results1 = [];
+                    for (j = l = 1; l <= 100; j = ++l) {
+                      results1.push({
                         todo: Math.random()
                       });
                     }
-                    return _results1;
+                    return results1;
                   })());
                 }
-                return _results;
+                return results;
               }).call(this);
             },
             fn: function() {
@@ -137,23 +137,23 @@
             setup: function() {
               var data, i, index, template;
               template = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push($('<div class="template"><div class="todo"></div></div>')[0]);
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push($('<div class="template"><div class="todo"></div></div>')[0]);
                 }
-                return _results;
+                return results;
               }).call(this);
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push({
                     todo: Math.random()
                   });
                 }
-                return _results;
+                return results;
               }).call(this);
             },
             fn: function() {
@@ -164,31 +164,31 @@
             setup: function() {
               var data, i, index, parser, template;
               parser = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push($('<div></div>')[0]);
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push($('<div></div>')[0]);
                 }
-                return _results;
+                return results;
               }).call(this);
               template = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push(Handlebars.compile('<div class="template"><div class="todo">{{todo}}</div></div>'));
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push(Handlebars.compile('<div class="template"><div class="todo">{{todo}}</div></div>'));
                 }
-                return _results;
+                return results;
               }).call(this);
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push({
                     todo: Math.random()
                   });
                 }
-                return _results;
+                return results;
               }).call(this);
             },
             fn: function() {
@@ -207,30 +207,30 @@
             setup: function() {
               var data, i, index, j, template;
               template = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push($('<div class="template"><div class="todo"></div></div>')[0]);
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push($('<div class="template"><div class="todo"></div></div>')[0]);
                 }
-                return _results;
+                return results;
               }).call(this);
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push((function() {
-                    var _j, _results1;
-                    _results1 = [];
-                    for (j = _j = 1; _j <= 100; j = ++_j) {
-                      _results1.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push((function() {
+                    var l, results1;
+                    results1 = [];
+                    for (j = l = 1; l <= 100; j = ++l) {
+                      results1.push({
                         todo: Math.random()
                       });
                     }
-                    return _results1;
+                    return results1;
                   })());
                 }
-                return _results;
+                return results;
               }).call(this);
             },
             fn: function() {
@@ -241,38 +241,38 @@
             setup: function() {
               var data, i, index, j, parser, template;
               parser = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push($('<div></div>')[0]);
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push($('<div></div>')[0]);
                 }
-                return _results;
+                return results;
               }).call(this);
               template = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push(Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>'));
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push(Handlebars.compile('<div class="template">{{#each this}}<div class="todo">{{todo}}</div>{{/each}}</div>'));
                 }
-                return _results;
+                return results;
               }).call(this);
               index = 0;
               data = (function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 1, _ref = this.count; 1 <= _ref ? _i <= _ref : _i >= _ref; i = 1 <= _ref ? ++_i : --_i) {
-                  _results.push((function() {
-                    var _j, _results1;
-                    _results1 = [];
-                    for (j = _j = 1; _j <= 100; j = ++_j) {
-                      _results1.push({
+                var k, ref, results;
+                results = [];
+                for (i = k = 1, ref = this.count; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+                  results.push((function() {
+                    var l, results1;
+                    results1 = [];
+                    for (j = l = 1; l <= 100; j = ++l) {
+                      results1.push({
                         todo: Math.random()
                       });
                     }
-                    return _results1;
+                    return results1;
                   })());
                 }
-                return _results;
+                return results;
               }).call(this);
             },
             fn: function() {

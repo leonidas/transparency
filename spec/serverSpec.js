@@ -9,9 +9,9 @@
 
   describe("Transparency", function() {
     return it("should work on node.js", function(done) {
-      return jsdom.env("", [], function(errors, _arg) {
+      return jsdom.env("", [], function(errors, arg) {
         var data, document, expected, template;
-        document = _arg.document;
+        document = arg.document;
         template = document.createElement('div');
         template.innerHTML = "<div class=\"container\">\n  <div class=\"hello\"></div>\n</div>";
         data = {

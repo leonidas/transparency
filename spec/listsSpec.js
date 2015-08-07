@@ -102,13 +102,13 @@
   });
 
   expectModelObjects = function(elements, data) {
-    var i, object, _i, _len, _results;
-    _results = [];
-    for (i = _i = 0, _len = data.length; _i < _len; i = ++_i) {
+    var i, j, len, object, results;
+    results = [];
+    for (i = j = 0, len = data.length; j < len; i = ++j) {
       object = data[i];
-      _results.push(expect(elements[i].transparency.model).toEqual(object));
+      results.push(expect(elements[i].transparency.model).toEqual(object));
     }
-    return _results;
+    return results;
   };
 
 }).call(this);

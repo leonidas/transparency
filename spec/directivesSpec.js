@@ -11,7 +11,7 @@
       directives = {
         name: {
           text: function() {
-            return "" + this.firstname + " " + this.lastname;
+            return this.firstname + " " + this.lastname;
           }
         }
       };
@@ -30,7 +30,7 @@
       directives = {
         name: {
           html: function() {
-            return "" + this.firstname + " " + this.lastname;
+            return this.firstname + " " + this.lastname;
           }
         }
       };
@@ -62,7 +62,7 @@
         ]
       };
       nameDecorator = function() {
-        return "" + this.firstname + " " + this.lastname;
+        return this.firstname + " " + this.lastname;
       };
       directives = {
         name: {
