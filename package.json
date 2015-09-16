@@ -27,7 +27,7 @@
     "MIT"
   ],
   "dependencies": {
-    "jsdom": "^1.0.0"
+    "jsdom": "^6.5.0"
   },
   "devDependencies": {
     "bower": "^1.3.12",
