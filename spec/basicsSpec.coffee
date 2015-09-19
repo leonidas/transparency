@@ -62,6 +62,14 @@ describe "Transparency", ->
     template.render data
     expect(template).toBeEqual expected
 
+  it "should accept context as a string", ->
+    template = '<div class="hello"></div>'
+    data     = hello: 'Hello'
+    expected = $ '<div><div class="hello">Hello</div></div>'
+
+    template = $ window.Transparency.render template, data
+    expect(template).toBeEqual expected
+
   it "should match model keys to template by element id, class, name attribute and data-bind attribute", ->
     template = $ """
       <div class="container">

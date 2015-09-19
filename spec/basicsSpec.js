@@ -35,6 +35,17 @@
       template.render(data);
       return expect(template).toBeEqual(expected);
     });
+    it("should accept context as a string", function() {
+      var data, expected, template;
+
+      template = '<div class="hello"></div>';
+      data = {
+        hello: 'Hello'
+      };
+      expected = $('<div><div class="hello">Hello</div></div>');
+      template = $(window.Transparency.render(template, data));
+      return expect(template).toBeEqual(expected);
+    });
     it("should match model keys to template by element id, class, name attribute and data-bind attribute", function() {
       var data, expected, template;
       template = $("<div class=\"container\">\n  <div id=\"my-id\"></div>\n  <div class=\"my-class\"></div>\n  <input name=\"my-name\" />\n  <div data-bind=\"my-data\"></div>\n</div>");
