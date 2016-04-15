@@ -20,8 +20,11 @@ class Element
     @attributes         = {}
     @childNodes         = _.toArray @el.childNodes
     @nodeName           = @el.nodeName.toLowerCase()
-    @classNames         = @el.className?.split(' ') || []
+    @classNames         = []
     @originalAttributes = {}
+
+    if typeof @el.className == 'string'
+      @classNames = @el.className.split(' ') 
 
   empty: ->
     @el.removeChild child while child = @el.firstChild
