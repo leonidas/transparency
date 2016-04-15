@@ -20,7 +20,7 @@ class Element
     @attributes         = {}
     @childNodes         = _.toArray @el.childNodes
     @nodeName           = @el.nodeName.toLowerCase()
-    @classNames         = @el.className.split ' '
+    @classNames         = @el.className?.split(' ') || []
     @originalAttributes = {}
 
   empty: ->

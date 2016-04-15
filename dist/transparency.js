@@ -316,11 +316,12 @@ module.exports = ElementFactory = {
 
 Element = (function() {
   function Element(el1) {
+    var ref;
     this.el = el1;
     this.attributes = {};
     this.childNodes = _.toArray(this.el.childNodes);
     this.nodeName = this.el.nodeName.toLowerCase();
-    this.classNames = this.el.className.split(' ');
+    this.classNames = ((ref = this.el.className) != null ? ref.split(' ') : void 0) || [];
     this.originalAttributes = {};
   }
 
