@@ -320,8 +320,11 @@ Element = (function() {
     this.attributes = {};
     this.childNodes = _.toArray(this.el.childNodes);
     this.nodeName = this.el.nodeName.toLowerCase();
-    this.classNames = this.el.className.split(' ');
+    this.classNames = [];
     this.originalAttributes = {};
+    if (typeof this.el.className === 'string') {
+      this.classNames = this.el.className.split(' ');
+    }
   }
 
   Element.prototype.empty = function() {
