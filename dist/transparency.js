@@ -8,7 +8,9 @@ helpers = require('./helpers');
 
 Context = require('./context');
 
-Transparency = {};
+Transparency = {
+  globalDirectives: {}
+};
 
 Transparency.render = function(context, models, directives, options) {
   var base, log;
@@ -31,6 +33,10 @@ Transparency.render = function(context, models, directives, options) {
   }
   context = (base = helpers.data(context)).context || (base.context = new Context(context, Transparency));
   return context.render(models, directives, options).el;
+};
+
+Transparency.setGlobalDirectives = function(directives) {
+  return this.globalDirectives = directives;
 };
 
 Transparency.matcher = function(element, key) {
@@ -672,7 +678,9 @@ module.exports = Instance = (function() {
   });
 
   Instance.prototype.renderDirectives = chainable(function(model, index, directives) {
-    var attributes, element, key, results;
+    var attributes, element, key, results, temp;
+    temp = _.extend({}, this.Transparency.globalDirectives);
+    directives = _.extend(temp, directives);
     results = [];
     for (key in directives) {
       if (!hasProp.call(directives, key)) continue;
@@ -751,6 +759,22 @@ _.toArray = function(obj) {
     arr[i] = obj[i];
   }
   return arr;
+};
+
+_.extend = function(destination, source) {
+  if (typeof destination === 'undefined') {
+    destination = {};
+  }
+  for (var property in source) {
+    if (source[property] && source[property].constructor &&
+     source[property].constructor === Object) {
+      destination[property] = destination[property] || {};
+      arguments.callee(destination[property], source[property]);
+    } else {
+      destination[property] = source[property];
+    }
+  }
+  return destination;
 };
 
 _.isString = function(obj) { return _.toString.call(obj) == '[object String]'; };
