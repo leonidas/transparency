@@ -138,6 +138,9 @@ module.exports = class Instance
   #
   # Directives are executed after the default rendering, so that they can be used for overriding default rendering.
   renderDirectives: chainable (model, index, directives) ->
+    temp = _.extend({}, @Transparency.globalDirectives)
+    directives = _.extend(temp, directives)
+
     for own key, attributes of directives when typeof attributes == 'object'
       model = {value: model} unless typeof model == 'object'
 
@@ -153,4 +156,3 @@ module.exports = class Instance
     elements = @queryCache[key] ||= (el for el in @elements when @Transparency.matcher el, key)
     helpers.log "Matching elements for '#{key}':", elements
     elements
-

@@ -31,7 +31,9 @@ Context = require './context'
 # For the full API reference, please see the README.
 
 # ## Public API
-Transparency = {}
+Transparency = {
+    globalDirectives : {}
+}
 
 # `Transparency.render` maps JSON objects to DOM elements.
 Transparency.render = (context, models = [], directives = {}, options = {}) ->
@@ -49,6 +51,9 @@ Transparency.render = (context, models = [], directives = {}, options = {}) ->
   # Rendering is a lot faster when the context element is detached from the DOM, as
   # reflow calculations are not triggered. So, detach it before rendering.
   context.render(models, directives, options).el
+
+Transparency.setGlobalDirectives = (directives) ->
+    @globalDirectives = directives
 
 # ### Configuration
 
